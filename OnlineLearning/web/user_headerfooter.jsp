@@ -12,6 +12,8 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%@include file="Header.jsp" %>
         <h1>Hello World!</h1>
+        <%@include file="Footer.jsp" %>
     </body>
 </html>
