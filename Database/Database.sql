@@ -57,6 +57,7 @@ CREATE TABLE Subjects (
     Subject_CategoryId INT,
     status NVARCHAR(50),
     thumbnail NVARCHAR(MAX),
+    update_date Datetime,
     FOREIGN KEY (Subject_CategoryId) REFERENCES Subject_Category(Subject_CategoryId)
 );
 GO
