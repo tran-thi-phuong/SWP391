@@ -13,10 +13,9 @@
     <title>Online Learning Web</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-3m7HEg5vP1+mtX6mDjMl++z1/5D5PgrnFA0ZI+VfQ4I/fWcgIFnm/4UO6upAdFw7" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="Homepage.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="css/Homepage.css" rel="stylesheet">
     <style>
        
     </style>
@@ -32,13 +31,13 @@
 
             <div class="slides">
                 <div class="slide">
-                    <img src="slider1.png" alt="Slide 1">
+                    <img src="images/slider1.png" alt="Slide 1">
                 </div>
                 <div class="slide">
-                    <img src="slider2.png" alt="Slide 2">
+                    <img src="images/slider2.png" alt="Slide 2">
                 </div>
                 <div class="slide">
-                    <img src="slider3.png" alt="Slide 3">
+                    <img src="images/slider3.png" alt="Slide 3">
                 </div>
             </div>
 
@@ -91,7 +90,7 @@
             </div>
             <div class="course">
                 <a href="course-details.html">
-                    <img src="image/slider1.png" alt="Course 5">
+                    <img src="images/slider1.png" alt="Course 5">
                     <div class="course-info">
                         <h3>Course Title 5</h3>
                         <p>Course Description</p>
