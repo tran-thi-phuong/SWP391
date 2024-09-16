@@ -19,7 +19,7 @@
                 <section class="search">
                     <h2>Search course</h2>
                     <form action="search" method="get">
-                        <input type="text" name="query" placeholder="...">
+                        <input type="text" name="query" placeholder="Search course...">
                         <button type="submit">Search</button>
                     </form>
                 </section>
@@ -28,21 +28,8 @@
                     <h2>Course Category</h2>
                     <ul>
                         <c:forEach items="${categories}" var="category">
-                            <li><a href="?category=${category.id}">${category.name}</a></li>
-                        </c:forEach>
-                    </ul>
-                </section>
-                
-                <section class="featured">
-                    <h2>Featured Subject</h2>
-                    <ul>
-                        <c:forEach items="${featuredSubjects}" var="subject">
                             <li>
-                                <a href="subject?id=${subject.id}">
-                                    <img src="${subject.thumbnail}" alt="${subject.title}">
-                                    <h3>${subject.title}</h3>
-                                    <p>${subject.tagline}</p>
-                                </a>
+                                <a href="?category=${category.subjectCategoryId}">${category.title}</a>
                             </li>
                         </c:forEach>
                     </ul>
@@ -52,14 +39,14 @@
             <main class="subject-list">
                 <c:forEach items="${subjects}" var="subject">
                     <article class="subject-item">
-                        <img src="${subject.thumbnail}" alt="${subject.title}">
-                        <h2><a href="subject?id=${subject.id}">${subject.title}</a></h2>
-                        <p>${subject.tagline}</p>
-                        <div class="price">
-                            <span class="list-price">${subject.listPrice}</span>
-                            <span class="sale-price">${subject.salePrice}</span>
+                        <h2>
+                            <a href="subject?id=${subject.subjectId}">${subject.title}</a>
+                        </h2>
+                        <p>${subject.description}</p>
+                        <div class="status">
+                            <span>Status: ${subject.status}</span>
                         </div>
-                        <a href="register?id=${subject.id}" class="btn-register">Register</a>
+                        <a href="register?id=${subject.subjectId}" class="btn-register">Register</a>
                     </article>
                 </c:forEach>
             </main>
