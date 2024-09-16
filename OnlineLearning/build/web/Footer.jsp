@@ -19,7 +19,7 @@
          
         <link href="bootstrap.min.css" rel="stylesheet">
         <link href="bootstrap-icons.css" rel="stylesheet">
-        <link href="tooplate-crispy-kitchen.css" rel="stylesheet">
+        <link href="footer.css" rel="stylesheet">
 
       
     </head>
