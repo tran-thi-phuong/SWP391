@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="css/login.css">
     </head>
     <body>
-        <%@include file="Header.jsp" %>
+        
         <div>
             <div class="banner">
             <img src="images/banner.png" class="" />
