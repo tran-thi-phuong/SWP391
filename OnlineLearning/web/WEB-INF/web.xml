@@ -8,6 +8,10 @@
         <servlet-name>logout</servlet-name>
         <servlet-class>controller.logout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>changePassword</servlet-name>
+        <servlet-class>Controller.changePassword</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginController</servlet-name>
         <url-pattern>/loginController</url-pattern>
@@ -15,5 +19,9 @@
     <servlet-mapping>
         <servlet-name>logout</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>changePassword</servlet-name>
+        <url-pattern>/changePassword</url-pattern>
     </servlet-mapping>
 </web-app>
