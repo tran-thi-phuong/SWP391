@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details</title>
+    <link rel="stylesheet" href="css/course-style.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Left Content -->
+        <div class="left-content">
+            <div class="title">
+                <div class="title-info">Course Detail</div>
+            </div>
+            <div class="course-details">
+                <a href="#">
+                    <h1>Course Title</h1>
+                </a>
+                <p><span class="info">Brief Info:</span></p>
+                <p>
+                    This course provides an in-depth understanding of the subject and is
+                    perfect for beginners and experts alike.
+                </p>
+                <div class="categories">
+                    <p><span class="info">Categories:</span></p>
+                    <a href="#" class="tag">Category 1</a>
+                    <a href="#" class="tag">Category 1</a>
+                    <a href="#" class="tag">Category 1</a>
+                    <a href="#" class="tag">Category 1</a>
+                    <a href="#" class="tag">Category 1</a>
+                </div>
+                <p><span class="info">Description:</span></p>
+                <p> This is a comprehensive course that covers all the fundamental aspects of the subject.
+                    You will gain hands-on experience and learn from industry experts. The course includes interactive
+                    lessons, quizzes, and assignments to ensure effective learning.
+                </p>
+
+
+            </div>
+        </div>
+
+        <!-- Right Content -->
+        <div class="right-content">
+            <div class="course-image">
+                <img src="course-image.jpg" alt="Course Image">
+                <p class="price">
+                    <span class="original-price">$199.99</span>
+                    $99.99
+                </p>
+            </div>
+            <a href="#" class="register-btn" class="title-info" id="open-popup-btn">Register Now</a>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="left-content">
+            <div class="title" style="background-color: #103e4b;">
+                <div class="title-info">Contact Link</div>
+            </div>
+            <div class="course-details">
+                <table class="listing">
+                    <tr>
+                        <td>
+                            <a href="#">
+                                <h3>Contact 1</h3>
+                            </a>
+                        </td>
+                        <td>
+                            <p>
+                                A
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#">
+                                <h3>Contact 1</h3>
+                            </a>
+                        </td>
+                        <td>
+                            <p>
+                                A
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#">
+                                <h3>Contact 1</h3>
+                            </a>
+                        </td>
+                        <td>
+                            <p>
+                                A
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="right-content">
+            <div class="title" style="background-color: #1e77bc">
+                <div class="title-info">Same Authors</div>
+            </div>
+            <p class="page-same">
+            <ul>
+                <li>
+                    <div class="img-same">
+                        <a href="#">
+                            <div style="background:#; background-size: cover; height: 100px; width: 75px;"></div>
+                        </a>
+                    </div>
+                    <div class="des-same">
+                        <a href="#">
+                            <b>Course title</b>
+                        </a>
+                    </div>
+                    <b>
+                        <p class="price">
+                            $99.99
+                        </p>
+                    </b>
+                </li>
+                <li>
+                    <div class="img-same">
+                        <a href="#">
+                            <div style="background:#; background-size: cover; height: 100px; width: 75px;"></div>
+                        </a>
+                    </div>
+                    <div class="des-same">
+                        <a href="#">
+                            <b>Course title</b>
+                        </a>
+                    </div>
+                    <b>
+                        <p class="price">
+                            $99.99
+                        </p>
+                    </b>
+                </li>
+                <li>
+                    <div class="img-same">
+                        <a href="#">
+                            <div style="background:#; background-size: cover; height: 100px; width: 75px;"></div>
+                        </a>
+                    </div>
+                    <div class="des-same">
+                        <a href="#">
+                            <b>Course title</b>
+                        </a>
+                    </div>
+                    <b>
+                        <p class="price">
+                            $99.99
+                        </p>
+                    </b>
+                </li>
+            </ul>
+            </p>
+        </div>
+    </div>
+    <!-- Pop-Up Container -->
+    <button id="open-popup-btn">Register for Subject</button>
+<div id="register-popup" class="popup-container">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2>Register for Subject Access</h2>
+        
+        <!-- Pricing Packages -->
+        <section id="pricing-packages">
+            <h3>Choose Your Package</h3>
+            <div class="package-option">
+                <label>
+                    <input type="radio" name="package" value="basic">
+                    <span>Basic Package - <span class="original-price">$20</span> - <span class="price">$10</span></span>
+                </label>
+            </div>
+            <div class="package-option">
+                <label>
+                    <input type="radio" name="package" value="premium">
+                    <span>Premium Package - <span class="original-price">$30</span> - <span class="price">$20</span></span>
+                </label>
+            </div>
+        </section>
+        
+        <!-- User Information -->
+        <section id="user-info">
+            <h3>Enter Your Information</h3>
+            <form id="registration-form">
+                <div class="form-field">
+                    <label for="full-name">Full Name:</label>
+                    <input type="text" id="full-name" name="full-name" required>
+                </div>
+                <div class="form-field">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-field">
+                    <label for="mobile">Mobile:</label>
+                    <input type="tel" id="mobile" name="mobile" required>
+                </div>
+                <div class="form-field">
+                    <label>Gender:</label>
+                    <label>
+                        <input type="radio" name="gender" value="male">
+                        Male
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="female">
+                        Female
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="other">
+                        Other
+                    </label>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </section>
+        
+        <!-- Additional Information -->
+        <section id="additional-info">
+            <a href="#">Terms and Conditions</a>
+        </section>
+    </div>
+</div>
+
+</body>
+<script src="js/pop-up-script.js"></script>
+
+</html>
