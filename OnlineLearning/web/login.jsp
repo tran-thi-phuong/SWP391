@@ -4,6 +4,8 @@
     Author     : tuant
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -22,16 +24,11 @@
             <div class="form-size">
                 <form method="post" action="login">
                     <h1 id="login-header">Login to your account</h1>
-                    <% 
-                        String username = (String)request.getAttribute("username");
-                        String password = (String)request.getAttribute("password");
-                        Boolean error = (Boolean) request.getAttribute("error");
-                        if (error != null && error) { 
-                    %>
-                    <div class="alert alert-danger alert-size" role="alert">
-                        Username or password is incorrect.
-                    </div>
-                    <% } %>
+                    <c:if test="${requestScope.error != null && requestScope.error}">
+                        <div class="alert alert-danger alert-size" role="alert">
+                            Username or password is incorrect.
+                        </div>
+                    </c:if>
                     <div class="form-group input-box1">
                         <input type="text" class="form-control" placeholder="Username or Email" name="username" 
                                value="${param.username}" required>
