@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-
+import java.util.Date;
 /**
  *
  * @author 84336
@@ -15,21 +15,19 @@ public class Subject {
     private String description;
     private int subjectCategoryId;
     private String status;
-
+    private Date updateDate;
     // Default constructor
     public Subject() {
     }
 
-    // Parameterized constructor
-    public Subject(int subjectId, String title, String description, int subjectCategoryId, String status) {
+    public Subject(int subjectId, String title, String description, int subjectCategoryId, String status, Date updateDate) {
         this.subjectId = subjectId;
         this.title = title;
         this.description = description;
         this.subjectCategoryId = subjectCategoryId;
         this.status = status;
+        this.updateDate = updateDate;
     }
-
-    // Getters and Setters
 
     public int getSubjectId() {
         return subjectId;
@@ -71,6 +69,16 @@ public class Subject {
         this.status = status;
     }
 
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    
+
     @Override
     public String toString() {
         return "Subject{" +
@@ -78,7 +86,7 @@ public class Subject {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", subjectCategoryId=" + subjectCategoryId +
-                ", status='" + status + '\'' +
+                ", status='" + status + '\'' + ", date=" + updateDate +
                 '}';
     }
 }

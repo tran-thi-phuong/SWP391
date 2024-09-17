@@ -210,6 +210,32 @@ header h1 {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+.subject-item {
+    position: relative; /* Ensure relative positioning of the article */
+    padding-bottom: 50px; /* Add some padding to prevent overlap with the button */
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.btn-register {
+    position: absolute;
+    bottom: 20px; /* Adjust this value to control the distance from the bottom */
+    right: 20px;  /* Adjust this value to control the distance from the right */
+    background-color: #057bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-register:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
 
 .search button:hover {
     background-color: #2980b9;
