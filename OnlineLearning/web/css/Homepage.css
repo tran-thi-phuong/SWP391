@@ -1,0 +1,152 @@
+/*---------------------------------------
+    Slider              
+-----------------------------------------*/
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.slider-container {
+    display: flex;
+    justify-content: center;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.slider {
+    position: relative;
+    max-width: 100%;
+    width: 80%;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    height: 400px;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+#slide1:checked ~ .slides {
+    transform: translateX(0%);
+}
+
+#slide2:checked ~ .slides {
+    transform: translateX(-100%);
+}
+
+#slide3:checked ~ .slides {
+    transform: translateX(-200%);
+}
+
+.controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 20px;
+}
+
+.control {
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.control:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.radio-controls {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+.radio-controls label {
+    cursor: pointer;
+    padding: 5px;
+    margin: 0 2px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.radio-controls input:checked + label {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/*---------------------------------------
+    Courses              
+-----------------------------------------*/
+.courses-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 2rem 15px;
+}
+
+.course {
+    width: calc(25% - 1rem); /* 4 khóa học mỗi hàng, khoảng cách giữa các khóa học */
+    margin-bottom: 2rem;
+    box-sizing: border-box;
+}
+
+.course img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.course-info {
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.course-info h3 {
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+}
+
+.course-info p {
+    color: var(--p-color);
+    font-size: 0.875rem;
+}
+
+.course a {
+    display: block;
+    text-decoration: none;
+    color: var(--secondary-color);
+    transition: color 0.3s;
+}
+
+.course a:hover {
+    color: var(--primary-color);
+}

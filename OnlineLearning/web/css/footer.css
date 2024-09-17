@@ -1,0 +1,111 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 16, 2024, 1:38:14 PM
+    Author     : sonna
+*/
+:root {
+    --white-color:                  #FFFFFF;
+    --primary-color:                #f44749;
+    --secondary-color:              #f3af24;
+    --dark-color:                   #000000;
+    --p-color:                      #717275;
+
+    --body-font-family:             'Montserrat', sans-serif;
+
+
+    --p-font-size:                  18px;
+    --menu-font-size:               18px;
+
+    --font-weight-normal:           400;
+    --font-weight-semibold:         600;
+    --font-weight-bold:             700;
+}
+
+body {
+    background: var(--white-color);
+    font-family: var(--body-font-family);
+    position: relative;
+}
+
+a,
+button {
+    touch-action: manipulation;
+    transition: all 0.3s;
+}
+
+.form-label {
+    color: var(--p-color);
+    font-weight: var(--font-weight-semibold);
+}
+
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+::selection {
+    background: var(--primary-color);
+    color: var(--white-color);
+}
+
+::-moz-selection {
+    background: var(--primary-color);
+    color: var(--white-color);
+}
+
+.section-padding {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+}
+
+b,
+strong {
+    font-weight: var(--font-weight-bold);
+}
+
+/*---------------------------------------
+  FOOTER              
+-----------------------------------------*/
+.site-footer {
+    background-image: url('../images/daan-evers-tKN1WXrzQ3s-unsplash.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    position: relative;
+}
+
+.site-footer::before {
+    content: "";
+    background: linear-gradient(to top, var(--dark-color), transparent 200%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.site-footer .container {
+    position: relative;
+}
+
+.site-footer a:hover {
+    color: var(--white-color);
+}
+
+.site-footer a {
+    color: #AAA;
+    ;
+}
+
+.site-footer p {
+    color: #AAA;
+}
