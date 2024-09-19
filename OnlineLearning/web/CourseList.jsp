@@ -18,7 +18,7 @@
                 <aside class="sidebar">
                     <section class="search">
                         <h2>Search course</h2>
-                        <form action="search" method="get">
+                        <form action="CourseList" method="get">  
                             <input type="text" name="query" placeholder="Search course...">
                             <button type="submit">Search</button>
                         </form>

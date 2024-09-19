@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Subject;
 import model.SubjectCategory;
 
-@WebServlet("/index")
+@WebServlet("/CourseList")
 public class ListSubject extends HttpServlet {
 
     private SubjectDAO subjectDAO;
@@ -37,11 +37,12 @@ public class ListSubject extends HttpServlet {
         try {
             int page = getPageNumber(request);
             int recordsPerPage = 3;
+            String query = request.getParameter("query");
             String categoryId = request.getParameter("category");
-            SubjectListResult subjectResult = getSubjects(categoryId, page, recordsPerPage);
+            SubjectListResult subjectResult = getSubjects(query,categoryId, page, recordsPerPage);
             List<SubjectCategory> categories = categoryDAO.getAllCategories();
-            setRequestAttributes(request, subjectResult, categories, page, recordsPerPage);
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            setRequestAttributes(request, subjectResult, categories, page, recordsPerPage, query, categoryId);
+            request.getRequestDispatcher("CourseList.jsp").forward(request, response);
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
@@ -52,9 +53,14 @@ public class ListSubject extends HttpServlet {
         return (pageParam != null) ? Integer.parseInt(pageParam) : 1;
     }
 
-    private SubjectListResult getSubjects(String categoryId, int page, int recordsPerPage) throws SQLException {
+    private SubjectListResult getSubjects(String query, String categoryId, int page, int recordsPerPage) throws SQLException {
         int offset = (page - 1) * recordsPerPage;
-        if (categoryId != null && !categoryId.isEmpty()) {
+        if (query != null && !query.trim().isEmpty()) {
+            return new SubjectListResult(
+                    subjectDAO.searchSubjects(query, offset, recordsPerPage),
+                    subjectDAO.getTotalSearchSubjects(query)
+            );
+        } else if (categoryId != null && !categoryId.trim().isEmpty()) {
             int catId = Integer.parseInt(categoryId);
             return new SubjectListResult(
                     subjectDAO.getSubjectsByCategory(catId, offset, recordsPerPage),
@@ -69,12 +75,15 @@ public class ListSubject extends HttpServlet {
     }
 
     private void setRequestAttributes(HttpServletRequest request, SubjectListResult subjectResult,
-            List<SubjectCategory> categories, int currentPage, int recordsPerPage) {
+            List<SubjectCategory> categories, int currentPage, int recordsPerPage, String query, String categoryId) {
         int totalPages = (int) Math.ceil(subjectResult.totalRecords * 1.0 / recordsPerPage);
         request.setAttribute("subjects", subjectResult.subjects);
         request.setAttribute("categories", categories);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("recordsPerPage", recordsPerPage);
+        request.setAttribute("query", query);
+        request.setAttribute("categoryId", categoryId);
     }
 
     private static class SubjectListResult {
