@@ -217,3 +217,9 @@ CREATE TABLE System_Setting (
     FOREIGN KEY (UserId) REFERENCES Users(UserID)
 );
 GO
+CREATE TABLE VerificationCode (
+    UserID INT NOT NULL primary key,
+    Code VARCHAR(50) NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+go
