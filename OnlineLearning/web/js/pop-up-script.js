@@ -25,18 +25,4 @@ document.addEventListener('DOMContentLoaded', function() {
             closePopup();
         }
     });
-
-    // Example check for logged-in user
-    const isLoggedIn = false; // This should be determined based on actual user session
-
-    if (isLoggedIn) {
-        document.getElementById('full-name').value = 'John Doe'; // Example data
-        document.getElementById('email').value = 'john.doe@example.com';
-        document.getElementById('mobile').value = '123-456-7890';
-        document.querySelector('input[name="gender"][value="male"]').checked = true;
-        // Make fields read-only
-        document.querySelectorAll('#registration-form input').forEach(input => {
-            input.setAttribute('readonly', true);
-        });
-    }
 });
