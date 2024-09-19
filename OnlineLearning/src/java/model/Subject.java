@@ -1,34 +1,32 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
-import java.util.Date;
-/**
- *
- * @author 84336
- */
-public class Subject {
 
+import java.util.Date;
+
+public class Subject {
     private int subjectId;
     private String title;
     private String description;
     private int subjectCategoryId;
     private String status;
+    private String thumbnail;
     private Date updateDate;
-    // Default constructor
-    public Subject() {
-    }
 
-    public Subject(int subjectId, String title, String description, int subjectCategoryId, String status, Date updateDate) {
+    // Default constructor
+    public Subject() {}
+
+    // Parameterized constructor
+    public Subject(int subjectId, String title, String description, int subjectCategoryId,
+                   String status, String thumbnail, Date updateDate) {
         this.subjectId = subjectId;
         this.title = title;
         this.description = description;
         this.subjectCategoryId = subjectCategoryId;
         this.status = status;
+        this.thumbnail = thumbnail;
         this.updateDate = updateDate;
     }
 
+    // Getters and Setters
     public int getSubjectId() {
         return subjectId;
     }
@@ -69,6 +67,14 @@ public class Subject {
         this.status = status;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     public Date getUpdateDate() {
         return updateDate;
     }
@@ -77,8 +83,6 @@ public class Subject {
         this.updateDate = updateDate;
     }
 
-    
-
     @Override
     public String toString() {
         return "Subject{" +
@@ -86,7 +90,9 @@ public class Subject {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", subjectCategoryId=" + subjectCategoryId +
-                ", status='" + status + '\'' + ", date=" + updateDate +
+                ", status='" + status + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", updateDate=" + updateDate +
                 '}';
     }
 }
