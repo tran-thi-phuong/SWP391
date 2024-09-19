@@ -45,6 +45,29 @@ public class SubjectDAO extends DBContext {
 
         return subjects;
     }
+    public List<Subject> getAllSubjects() {
+    List<Subject> subjects = new ArrayList<>();
+    String sql = "SELECT * FROM Subjects";
+
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            Subject subject = new Subject();
+            subject.setSubjectId(rs.getInt("SubjectId"));
+            subject.setTitle(rs.getString("title"));
+            subject.setDescription(rs.getString("description"));
+            subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
+            subject.setStatus(rs.getString("status"));
+            subject.setUpdateDate(rs.getDate("Update_Date"));
+            subjects.add(subject);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error in getAllSubjects: " + e.getMessage());
+    }
+
+    return subjects; // This should be List<Subject>
+}
 
     public int getTotalSubjects() {
         String sql = "SELECT COUNT(*) FROM Subjects";
