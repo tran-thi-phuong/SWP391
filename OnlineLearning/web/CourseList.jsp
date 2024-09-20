@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
-
+        <%@include file="Header.jsp" %>
         <div class="container">
             <header>
                 <h1>Subject List </h1>
@@ -87,4 +87,5 @@
             </footer>
         </div>
     </body>
+<%@include file="Footer.jsp" %>
 </html>
