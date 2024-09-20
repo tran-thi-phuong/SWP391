@@ -255,3 +255,27 @@ header h1 {
     max-width: 100%; /* Điều chỉnh kích thước hình thu nhỏ để không vượt quá kích thước của container */
     height: auto; /* Giữ tỷ lệ khung hình của hình ảnh */
 }
+.pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+    .pagination a, .pagination span {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+        margin: 0 4px;
+    }
+    .pagination a.active {
+        background-color: #f44336;
+        color: white;
+        border: 1px solid #f44336;
+    }
+    .pagination a:hover:not(.active) {background-color: #ddd;}
+    .pagination .arrow {
+        background-color: #f1f1f1;
+    }

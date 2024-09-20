@@ -66,11 +66,22 @@
             <footer>
                 <div class="pagination">
                     <c:if test="${currentPage > 1}">
-                        <a href="?page=${currentPage - 1}${not empty param.category ? '&category='.concat(param.category) : ''}${not empty param.query ? '&query='.concat(param.query) : ''}">Previous Page</a>
+                        <a href="?page=${currentPage - 1}" class="arrow">&laquo;</a>
                     </c:if>
-                    <span>Page ${currentPage} / ${totalPages}</span>
+
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <c:choose>
+                            <c:when test="${currentPage eq i}">
+                                <span class="active">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="?page=${i}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+
                     <c:if test="${currentPage < totalPages}">
-                        <a href="?page=${currentPage + 1}${not empty param.category ? '&category='.concat(param.category) : ''}${not empty param.query ? '&query='.concat(param.query) : ''}">Next page</a>
+                        <a href="?page=${currentPage + 1}" class="arrow">&raquo;</a>
                     </c:if>
                 </div>
             </footer>

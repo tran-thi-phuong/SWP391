@@ -36,7 +36,7 @@ public class ListSubject extends HttpServlet {
             throws ServletException, IOException {
         try {
             int page = getPageNumber(request);
-            int recordsPerPage = 3;
+            int recordsPerPage = 6;
             String query = request.getParameter("query");
             String categoryId = request.getParameter("category");
             SubjectListResult subjectResult = getSubjects(query,categoryId, page, recordsPerPage);
