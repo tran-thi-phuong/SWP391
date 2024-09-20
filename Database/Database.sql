@@ -1,4 +1,4 @@
-﻿-- Tạo cơ sở dữ liệu OnlineLearning
+-- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
 
@@ -18,9 +18,8 @@ CREATE TABLE Users(
 	Address NVARCHAR(255),
 	Avatar NVARCHAR(255),
     Role NVARCHAR(20) Not Null, 
-	Status NVARCHAR(10) NOT NULL
-  Token NVARCHAR(MAX) NOT NULL,
-);
+	Status NVARCHAR(10) NOT NULL,
+  Token NVARCHAR(MAX) NOT NULL);
 GO
 
 -- Tạo bảng Blog_Category
