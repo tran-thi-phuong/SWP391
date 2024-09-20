@@ -9,11 +9,6 @@
         <link rel="stylesheet" href="change_reset_password.css">
     </head>
     <body>
-        <ul>
-            <li><a href="infor.jsp" class="link">${sessionScope.account.username}</a></li>
-            <li><a href="logout" class="link">Logout</a></li>
-
-        </ul>
         <!-- Trigger button for popup -->
         <button id="changePasswordBtn" class="button-c">Change Password</button>
         <!-- Popup Overlay -->
