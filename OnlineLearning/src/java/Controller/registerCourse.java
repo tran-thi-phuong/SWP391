@@ -53,7 +53,7 @@ public class registerCourse extends HttpServlet {
             SubjectCategory currentCat = categoryDAO.getCategoryById(currentSub.getSubjectCategoryId());
             List<PackagePrice> currentPackage = packagePriceDAO.searchBySubjectId(id);
             double lowestOption = packagePriceDAO.findLowestPrice(currentPackage);
-
+            List<SubjectCategory> categories = categoryDAO.getAllCategories();
             // Get 3 random Subjects and their lowestPrice
             List<Subject> randomSubs = getRandomItems(subjectDAO.getAllSubjects(), 3);
             if (randomSubs.isEmpty()) {
@@ -66,7 +66,7 @@ public class registerCourse extends HttpServlet {
                 double lowestPrice = packagePriceDAO.findLowestPrice(randomSubPack);
                 subjectPriceMap.put(randomSub, lowestPrice);
             }
-
+            request.setAttribute("categories", categories);
             request.setAttribute("subjectPriceMap", subjectPriceMap);
             request.setAttribute("currentCat", currentCat);
             request.setAttribute("currentSub", currentSub);
