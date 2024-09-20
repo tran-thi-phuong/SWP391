@@ -5,6 +5,9 @@
         <group>
             <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/src/java/Controller/resetPassword.java</file>
             <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/web/resetPassword.jsp</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/src/java/controller/UpdateProfile.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/src/java/dal/UserDAO.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/web/profile.jsp</file>
         </group>
     </open-files>
 </project-private>
