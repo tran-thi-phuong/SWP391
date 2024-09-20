@@ -1,122 +1,132 @@
 package Model;
 
 public class User {
-    private int userId;
-    private String username;
-    private String password;
-    private String name;
-    private String gender;
-    private String phone;
-    private String email;
-    private String address;
-    private String avatar;
-    private String role;
-    private String status;
+    private int UserID;
+    private String Username;
+    private String Password;
+    private String Name;
+    private String Gender;
+    private String Phone;
+    private String Email;
+    private String Address;
+    private String Avatar;
+    private String Role;
+    private String Status;
+    private String Token;
 
-    // Default constructor
-    public User() {}
-
-    // Parameterized constructor
-    public User(int userId, String username, String password, String name, String gender, String phone, String email, String address, String avatar, String role, String status) {
-        this.userId = userId;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.gender = gender;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-        this.avatar = avatar;
-        this.role = role;
-        this.status = status;
+    public User() {
     }
 
-    // Getters and Setters
-    public int getUserId() {
-        return userId;
+    
+    public User(int UserID, String Username, String Password, String Name, String Gender, String Phone, String Email, String Address, String Avatar, String Role, String Status, String Token) {
+        this.UserID = UserID;
+        this.Username = Username;
+        this.Password = Password;
+        this.Name = Name;
+        this.Gender = Gender;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Address = Address;
+        this.Avatar = Avatar;
+        this.Role = Role;
+        this.Status = Status;
+        this.Token = Token;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public int getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(int UserID) {
+        this.UserID = UserID;
     }
 
     public String getUsername() {
-        return username;
+        return Username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String Username) {
+        this.Username = Username;
     }
 
     public String getPassword() {
-        return password;
+        return Password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String Password) {
+        this.Password = Password;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String Name) {
+        this.Name = Name;
     }
 
     public String getGender() {
-        return gender;
+        return Gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setGender(String Gender) {
+        this.Gender = Gender;
     }
 
     public String getPhone() {
-        return phone;
+        return Phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhone(String Phone) {
+        this.Phone = Phone;
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String Email) {
+        this.Email = Email;
     }
 
     public String getAddress() {
-        return address;
+        return Address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddress(String Address) {
+        this.Address = Address;
     }
 
     public String getAvatar() {
-        return avatar;
+        return Avatar;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setAvatar(String Avatar) {
+        this.Avatar = Avatar;
     }
 
     public String getRole() {
-        return role;
+        return Role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRole(String Role) {
+        this.Role = Role;
     }
 
     public String getStatus() {
-        return status;
+        return Status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(String Status) {
+        this.Status = Status;
     }
+
+    public String getToken() {
+        return Token;
+    }
+
+    public void setToken(String Token) {
+        this.Token = Token;
+    }
+
 }

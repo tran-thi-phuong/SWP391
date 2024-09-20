@@ -3,10 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/web/changePassword.jsp</file>
-            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/src/java/Controller/changePassword.java</file>
-            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/web/style.css</file>
-            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/src/java/Model/User.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/src/java/Controller/resetPassword.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/web/resetPassword.jsp</file>
         </group>
     </open-files>
 </project-private>

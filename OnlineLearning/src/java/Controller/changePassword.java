@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class changePassword extends HttpServlet {
+    
+    private static final int MAX_ATTEMPTS = 5;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -18,48 +20,63 @@ public class changePassword extends HttpServlet {
         String oldPassword = request.getParameter("oldPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmNewPassword = request.getParameter("confirmNewPassword");
+        
+        Integer attempts = (Integer) session.getAttribute("attempts");
+        if (attempts == null) {
+            attempts = 0;
+        }
 
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(username);
 
         if (user == null || !user.getPassword().equals(oldPassword)) {
-            request.setAttribute("errorMessage", "Your old password is incorrect");
-            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            attempts++;
+            session.setAttribute("attempts", attempts);
+
+            if (attempts >= MAX_ATTEMPTS) {
+                user.setStatus("deactive");
+                dao.updateUserStatus(user);
+                session.invalidate();
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
+            session.setAttribute("errorMessage", "Your old password is incorrect. If you enter the wrong password more than 5 times, your account will be locked"
+                    + ". Attempt " + attempts + " of " + MAX_ATTEMPTS);
+            response.sendRedirect("customer.jsp");
             return;
         }
 
         if (oldPassword.equals(newPassword)) {
-            request.setAttribute("errorMessage", "The new password cannot be the same as the old password");
-            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "The new password cannot be the same as the old password");
+            response.sendRedirect("customer.jsp");
             return;
         }
 
         if (!newPassword.equals(confirmNewPassword)) {
-            request.setAttribute("errorMessage", "The new passwords do not match");
-            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "The new passwords do not match");
+            response.sendRedirect("customer.jsp");
             return;
         }
 
-        // Validate new password
         if (!isValidPassword(newPassword)) {
-            request.setAttribute("errorMessage", "The new password must be 8-16 characters long, start with an uppercase letter, and contain at least one special character");
-            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "The new password must be 8-16 characters long, start with an uppercase letter, and contain at least one special character");
+            response.sendRedirect("customer.jsp");
             return;
         }
 
         user.setPassword(newPassword);
         boolean isUpdated = dao.updateUserPassword(user);
-
         if (isUpdated) {
-            request.setAttribute("successMessage", "Password changed successfully!");
-            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            session.setAttribute("successMessage", "Password changed successfully!");
+            session.removeAttribute("attempts");
+            response.sendRedirect("customer.jsp");
         } else {
-            request.setAttribute("errorMessage", "Failed to update password");
-            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "Failed to update password");
+            response.sendRedirect("customer.jsp");
         }
     }
 
-    // Method to validate password
     private boolean isValidPassword(String password) {
         if (password.length() < 8 || password.length() > 16) {
             return false;
