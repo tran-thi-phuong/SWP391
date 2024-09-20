@@ -8,6 +8,22 @@
         <servlet-name>logout</servlet-name>
         <servlet-class>controller.logout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SliderServlet</servlet-name>
+        <servlet-class>controller.SliderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SubjectServlet</servlet-name>
+        <servlet-class>controller.SubjectServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Homepage</servlet-name>
+        <servlet-class>controller.Homepage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BlogList</servlet-name>
+        <servlet-class>controller.BlogList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginController</servlet-name>
         <url-pattern>/loginController</url-pattern>
@@ -15,5 +31,21 @@
     <servlet-mapping>
         <servlet-name>logout</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SliderServlet</servlet-name>
+        <url-pattern>/SliderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubjectServlet</servlet-name>
+        <url-pattern>/SubjectServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlogList</servlet-name>
+        <url-pattern>/blogs</url-pattern>
     </servlet-mapping>
 </web-app>

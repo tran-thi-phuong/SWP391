@@ -3,9 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/sonna/Downloads/SWP391-main/SWP391/OnlineLearning/web/user_headerfooter.jsp</file>
-            <file>file:/C:/Users/sonna/Downloads/SWP391-main/SWP391/OnlineLearning/web/Header.jsp</file>
-            <file>file:/C:/Users/sonna/Downloads/SWP391-main/SWP391/OnlineLearning/web/Footer.jsp</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/controller/BlogList.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/web/Homepage.jsp</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/dal/SubjectDAO.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/model/Subject.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/model/Slider.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/web/Homepage.css</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/dal/SliderDAO.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/dal/BlogDAO.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/web/Footer.jsp</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/dal/DBContext.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/src/java/controller/Homepage.java</file>
+            <file>file:/D:/SWP391/OnlineLearning/web/BlogList.jsp</file>
+            <file>file:/D:/SWP391/OnlineLearning/web/Header_Footer.css</file>
+            <file>file:/D:/SWP391/OnlineLearning/web/Header.jsp</file>
         </group>
     </open-files>
 </project-private>

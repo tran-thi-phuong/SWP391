@@ -17,9 +17,11 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">  
          
-        <link href="bootstrap.min.css" rel="stylesheet">
-        <link href="bootstrap-icons.css" rel="stylesheet">
-        <link href="footer.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-3m7HEg5vP1+mtX6mDjMl++z1/5D5PgrnFA0ZI+VfQ4I/fWcgIFnm/4UO6upAdFw7" crossorigin="anonymous">
+        <link href="Header_Footer.css" rel="stylesheet">  
+
 
       
     </head>

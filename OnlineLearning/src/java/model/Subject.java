@@ -8,28 +8,37 @@ package model;
  *
  * @author sonna
  */
+
+import java.util.Date;
+
 public class Subject {
-    private int SubjectId;
+    private int subjectID;
     private String title;
     private String description;
-    int Subject_CategoryId;
+    private int subjectCategoryID;
+    private String status;
+    private String thumbnail;
+    private Date updateDate;
 
     public Subject() {
     }
 
-    public Subject(int SubjectId, String title, String description, int Subject_CategoryId) {
-        this.SubjectId = SubjectId;
+    public Subject(int subjectID, String title, String description, int subjectCategoryID, String status, String thumbnail, Date updateDate) {
+        this.subjectID = subjectID;
         this.title = title;
         this.description = description;
-        this.Subject_CategoryId = Subject_CategoryId;
+        this.subjectCategoryID = subjectCategoryID;
+        this.status = status;
+        this.thumbnail = thumbnail;
+        this.updateDate = updateDate;
     }
 
-    public int getSubjectId() {
-        return SubjectId;
+    public int getSubjectID() {
+        return subjectID;
     }
 
-    public void setSubjectId(int SubjectId) {
-        this.SubjectId = SubjectId;
+    public void setSubjectID(int subjectID) {
+        this.subjectID = subjectID;
     }
 
     public String getTitle() {
@@ -48,13 +57,37 @@ public class Subject {
         this.description = description;
     }
 
-    public int getSubject_CategoryId() {
-        return Subject_CategoryId;
+    public int getSubjectCategoryID() {
+        return subjectCategoryID;
     }
 
-    public void setSubject_CategoryId(int Subject_CategoryId) {
-        this.Subject_CategoryId = Subject_CategoryId;
+    public void setSubjectCategoryID(int subjectCategoryID) {
+        this.subjectCategoryID = subjectCategoryID;
     }
-    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
     
 }
