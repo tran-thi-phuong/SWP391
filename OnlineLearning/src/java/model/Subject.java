@@ -1,35 +1,38 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author sonna
- */
+import java.util.Date;
+
 public class Subject {
-    private int SubjectId;
+    private int subjectId;
     private String title;
     private String description;
-    int Subject_CategoryId;
+    private int subjectCategoryId;
+    private String status;
+    private String thumbnail;
+    private Date updateDate;
 
-    public Subject() {
-    }
+    // Default constructor
+    public Subject() {}
 
-    public Subject(int SubjectId, String title, String description, int Subject_CategoryId) {
-        this.SubjectId = SubjectId;
+    // Parameterized constructor
+    public Subject(int subjectId, String title, String description, int subjectCategoryId,
+                   String status, String thumbnail, Date updateDate) {
+        this.subjectId = subjectId;
         this.title = title;
         this.description = description;
-        this.Subject_CategoryId = Subject_CategoryId;
+        this.subjectCategoryId = subjectCategoryId;
+        this.status = status;
+        this.thumbnail = thumbnail;
+        this.updateDate = updateDate;
     }
 
+    // Getters and Setters
     public int getSubjectId() {
-        return SubjectId;
+        return subjectId;
     }
 
-    public void setSubjectId(int SubjectId) {
-        this.SubjectId = SubjectId;
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
     }
 
     public String getTitle() {
@@ -48,13 +51,48 @@ public class Subject {
         this.description = description;
     }
 
-    public int getSubject_CategoryId() {
-        return Subject_CategoryId;
+    public int getSubjectCategoryId() {
+        return subjectCategoryId;
     }
 
-    public void setSubject_CategoryId(int Subject_CategoryId) {
-        this.Subject_CategoryId = Subject_CategoryId;
+    public void setSubjectCategoryId(int subjectCategoryId) {
+        this.subjectCategoryId = subjectCategoryId;
     }
-    
-    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "subjectId=" + subjectId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", subjectCategoryId=" + subjectCategoryId +
+                ", status='" + status + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", updateDate=" + updateDate +
+                '}';
+    }
 }

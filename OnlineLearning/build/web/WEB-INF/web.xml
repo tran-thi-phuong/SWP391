@@ -34,5 +34,7 @@
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
+    <welcome-file-list>
+        <welcome-file>CourseList</welcome-file>
     </welcome-file-list>
 </web-app>
