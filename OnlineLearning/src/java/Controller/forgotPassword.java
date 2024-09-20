@@ -20,7 +20,6 @@ public class forgotPassword extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy email từ session
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("resetEmail");
 
