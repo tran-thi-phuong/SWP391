@@ -17,6 +17,7 @@
     </head>
 
     <body>
+        <%@include file="Header.jsp" %>
         <c:set var="categories" value="${requestScope.categories}" />
         <c:set var="currentSub" value="${requestScope.currentSub}" />
         <c:set var="lowestOption" value="${requestScope.lowestOption}" />
@@ -218,6 +219,7 @@
         </div>
 
     </body>
+    <%@include file="Footer.jsp" %>
     <script src="js/pop-up-script.js"></script>
 
 </html>
