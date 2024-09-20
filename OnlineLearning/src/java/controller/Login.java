@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
 import dal.UserDAO;
@@ -33,20 +32,17 @@ public class Login extends HttpServlet {
 
             switch (role) {
                 case "admin":
-                    response.sendRedirect("schedule.jsp");
-                    break;
-                case "staff":
-                    response.sendRedirect("staff.jsp");
+                    response.sendRedirect("dashboard.jsp");
                     break;
                 case "customer":
-                    response.sendRedirect("customer.jsp");
+                    response.sendRedirect("Homepage.jsp");
                     break;
                 default:
-                    response.sendRedirect("login.jsp");
+                    response.sendRedirect("Homepage.jsp");
                     break;
             }
         } else {
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("Homepage.jsp").forward(request, response);
         }
     }
 
@@ -62,18 +58,26 @@ public class Login extends HttpServlet {
             request.setAttribute("error", error);
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            switch (user.getRole().toLowerCase()) {
-                case "admin":
-                response.sendRedirect("schedule.jsp");
-                    break;
-                case "user":
+
+            if (user.getStatus().toLowerCase().equals("active")) {
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                if (user.getRole().toLowerCase().equals("customer")) {
                     response.sendRedirect("Homepage.jsp");
-                    break;
-                default:
-                    response.sendRedirect("login.jsp");
-                    break;
+                } else {
+                    response.sendRedirect("dashboard.jsp");
+                }
+            } else {
+                Users u1 = uDAO.getUserByInfo("Email", username);
+                Users u2 = uDAO.getUserByInfo("Username", username);
+                if(u1 != null){
+                    request.setAttribute("userId", u1.getUserID());
+                    request.setAttribute("email", u1.getEmail());
+                }else{
+                    request.setAttribute("userId", u2.getUserID());
+                    request.setAttribute("email", u2.getEmail());
+                }
+                request.getRequestDispatcher("verify.jsp").forward(request, response);
             }
         }
     }

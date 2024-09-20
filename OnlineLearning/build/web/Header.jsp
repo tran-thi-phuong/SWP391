@@ -56,7 +56,7 @@
 
                 <div class="">
                     <button type="button" class="btn btn-danger" onclick="window.location.href='login.jsp'">Login</button>
-                    <button type="button" class="btn btn-secondary" >Register</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='register.jsp'">Register</button>
                 </div>
             </div>
         </nav>

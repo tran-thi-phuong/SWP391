@@ -18,8 +18,8 @@ CREATE TABLE Users(
 	Address NVARCHAR(255),
 	Avatar NVARCHAR(255),
     Role NVARCHAR(20) Not Null, 
-	Status NVARCHAR(10) NOT NULL
-);
+	Status NVARCHAR(10) NOT NULL,
+  Token NVARCHAR(MAX) NOT NULL);
 GO
 
 -- Tạo bảng Blog_Category
@@ -217,3 +217,9 @@ CREATE TABLE System_Setting (
     FOREIGN KEY (UserId) REFERENCES Users(UserID)
 );
 GO
+CREATE TABLE VerificationCode (
+    UserID INT NOT NULL primary key,
+    Code VARCHAR(50) NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+go
