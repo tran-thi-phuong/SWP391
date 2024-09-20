@@ -6,7 +6,6 @@
     </head>
     <body>
         <div class="container">
-            <!-- Hi?n th? thông báo l?i phía trên form -->
             <c:if test="${not empty errorMessage}">
                 <div class="error-message-1">
                     <p>${errorMessage}</p>
@@ -16,7 +15,7 @@
                 <label for="email" class="title"><p>Find your account</p></label><br>
                 <label for="email">Please enter your registered email:</label>
                 <div class="center-self">
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" value="${param.email != null ? param.email : ''}" required>
                 </div>
                 <div class="button-forgot">
                     <button type="button" class="cancel-button" onclick="window.location.href = 'login.jsp'">Cancel</button>
