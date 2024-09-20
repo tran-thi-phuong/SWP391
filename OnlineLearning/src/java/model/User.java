@@ -28,14 +28,7 @@ public class User {
 
     // Parameterized constructor
     public User(int userId, String username, String password, String name, String gender,
-                String phone, String email, String address, String avatar, String role, String status) {
         this.userId = userId;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.gender = gender;
-        this.phone = phone;
-        this.email = email;
         this.address = address;
         this.avatar = avatar;
         this.role = role;

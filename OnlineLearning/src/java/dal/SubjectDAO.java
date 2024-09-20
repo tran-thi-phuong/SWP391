@@ -249,6 +249,27 @@ public class SubjectDAO extends DBContext {
         return 0;
     }
 
+  
+    
+}
+
+    public List<Subject> getFeaturedSubjects() {
+        List<Subject> featuredSubjects = new ArrayList<>();
+        String sql = "SELECT TOP 5 * FROM Subjects ORDER BY Update_Date DESC";
+        try (
+             PreparedStatement st = connection.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Subject subject = new Subject();
+                // Set subject properties from ResultSet
+                featuredSubjects.add(subject);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return featuredSubjects;
+    }
+
     public static void main(String[] args) {
         SubjectDAO sDAO = new SubjectDAO();
         List<Subject> list = sDAO.getAllSubjects(1, 3);
@@ -257,5 +278,11 @@ public class SubjectDAO extends DBContext {
         System.out.println(a);
         List<Subject> l = sDAO.searchSubjects("a", 1, 3);
         System.out.println(l);
+        List<Subject> subjects = dao.getFeaturedSubjects();
+        System.out.println("Subjects:");
+        for (Subject subject : subjects) {
+            System.out.println(subject.getTitle() + " - " + subject.getDescription());
+        }
     }
 }
+

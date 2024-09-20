@@ -1,6 +1,13 @@
-/*---------------------------------------
-    Slider              
------------------------------------------*/
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 16, 2024, 7:58:51 PM
+    Author     : sonna
+*/
+
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,9 +15,13 @@ body {
     background-color: #f4f4f4;
 }
 
+/*---------------------------------------
+    Slider
+-----------------------------------------*/
 .slider-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column; 
+    align-items: center;
     padding: 0 15px;
     margin: 0 auto;
 }
@@ -20,8 +31,16 @@ body {
     max-width: 100%;
     width: 80%;
     overflow: hidden;
-    border: 2px solid #ddd;
-    border-radius: 10px;
+    border: 2px solid #ddd; 
+    border-radius: 10px; 
+}
+
+.slider-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .slides {
@@ -33,13 +52,13 @@ body {
     min-width: 100%;
     box-sizing: border-box;
     position: relative;
-    height: 400px;
+    height: 400px; 
 }
 
 .slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; 
 }
 
 input[type="radio"] {
@@ -58,28 +77,12 @@ input[type="radio"] {
     transform: translateX(-200%);
 }
 
-.controls {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-    padding: 0 20px;
+#slide4:checked ~ .slides {
+    transform: translateX(-300%);
 }
 
-.control {
-    cursor: pointer;
-    font-size: 24px;
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    border-radius: 50%;
-    transition: background 0.3s;
-}
-
-.control:hover {
-    background: rgba(0, 0, 0, 0.8);
+#slide5:checked ~ .slides {
+    transform: translateX(-400%);
 }
 
 .radio-controls {
@@ -102,51 +105,138 @@ input[type="radio"] {
 .radio-controls input:checked + label {
     background: rgba(0, 0, 0, 0.8);
 }
-
 /*---------------------------------------
-    Courses              
+    Subjects
 -----------------------------------------*/
-.courses-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+#subjects {
+    background-color: #fff;
     padding: 2rem 15px;
+    margin-top: 2rem;
 }
 
-.course {
-    width: calc(25% - 1rem); /* 4 khóa học mỗi hàng, khoảng cách giữa các khóa học */
-    margin-bottom: 2rem;
-    box-sizing: border-box;
-}
-
-.course img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.course-info {
-    padding: 0.5rem;
+#subjects h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
     text-align: center;
+    margin-bottom: 1.5rem;
 }
 
-.course-info h3 {
+#subjects .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+#subjects .card:hover {
+    transform: translateY(-5px);
+}
+
+#subjects .card img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    object-fit: cover; /* Đảm bảo ảnh được cắt chính xác */
+    height: 200px; /* Kích thước chiều cao cố định */
+    width: 100%; /* Chiều rộng 100% để phù hợp với khung */
+}
+
+#subjects .card-body {
+    padding: 1rem;
+}
+
+#subjects .card-title {
     font-size: 1.25rem;
-    margin: 0.5rem 0;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
 }
 
-.course-info p {
+#subjects .card-text {
     color: var(--p-color);
     font-size: 0.875rem;
+    margin-bottom: 0.5rem;
 }
 
-.course a {
-    display: block;
+#subjects .text-muted {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+#subjects a {
     text-decoration: none;
     color: var(--secondary-color);
-    transition: color 0.3s;
+    transition: color 0.3s ease;
 }
 
-.course a:hover {
+#subjects a:hover {
     color: var(--primary-color);
 }
+/*---------------------------------------
+    Latest Blogs              
+-----------------------------------------*/
+#latest-blogs {
+    background-color: #fff;
+    padding: 2rem 15px;
+    margin-top: 2rem;
+}
+
+#latest-blogs h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+#latest-blogs .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+#latest-blogs .card:hover {
+    transform: translateY(-5px);
+}
+
+#latest-blogs .card img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    object-fit: cover;
+    height: 200px;
+    width: 100%;
+}
+
+#latest-blogs .card-body {
+    padding: 1rem;
+}
+
+#latest-blogs .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
+}
+
+#latest-blogs .card-text {
+    color: var(--p-color);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+#latest-blogs .text-muted {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+#latest-blogs a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    transition: color 0.3s ease;
+}
+
+#latest-blogs a:hover {
+    color: var(--primary-color);
+}
+

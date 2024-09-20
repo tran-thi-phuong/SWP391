@@ -8,10 +8,11 @@ package model;
  *
  * @author sonna
  */
+
 public class Slider {
-    private int SliderId;
-    private int BlogId;
-    private int SubjectId;
+    private int sliderID;
+    private Blog blog;
+    private Subject subject;
     private String title;
     private String image;
     private String content;
@@ -19,37 +20,38 @@ public class Slider {
     public Slider() {
     }
 
-    public Slider(int SliderId, int BlogId, int SubjectId, String title, String image, String content) {
-        this.SliderId = SliderId;
-        this.BlogId = BlogId;
-        this.SubjectId = SubjectId;
+    public Slider(int sliderID, Blog blog, Subject subject, String title, String image, String content) {
+        this.sliderID = sliderID;
+        this.blog = blog;
+        this.subject = subject;
         this.title = title;
         this.image = image;
         this.content = content;
     }
 
-    public int getSliderId() {
-        return SliderId;
+    // Getter và Setter cho tất cả các thuộc tính
+    public int getSliderID() {
+        return sliderID;
     }
 
-    public void setSliderId(int SliderId) {
-        this.SliderId = SliderId;
+    public void setSliderID(int sliderID) {
+        this.sliderID = sliderID;
     }
 
-    public int getBlogId() {
-        return BlogId;
+    public Blog getBlog() {
+        return blog;
     }
 
-    public void setBlogId(int BlogId) {
-        this.BlogId = BlogId;
+    public void setBlog(Blog blog) {
+        this.blog = blog;
     }
 
-    public int getSubjectId() {
-        return SubjectId;
+    public Subject getSubject() {
+        return subject;
     }
 
-    public void setSubjectId(int SubjectId) {
-        this.SubjectId = SubjectId;
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public String getTitle() {
@@ -75,8 +77,4 @@ public class Slider {
     public void setContent(String content) {
         this.content = content;
     }
-    
-    
 }
-
-

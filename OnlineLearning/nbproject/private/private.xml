@@ -11,6 +11,20 @@
             <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/src/java/controller/ListSubject.java</file>
             <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/web/css/style.css</file>
             <file>file:/E:/FU%20Learning/FALL%202024/SWP391/ASS/SWP391/OnlineLearning/web/CourseList.jsp</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/controller/BlogList.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/web/Homepage.jsp</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/dal/SubjectDAO.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/model/Subject.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/model/Slider.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/web/Homepage.css</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/dal/SliderDAO.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/dal/BlogDAO.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/web/Footer.jsp</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/dal/DBContext.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/src/java/controller/Homepage.java</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/web/BlogList.jsp</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/web/Header_Footer.css</file>
+            <file>file:/E:/FU%20Learning/FALL%202024/SWP391/OnlineLearning/web/Header.jsp</file>
         </group>
     </open-files>
 </project-private>

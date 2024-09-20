@@ -16,6 +16,22 @@
         <servlet-name>resetPassword</servlet-name>
         <servlet-class>Controller.resetPassword</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SliderServlet</servlet-name>
+        <servlet-class>controller.SliderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SubjectServlet</servlet-name>
+        <servlet-class>controller.SubjectServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Homepage</servlet-name>
+        <servlet-class>controller.Homepage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BlogList</servlet-name>
+        <servlet-class>controller.BlogList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -37,4 +53,19 @@
     <welcome-file-list>
         <welcome-file>CourseList</welcome-file>
     </welcome-file-list>
+        <servlet-name>SliderServlet</servlet-name>
+        <url-pattern>/SliderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubjectServlet</servlet-name>
+        <url-pattern>/SubjectServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlogList</servlet-name>
+        <url-pattern>/blogs</url-pattern>
+    </servlet-mapping>
 </web-app>
