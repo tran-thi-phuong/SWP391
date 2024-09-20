@@ -87,12 +87,12 @@
                         <c:forEach var="entry" items="${subjectPriceMap}">
                             <li>
                                 <div class="img-same">
-                                    <a href="register?id=${entry.key.subjectId}">
+                                    <a href="registerCourse?id=${entry.key.subjectId}">
                                         <div style="background: url('${entry.key.thumbnail}'); background-size: cover; height: 100px; width: 75px;"></div>
                                     </a>
                                 </div>
                                 <div class="des-same">
-                                    <a href="register?id=${entry.key.subjectId}">
+                                    <a href="registerCourse?id=${entry.key.subjectId}">
                                         <b>${entry.key.title}</b>
                                     </a>
                                 </div>

@@ -47,10 +47,10 @@
                                 <article class="subject-item">
                                     <div class="center-itself" style="background: url('${subject.thumbnail}'); background-size: cover; height: 100px"></div>
                                     <h2>
-                                        <a href="register?id=${subject.subjectId}" style="text-decoration: none; color: black">${subject.title}</a>
+                                        <a href="registerCourse?id=${subject.subjectId}" style="text-decoration: none; color: black">${subject.title}</a>
                                     </h2>
                                     <p>${subject.description}</p>
-                                    <a href="register?id=${subject.subjectId}" class="btn-register">Register</a>
+                                    <a href="registerCourse?id=${subject.subjectId}" class="btn-register">Register</a>
                                 </article>
                             </c:forEach>
                         </c:when>
