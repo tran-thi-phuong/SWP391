@@ -38,6 +38,31 @@ public class PackagePriceDAO extends DBContext {
         }
         return packages;
     }
+    public PackagePrice searchByPackagePriceId(int packagePriceId) {
+    PackagePrice packagePrice = null; // Initialize to null
+    String query = "SELECT * FROM Package_Price WHERE PackageId = ?";
+    
+    try {
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, packagePriceId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        
+        if (resultSet.next()) { // Check if there's a result
+            packagePrice = new PackagePrice();
+            packagePrice.setPackageId(resultSet.getInt("PackageId"));
+            packagePrice.setSubjectId(resultSet.getInt("SubjectId"));
+            packagePrice.setName(resultSet.getString("name"));
+            packagePrice.setDurationTime(resultSet.getInt("duration_time"));
+            packagePrice.setSalePrice(resultSet.getDouble("sale_price"));
+            packagePrice.setPrice(resultSet.getDouble("price"));
+        }
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+    
+    return packagePrice; // Return the single PackagePrice object or null if not found
+}
+
     public double findLowestPrice(List<PackagePrice> packagePrices) {
     double lowestPrice = Double.MAX_VALUE; 
     for (PackagePrice packagePrice : packagePrices) {

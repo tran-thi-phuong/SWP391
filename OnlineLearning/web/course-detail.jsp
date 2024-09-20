@@ -116,14 +116,14 @@
                 
                 <span class="close-btn">&times;</span>
                 <h2>Register for Subject Access</h2>
-                <form id="registration-form">
+                <form id="registration-form" action="payment" method="post">
                 <!-- Pricing Packages -->
                 <section id="pricing-packages">
                     <h3>Choose Your Package</h3>
                     <c:forEach items="${currentPackage}" var="pkg">
                         <div class="package-option">
                             <label>
-                                <input type="radio" name="package" value="${pkg.packageId}">
+                                <input type="radio" name="package" value="${pkg.packageId}" required>
                                 ${pkg.name} - ${pkg.durationTime} day -
                                 <c:choose>
                                     <c:when test="${pkg.salePrice < pkg.price}">
@@ -156,7 +156,7 @@
                                 </div>
                                 <div class="form-field">
                                     <label for="mobile">Mobile:</label>
-                                    <input type="tel" id="mobile" name="mobile" value="${sessionScope.user.phone}" readonly>
+                                    <input type="number" id="mobile" name="mobile" value="${sessionScope.user.phone}" readonly>
                                 </div>
                                 <div class="form-field">
                                     <label>Gender:</label>
@@ -187,20 +187,20 @@
                                 </div>
                                 <div class="form-field">
                                     <label for="mobile">Mobile:</label>
-                                    <input type="tel" id="mobile" name="mobile" required>
+                                    <input type="number" id="mobile" name="mobile" required>
                                 </div>
                                 <div class="form-field">
                                     <label>Gender:</label>
                                     <label>
-                                        <input type="radio" name="gender" value="male">
+                                        <input type="radio" name="gender" value="male" required>
                                         Male
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="female">
+                                        <input type="radio" name="gender" value="female" required>
                                         Female
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="other">
+                                        <input type="radio" name="gender" value="other" required>
                                         Other
                                     </label>
                                 </div>
