@@ -6,31 +6,35 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Course List</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
+        
         <div class="container">
             <header>
-                <h1>Course List </h1>
+                <h1>Subject List </h1>
             </header>
 
             <div class="content">
                 <aside class="sidebar">
                     <section class="search">
-                        <h2>Search course</h2>
+                        <h2>Search Subject</h2>
                         <form action="CourseList" method="get">  
-                            <input type="text" name="query" placeholder="Search course...">
+                            <input type="text" name="query" placeholder="Search subject...">
                             <button type="submit">Search</button>
                         </form>
                     </section>
 
                     <section class="categories">
-                        <h2>Course Category</h2>
+                        <h2>Subject Category</h2>
                         <ul>
                             <li>
                                 <a href="?category=${category.subjectCategoryId}">All</a>
                             </li>
-                            <c:forEach items="${categories}" var="category">
+                            <li>
+                                <a href="?category=${category.subjectCategoryId}">Category 1</a>
+                            </li>
+                            <c:forEach items="${categoriess}" var="category">
                                 <li>
                                     <a href="?category=${category.subjectCategoryId}">${category.title}</a>
                                 </li>
@@ -42,13 +46,11 @@
                 <main class="subject-list">
                     <c:forEach items="${subjects}" var="subject">
                         <article class="subject-item">
+                            <div class="center-itself", style="background: url('${subject.thumbnail}'); background-size: cover; height: 100px"></div>
                             <h2>
                                 <a href="subject?id=${subject.subjectId}">${subject.title}</a>
                             </h2>
                             <p>${subject.description}</p>
-                            <div class="status">
-                                <span>Status: ${subject.status}</span>
-                            </div>
                             <a href="register?id=${subject.subjectId}" class="btn-register">Register</a>
                         </article>
                     </c:forEach>

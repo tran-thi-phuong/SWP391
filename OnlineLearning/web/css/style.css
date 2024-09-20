@@ -58,6 +58,8 @@ header h1 {
 }
 
 .subject-item {
+    height: 280px;
+    weight: 271px;
     background-color: white;
     border-radius: 5px;
     padding: 15px;
@@ -239,4 +241,17 @@ header h1 {
 
 .search button:hover {
     background-color: #2980b9;
+}
+.subject-item {
+    /* Các kiểu khác */
+    position: relative;
+}
+
+.thumbnail {
+    margin-bottom: 10px;
+}
+
+.thumbnail img {
+    max-width: 100%; /* Điều chỉnh kích thước hình thu nhỏ để không vượt quá kích thước của container */
+    height: auto; /* Giữ tỷ lệ khung hình của hình ảnh */
 }
