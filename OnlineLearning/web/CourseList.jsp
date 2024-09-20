@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
-        
+
         <div class="container">
             <header>
                 <h1>Subject List </h1>
@@ -31,10 +31,7 @@
                             <li>
                                 <a href="?category=${category.subjectCategoryId}">All</a>
                             </li>
-                            <li>
-                                <a href="?category=${category.subjectCategoryId}">Category 1</a>
-                            </li>
-                            <c:forEach items="${categoriess}" var="category">
+                            <c:forEach items="${categories}" var="category">
                                 <li>
                                     <a href="?category=${category.subjectCategoryId}">${category.title}</a>
                                 </li>
@@ -44,16 +41,23 @@
                 </aside>
 
                 <main class="subject-list">
-                    <c:forEach items="${subjects}" var="subject">
-                        <article class="subject-item">
-                            <div class="center-itself", style="background: url('${subject.thumbnail}'); background-size: cover; height: 100px"></div>
-                            <h2>
-                                <a href="subject?id=${subject.subjectId}">${subject.title}</a>
-                            </h2>
-                            <p>${subject.description}</p>
-                            <a href="register?id=${subject.subjectId}" class="btn-register">Register</a>
-                        </article>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${not empty subjects}">
+                            <c:forEach items="${subjects}" var="subject">
+                                <article class="subject-item">
+                                    <div class="center-itself" style="background: url('${subject.thumbnail}'); background-size: cover; height: 100px"></div>
+                                    <h2>
+                                        <a href="subject?id=${subject.subjectId}">${subject.title}</a>
+                                    </h2>
+                                    <p>${subject.description}</p>
+                                    <a href="register?id=${subject.subjectId}" class="btn-register">Register</a>
+                                </article>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <p>No subjects found.</p>
+                        </c:otherwise>
+                    </c:choose>
                 </main>
 
 
@@ -62,11 +66,11 @@
             <footer>
                 <div class="pagination">
                     <c:if test="${currentPage > 1}">
-                        <a href="?page=${currentPage - 1}">Previous Page</a>
+                        <a href="?page=${currentPage - 1}${not empty param.category ? '&category='.concat(param.category) : ''}${not empty param.query ? '&query='.concat(param.query) : ''}">Previous Page</a>
                     </c:if>
                     <span>Page ${currentPage} / ${totalPages}</span>
                     <c:if test="${currentPage < totalPages}">
-                        <a href="?page=${currentPage + 1}">Next page</a>
+                        <a href="?page=${currentPage + 1}${not empty param.category ? '&category='.concat(param.category) : ''}${not empty param.query ? '&query='.concat(param.query) : ''}">Next page</a>
                     </c:if>
                 </div>
             </footer>
