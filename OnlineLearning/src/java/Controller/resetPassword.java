@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.User;
+import model.Users;
 import dal.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -43,7 +43,7 @@ public class resetPassword extends HttpServlet {
         }
 
         UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserByToken(token);
+        Users user = userDAO.getUserByToken(token);
 
         if (user != null) {
             if (!newPassword.equals(confirmPassword)) {

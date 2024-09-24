@@ -12,7 +12,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Your profile</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <link rel="stylesheet" href="css/change_reset_password.css">
     </head>
     <body>
         <%@include file="Header.jsp" %>
@@ -87,12 +88,16 @@
                             </div>
                         </div>
                         <div class="login-btn">
-                            <div><button type="submit" class="ud-btn ud-btn-large ud-btn-brand ud-heading-md">
-                                <span class="ud-btn-label">Save</span>
-                            </button></div>
-                            <div class="change-btn"><a href="customer.jsp" >
-                                    <span class="ud-btn-label">Change Password</span>
-                                </a></div class="change-btn">
+                            <div>
+                                <button type="submit" class="ud-btn ud-btn-large ud-btn-brand ud-heading-md">
+                                    <span class="ud-btn-label">Save</span>
+                                </button>
+                            </div>
+                            <div class="change-btn ud-btn ud-btn-large ud-btn-brand ud-heading-md">
+                                <button type="button" id="changePasswordBtn" class="ud-btn-label">
+                                    <span class="ud-btn-label">Change Password</span></button>
+
+                            </div>
                         </div>
                         <div class="change-password-btn">
 
@@ -100,10 +105,92 @@
                     </div>
                 </div>
             </form>
+            <div id="popupOverlay" class="popup-overlay"></div>
+            <div class="popup" id="changePasswordPopup">
+                <div class="popup-content">
+                    <span class="close-btn" id="closePopup">&times;</span>
+                    <header>Change Password</header>
+
+                    <c:if test="${not empty sessionScope.errorMessage}">
+                        <div class="error-message">${sessionScope.errorMessage}</div>
+                        <c:remove var="errorMessage"/>
+                    </c:if>
+
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <div class="success-message">${sessionScope.successMessage}</div>
+                        <c:remove var="successMessage"/>
+                    </c:if>
+
+                    <form id="changePasswordForm" action="changePassword" method="post">
+
+                        <div class="input-box-c">
+                            <label for="oldPassword">Old Password:</label>
+                            <input type="password" id="oldPassword" name="oldPassword" required>
+                        </div>
+                        <div class="input-box-c">
+                            <label for="newPassword">New Password:</label>
+                            <input type="password" id="newPassword" name="newPassword" required>
+                        </div>
+                        <div class="input-box-c">
+                            <label for="confirmNewPassword">Confirm New Password:</label>
+                            <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+                        </div>
+
+                        <div class="input-box-c">
+                            <input type="submit" class="submit" value="Change Password">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
 
         </div>
 
         <%@include file="Footer.jsp" %>
         <link rel="stylesheet" href="css/profile.css"/>
+        <script>
+            $(document).ready(function () {
+
+                $('#changePasswordBtn').click(function () {
+                    $('#popupOverlay').fadeIn();
+                    $('#changePasswordPopup').fadeIn();
+                });
+
+
+                function closePopup() {
+                    $('#popupOverlay').fadeOut();
+                    $('#changePasswordPopup').fadeOut();
+                    clearInputs();
+                }
+
+                function clearInputs() {
+                    $('#oldPassword').val('');
+                    $('#newPassword').val('');
+                    $('#confirmNewPassword').val('');
+                    $('.error-message').remove();
+                }
+
+                $('#closePopup').click(function () {
+                    closePopup();
+                });
+
+                $('#popupOverlay').click(function () {
+                    closePopup();
+                });
+
+                // Keep the popup open if there's an error
+                function handleError() {
+                    if ($('.error-message').length > 0) {
+                        $('#popupOverlay').fadeIn();
+                        $('#changePasswordPopup').fadeIn();
+                    }
+                }
+
+                // Call this function on page load if there are error messages
+                handleError();
+            });
+        </script>
+
+
     </body>
 </html>

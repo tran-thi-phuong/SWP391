@@ -30,7 +30,7 @@ public class SubjectDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Subject subject = new Subject();
-                    subject.setSubjectId(rs.getInt("SubjectID"));
+                    subject.setSubjectID(rs.getInt("SubjectID"));
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -56,7 +56,7 @@ public class SubjectDAO extends DBContext {
 
             while (rs.next()) {
                 Subject subject = new Subject();
-                subject.setSubjectId(rs.getInt("SubjectID"));
+                subject.setSubjectID(rs.getInt("SubjectID"));
                 subject.setTitle(rs.getString("Title"));
                 subject.setDescription(rs.getString("Description"));
                 subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -98,7 +98,7 @@ public class SubjectDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Subject subject = new Subject();
-                    subject.setSubjectId(rs.getInt("SubjectID"));
+                    subject.setSubjectID(rs.getInt("SubjectID"));
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -168,7 +168,7 @@ public class SubjectDAO extends DBContext {
             ps.setString(4, subject.getStatus());
             ps.setDate(5, new java.sql.Date(subject.getUpdateDate().getTime()));
             ps.setString(6, subject.getThumbnail());
-            ps.setInt(7, subject.getSubjectId());
+            ps.setInt(7, subject.getSubjectID());
 
             int rowsUpdated = ps.executeUpdate();
             return rowsUpdated > 0;
@@ -186,7 +186,7 @@ public class SubjectDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     subject = new Subject();
-                    subject.setSubjectId(rs.getInt("SubjectId"));
+                    subject.setSubjectID(rs.getInt("SubjectId"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
@@ -215,7 +215,7 @@ public class SubjectDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Subject subject = new Subject();
-                    subject.setSubjectId(rs.getInt("SubjectId"));
+                    subject.setSubjectID(rs.getInt("SubjectId"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
@@ -251,7 +251,7 @@ public class SubjectDAO extends DBContext {
 
   
     
-}
+
 
     public List<Subject> getFeaturedSubjects() {
         List<Subject> featuredSubjects = new ArrayList<>();
@@ -270,19 +270,6 @@ public class SubjectDAO extends DBContext {
         return featuredSubjects;
     }
 
-    public static void main(String[] args) {
-        SubjectDAO sDAO = new SubjectDAO();
-        List<Subject> list = sDAO.getAllSubjects(1, 3);
-        System.out.println(list);
-        int a = sDAO.getTotalSearchSubjects("a");
-        System.out.println(a);
-        List<Subject> l = sDAO.searchSubjects("a", 1, 3);
-        System.out.println(l);
-        List<Subject> subjects = dao.getFeaturedSubjects();
-        System.out.println("Subjects:");
-        for (Subject subject : subjects) {
-            System.out.println(subject.getTitle() + " - " + subject.getDescription());
-        }
-    }
+    
 }
 

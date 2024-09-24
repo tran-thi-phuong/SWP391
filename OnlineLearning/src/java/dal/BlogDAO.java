@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Blog;
-import model.User;
+import model.Users;
 import model.BlogCategory;
 
 public class BlogDAO extends DBContext {
@@ -41,8 +41,8 @@ public class BlogDAO extends DBContext {
                 b.setContent(rs.getString("Content"));
                 b.setCreateAt(rs.getDate("Create_At"));
                 
-                User u = new User();
-                u.setUserId(rs.getInt("UserID"));
+                Users u = new Users();
+                u.setUserID(rs.getInt("UserID"));
                 u.setUsername(rs.getString("Username"));
                 u.setName(rs.getString("Name"));
                 b.setUserId(u);

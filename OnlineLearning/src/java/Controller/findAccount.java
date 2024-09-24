@@ -1,6 +1,6 @@
-package Controller;
+package controller;
 
-import Model.User;
+import model.Users;
 import dal.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -16,7 +16,7 @@ public class findAccount extends HttpServlet {
         String email = request.getParameter("email");
 
         UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserByEmail(email);
+        Users user = userDAO.getUserByEmail(email);
 
         if (user != null) {
             HttpSession session = request.getSession();
@@ -25,8 +25,8 @@ public class findAccount extends HttpServlet {
             request.setAttribute("email", user.getEmail());
             request.setAttribute("username", user.getUsername());
             request.setAttribute("avatarUrl", (user.getAvatar() != null && !user.getAvatar().isEmpty())
-                ? "Image/" + user.getAvatar()
-                : "Image/default-avatar.jpg");
+                ? "" + user.getAvatar()
+                : "images/default-avatar.jpg");
 
             request.getRequestDispatcher("/recoverAccount.jsp").forward(request, response);
         } else {

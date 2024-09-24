@@ -43,7 +43,7 @@
                     </div>
                 </form>
                 <div class="forgot-link">
-                    <span>or <a class="" href=#">Forgot Password</a></span>
+                    <span>or <a class="" href="findAccount.jsp">Forgot Password</a></span>
                 </div>
             </div>
         </div>

@@ -3,12 +3,11 @@
 <html>
 <head>
     <title>Recover Account</title>
-    <link rel="stylesheet" type="text/css" href="change_reset_password.css">
+    <link rel="stylesheet" type="text/css" href="css/recoverAccount.css">
 </head>
 <body>
     <div class="body2">
         <div>
-        <!-- Hi?n th? thông báo n?u có -->
         <c:if test="${not empty message}">
             <h1>Please check you email!!!!</h1>
             <div class="message-box">
@@ -18,7 +17,6 @@
             </div>
         </c:if>
         
-        <!-- Hi?n th? thông tin tài kho?n n?u có -->
         <c:if test="${not empty email}">
             <h1>Your Account</h1><br>
             <div class="account-info">
@@ -31,7 +29,6 @@
                     <input type="hidden" name="email" value="${email}"> 
                     <button type="submit">Send Reset Link</button>
                 </form>
-                <!-- S? d?ng input v?i class button-not-you -->
                 <input type="button" value="Not You?" class="button-not-you" onclick="window.location.href = 'findAccount.jsp'">
             </div>
         </c:if>

@@ -21,7 +21,12 @@ CREATE TABLE Users(
 	Status NVARCHAR(10) NOT NULL,
   Token NVARCHAR(MAX) NOT NULL);
 GO
-
+CREATE TABLE VerificationCode (
+    UserID INT NOT NULL primary key,
+    Code VARCHAR(50) NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+go
 -- Tạo bảng Blog_Category
 CREATE TABLE Blog_Category (
     Blog_CategoryID INT PRIMARY KEY IDENTITY(1,1),
@@ -106,15 +111,20 @@ CREATE TABLE Registrations (
     UserID INT,
     SubjectID INT,
     PackageID INT,
+    Total_Cost NVARCHAR(15),
     Registration_Time DATETIME DEFAULT GETDATE(),
+    Valid_From DATE,
     Valid_To DATE,
     Status NVARCHAR(50),
+    StaffID INT,
+    Note NVARCHAR(MAX),
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID),
-	FOREIGN KEY (PackageID) REFERENCES Package_Price(PackageID)
-	
+    FOREIGN KEY (PackageID) REFERENCES Package_Price(PackageID),
+    FOREIGN KEY (StaffID) REFERENCES Users(UserID)
 );
 GO
+
 
 
 -- Tạo bảng Sliders
@@ -217,12 +227,7 @@ CREATE TABLE System_Setting (
     FOREIGN KEY (UserId) REFERENCES Users(UserID)
 );
 GO
-CREATE TABLE VerificationCode (
-    UserID INT NOT NULL primary key,
-    Code VARCHAR(50) NOT NULL,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
-);
-go
+
 INSERT INTO Subject_Category (Title) 
 VALUES 
 ('Mathematics'),

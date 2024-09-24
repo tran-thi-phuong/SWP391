@@ -1,12 +1,12 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Find Account</title>
-        <link rel="stylesheet" type="text/css" href="change_reset_password.css">
+        <link rel="stylesheet" type="text/css" href="css/findAccount.css">
     </head>
-    <body>
+    <body style="display: flex">
         <div class="container">
-            <!-- Hi?n th? thông báo l?i phía trên form -->
             <c:if test="${not empty errorMessage}">
                 <div class="error-message-1">
                     <p>${errorMessage}</p>

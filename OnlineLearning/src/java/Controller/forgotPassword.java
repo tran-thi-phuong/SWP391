@@ -1,6 +1,6 @@
-package Controller;
+package controller;
 
-import Model.User;
+import model.Users;
 import dal.UserDAO;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -30,7 +30,7 @@ public class forgotPassword extends HttpServlet {
         }
 
         UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserByEmail(email);
+        Users user = userDAO.getUserByEmail(email);
 
         if (user != null) {
             String token = generateToken();

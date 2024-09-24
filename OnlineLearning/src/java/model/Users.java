@@ -20,11 +20,12 @@ public class Users {
     private String avatar;
     private String role;
     private String status;
+    private String token;
 
     public Users() {
     }
 
-    public Users(int userID, String username, String password, String name, String gender, String phone, String email, String address, String avatar, String role, String status) {
+    public Users(int userID, String username, String password, String name, String gender, String phone, String email, String address, String avatar, String role, String status, String token) {
         this.userID = userID;
         this.username = username;
         this.password = password;
@@ -36,8 +37,10 @@ public class Users {
         this.avatar = avatar;
         this.role = role;
         this.status = status;
+        this.token = token;
     }
 
+   
     public int getUserID() {
         return userID;
     }
@@ -124,6 +127,14 @@ public class Users {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

@@ -62,7 +62,7 @@ public class registerCourse extends HttpServlet {
 
             Map<Subject, Double> subjectPriceMap = new HashMap<>();
             for (Subject randomSub : randomSubs) {
-                List<PackagePrice> randomSubPack = packagePriceDAO.searchBySubjectId(randomSub.getSubjectId());
+                List<PackagePrice> randomSubPack = packagePriceDAO.searchBySubjectId(randomSub.getSubjectID());
                 double lowestPrice = packagePriceDAO.findLowestPrice(randomSubPack);
                 subjectPriceMap.put(randomSub, lowestPrice);
             }

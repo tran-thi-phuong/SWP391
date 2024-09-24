@@ -21,7 +21,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         
 
-<link href="Header_Footer.css" rel="stylesheet">  
+<link href="css/Header_Footer.css" rel="stylesheet">  
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-white shadow-lg">

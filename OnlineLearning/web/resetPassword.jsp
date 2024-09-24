@@ -1,8 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Reset Password</title>
-        <link rel="stylesheet" type="text/css" href="change_reset_password.css">
+        <link rel="stylesheet" type="text/css" href="css/change_reset_password.css">
     </head>
     <body>
         <div class="body2">

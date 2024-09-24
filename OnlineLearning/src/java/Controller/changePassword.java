@@ -1,7 +1,7 @@
-package Controller;
+package controller;
 
 import dal.UserDAO;
-import Model.User;
+import model.Users;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class changePassword extends HttpServlet {
         }
 
         UserDAO dao = new UserDAO();
-        User user = dao.getUserByUsername(username);
+        Users user = dao.getUserByUsername(username);
 
         if (user == null || !user.getPassword().equals(oldPassword)) {
             attempts++;
@@ -43,25 +43,25 @@ public class changePassword extends HttpServlet {
 
             session.setAttribute("errorMessage", "Your old password is incorrect. If you enter the wrong password more than 5 times, your account will be locked"
                     + ". Attempt " + attempts + " of " + MAX_ATTEMPTS);
-            response.sendRedirect("customer.jsp");
+            response.sendRedirect("profile.jsp");
             return;
         }
 
         if (oldPassword.equals(newPassword)) {
             session.setAttribute("errorMessage", "The new password cannot be the same as the old password");
-            response.sendRedirect("customer.jsp");
+            response.sendRedirect("profile.jsp");
             return;
         }
 
         if (!newPassword.equals(confirmNewPassword)) {
             session.setAttribute("errorMessage", "The new passwords do not match");
-            response.sendRedirect("customer.jsp");
+            response.sendRedirect("profile.jsp");
             return;
         }
 
         if (!isValidPassword(newPassword)) {
             session.setAttribute("errorMessage", "The new password must be 8-16 characters long, start with an uppercase letter, and contain at least one special character");
-            response.sendRedirect("customer.jsp");
+            response.sendRedirect("profile.jsp");
             return;
         }
 

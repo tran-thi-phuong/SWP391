@@ -3,7 +3,7 @@ package model;
 import java.util.Date;
 
 public class Subject {
-    private int subjectId;
+    private int subjectID;
     private String title;
     private String description;
     private int subjectCategoryId;
@@ -15,9 +15,9 @@ public class Subject {
     public Subject() {}
 
     // Parameterized constructor
-    public Subject(int subjectId, String title, String description, int subjectCategoryId,
+    public Subject(int subjectID, String title, String description, int subjectCategoryId,
                    String status, String thumbnail, Date updateDate) {
-        this.subjectId = subjectId;
+        this.subjectID = subjectID;
         this.title = title;
         this.description = description;
         this.subjectCategoryId = subjectCategoryId;
@@ -27,12 +27,12 @@ public class Subject {
     }
 
     // Getters and Setters
-    public int getSubjectId() {
-        return subjectId;
+    public int getSubjectID() {
+        return subjectID;
     }
 
-    public void setSubjectId(int subjectId) {
-        this.subjectId = subjectId;
+    public void setSubjectID(int subjectID) {
+        this.subjectID = subjectID;
     }
 
     public String getTitle() {
@@ -86,7 +86,7 @@ public class Subject {
     @Override
     public String toString() {
         return "Subject{" +
-                "subjectId=" + subjectId +
+                "subjectId=" + subjectID +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", subjectCategoryId=" + subjectCategoryId +

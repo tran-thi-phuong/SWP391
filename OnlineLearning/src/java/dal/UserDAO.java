@@ -4,15 +4,9 @@
  */
 package dal;
 
-import Model.User;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import model.*;
-import java.sql.Statement;
+import model.Users;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.SQLException;
 
 /**
@@ -21,8 +15,8 @@ import java.sql.SQLException;
  */
 public class UserDAO extends DBContext {
 
-    public User getUserByUsername(String username) {
-        User user = null;
+    public Users getUserByUsername(String username) {
+        Users user = null;
         try {
             String sql = "SELECT * FROM Users WHERE TRIM(Username) = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -30,7 +24,7 @@ public class UserDAO extends DBContext {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                user = new User();
+                user = new Users();
                 user.setUserID(rs.getInt("UserID"));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
@@ -49,25 +43,6 @@ public class UserDAO extends DBContext {
         }
         return user;
     }
-
-    public User getUserByLogin(String login) {
-        User user = null;
-        String sql = "SELECT * FROM Users WHERE Username = ? OR Email = ?";
-
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-
-            // Set parameters for the SQL query
-            ps.setString(1, login);
-            ps.setString(2, login);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                // Process the result set
-                if (rs.next()) {
-                    user = new User();
- * @author DELL
- */
-public class UserDAO extends DBContext {
 
     public Users getUser(String username, String password) {
         Users user = null;
@@ -102,7 +77,7 @@ public class UserDAO extends DBContext {
         return user;
     }
 
-    public boolean updateUserPassword(User user) {
+    public boolean updateUserPassword(Users user) {
         String sql = "UPDATE Users SET Password = ? WHERE Username = ?";
         try {
             // Start transaction
@@ -130,7 +105,7 @@ public class UserDAO extends DBContext {
         return false;
     }
 
-    public boolean updateUserStatus(User user) {
+    public boolean updateUserStatus(Users user) {
         String sql = "UPDATE Users SET Status = ? WHERE Username = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getStatus());
@@ -142,15 +117,15 @@ public class UserDAO extends DBContext {
         return false;
     }
 
-    public User getUserByEmail(String email) {
-        User user = null;
+    public Users getUserByEmail(String email) {
+        Users user = null;
         String sql = "SELECT * FROM Users WHERE Email = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) { // Chỉ cần lấy một bản ghi
-                    user = new User();
+                    user = new Users();
                     user.setUserID(rs.getInt("UserID"));
                     user.setUsername(rs.getString("Username"));
                     user.setPassword(rs.getString("Password"));
@@ -183,14 +158,31 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public User getUserByToken(String token) {
-        User user = null;
+    public Users getUserByToken(String token) {
+        Users user = null;
         String sql = "SELECT * FROM Users WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, token);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    user = new User();
+                    user = new Users();
+                    user.setUserID(rs.getInt("UserID"));
+                    user.setUsername(rs.getString("Username"));
+                    user.setPassword(rs.getString("Password"));
+                    user.setName(rs.getString("Name"));
+                    user.setGender(rs.getString("Gender"));
+                    user.setPhone(rs.getString("Phone"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setAddress(rs.getString("Address"));
+                    user.setAvatar(rs.getString("Avatar"));
+                    user.setRole(rs.getString("Role"));
+                    user.setStatus(rs.getString("Status"));
+                    user.setToken(rs.getString("Token"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return user;
     }
 
@@ -287,14 +279,14 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public void clearResetToken(String token) {
+public void clearResetToken(String token) {
         String sql = "UPDATE Users SET Token = NULL WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, token);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        return user;
+        }
     }
 
     public void updateProfile(String name, String username, String phone, String address, String gender, int userID, String avatar) {
@@ -332,33 +324,4 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
-
-    public static void main(String[] args) {
-        UserDAO userDAO = new UserDAO();
-
-        // Token to test
-        String testToken = "yvWo5jzXKOk"; // Ensure this token exists in the database
-
-        // New password to set
-        String newPassword = "Phuong1274@"; // Use a hashed password in a real scenario
-
-        // Update the password
-        userDAO.updatePassword(testToken, newPassword);
-
-        // Verify the update
-        User user = userDAO.getUserByToken(testToken);
-        if (user != null) {
-            System.out.println("Password updated successfully.");
-            System.out.println("Updated Password: " + user.getPassword()); // This should show the new password
-        } else {
-            System.out.println("User not found with the given token.");
-        }
-
-    }
-    
-        UserDAO u = new UserDAO();
-        u.updateProfile("Tuan", "tuan1", null, null, null, 26, "images/banner.png");
-        
-    }
-
 }
