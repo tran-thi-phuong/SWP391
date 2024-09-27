@@ -12,6 +12,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Sign up</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">  
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+        <link href="css/Header_Footer.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/register.css">
 
     </head>
     <body>
@@ -52,7 +58,7 @@
                     <div class="form-group input-box2">
                         <input type="text" class="form-control" placeholder="Username" name="username" 
                                value="${param.username}" required pattern="[A-Za-z0-9]{3,16}" 
-                           title="Username must be between 3 and 16 characters and not contain special characters.">
+                               title="Username must be between 3 and 16 characters and not contain special characters.">
                     </div>
                     <div class="form-group input-box2">
                         <input type="email" class="form-control" placeholder="Email" name="email" 
@@ -61,12 +67,12 @@
                     <div class="form-group input-box2">
                         <input type="password" class="form-control" placeholder="Password" name="password" 
                                value="${param.password}" required pattern=".{6,16}" 
-                           title="Password must be between 6 and 16 characters.">
+                               title="Password must be between 6 and 16 characters.">
                     </div>
                     <div class="form-group input-box2">
                         <input type="password" class="form-control" placeholder="Confirm Password" name="repassword" 
                                value="${param.repassword}" required pattern=".{6,16}" 
-                           title="Password must be between 6 and 16 characters.">
+                               title="Password must be between 6 and 16 characters.">
                     </div>
                     <div class="form-group input-box2">
                         <input type="tel" class="form-control" pattern="[0]{1}[1-9]{1}[0-9]{8}" name="phone" 
@@ -105,6 +111,5 @@
         </div>
         <br>
         <%@include file="Footer.jsp" %>
-        <link rel="stylesheet" href="css/register.css">
     </body>
 </html>
