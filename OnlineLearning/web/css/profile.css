@@ -56,7 +56,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 .login-btn button{
     margin-top: 15px;
-    width: 50%;
+    width: 80%;
 }
 .ud-btn-large {
     height: 4.8rem;
@@ -71,7 +71,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     min-width: 8rem;
     padding: 0 1.2rem;
     justify-content: center;
-    user-select: none;
     -webkit-user-select: none;
     vertical-align: bottom;
     white-space: nowrap;
@@ -101,7 +100,7 @@ button, input {
 }
 .login-btn{
     display: flex;
-    width: 460px;
+    width: 300px;
 }
 .ud-btn-label {
     font-size: 20px; 
@@ -121,21 +120,23 @@ button, input {
     text-decoration: underline;
 }
 footer{
-    margin-top: 200px;
+    margin-top: 230px;
 }
 .gender{
     display: flex;
     justify-content: center;
     justify-content: space-evenly
 }
-.avatar{
+.avatar-profile{
     position: relative;
     top: 50px;
     left: -450px;
 }
 .profile-info{
-    top: -200px;
-    left: 50px;
+    position: relative;
+    top: -205px; /* Adjust this value to ensure it's 10px above the menu */
+    left: 50px; /* This remains unchanged */
+    
 }
 .img-avt{
     margin-bottom: 10px;
@@ -151,7 +152,14 @@ footer{
 }
 .change-btn{
 
-    width: 200px;
-    margin-left: 130px;
-    margin-top: 25px;
+    width: 230px;
+    margin-left: 0px;
+    margin-top: 15px;
 }
+.save-changePass{
+    display: flex;
+}
+/*#changePasswordBtn{
+    background-color: black;
+    color: white;
+}*/

@@ -29,23 +29,29 @@ public class UpdateProfile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         String name = request.getParameter("name");
         String username = request.getParameter("username");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String gender = request.getParameter("gender");
         Part filePart = request.getPart("avatar"); 
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // Lấy tên file
-        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
-
-        // Tạo thư mục nếu chưa tồn tại
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
+        String fileName = null;
+        String filePath = null;
+        HttpSession session = request.getSession();
+        UserDAO uDAO = new UserDAO();
+        Users u1 = (Users) session.getAttribute("user");
+        if (filePart != null && filePart.getSize() > 0) {
+            fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            File file = new File(uploadDir, fileName);
+            filePart.write(file.getAbsolutePath());
+            filePath = UPLOAD_DIR + "/" + fileName;
         }
-        File file = new File(uploadDir, fileName);
-        filePart.write(file.getAbsolutePath());
-        String filePath = UPLOAD_DIR + "/" + fileName; 
         if (phone != null && phone.isEmpty()) {
             phone = null;
         }
@@ -55,9 +61,10 @@ public class UpdateProfile extends HttpServlet {
         if (address != null && address.isEmpty()) {
             address = null;
         }
-        HttpSession session = request.getSession();
-        UserDAO uDAO = new UserDAO();
-        Users u1 = (Users) session.getAttribute("user");
+        if (filePath == null) {
+                filePath = u1.getAvatar();
+            }
+        
         try {
             Users usernameCheck = uDAO.getUserByInfo("Username", username);
             Users phoneCheck = uDAO.getUserByInfo("Phone", phone);

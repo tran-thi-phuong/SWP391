@@ -20,9 +20,9 @@
         <div class="form-size ">
             <form method="post" action="updateProfile" enctype="multipart/form-data">
                 <div class="">
-                    <div class="avatar">
+                    <div class="avatar-profile">
                         <div class="img-avt">
-                            <img src="${sessionScope.user.avatar == null ? "images/banner.png" : sessionScope.user.avatar}" alt="alt"/>
+                            <img src="${sessionScope.user.avatar == null ? "images/default-avatar.jpg" : sessionScope.user.avatar}" alt="alt"/>
                         </div>
                         <input type="file" name="avatar">
                     </div>
@@ -87,20 +87,20 @@
                                 <label for="female">Female</label>
                             </div>
                         </div>
-                        <div class="login-btn">
-                            <div>
+                        <div class="save-changePass">
+                            <div class="login-btn">
+
                                 <button type="submit" class="ud-btn ud-btn-large ud-btn-brand ud-heading-md">
                                     <span class="ud-btn-label">Save</span>
                                 </button>
-                            </div>
-                            <div class="change-btn ud-btn ud-btn-large ud-btn-brand ud-heading-md">
-                                <button type="button" id="changePasswordBtn" class="ud-btn-label">
-                                    <span class="ud-btn-label">Change Password</span></button>
+
 
                             </div>
-                        </div>
-                        <div class="change-password-btn">
-
+                            <div class="change-btn ">
+                                <button type="button" id="changePasswordBtn" class="ud-btn ud-btn-large ud-btn-brand ud-heading-md">
+                                    <span class="ud-btn-label">Change Password</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
