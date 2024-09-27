@@ -16,7 +16,14 @@ public class changePassword extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
+        Users user = (Users) session.getAttribute("user");
+
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String username = user.getUsername();
         String oldPassword = request.getParameter("oldPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmNewPassword = request.getParameter("confirmNewPassword");
@@ -27,9 +34,9 @@ public class changePassword extends HttpServlet {
         }
 
         UserDAO dao = new UserDAO();
-        Users user = dao.getUserByUsername(username);
+        Users dbUser = dao.getUserByUsername(username);
 
-        if (user == null || !user.getPassword().equals(oldPassword)) {
+        if (dbUser == null || !dbUser.getPassword().equals(oldPassword)) {
             attempts++;
             session.setAttribute("attempts", attempts);
 
@@ -41,8 +48,7 @@ public class changePassword extends HttpServlet {
                 return;
             }
 
-            session.setAttribute("errorMessage", "Your old password is incorrect. If you enter the wrong password more than 5 times, your account will be locked"
-                    + ". Attempt " + attempts + " of " + MAX_ATTEMPTS);
+            session.setAttribute("errorMessage", "Your old password is incorrect. If you enter the wrong password more than 5 times, your account will be locked. Attempt " + attempts + " of " + MAX_ATTEMPTS);
             response.sendRedirect("profile.jsp");
             return;
         }
@@ -65,15 +71,15 @@ public class changePassword extends HttpServlet {
             return;
         }
 
-        user.setPassword(newPassword);
-        boolean isUpdated = dao.updateUserPassword(user);
+        dbUser.setPassword(newPassword);
+        boolean isUpdated = dao.updateUserPassword(dbUser);
         if (isUpdated) {
             session.setAttribute("successMessage", "Password changed successfully!");
             session.removeAttribute("attempts");
-            response.sendRedirect("customer.jsp");
+            response.sendRedirect("profile.jsp");
         } else {
             session.setAttribute("errorMessage", "Failed to update password");
-            response.sendRedirect("customer.jsp");
+            response.sendRedirect("profile.jsp");
         }
     }
 

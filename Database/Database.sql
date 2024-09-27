@@ -19,7 +19,7 @@ CREATE TABLE Users(
 	Avatar NVARCHAR(255),
     Role NVARCHAR(20) Not Null, 
 	Status NVARCHAR(10) NOT NULL,
-  Token NVARCHAR(MAX) NOT NULL);
+    Token NVARCHAR(MAX));
 GO
 CREATE TABLE VerificationCode (
     UserID INT NOT NULL primary key,
@@ -105,7 +105,16 @@ CREATE TABLE Package_Price (
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
--- Tạo bảng Registrations
+-- Tạo bảng Campaigns
+CREATE TABLE Campaigns (
+    CampaignID INT PRIMARY KEY IDENTITY(1,1),
+    CampaignName NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(MAX),
+    StartDate DATE,
+    EndDate DATE,
+    Image NVARCHAR(255)  
+);
+GO
 CREATE TABLE Registrations (
     RegistrationID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT,
@@ -118,13 +127,14 @@ CREATE TABLE Registrations (
     Status NVARCHAR(50),
     StaffID INT,
     Note NVARCHAR(MAX),
+    CampaignID INT,  -- Thêm cột CampaignID
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID),
     FOREIGN KEY (PackageID) REFERENCES Package_Price(PackageID),
-    FOREIGN KEY (StaffID) REFERENCES Users(UserID)
+    FOREIGN KEY (StaffID) REFERENCES Users(UserID),
+    FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID)  -- Thiết lập khóa ngoại cho CampaignID
 );
 GO
-
 
 
 -- Tạo bảng Sliders

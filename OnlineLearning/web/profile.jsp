@@ -17,7 +17,7 @@
     </head>
     <body>
         <%@include file="Header.jsp" %>
-        <div class="form-size ">
+        <div class="form-size">
             <form method="post" action="updateProfile" enctype="multipart/form-data">
                 <div class="">
                     <div class="avatar-profile">
@@ -65,7 +65,7 @@
                             <span class="input-label"><small>Phone number</small></span>
                             <input type="tel" class="form-control" pattern="[0]{1}[1-9]{1}[0-9]{8}" name="phone" 
                                    placeholder="Phone number" value="${sessionScope.user.phone}" 
-                                   title="">
+                                   title="Phone number must be 10 digits long and start with 0">
                         </div>
                         <span class="input-label"><small>Address</small></span>
                         <div class="form-group input-box2">
