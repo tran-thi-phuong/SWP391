@@ -1,0 +1,32 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 27, 2024, 11:00:21 AM
+    Author     : tuant
+*/
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: white;
+    padding: 20px;
+}
+.sidebar-item {
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.sidebar-item:hover {
+    background-color: #e9ecef;
+}
+.sidebar-item.active {
+    background-color: #0d6efd;
+    color: white;
+}
+.sidebar-icon {
+    margin-right: 10px;
+}
