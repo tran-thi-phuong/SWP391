@@ -32,6 +32,12 @@ public class Login extends HttpServlet {
                 case "admin":
                     response.sendRedirect("dashboard.jsp");
                     break;
+                case "marketing":
+                    response.sendRedirect("dashboard.jsp");
+                    break;   
+                case "sale":
+                    response.sendRedirect("dashboard.jsp");
+                    break;    
                 case "customer":
                     response.sendRedirect("Homepage");
                     break;

@@ -53,6 +53,10 @@
         <servlet-class>controller.BlogList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Statistic</servlet-name>
+        <servlet-class>controller.Statistic</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Logout</servlet-name>
         <servlet-class>controller.Logout</servlet-class>
     </servlet>
@@ -111,6 +115,10 @@
     <servlet-mapping>
         <servlet-name>BlogList</servlet-name>
         <url-pattern>/blogs</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Statistic</servlet-name>
+        <url-pattern>/statistic</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
