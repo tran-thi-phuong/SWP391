@@ -21,6 +21,7 @@
         
         <link href="css/Homepage.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
+        
 
     </head>
     <body>
@@ -64,7 +65,7 @@
                                 <img class="card-img-top" src="image/default-thumbnail.jpg" alt="${blog.title}">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <a href="blogDetail.jsp?blogId=${blog.blogId}">
+                                        <a href="blogDetail?blogId=${blog.blogId}">
                                             ${blog.title}
                                         </a>
                                     </h5>

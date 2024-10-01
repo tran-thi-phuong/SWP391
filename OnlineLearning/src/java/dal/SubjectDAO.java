@@ -270,6 +270,28 @@ public class SubjectDAO extends DBContext {
         return featuredSubjects;
     }
 
-    
+    public static void main(String[] args) {
+        SubjectDAO subjectDAO = new SubjectDAO();
+
+        // Lấy danh sách tất cả các subjects
+        List<Subject> subjects = subjectDAO.getAllSubjects();
+
+        // Hiển thị thông tin của các subjects
+        if (subjects != null && !subjects.isEmpty()) {
+            System.out.println("Danh sách các khóa học:");
+            for (Subject subject : subjects) {
+                System.out.println("Subject ID: " + subject.getSubjectID());
+                System.out.println("Title: " + subject.getTitle());
+                System.out.println("Description: " + subject.getDescription());
+                System.out.println("Category ID: " + subject.getSubjectCategoryId());
+                System.out.println("Status: " + subject.getStatus());
+                System.out.println("Update Date: " + subject.getUpdateDate());
+                System.out.println("Thumbnail: " + subject.getThumbnail());
+                System.out.println("-----------------------------");
+            }
+        } else {
+            System.out.println("Không có khóa học nào.");
+        }
+    }
 }
 

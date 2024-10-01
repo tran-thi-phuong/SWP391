@@ -1,3 +1,5 @@
+DROP DATABASE OnlineLearning;
+
 -- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
