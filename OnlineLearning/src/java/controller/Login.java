@@ -32,15 +32,21 @@ public class Login extends HttpServlet {
                 case "admin":
                     response.sendRedirect("dashboard.jsp");
                     break;
+                case "marketing":
+                    response.sendRedirect("dashboard.jsp");
+                    break;   
+                case "sale":
+                    response.sendRedirect("dashboard.jsp");
+                    break;    
                 case "customer":
-                    response.sendRedirect("Homepage.jsp");
+                    response.sendRedirect("Homepage");
                     break;
                 default:
-                    response.sendRedirect("Homepage.jsp");
+                    response.sendRedirect("Homepage");
                     break;
             }
         } else {
-            request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+            request.getRequestDispatcher("Homepage").forward(request, response);
         }
     }
 
@@ -61,7 +67,7 @@ public class Login extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
                 if (user.getRole().toLowerCase().equals("customer")) {
-                    response.sendRedirect("Homepage.jsp");
+                    response.sendRedirect("Homepage");
                 } else {
                     response.sendRedirect("dashboard.jsp");
                 }
