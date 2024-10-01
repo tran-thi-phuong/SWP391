@@ -19,11 +19,11 @@
     </div>
     <hr>
     <h5 class="mb-3">Campaign</h5>
-    <c:forEach items="${sessionScope.user}" var="u">
+    
     <div class="sidebar-item">
         <i class="bi bi-cash-coin sidebar-icon"></i>
-        ${u.name}
+        ${sessionScope.user.name}
     </div>
-    </c:forEach>
+    
 </div>
 
