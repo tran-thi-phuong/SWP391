@@ -1,3 +1,5 @@
+DROP DATABASE OnlineLearning;
+
 -- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
@@ -9,9 +11,9 @@ GO
 -- Tạo bảng Users
 CREATE TABLE Users(
     UserID INT PRIMARY KEY IDENTITY(1,1),
-    Username NVARCHAR(50) NOT NULL UNIQUE,
+    Username NVARCHAR(50) UNIQUE,
     Password NVARCHAR(255) NOT NULL,
-    Name NVARCHAR(100) NOT NULL,
+    Name NVARCHAR(100),
 	Gender NVARCHAR(10),
     Phone NVARCHAR(15),
     Email NVARCHAR(100) NOT NULL,
@@ -105,16 +107,6 @@ CREATE TABLE Package_Price (
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
--- Tạo bảng Campaigns
-CREATE TABLE Campaigns (
-    CampaignID INT PRIMARY KEY IDENTITY(1,1),
-    CampaignName NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(MAX),
-    StartDate DATE,
-    EndDate DATE,
-    Image NVARCHAR(255)  
-);
-GO
 CREATE TABLE Registrations (
     RegistrationID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT,
@@ -127,12 +119,10 @@ CREATE TABLE Registrations (
     Status NVARCHAR(50),
     StaffID INT,
     Note NVARCHAR(MAX),
-    CampaignID INT,  -- Thêm cột CampaignID
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID),
     FOREIGN KEY (PackageID) REFERENCES Package_Price(PackageID),
     FOREIGN KEY (StaffID) REFERENCES Users(UserID),
-    FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID)  -- Thiết lập khóa ngoại cho CampaignID
 );
 GO
 
@@ -235,6 +225,25 @@ CREATE TABLE System_Setting (
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (UserId) REFERENCES Users(UserID)
+);
+GO
+CREATE TABLE Campaigns (
+    CampaignID INT PRIMARY KEY IDENTITY(1,1),
+    CampaignName NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(MAX),
+    StartDate DATE,
+    EndDate DATE,
+    Image NVARCHAR(255),
+	Status nvarchar(20) not null	
+);
+GO
+CREATE TABLE Campaign_Subject (
+    CampaignID INT,
+    SubjectID INT,
+	Discount INT,
+    PRIMARY KEY (CampaignID, SubjectID),
+    FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
+    FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
 
