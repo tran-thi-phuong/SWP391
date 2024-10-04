@@ -1,0 +1,56 @@
+/* Đặt các thuộc tính cơ bản cho toàn bộ trang */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+    color: #343a40; /* Màu chữ chính */
+}
+
+/* Đặt lề cho thẻ container */
+.container {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* Định dạng cho thẻ tiêu đề */
+h1 {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Định dạng cho thẻ card */
+.card {
+    border: none; /* Không viền */
+    border-radius: 8px; /* Bo tròn các góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+/* Định dạng cho phần thân card */
+.card-body {
+    padding: 20px; /* Padding cho card body */
+}
+
+/* Định dạng cho tiêu đề card */
+.card-title {
+    font-size: 1.5rem; /* Kích thước chữ lớn hơn */
+    font-weight: 500; /* Đậm hơn */
+}
+
+/* Định dạng cho các thẻ p bên trong card */
+.card-body p {
+    font-size: 1.1rem; /* Kích thước chữ cho các đoạn văn */
+    margin: 10px 0; /* Lề trên và dưới cho các đoạn văn */
+}
+
+/* Định dạng cho nút quay lại */
+.btn-primary {
+    background-color: #007bff; /* Màu nền nút */
+    border-color: #007bff; /* Màu viền nút */
+    padding: 10px 20px; /* Padding cho nút */
+    font-size: 1rem; /* Kích thước chữ cho nút */
+}
+
+/* Định dạng cho nút khi hover */
+.btn-primary:hover {
+    background-color: #0056b3; /* Màu nền khi hover */
+    border-color: #0056b3; /* Màu viền khi hover */
+}
