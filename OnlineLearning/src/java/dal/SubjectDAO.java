@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dal;
-
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.List;
 import model.Subject;
 import java.sql.PreparedStatement;
 import java.sql.*;
+import model.SubjectCategoryCount;
 
 /**
  *
@@ -81,6 +82,34 @@ public class SubjectDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in getTotalSubjects: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int getTotalActiveSubjects() {
+        String sql = "SELECT COUNT(*) FROM Subjects where Status = 'Active'";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getTotalSubjects: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int getNewSubjectByTime(Date startDate, Date endDate) {
+        String sql = "SELECT COUNT(*) FROM Subjects WHERE Update_Date BETWEEN ? AND ? and Status = 'Active'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDate(1, new java.sql.Date(startDate.getTime()));
+            ps.setDate(2, new java.sql.Date(endDate.getTime()));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getTotalUpdatedSubjects: " + e.getMessage());
         }
         return 0;
     }
@@ -249,16 +278,11 @@ public class SubjectDAO extends DBContext {
         return 0;
     }
 
-  
-    
-
-
     public List<Subject> getFeaturedSubjects() {
         List<Subject> featuredSubjects = new ArrayList<>();
         String sql = "SELECT TOP 5 * FROM Subjects ORDER BY Update_Date DESC";
         try (
-             PreparedStatement st = connection.prepareStatement(sql);
-             ResultSet rs = st.executeQuery()) {
+                PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
             while (rs.next()) {
                 Subject subject = new Subject();
                 // Set subject properties from ResultSet
@@ -270,28 +294,30 @@ public class SubjectDAO extends DBContext {
         return featuredSubjects;
     }
 
-    public static void main(String[] args) {
-        SubjectDAO subjectDAO = new SubjectDAO();
-
-        // Lấy danh sách tất cả các subjects
-        List<Subject> subjects = subjectDAO.getAllSubjects();
-
-        // Hiển thị thông tin của các subjects
-        if (subjects != null && !subjects.isEmpty()) {
-            System.out.println("Danh sách các khóa học:");
-            for (Subject subject : subjects) {
-                System.out.println("Subject ID: " + subject.getSubjectID());
-                System.out.println("Title: " + subject.getTitle());
-                System.out.println("Description: " + subject.getDescription());
-                System.out.println("Category ID: " + subject.getSubjectCategoryId());
-                System.out.println("Status: " + subject.getStatus());
-                System.out.println("Update Date: " + subject.getUpdateDate());
-                System.out.println("Thumbnail: " + subject.getThumbnail());
-                System.out.println("-----------------------------");
+    public List<SubjectCategoryCount> getSubjectAllocation() {
+        List<SubjectCategoryCount> list = new ArrayList<>();
+        try {
+            String sql = "SELECT sc.Title, COUNT(s.SubjectID) as SubjectCount "
+                    + "FROM Subject_Category sc "
+                    + "LEFT JOIN Subjects s ON sc.Subject_CategoryID = s.Subject_CategoryID where Status = 'Active'"
+                    + "GROUP BY sc.Title";
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                SubjectCategoryCount subCount = new SubjectCategoryCount();
+                subCount.setCategory(rs.getString("Title"));
+                subCount.setCount(rs.getInt("SubjectCount"));
+                list.add(subCount);
             }
-        } else {
-            System.out.println("Không có khóa học nào.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+        return list;
+    }
+
+    public static void main(String[] args) {
+
+        SubjectDAO subjectDAO = new SubjectDAO();
+         
     }
 }
-

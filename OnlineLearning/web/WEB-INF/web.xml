@@ -53,8 +53,16 @@
         <servlet-class>controller.BlogList</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Statistic</servlet-name>
-        <servlet-class>controller.Statistic</servlet-class>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>controller.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>blogDetail</servlet-name>
+        <servlet-class>controller.blogDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CourseStat</servlet-name>
+        <servlet-class>controller.CourseStat</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
@@ -109,10 +117,18 @@
         <url-pattern>/blogs</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Statistic</servlet-name>
-        <url-pattern>/statistic</url-pattern>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>blogDetail</servlet-name>
+        <url-pattern>/blogDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseStat</servlet-name>
+        <url-pattern>/courseStat</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>Homepage.jsp</welcome-file>
+        <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
 </web-app>

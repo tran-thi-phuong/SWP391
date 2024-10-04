@@ -4,19 +4,25 @@
  */
 
 package controller;
-
+import java.sql.Date;
+import dal.SubjectDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+import java.util.List;
+import model.SubjectCategoryCount;
 
 /**
  *
  * @author tuant
  */
-public class Statistic extends HttpServlet {
+public class CourseStat extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,10 +39,10 @@ public class Statistic extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Statistic</title>");  
+            out.println("<title>Servlet CourseStat</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Statistic at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet CourseStat at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -53,7 +59,20 @@ public class Statistic extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        LocalDate endDateLocal = LocalDate.now(); // Today's date
+        LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS); // 7 days before today
+
+        // Convert LocalDate to java.sql.Date
+        Date endDate = Date.valueOf(endDateLocal);
+        Date startDate = Date.valueOf(startDateLocal);
+        SubjectDAO sDAO = new SubjectDAO();
+        int totalCourse = sDAO.getTotalActiveSubjects();
+        int newCourse = sDAO.getNewSubjectByTime(startDate, endDate);
+        List<SubjectCategoryCount> subjectAllocation = sDAO.getSubjectAllocation();
+        request.setAttribute("newCourse", newCourse);
+        request.setAttribute("totalCourse", totalCourse);
+        request.setAttribute("subjectAllocation", subjectAllocation);
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     } 
 
     /** 
@@ -66,8 +85,8 @@ public class Statistic extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-            request.getRequestDispatcher("dashboard.jsp").forward(request, response);
-        }
+        processRequest(request, response);
+    }
 
     /** 
      * Returns a short description of the servlet.
