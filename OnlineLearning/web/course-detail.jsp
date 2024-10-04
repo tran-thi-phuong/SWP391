@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.Subject" %>
 <%@ page import="model.SubjectCategory" %>
-<%@ page import="model.User" %>
+<%@ page import="model.Users" %>
 <%@ page import="model.PackagePrice" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -19,6 +19,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
         <link rel="stylesheet" href="css/course-style.css">
+        
     </head>
 
     <body>
@@ -28,7 +29,7 @@
         <c:set var="lowestOption" value="${requestScope.lowestOption}" />
         <c:set var="currentCat" value="${requestScope.currentCat}" />
         <c:set var="currentPackage" value="${requestScope.currentPackage}" />
-        <div class="container">
+        <div class="container2">
             <aside class="sidebar">
                     <section class="search">
                         <h2>Search course</h2>
@@ -86,19 +87,19 @@
                 <div class="title" style="background-color: #1e77bc">
                     <div class="title-info">More Courses</div>
                 </div>
-                <p class="page-same">
+                <div class="page-same">
                     <c:set var="subjectPriceMap" value="${requestScope.subjectPriceMap}" />
                 <ul>
                     <c:if test="${not empty subjectPriceMap}">
                         <c:forEach var="entry" items="${subjectPriceMap}">
                             <li>
                                 <div class="img-same">
-                                    <a href="registerCourse?id=${entry.key.subjectId}">
+                                    <a href="registerCourse?id=${entry.key.subjectID}">
                                         <div style="background: url('${entry.key.thumbnail}'); background-size: cover; height: 100px; width: 75px;"></div>
                                     </a>
                                 </div>
                                 <div class="des-same">
-                                    <a href="registerCourse?id=${entry.key.subjectId}">
+                                    <a href="registerCourse?id=${entry.key.subjectID}">
                                         <b>${entry.key.title}</b>
                                     </a>
                                 </div>
@@ -112,11 +113,10 @@
                         <li>No subjects available.</li>
                         </c:if>
                 </ul>
-                </p>
             </div>
 
         </div>
-
+        </div>
         <div id="register-popup" class="popup-container">
             <div class="popup-content">
                 
@@ -222,9 +222,9 @@
                 </section>
             </div>
         </div>
-
+        <%@include file="Footer.jsp" %>
     </body>
-    <%@include file="Footer.jsp" %>
+    
     <script src="js/pop-up-script.js"></script>
 
 </html>

@@ -21,7 +21,7 @@ body {
     background-color: #ffffff;
 }
 
-.container {
+.container2 {
     display: flex;
     width: 100%;
     max-width: 1200px;
@@ -274,7 +274,7 @@ table {
     padding-bottom: 10px;
 }
 
-ul {
+.page-same ul {
     display: flex; 
     flex-direction: column;
     list-style-type: disc;
@@ -284,21 +284,21 @@ ul {
     margin-inline-end: 0px;
     padding-inline-start: auto;
 }
-ul {
+.page-same ul {
 padding: 10px;
 border: 1px solid #666;
 }
-li {
+.page-same li {
     list-style: none;
 }
 
-li {
+.page-same li {
     border-bottom: 1px solid #d5d5d5;
     margin-bottom: 10px;
     padding-bottom: 10px;
 }
 
-li {
+.page-same li {
     display: list-item;
     text-align: center;
     unicode-bidi: isolate;
