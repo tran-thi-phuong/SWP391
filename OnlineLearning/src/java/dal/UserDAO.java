@@ -146,6 +146,46 @@ public class UserDAO extends DBContext {
 
         return user;
     }
+    // get cutomer's email method
+
+    public String getEmailByUserId(int userId) {
+        String email = "";
+
+        try {
+            String query = "SELECT Email FROM Users WHERE UserID = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        email = resultSet.getString("email");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+
+//get staff username method
+    public String getStaffUserNameByUserId(int userId) {
+        String username = "";
+
+        try {
+            String query = "SELECT Username FROM Users WHERE UserID = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        username = resultSet.getString("username");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return username;
+    }
 
     public void updateResetToken(String email, String token) {
         String sql = "UPDATE Users SET Token = ? WHERE Email = ?";
@@ -279,7 +319,7 @@ public class UserDAO extends DBContext {
         }
     }
 
-public void clearResetToken(String token) {
+    public void clearResetToken(String token) {
         String sql = "UPDATE Users SET Token = NULL WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, token);
@@ -311,12 +351,12 @@ public void clearResetToken(String token) {
             } else {
                 st.setNull(5, java.sql.Types.VARCHAR);
             }
-            
+
             if (avatar != null && !avatar.isEmpty()) {
-            st.setString(6, avatar);
-        } else {
-            st.setNull(6, java.sql.Types.VARCHAR);
-        }
+                st.setString(6, avatar);
+            } else {
+                st.setNull(6, java.sql.Types.VARCHAR);
+            }
             st.setInt(7, userID);
             st.executeUpdate();
 

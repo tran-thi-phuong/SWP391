@@ -52,6 +52,14 @@
         <servlet-name>BlogList</servlet-name>
         <servlet-class>controller.BlogList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RegistrationLists</servlet-name>
+        <servlet-class>controller.RegistrationLists</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RegistrationDetail</servlet-name>
+        <servlet-class>controller.RegistrationDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -103,6 +111,14 @@
     <servlet-mapping>
         <servlet-name>BlogList</servlet-name>
         <url-pattern>/blogs</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegistrationLists</servlet-name>
+        <url-pattern>/listRegistration</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegistrationDetail</servlet-name>
+        <url-pattern>/registrationDetail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage.jsp</welcome-file>
