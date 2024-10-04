@@ -1,4 +1,3 @@
-
 -- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
@@ -224,6 +223,25 @@ CREATE TABLE System_Setting (
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (UserId) REFERENCES Users(UserID)
+);
+GO
+CREATE TABLE Campaigns (
+    CampaignID INT PRIMARY KEY IDENTITY(1,1),
+    CampaignName NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(MAX),
+    StartDate DATE,
+    EndDate DATE,
+    Image NVARCHAR(255),
+	Status nvarchar(20) not null	
+);
+GO
+CREATE TABLE Campaign_Subject (
+    CampaignID INT,
+    SubjectID INT,
+	Discount INT,
+    PRIMARY KEY (CampaignID, SubjectID),
+    FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
+    FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
 CREATE TABLE Campaigns (
