@@ -124,6 +124,7 @@
                 <h2>Register for Subject Access</h2>
                 <form id="registration-form" action="payment" method="post">
                 <!-- Pricing Packages -->
+                <input type="text" name="subjectID" value="${currentSub.subjectID}" hidden="true">
                 <section id="pricing-packages">
                     <h3>Choose Your Package</h3>
                     <c:forEach items="${currentPackage}" var="pkg">

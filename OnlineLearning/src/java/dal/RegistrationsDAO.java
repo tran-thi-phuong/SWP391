@@ -140,4 +140,24 @@ public Registrations getRegistrationById(int id) {
     return registration;
 }
 
+    //Add a registration
+ public void addRegistration(int userId, int subjectId, int packageId, double totalCost) throws SQLException {
+        String sql = "INSERT INTO Registrations (UserID, SubjectID, PackageID, Total_Cost, Registration_Time, Status) "
+                   + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, subjectId);
+            pstmt.setInt(3, packageId);
+            pstmt.setDouble(4, totalCost);
+            pstmt.setDate(5, new Date(System.currentTimeMillis())); // Current time
+            pstmt.setString(6, "Processing");
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            // Handle SQL exception
+            e.printStackTrace();
+            throw e; // Re-throw exception after logging
+        }
+    }
 }
