@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class RegistrationsDAO extends DBContext {
 
@@ -150,7 +151,7 @@ public Registrations getRegistrationById(int id) {
             pstmt.setInt(2, subjectId);
             pstmt.setInt(3, packageId);
             pstmt.setDouble(4, totalCost);
-            pstmt.setDate(5, new Date(System.currentTimeMillis())); // Current time
+            pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis())); // Current date and time
             pstmt.setString(6, "Processing");
 
             pstmt.executeUpdate();
