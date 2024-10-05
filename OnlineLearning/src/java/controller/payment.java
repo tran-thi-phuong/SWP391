@@ -14,11 +14,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.PackagePrice;
+import model.Users;
 
 /**
  *
@@ -26,6 +28,7 @@ import model.PackagePrice;
  */
 @WebServlet(name = "payment", urlPatterns = {"/payment"})
 public class payment extends HttpServlet {
+
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -39,6 +42,7 @@ public class payment extends HttpServlet {
     }
     RegistrationsDAO registrationsDAO = new RegistrationsDAO();
     UserDAO userDAO = new UserDAO();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -85,33 +89,38 @@ public class payment extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("mobile");
         String gender = request.getParameter("gender");
-        int subjectID =  Integer.parseInt(request.getParameter("subjectID"));
+        int subjectID = Integer.parseInt(request.getParameter("subjectID"));
         PackagePriceDAO PackagePriceDAO = new PackagePriceDAO();
         PackagePrice currentPac = PackagePriceDAO.searchByPackagePriceId(packageId);
         double price = Math.min(currentPac.getSalePrice(), currentPac.getPrice());
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession();
+
         try {
-            int userID = userDAO.addUser(email, phone, gender, phone, generateRandomString(10));
+            Users user = (Users) session.getAttribute("user");
+            int userID;
+            if (user == null) {
+                userID = userDAO.addUser(email, phone, gender, phone, generateRandomString(10));
+            } else {
+                userID = user.getUserID();
+            }
             registrationsDAO.addRegistration(userID, subjectID, packageId, price);
             out.println("<html><head><title>Submission Details</title></head><body>");
-        out.println("<h1>Form Submission Details</h1>");
-        out.println("<p><strong>Package ID:</strong> " + currentPac.getDurationTime() + "days - " + currentPac.getSalePrice() + "$</p>");
-        out.println("<p><strong>Full Name:</strong> " + fullname + "</p>");
-        out.println("<p><strong>Email:</strong> " + email + "</p>");
-        out.println("<p><strong>Phone:</strong> " + phone + "</p>");
-        out.println("<p><strong>Gender:</strong> " + gender + "</p>");
-        out.println("<p><strong>Status:Submission Successful </strong></p>");
-        out.println("</body></html>");
+            out.println("<h1>Form Submission Details</h1>");
+            out.println("<p><strong>Package ID:</strong> " + currentPac.getDurationTime() + "days - " + currentPac.getSalePrice() + "$</p>");
+            out.println("<p><strong>Full Name:</strong> " + fullname + "</p>");
+            out.println("<p><strong>Email:</strong> " + email + "</p>");
+            out.println("<p><strong>Phone:</strong> " + phone + "</p>");
+            out.println("<p><strong>Gender:</strong> " + gender + "</p>");
+            out.println("<p><strong>Status:Submission Successful </strong></p>");
+            out.println("</body></html>");
         } catch (SQLException ex) {
             System.out.println(ex);
             out.println("<p><strong>Status:Submission Failed </strong></p>");
         }
-        
-        
-        // Get the PrintWriter to write the response
-        
 
+        // Get the PrintWriter to write the response
         // Write the HTML response
         out.println("<html><head><title>Submission Details</title></head><body>");
         out.println("<h1>Form Submission Details</h1>");
