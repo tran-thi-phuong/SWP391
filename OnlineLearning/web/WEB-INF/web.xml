@@ -60,6 +60,10 @@
         <servlet-name>blogDetail</servlet-name>
         <servlet-class>controller.blogDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>authorInformation</servlet-name>
+        <servlet-class>controller.authorInformation</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -119,6 +123,10 @@
     <servlet-mapping>
         <servlet-name>blogDetail</servlet-name>
         <url-pattern>/blogDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>authorInformation</servlet-name>
+        <url-pattern>/authorInformation</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

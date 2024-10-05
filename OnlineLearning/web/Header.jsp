@@ -10,7 +10,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <a class="navbar-brand" href="Homepage.jsp">
+        <a class="navbar-brand" href="Homepage">
             Learning
         </a>
 
@@ -43,13 +43,13 @@
             <div class="dropdown">
                 
                 <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="images/hinh-nen-may-tinh-chibi-4k-co-gai-cute.jpeg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 8px;">
+                    <img src="${sessionScope.user.avatar}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 8px;">
                    
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item"><strong>${sessionScope.user.username}</strong></a></li>
                     <li><a class="dropdown-item" href="MyCourse">My Courses</a></li>
-                    <li><a class="dropdown-item" href="Profile">Profile</a></li>
+                    <li><a class="dropdown-item" href="profile.jsp">Profile</a></li>
                     <li><a class="dropdown-item" href="Logout">Logout</a></li>
                 </ul>
             </div>
@@ -58,4 +58,3 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </nav>
-<!--${sessionScope.user.avatar}-->

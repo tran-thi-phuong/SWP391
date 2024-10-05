@@ -55,7 +55,7 @@
                 <div class="blog-detail-header">
                     <h1><%= blog.getTitle() %></h1>
                     <p><strong>Category:</strong> <%= category.getTitle() %></p>
-                    <p><strong>Author:</strong> <a href ="authorInformation?userId=${users.userId}"><%= author.getName() %></a></p>
+                    <p><strong>Author:</strong> <a href="authorInformation?username=<%= author.getUsername() %>"><%= author.getName() %></a></p>
                     <p><strong>Created At:</strong> <%= blog.getCreateAt() %></p>
                 </div>
 
