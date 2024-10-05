@@ -28,7 +28,20 @@
                 <div class="col-md-3">
                     <%@include file="sidebar.jsp" %>
                 </div>
-                    <%@include file="courseStat.jsp" %>
+                <c:choose>
+                    <c:when test="${requestScope.action == 'courseStat'}">
+                        <%@include file="courseStat.jsp" %>
+                    </c:when>
+                    <c:when test="${requestScope.action == 'registrationStat'}">
+                        <%@include file="registrationStat.jsp" %>
+                    </c:when>
+                    <c:when test="${requestScope.action == 'revenueStat'}">
+                        <%@include file="revenueStat.jsp" %>
+                    </c:when>
+                    <c:when test="${requestScope.action == 'customerStat'}">
+                        <%@include file="customerStat.jsp" %>
+                    </c:when>
+                </c:choose>
             </div>
         </div>
         <%@include file="Footer.jsp" %>

@@ -25,7 +25,12 @@
         </div>
     </div> 
     </div>
-      
+      <div class="course-regis-chart">
+        <div class="card-4">
+
+        </div>
+    </div>        
+          
 </div>
             
             

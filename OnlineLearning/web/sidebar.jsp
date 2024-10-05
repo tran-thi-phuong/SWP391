@@ -6,15 +6,15 @@
         <i class="bi bi-book sidebar-icon"></i>
         Courses
     </div>
-    <div class="sidebar-item">
+    <div class="sidebar-item" onclick="window.location.href = 'registrationStat'">
         <i class="bi bi-pencil-square sidebar-icon"></i>
         Registration
     </div>
-    <div class="sidebar-item">
+    <div class="sidebar-item" onclick="window.location.href = 'revenueStat'">
         <i class="bi bi-cash sidebar-icon"></i>
         Revenue
     </div>
-    <div class="sidebar-item" onclick="window.location.href = 'dashboard.jsp'">
+    <div class="sidebar-item" onclick="window.location.href = 'customerStat'">
         <i class="bi bi-person sidebar-icon" ></i>
         Customer
     </div>
