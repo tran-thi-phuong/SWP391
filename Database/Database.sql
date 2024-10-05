@@ -254,25 +254,6 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
-CREATE TABLE Campaigns (
-    CampaignID INT PRIMARY KEY IDENTITY(1,1),
-    CampaignName NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(MAX),
-    StartDate DATE,
-    EndDate DATE,
-    Image NVARCHAR(255),
-	Status nvarchar(20) not null	
-);
-GO
-CREATE TABLE Campaign_Subject (
-    CampaignID INT,
-    SubjectID INT,
-	Discount INT,
-    PRIMARY KEY (CampaignID, SubjectID),
-    FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
-    FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
-);
-GO
 
 INSERT INTO Users(Username, Password, Name, Gender, Email, Address, Avatar, Role, Status)
 VALUES('moew', 'Moew1274@', 'Phuong', 'Female', 'phuongthai12070427@gmail.com', 'Ha Noi','hinh-nen-may-tinh-chibi-4k-co-gai-cute.jpeg', 'Sale', 'Active' );
