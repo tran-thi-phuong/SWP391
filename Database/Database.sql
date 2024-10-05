@@ -73,6 +73,9 @@ CREATE TABLE Tests (
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
+    MediaType NVARCHAR(10), -- 'image' or 'video'
+    MediaURL NVARCHAR(MAX),  -- URL to the image or video
+    MediaDescription NVARCHAR(MAX), -- Description of the media
     Type NVARCHAR(50),
     Duration INT,
     Pass_Condition DECIMAL(5, 2),
@@ -218,11 +221,18 @@ GO
 CREATE TABLE System_Setting (
     SettingID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT,
-    Setting_Key NVARCHAR(255) NOT NULL,
-    Setting_Value NVARCHAR(255),
+    QuizID BIT DEFAULT 0,                 -- Quiz ID (default selected, true/false)
+    Name BIT NOT NULL DEFAULT 1,          -- Name (default selected, not editable)
+    Subject BIT DEFAULT 0,                 -- Subject (default selected)
+    Level BIT DEFAULT 0,                   -- Level (default selected)
+    NumberOfQuestions BIT DEFAULT 0,      -- Number of Questions (default selected)
+    Duration BIT DEFAULT 0,                -- Duration (default selected)
+    PassRate BIT DEFAULT 0,                -- Pass Rate (default selected)
+    QuizType BIT DEFAULT 0,                -- Quiz Type (default selected)
+    NumberOfItems INT DEFAULT 10,          -- Number of items per page
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (UserId) REFERENCES Users(UserID)
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 GO
 CREATE TABLE Campaigns (
