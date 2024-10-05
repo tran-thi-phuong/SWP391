@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author 84336
- */
 public class Test {
     private int testID;
     private int subjectID;
@@ -18,6 +10,9 @@ public class Test {
     private double passCondition;
     private String level;
     private int quantity;
+    private String mediaType;           // New field for media type (image/video)
+    private String mediaURL;            // New field for media URL
+    private String mediaDescription;     // New field for media description
 
     // Getters and Setters
 
@@ -92,5 +87,28 @@ public class Test {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-}
 
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public String getMediaURL() {
+        return mediaURL;
+    }
+
+    public void setMediaURL(String mediaURL) {
+        this.mediaURL = mediaURL;
+    }
+
+    public String getMediaDescription() {
+        return mediaDescription;
+    }
+
+    public void setMediaDescription(String mediaDescription) {
+        this.mediaDescription = mediaDescription;
+    }
+}
