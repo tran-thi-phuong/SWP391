@@ -67,9 +67,11 @@
     <servlet>
         <servlet-name>RegistrationStat</servlet-name>
         <servlet-class>controller.RegistrationStat</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RegistrationLists</servlet-name>
         <servlet-class>controller.RegistrationLists</servlet-class>
-    </servlet>
+    </servlet>    
     <servlet>
         <servlet-name>RegistrationDetail</servlet-name>
         <servlet-class>controller.RegistrationDetail</servlet-class>
@@ -141,9 +143,11 @@
     <servlet-mapping>
         <servlet-name>RegistrationStat</servlet-name>
         <url-pattern>/registrationStat</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>RegistrationLists</servlet-name>
         <url-pattern>/listRegistration</url-pattern>
-    </servlet-mapping>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegistrationDetail</servlet-name>
         <url-pattern>/registrationDetail</url-pattern>
