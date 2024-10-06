@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="body2">
-        <div>
+        <div> 
         <c:if test="${not empty message}">
             <h1>Please check you email!!!!</h1>
             <div class="message-box">

@@ -230,6 +230,24 @@ public class SubjectDAO extends DBContext {
         return subject;
     }
 
+    public String getSubjectNameById(int subjectId) {
+        String title = "";
+
+        try {
+            String query = "SELECT title FROM Subjects WHERE SubjectID = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, subjectId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                       title = resultSet.getString("title");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return title;
+    }
     public List<Subject> searchSubjects(String query, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM Subjects WHERE title LIKE ? OR description LIKE ? "

@@ -77,4 +77,23 @@ public class PackagePriceDAO extends DBContext {
     }
     return lowestPrice == Double.MAX_VALUE ? 0 : lowestPrice;
 }
+    
+    public String getNameByPackageId(int packageId) {
+        String name = "";
+
+        try {
+            String query = "SELECT Name FROM Package_Price WHERE PackageID = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, packageId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                      name = resultSet.getString("name");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
 }

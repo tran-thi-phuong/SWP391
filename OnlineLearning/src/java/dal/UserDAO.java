@@ -146,6 +146,46 @@ public class UserDAO extends DBContext {
 
         return user;
     }
+    // get cutomer's email method
+
+    public String getEmailByUserId(int userId) {
+        String email = "";
+
+        try {
+            String query = "SELECT Email FROM Users WHERE UserID = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        email = resultSet.getString("email");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+
+//get staff username method
+    public String getStaffUserNameByUserId(int userId) {
+        String username = "";
+
+        try {
+            String query = "SELECT Username FROM Users WHERE UserID = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        username = resultSet.getString("username");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return username;
+    }
 
     public void updateResetToken(String email, String token) {
         String sql = "UPDATE Users SET Token = ? WHERE Email = ?";
@@ -279,7 +319,7 @@ public class UserDAO extends DBContext {
         }
     }
 
-public void clearResetToken(String token) {
+    public void clearResetToken(String token) {
         String sql = "UPDATE Users SET Token = NULL WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, token);
@@ -311,17 +351,48 @@ public void clearResetToken(String token) {
             } else {
                 st.setNull(5, java.sql.Types.VARCHAR);
             }
-            
+
             if (avatar != null && !avatar.isEmpty()) {
-            st.setString(6, avatar);
-        } else {
-            st.setNull(6, java.sql.Types.VARCHAR);
-        }
+                st.setString(6, avatar);
+            } else {
+                st.setNull(6, java.sql.Types.VARCHAR);
+            }
             st.setInt(7, userID);
             st.executeUpdate();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    
+    public int addUser(String email, String password, String gender, String phone, String username) throws SQLException {
+        String sql = "INSERT INTO Users (Email, Password, Gender, Phone, Status, Role, Username) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        int generatedUserId = -1;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, email);
+            pstmt.setString(2, password);
+            pstmt.setString(3, gender);
+            pstmt.setString(4, phone);
+            pstmt.setString(5, "Inactive");
+            pstmt.setString(6, "Customer");
+            pstmt.setString(7, username);
+
+            // Execute the insert operation
+            pstmt.executeUpdate();
+
+            // Retrieve the generated user ID
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedUserId = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            // Handle SQL exception
+            e.printStackTrace();
+            throw e; // Re-throw exception after logging
+        }
+
+        return generatedUserId;
     }
 }
