@@ -48,6 +48,7 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item"><strong>${sessionScope.user.username}</strong></a></li>
+                    <li><a class="dropdown-item" href="myRegistration">My Registration</a></li>
                     <li><a class="dropdown-item" href="MyCourse">My Courses</a></li>
                     <li><a class="dropdown-item" href="profile.jsp">Profile</a></li>
                     <li><a class="dropdown-item" href="Logout">Logout</a></li>
