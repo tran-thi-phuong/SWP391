@@ -364,4 +364,35 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
+    
+    public int addUser(String email, String password, String gender, String phone, String username) throws SQLException {
+        String sql = "INSERT INTO Users (Email, Password, Gender, Phone, Status, Role, Username) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        int generatedUserId = -1;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, email);
+            pstmt.setString(2, password);
+            pstmt.setString(3, gender);
+            pstmt.setString(4, phone);
+            pstmt.setString(5, "Inactive");
+            pstmt.setString(6, "Customer");
+            pstmt.setString(7, username);
+
+            // Execute the insert operation
+            pstmt.executeUpdate();
+
+            // Retrieve the generated user ID
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedUserId = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            // Handle SQL exception
+            e.printStackTrace();
+            throw e; // Re-throw exception after logging
+        }
+
+        return generatedUserId;
+    }
 }
