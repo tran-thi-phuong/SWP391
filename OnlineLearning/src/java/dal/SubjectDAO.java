@@ -11,6 +11,8 @@ import java.util.List;
 import model.Subject;
 import java.sql.PreparedStatement;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -289,5 +291,27 @@ public class SubjectDAO extends DBContext {
     }
 
     
+  public Map<Integer, Subject> getAllSubject() {
+        Map<Integer, Subject> list = new HashMap<>();
+        try {
+            String sql = "SELECT * FROM Subjects";
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                Subject subject = new Subject();
+                    subject.setSubjectID(rs.getInt("SubjectID"));
+                    subject.setTitle(rs.getString("Title"));
+                    subject.setDescription(rs.getString("Description"));
+                    subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
+                    subject.setStatus(rs.getString("Status"));
+                    subject.setUpdateDate(rs.getDate("Update_Date"));
+                    subject.setThumbnail(rs.getString("Thumbnail"));;
+                list.put(subject.getSubjectID(), subject);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return list;
+    }  
 }
 

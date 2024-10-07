@@ -6,10 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dal.RegistrationsDAO;
-import dal.UserDAO;
-import dal.SubjectDAO;
-import dal.PackagePriceDAO;
-import model.Registrations;
+import dal.*;
+import model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -20,12 +18,14 @@ public class RegistrationLists extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         try {
             // Initialize DAOs
             RegistrationsDAO registrationsDAO = new RegistrationsDAO();
             UserDAO userDAO = new UserDAO();
             SubjectDAO subjectDAO = new SubjectDAO();
             PackagePriceDAO packageDAO = new PackagePriceDAO();
+            CampaignsDAO campaignDAO = new CampaignsDAO();
 
             // Pagination parameters
             int pageSize = 20; // Number of items per page
@@ -43,6 +43,9 @@ public class RegistrationLists extends HttpServlet {
 
             // Retrieve the list of registrations for the current page
             List<Registrations> listR = registrationsDAO.getRegistrationsByPage(currentPage, pageSize);
+            // Lấy danh sách subject và campaign
+            Map<Integer, Subject> listS = subjectDAO.getAllSubject();
+            Map<Integer, Campaigns> listC = campaignDAO.getAllCampaigns();
 
             if (listR != null && !listR.isEmpty()) {
                 // Initialize maps to hold user, subject, and package information
@@ -72,7 +75,9 @@ public class RegistrationLists extends HttpServlet {
                 request.setAttribute("packageName", packageName);
                 request.setAttribute("staffUsername", staffUsername);
                 request.setAttribute("currentPage", currentPage);
-                request.setAttribute("totalPages", totalPages); // Set total pages for pagination
+                request.setAttribute("totalPages", totalPages);
+                request.setAttribute("listS", listS);
+                request.setAttribute("listC", listC);
 
                 // Forward the request to the JSP page
                 request.getRequestDispatcher("RegistrationList.jsp").forward(request, response);
