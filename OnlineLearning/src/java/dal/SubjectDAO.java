@@ -99,7 +99,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getNewSubjectByTime(Date startDate, Date endDate) {
-        String sql = "SELECT COUNT(*) FROM Subjects WHERE Update_Date BETWEEN ? AND ? and Status = 'Active'";
+        String sql = "SELECT COUNT(*) FROM Subjects WHERE Update_Date BETWEEN ? AND ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(startDate.getTime()));
             ps.setDate(2, new java.sql.Date(endDate.getTime()));
@@ -317,8 +317,8 @@ public class SubjectDAO extends DBContext {
         try {
             String sql = "SELECT sc.Title, COUNT(s.SubjectID) as SubjectCount "
                     + "FROM Subject_Category sc "
-                    + "LEFT JOIN Subjects s ON sc.Subject_CategoryID = s.Subject_CategoryID where Status = 'Active'"
-                    + "GROUP BY sc.Title";
+                    + "LEFT JOIN Subjects s ON sc.Subject_CategoryID = s.Subject_CategoryID "
+                    + "GROUP BY sc.Title HAVING COUNT(s.SubjectID) > 0";
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {

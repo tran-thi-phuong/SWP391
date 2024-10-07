@@ -1,5 +1,4 @@
-DROP DATABASE OnlineLearning;
-
+drop database OnlineLearning
 -- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
@@ -59,13 +58,15 @@ GO
 -- Tạo bảng Subjects
 CREATE TABLE Subjects (
     SubjectID INT PRIMARY KEY IDENTITY(1,1),
+	UserID int,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
     Subject_CategoryID INT,
     Status NVARCHAR(50),
     Thumbnail NVARCHAR(MAX),
     Update_Date Datetime,
-    FOREIGN KEY (Subject_CategoryID) REFERENCES Subject_Category(Subject_CategoryID)
+    FOREIGN KEY (Subject_CategoryID) REFERENCES Subject_Category(Subject_CategoryID),
+	FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 GO
 
@@ -212,10 +213,12 @@ GO
 CREATE TABLE Payment (
     PaymentID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT,
+	SubjectID int,
     PaymentDate DATETIME DEFAULT GETDATE(),
     Amount DECIMAL(10, 2),
     PaymentMethod NVARCHAR(50),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+	FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
 
@@ -256,9 +259,6 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
-<<<<<<< HEAD
-=======
-
 INSERT INTO Users(Username, Password, Name, Gender, Email, Address, Avatar, Role, Status)
 VALUES('moew', 'Moew1274@', 'Phuong', 'Female', 'phuongthai12070427@gmail.com', 'Ha Noi','hinh-nen-may-tinh-chibi-4k-co-gai-cute.jpeg', 'Sale', 'Active' );
 GO
@@ -267,16 +267,12 @@ VALUES
 ('sale1', 'password1', 'Sale One', 'Female', 'sale1@example.com', 'Address 1', 'avatar1.jpg', 'Sale', 'Active'),
 ('sale2', 'password2', 'Sale Two', 'Male', 'sale2@example.com', 'Address 2', 'avatar2.jpg', 'Sale', 'Active'),
 ('sale3', 'password3', 'Sale Three', 'Female', 'sale3@example.com', 'Address 3', 'avatar3.jpg', 'Sale', 'Active');
-
->>>>>>> f9657eba62c0f1cd1611d95e8ab143deb07b51b5
-
 INSERT INTO Subject_Category (Title) 
 VALUES 
 ('Mathematics'),
 ('Science'),
 ('History');
 GO
-
 INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date) 
 VALUES 
 ('Algebra', 'A subject focusing on algebraic expressions, equations, and functions.', 1, 'Active', 'algebra_thumbnail.jpg', '2024-01-10 09:30:00'),

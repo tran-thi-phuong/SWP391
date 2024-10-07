@@ -1,17 +1,23 @@
-<%-- 
-    Document   : customerStat
-    Created on : Oct 4, 2024, 10:00:54 PM
-    Author     : tuant
---%>
+<div class="col-md-9 content-container">
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
-</html>
+    <div class="content">
+        <div class="total-course-card">
+            <div class="card-1">
+                <p class="card-title">Total courses</p>
+                <div class="course-stat">
+                    <div class="icon bi bi-book"></div>
+                    <div class="course-number">${requestScope.totalCourse}</div>
+                </div>
+<!--                    <div class="inactive-course">${requestScope.inactiveCourse} courses inactive</div>-->
+            </div>
+            <div class="card-2">
+                <p class="card-title">New courses</p>
+                <div class="course-stat">
+                    <div class="icon bi bi-book"></div>
+                    <div class="course-number">${requestScope.newCourse}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

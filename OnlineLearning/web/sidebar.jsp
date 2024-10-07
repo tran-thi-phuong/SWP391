@@ -11,7 +11,7 @@
         Registration
     </div>
     <div class="sidebar-item" onclick="window.location.href = 'revenueStat'">
-        <i class="bi bi-cash sidebar-icon"></i>
+        <i class="bi bi-currency-dollar sidebar-icon"></i>
         Revenue
     </div>
     <div class="sidebar-item" onclick="window.location.href = 'customerStat'">
