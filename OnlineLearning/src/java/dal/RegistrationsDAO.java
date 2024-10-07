@@ -138,13 +138,6 @@ public class RegistrationsDAO extends DBContext {
         return registration;
     }
     
-    public static void main(String[] args) {
-        RegistrationsDAO r = new RegistrationsDAO();
-        r.getRegistrationById(3);
-                
-    return registration;
-}
-
     //Add a registration
  public void addRegistration(int userId, int subjectId, int packageId, double totalCost) throws SQLException {
         String sql = "INSERT INTO Registrations (UserID, SubjectID, PackageID, Total_Cost, Registration_Time, Status) "
