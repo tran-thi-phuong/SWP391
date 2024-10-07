@@ -64,7 +64,6 @@ public class RegistrationsDAO extends DBContext {
         }
         return total;
     }
-
     public List<Registrations> getRegistrationsByPage(int currentPage, int pageSize) {
         List<Registrations> registrations = new ArrayList<>();
         String sql = "SELECT r.RegistrationID, u.Email, r.Registration_Time, s.Title AS Subject, "
@@ -77,7 +76,7 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Users us ON r.StaffID = us.UserID "
                 + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
                 + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID "
-                + "ORDER BY r.RegistrationID "
+                + "ORDER BY r.Registration_Time "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -98,7 +97,7 @@ public class RegistrationsDAO extends DBContext {
                 registration.setValidTo(rs.getDate("Valid_To"));
                 registration.setStaffId(rs.getInt("StaffID"));
                 registration.setNote(rs.getString("Note"));
-                registration.setCampaignName(rs.getString("CampaignName")); // Thêm tên chiến dịch
+                registration.setCampaignName(rs.getString("CampaignName"));
                 registrations.add(registration);
             }
         } catch (SQLException e) {
@@ -111,9 +110,9 @@ public class RegistrationsDAO extends DBContext {
         Registrations registration = null;
         String sql = "SELECT r.*, c.CampaignName "
                 + "FROM Registrations r "
-                + "LEFT JOIN Campaigns c ON r.CampaignID = c.CampaignID "
-                + // Replace with your actual campaign ID column and table name
-                "WHERE r.RegistrationID = ?";
+                + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
+                + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID "
+                +"WHERE r.RegistrationID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -142,7 +141,7 @@ public class RegistrationsDAO extends DBContext {
 
         return registration;
     }
-
+    
     //Add a registration
     public void addRegistration(int userId, int subjectId, int packageId, double totalCost) throws SQLException {
         String sql = "INSERT INTO Registrations (UserID, SubjectID, PackageID, Total_Cost, Registration_Time, Status) "
