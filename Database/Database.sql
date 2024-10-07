@@ -222,13 +222,15 @@ CREATE TABLE System_Setting (
     SettingID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT,
     QuizID BIT DEFAULT 0,                 -- Quiz ID (default selected, true/false)
-    Name BIT NOT NULL DEFAULT 1,          -- Name (default selected, not editable)
-    Subject BIT DEFAULT 0,                 -- Subject (default selected)
-    Level BIT DEFAULT 0,                   -- Level (default selected)
-    NumberOfQuestions BIT DEFAULT 0,      -- Number of Questions (default selected)
-    Duration BIT DEFAULT 0,                -- Duration (default selected)
-    PassRate BIT DEFAULT 0,                -- Pass Rate (default selected)
-    QuizType BIT DEFAULT 0,                -- Quiz Type (default selected)
+    Title BIT NOT NULL DEFAULT 1,          -- Name (default selected, not editable)
+    Subject BIT DEFAULT 0,  
+    Description BIT DEFAULT 0,
+    QuizType BIT DEFAULT 0,
+    Duration BIT DEFAULT 0, 
+    PassCondition BIT DEFAULT 0, 
+    Level BIT DEFAULT 0,                   
+    Quantity BIT DEFAULT 0,     
+    PassRate BIT DEFAULT 0,                
     NumberOfItems INT DEFAULT 10,          -- Number of items per page
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),
