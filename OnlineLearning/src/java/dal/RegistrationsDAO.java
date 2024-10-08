@@ -1,14 +1,17 @@
 package dal;
 
+import java.sql.Timestamp;
+import model.SubjectCategoryCount;
 import java.util.ArrayList;
 import java.util.List;
 import model.Registrations;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Timestamp;
 import java.util.Date;
+import java.sql.Statement;
+
+import model.SubjectCategoryCount;
 
 public class RegistrationsDAO extends DBContext {
 
@@ -426,6 +429,72 @@ public class RegistrationsDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+    public List<SubjectCategoryCount> getRegistrationAllocation() {
+        List<SubjectCategoryCount> list = new ArrayList<>();
+        try {
+            String sql = "SELECT sc.Title AS CategoryName, COUNT(r.RegistrationID) AS RegistrationCount "
+                    + "FROM Subject_Category sc "
+                    + "JOIN Subjects s ON sc.Subject_CategoryID = s.Subject_CategoryID "
+                    + "JOIN Registrations r ON s.SubjectID = r.SubjectID "
+                    + "GROUP BY sc.Subject_CategoryID, sc.Title "
+                    + "HAVING COUNT(r.RegistrationID) > 0 "
+                    + "ORDER BY sc.Title";
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                SubjectCategoryCount subCount = new SubjectCategoryCount();
+                subCount.setCategory(rs.getString("CategoryName"));
+                subCount.setCount(rs.getInt("RegistrationCount"));
+                list.add(subCount);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return list;
+    }
+    public int getNewRegistrationByTime(java.util.Date startDate, java.util.Date endDate) {
+        String sql = "SELECT COUNT(*) FROM Registrations WHERE Registration_Time BETWEEN ? AND ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDate(1, new java.sql.Date(startDate.getTime()));
+            ps.setDate(2, new java.sql.Date(endDate.getTime()));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getTotalUpdatedSubjects: " + e.getMessage());
+        }
+        return 0;
+    }
+    public List<SubjectCategoryCount> getBestSeller(int n) {
+        List<SubjectCategoryCount> list = new ArrayList<>();
+        String sql = "SELECT top " + n + "count(r.SubjectID) as Amount, s.Title FROM Registrations r join Subjects s on r.SubjectID = s.SubjectID group by s.Title order by Amount desc";
+        try (
+                PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                SubjectCategoryCount subCount = new SubjectCategoryCount();
+                subCount.setCategory(rs.getString("Title"));
+                subCount.setCount(rs.getInt("Amount"));
+                list.add(subCount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public int getTotalRegistrationByStatus(String status){
+        String sql = "select count(*) from Registrations where Status = '" + status + "'";
+        try (PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
     }
 
     public static void main(String[] args) {
