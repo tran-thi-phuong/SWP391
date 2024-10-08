@@ -26,11 +26,17 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="CourseList">Course</a>
+                    <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
+                        <a class="nav-link" href="CourseList">Course</a>
+                    </c:if>
+                    
+                    <c:if test="${sessionScope.user.role=='Staff'}">
+                        <a class="nav-link" href="CourseList">Course</a>
+                    </c:if>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="blogs">News</a>
+                    <a class="nav-link" href="blogList">News</a>
                 </li>
 
                 <li class="nav-item">
@@ -54,7 +60,6 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item"><strong>${sessionScope.user.username}</strong></a></li>
-                    <li><a class="dropdown-item" href="MyCourse">My Courses</a></li>
                     <li><a class="dropdown-item" href="myRegistration">My Registration</a></li>
                     <li><a class="dropdown-item" href="myCourse">My Courses</a></li>
                     <li><a class="dropdown-item" href="profile.jsp">Profile</a></li>

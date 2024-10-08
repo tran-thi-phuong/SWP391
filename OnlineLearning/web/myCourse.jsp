@@ -39,26 +39,25 @@
             <label><input type="checkbox" data-attr="note"> Note</label>
         </div>
 
-        <c:if test="${not empty registrationList}">
+        <c:if test="${not empty courseList}">
             <div id="registrations">
-                <c:forEach var="registration" items="${courseList}">
+                <c:forEach var="course" items="${courseList}">
                     <div class="registration-card">
                         <div>
-                            <p class="registration-card-title">${courseList.subjectName}</p>
-                            <p class="registration-card-text"><strong>Package</strong> ${courseList.packageId}</p>
-                            <p class="registration-card-text"><strong>Cost</strong> ${courseList.totalCost}</p>
-                            <p class="registration-card-text"><strong>Status</strong> ${courseList.status}</p>
-                            <p class="registration-card-text"><strong>ValidFrom</strong> ${courseList.validFrom}</p>
-                            <p class="registration-card-text"><strong>ValidTo</strong> ${courseList.validTo}</p>
-                            <p class="registration-card-text"><strong>Teacher</strong> ${courseList.staffName}</p>
-                            <p class="registration-card-text"><strong>Note</strong> ${courseList.note}</p>
+                            <p class="registration-card-title">${course.subjectName}</p>
+                            <p class="registration-card-text"><strong>Cost</strong> ${course.totalCost}</p>
+                            <p class="registration-card-text"><strong>Status</strong> ${course.status}</p>
+                            <p class="registration-card-text"><strong>ValidFrom</strong> ${course.validFrom}</p>
+                            <p class="registration-card-text"><strong>ValidTo</strong> ${course.validTo}</p>
+                            <p class="registration-card-text"><strong>Teacher</strong> ${course.staffName}</p>
+                            <p class="registration-card-text"><strong>Note</strong> ${course.note}</p>
                         </div>
                     </div>
                 </c:forEach>
             </div>
         </c:if>
 
-        <c:if test="${empty registrationList}">
+        <c:if test="${empty courseList}">
             <p>Not found</p>
         </c:if>
 

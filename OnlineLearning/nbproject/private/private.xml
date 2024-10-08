@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/FU%20Learning/SWP391/OnlineLearning/src/java/model/Registrations.java</file>
-            <file>file:/E:/FU%20Learning/SWP391/OnlineLearning/src/java/dal/RegistrationsDAO.java</file>
-            <file>file:/E:/FU%20Learning/SWP391/OnlineLearning/web/RegistrationList.jsp</file>
-            <file>file:/E:/FU%20Learning/SWP391/OnlineLearning/src/java/controller/RegistrationLists.java</file>
-            <file>file:/E:/FU%20Learning/SWP391/OnlineLearning/src/java/controller/RegistrationDetail.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/myRegistration.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/myRegistration.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/RegistrationsDAO.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/css/myRegistration.css</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/myRegistration.js</file>
         </group>
     </open-files>
 </project-private>

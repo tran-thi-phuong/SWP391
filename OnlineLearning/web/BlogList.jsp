@@ -34,7 +34,7 @@
                     <!-- Thanh tìm kiếm -->
                     <div class="search-bar">
                         <h4>Tìm kiếm</h4>
-                        <form action="BlogList" method="get">
+                        <form action="blogList" method="get">
                             <input type="text" name="search" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
                             <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
                         </form>
