@@ -64,7 +64,7 @@ CREATE TABLE Subjects (
     Status NVARCHAR(50),
     Thumbnail NVARCHAR(MAX),
     Update_Date Datetime,
-	FOREIGN KEY (UserID) REFERENCES Users(UserID),
+	FOREIGN KEY (OwnerID) REFERENCES Users(UserID),
     FOREIGN KEY (Subject_CategoryID) REFERENCES Subject_Category(Subject_CategoryID)
 );
 GO
