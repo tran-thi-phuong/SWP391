@@ -1,0 +1,121 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 30, 2024, 10:25:52 PM
+    Author     : tuant
+*/
+.content-container{
+    background-color: #F4F7FE;
+}
+.content {
+    display: flex;
+    margin-left: 0;
+    padding: 20px;
+    flex-grow: 1;
+    
+
+}
+.card-1, .card-2, .card-5{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    border: 0px;
+    width: 300px;
+    height: 160px;
+}
+.card-title,.card-title-success {
+    color: #7a7a7a;
+    font-size: 20px;
+    font-weight: bold;
+}
+.course-stat {
+    margin-top: 5px;
+    display: flex;
+}
+.course-number{
+    padding-top: 7px;
+    font-size: 45px;
+    margin-left: 25px;
+}
+.icon{
+    font-size: 55px;
+}
+.activity-card {
+    background-color: #6557ff;
+    color: white;
+}
+.course-category-card{
+    margin-left: 10px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 0px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    border: 0px;
+    width: 590px;;
+    height: 335px;
+}
+.card-2 {
+    margin-top: 15px;
+}
+.course-regis-chart {
+    display: flex;
+    padding: 0px 20px;
+    margin-bottom: 20px;
+}
+.inactive-course{
+    margin-top: -8px;
+    margin-left: 10px;
+}
+.card-4{
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px 20px 20px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    border: 0px;
+    width: 300px;
+    height: 335px;
+}
+.best-seller{
+    color: #7a7a7a;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+.best-seller-content{
+    font-size: 20px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between
+}
+.registration-status{
+    margin-left: 10px;
+}
+.card-5{
+    width: 277px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.card-6{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    border: 0px;
+    width: 279px;
+    height: 160px;
+}
+.new-regis{
+    margin-bottom: 0px;
+}
+.revenue-number{
+    padding-top: 15px;
+    font-size: 35px;
+    margin-left: 0px;
+}

@@ -1,3 +1,4 @@
+drop database OnlineLearning
 -- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
@@ -57,14 +58,14 @@ GO
 -- Tạo bảng Subjects
 CREATE TABLE Subjects (
     SubjectID INT PRIMARY KEY IDENTITY(1,1),
-	UserID INT,
+	OwnerID INT,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
     Subject_CategoryID INT,
     Status NVARCHAR(50),
     Thumbnail NVARCHAR(MAX),
     Update_Date Datetime,
-	FOREIGN KEY (UserID) REFERENCES Users(UserID),
+	FOREIGN KEY (OwnerID) REFERENCES Users(UserID),
     FOREIGN KEY (Subject_CategoryID) REFERENCES Subject_Category(Subject_CategoryID)
 );
 GO
@@ -212,10 +213,12 @@ GO
 CREATE TABLE Payment (
     PaymentID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT,
+	SubjectID int,
     PaymentDate DATETIME DEFAULT GETDATE(),
     Amount DECIMAL(10, 2),
     PaymentMethod NVARCHAR(50),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+	FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
 
@@ -258,9 +261,44 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
-
 INSERT INTO Users(Username, Password, Name, Gender, Email, Address, Avatar, Role, Status)
 VALUES('moew', 'Moew1274@', 'Phuong', 'Female', 'phuongthai12070427@gmail.com', 'Ha Noi','hinh-nen-may-tinh-chibi-4k-co-gai-cute.jpeg', 'Sale', 'Active' );
+GO
+INSERT INTO Users (Username, Password, Name, Gender, Email, Address, Avatar, Role, Status)
+VALUES
+('sale1', 'password1', 'Sale One', 'Female', 'sale1@example.com', 'Address 1', 'avatar1.jpg', 'Sale', 'Active'),
+('sale2', 'password2', 'Sale Two', 'Male', 'sale2@example.com', 'Address 2', 'avatar2.jpg', 'Sale', 'Active'),
+('sale3', 'password3', 'Sale Three', 'Female', 'sale3@example.com', 'Address 3', 'avatar3.jpg', 'Sale', 'Active');
+INSERT INTO Subject_Category (Title) 
+VALUES 
+('Mathematics'),
+('Science'),
+('History');
+GO
+INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date) 
+VALUES 
+('Algebra', 'A subject focusing on algebraic expressions, equations, and functions.', 1, 'Active', 'algebra_thumbnail.jpg', '2024-01-10 09:30:00'),
+('Geometry', 'Study of shapes, sizes, and properties of space.', 1, 'Active', 'geometry_thumbnail.jpg', '2024-02-15 14:45:00'),
+('Biology', 'Introduction to the study of life and living organisms.', 2, 'Active', 'biology_thumbnail.jpg', '2024-03-20 11:00:00'),
+('Physics', 'Study of matter, energy, and their interactions.', 2, 'Active', 'physics_thumbnail.jpg', '2024-04-25 16:20:00'),
+('Chemistry', 'Exploring the properties, composition, and behavior of matter.', 2, 'Inactive', 'chemistry_thumbnail.jpg', '2024-05-30 08:15:00'),
+('World History', 'A comprehensive overview of global historical events and trends.', 3, 'Active', 'world_history_thumbnail.jpg', '2024-06-05 13:50:00'),
+('Ancient Civilizations', 'Study of ancient cultures and civilizations.', 3, 'Active', 'ancient_civilizations_thumbnail.jpg', '2024-07-10 17:30:00'),
+('Calculus', 'Advanced mathematics focused on limits, functions, derivatives, and integrals.', 1, 'Inactive', 'calculus_thumbnail.jpg', '2024-08-15 09:40:00'),
+('Environmental Science', 'Study of the environment and solutions to environmental problems.', 2, 'Active', 'environmental_science_thumbnail.jpg', '2024-09-20 12:10:00'),
+('Modern History', 'Study of the most recent historical events and developments.', 3, 'Inactive', 'modern_history_thumbnail.jpg', '2024-10-25 14:05:00');
+GO
+INSERT INTO Package_Price (SubjectID, Name, Duration_time, Sale_Price, Price)
+VALUES 
+(1, '3 Months', 90, 49.99, 59.99),
+(2, '1 Months', 30, 79.99, 89.99),
+(3, '2 Months', 60, 69.99, 79.99);
+Go
+INSERT INTO Users(Username, Password, Name, Gender, Email, Address, Avatar, Role, Status)
+VALUES('hoa', '123', 'Phuong', 'Female', 'phuongthai12070427@gmail.com', 'Ha Noi','hinh-nen-may-tinh-chibi-4k-co-gai-cute.jpeg', 'Customer', 'Active' );
+GO
+INSERT INTO Users(Username, Password, Name, Gender, Email, Address, Avatar, Role, Status)
+VALUES('lan', '123', 'Phuong', 'Female', 'phuongthai12070427@gmail.com', 'Ha Noi','hinh-nen-may-tinh-chibi-4k-co-gai-cute.jpeg', 'Customer', 'Active' );
 GO
 INSERT INTO Users (Username, Password, Name, Gender, Email, Address, Avatar, Role, Status)
 VALUES

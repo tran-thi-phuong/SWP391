@@ -21,6 +21,7 @@
         
         <link href="css/Homepage.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
+        
 
     </head>
     <body>
@@ -39,7 +40,7 @@
                 <div class="slides">
                     <c:forEach var="subject" items="${topSubjects}">
                         <div class="slide">
-                            <img src="image/${subject.thumbnail}" alt="${subject.title}">
+                            <img src="${subject.thumbnail}" alt="${subject.title}">
                         </div>
                     </c:forEach>
                 </div>
@@ -64,7 +65,7 @@
                                 <img class="card-img-top" src="image/default-thumbnail.jpg" alt="${blog.title}">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <a href="blogDetail.jsp?blogId=${blog.blogId}">
+                                        <a href="blogDetail?blogId=${blog.blogId}">
                                             ${blog.title}
                                         </a>
                                     </h5>
@@ -87,10 +88,10 @@
                     <c:forEach var="subject" items="${topSubjects}">
                         <div class="col-md-4 mb-4">
                             <div class="card">
-                                <img class="card-img-top" src="image/${subject.thumbnail}" alt="${subject.title}">
+                                <img class="card-img-top" src="${subject.thumbnail}" alt="${subject.title}">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <a href="subjectDetail.jsp?subjectId=${subject.subjectID}">
+                                        <a href="subject-detail.jsp?subjectId=${subject.subjectID}">
                                             ${subject.title}
                                         </a>
                                     </h5>
