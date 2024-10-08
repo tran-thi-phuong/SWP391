@@ -60,6 +60,7 @@ public class Verify extends HttpServlet {
             request.getRequestDispatcher("verify.jsp").forward(request, response);
         }else{
             vDao.activeUser(Integer.parseInt(userId));
+            vDao.deleteCode(Integer.parseInt(userId));
             Users user = uDAO.getUserByInfo("Email", email);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);

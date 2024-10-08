@@ -53,6 +53,22 @@
         <servlet-class>controller.BlogList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>controller.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>blogDetail</servlet-name>
+        <servlet-class>controller.blogDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CourseStat</servlet-name>
+        <servlet-class>controller.CourseStat</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RegistrationStat</servlet-name>
+        <servlet-class>controller.RegistrationStat</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RegistrationLists</servlet-name>
         <servlet-class>controller.RegistrationLists</servlet-class>
     </servlet>
@@ -133,9 +149,25 @@
         <url-pattern>/blogs</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>blogDetail</servlet-name>
+        <url-pattern>/blogDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseStat</servlet-name>
+        <url-pattern>/courseStat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegistrationStat</servlet-name>
+        <url-pattern>/registrationStat</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>RegistrationLists</servlet-name>
         <url-pattern>/listRegistration</url-pattern>
-    </servlet-mapping>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegistrationDetail</servlet-name>
         <url-pattern>/registrationDetail</url-pattern>
@@ -161,6 +193,6 @@
         <url-pattern>/updateCampaign</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>Homepage.jsp</welcome-file>
+        <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
 </web-app>

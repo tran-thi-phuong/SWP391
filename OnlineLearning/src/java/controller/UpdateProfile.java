@@ -76,6 +76,7 @@ public class UpdateProfile extends HttpServlet {
                 if (phoneCheck != null) {
                     request.setAttribute("invalidPhone", true);
                     request.getRequestDispatcher("profile.jsp").forward(request, response);
+                    return;
                 }
             }
             uDAO.updateProfile(name, username, phone, address, gender, u1.getUserID(), filePath);

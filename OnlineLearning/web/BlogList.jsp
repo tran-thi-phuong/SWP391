@@ -40,7 +40,6 @@
                         </form>
                     </div>
 
-                    <!-- Các danh mục -->
                     <div class="categories">
                         <h4>Danh mục</h4>
                         <ul class="list-group">
@@ -54,20 +53,16 @@
                 </div>
 
                 <div class="col-md-9">
-                    <!-- Danh sách blog -->
                     <c:forEach var="blog" items="${blogs}">
                         <div class="blog-post">
-                            <!-- Hiển thị tiêu đề, có link dẫn đến trang chi tiết -->
-                            <h2><a href="PostDetailServlet?blogId=${blog.blogId}">${blog.title}</a></h2>
+                            <h2><a href="blogDetail?blogId=${blog.blogId}">${blog.title}</a></h2>
 
-                            <!-- Hiển thị thông tin người đăng và ngày đăng -->
                             <div class="blog-info">
                                 Đăng bởi ${blog.userId.name} vào ngày ${blog.createAt}
                             </div>
                         </div>
                     </c:forEach>
 
-                    <!-- Phân trang -->
                     <nav aria-label="Page navigation">
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">

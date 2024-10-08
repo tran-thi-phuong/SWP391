@@ -59,7 +59,6 @@ public class RegistrationsDAO extends DBContext {
         }
         return total;
     }
-
     public List<Registrations> getRegistrationsByPage(int currentPage, int pageSize) {
         List<Registrations> registrations = new ArrayList<>();
         String sql = "SELECT r.RegistrationID, u.Email, r.Registration_Time, s.Title AS Subject, "
