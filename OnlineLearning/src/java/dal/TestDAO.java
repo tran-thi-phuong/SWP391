@@ -33,11 +33,17 @@ public class TestDAO extends DBContext {
         }
     }
 
-    public List<Test> getAllTests() {
-        List<Test> tests = new ArrayList<>();
-        String sql = "SELECT * FROM Tests";
-        try (
-                Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+    public List<Test> getAllTests(int pageNumber, int pageSize) {
+    List<Test> tests = new ArrayList<>();
+    // Calculate the offset for pagination
+    int offset = (pageNumber - 1) * pageSize;
+    String sql = "SELECT * FROM Tests LIMIT ? OFFSET ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, pageSize); // Number of items per page
+        stmt.setInt(2, offset);    // Calculate the offset
+
+        try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Test test = new Test();
                 test.setTestID(rs.getInt("TestID"));
@@ -51,11 +57,111 @@ public class TestDAO extends DBContext {
                 test.setQuantity(rs.getInt("Quantity"));
                 tests.add(test);
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
-        return tests;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
     }
+    return tests;
+}
+public List<Test> getAllTests(int pageNumber, int pageSize, String search, String subjectId, String type) {
+    List<Test> tests = new ArrayList<>();
+    int offset = (pageNumber - 1) * pageSize;
+
+    // Base SQL query
+    StringBuilder sql = new StringBuilder("SELECT * FROM Tests WHERE 1=1"); // Start with a basic query
+
+    // Build query conditions based on provided parameters
+    if (search != null && !search.isEmpty()) {
+        sql.append(" AND Title LIKE ?");
+    }
+    if (subjectId != null && !subjectId.isEmpty()) {
+        sql.append(" AND SubjectID = ?");
+    }
+    if (type != null && !type.isEmpty()) {
+        sql.append(" AND Type = ?");
+    }
+
+    // Add pagination using OFFSET and FETCH NEXT
+    sql.append(" ORDER BY TestID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+        int paramIndex = 1;
+
+        // Set parameters for the query
+        if (search != null && !search.isEmpty()) {
+            stmt.setString(paramIndex++, "%" + search + "%"); // Use LIKE for searching
+        }
+        if (subjectId != null && !subjectId.isEmpty()) {
+            stmt.setInt(paramIndex++, Integer.parseInt(subjectId)); // Set subject ID
+        }
+        if (type != null && !type.isEmpty()) {
+            stmt.setString(paramIndex++, type); // Set type
+        }
+
+        // Set pagination parameters
+        stmt.setInt(paramIndex++, offset); // Offset for pagination
+        stmt.setInt(paramIndex++, pageSize); // Number of items per page
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Test test = new Test();
+                test.setTestID(rs.getInt("TestID"));
+                test.setSubjectID(rs.getInt("SubjectID"));
+                test.setTitle(rs.getString("Title"));
+                test.setDescription(rs.getString("Description"));
+                test.setType(rs.getString("Type"));
+                test.setDuration(rs.getInt("Duration"));
+                test.setPassCondition(rs.getDouble("Pass_Condition"));
+                test.setLevel(rs.getString("Level"));
+                test.setQuantity(rs.getInt("Quantity"));
+                tests.add(test);
+            }
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace(); // Handle exception appropriately
+    }
+    return tests; // Return the list of tests
+}
+
+public int getTotalTestCount(String search, String subjectId, String type) {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Tests WHERE 1=1");
+
+    // Build query conditions based on provided parameters
+    if (search != null && !search.isEmpty()) {
+        sql.append(" AND Title LIKE ?");
+    }
+    if (subjectId != null && !subjectId.isEmpty()) {
+        sql.append(" AND SubjectID = ?");
+    }
+    if (type != null && !type.isEmpty()) {
+        sql.append(" AND Type = ?");
+    }
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+        int paramIndex = 1;
+
+        // Set parameters for the query
+        if (search != null && !search.isEmpty()) {
+            stmt.setString(paramIndex++, "%" + search + "%"); // Use LIKE for searching
+        }
+        if (subjectId != null && !subjectId.isEmpty()) {
+            stmt.setInt(paramIndex++, Integer.parseInt(subjectId)); // Set subject ID
+        }
+        if (type != null && !type.isEmpty()) {
+            stmt.setString(paramIndex++, type); // Set type
+        }
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1); // Return the count
+            }
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace(); // Handle exception appropriately
+    }
+    return 0; // Return 0 if an error occurs
+}
+
 
     public List<Test> searchTests(String query, int offset, int limit) {
         List<Test> tests = new ArrayList<>();

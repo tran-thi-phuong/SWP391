@@ -58,14 +58,14 @@ GO
 -- Tạo bảng Subjects
 CREATE TABLE Subjects (
     SubjectID INT PRIMARY KEY IDENTITY(1,1),
-	UserID INT,
+	OwnerID INT,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
     Subject_CategoryID INT,
     Status NVARCHAR(50),
     Thumbnail NVARCHAR(MAX),
     Update_Date Datetime,
-	FOREIGN KEY (UserID) REFERENCES Users(UserID),
+	FOREIGN KEY (OwnerID) REFERENCES Users(UserID),
     FOREIGN KEY (Subject_CategoryID) REFERENCES Subject_Category(Subject_CategoryID)
 );
 GO
@@ -227,13 +227,15 @@ CREATE TABLE System_Setting (
     SettingID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT,
     QuizID BIT DEFAULT 0,                 -- Quiz ID (default selected, true/false)
-    Name BIT NOT NULL DEFAULT 1,          -- Name (default selected, not editable)
-    Subject BIT DEFAULT 0,                 -- Subject (default selected)
-    Level BIT DEFAULT 0,                   -- Level (default selected)
-    NumberOfQuestions BIT DEFAULT 0,      -- Number of Questions (default selected)
-    Duration BIT DEFAULT 0,                -- Duration (default selected)
-    PassRate BIT DEFAULT 0,                -- Pass Rate (default selected)
-    QuizType BIT DEFAULT 0,                -- Quiz Type (default selected)
+    Title BIT NOT NULL DEFAULT 1,          -- Name (default selected, not editable)
+    Subject BIT DEFAULT 0,  
+    Description BIT DEFAULT 0,
+    QuizType BIT DEFAULT 0,
+    Duration BIT DEFAULT 0, 
+    PassCondition BIT DEFAULT 0, 
+    Level BIT DEFAULT 0,                   
+    Quantity BIT DEFAULT 0,     
+    PassRate BIT DEFAULT 0,                
     NumberOfItems INT DEFAULT 10,          -- Number of items per page
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),
