@@ -6,8 +6,8 @@ import model.Registrations;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class RegistrationsDAO extends DBContext {
 
@@ -64,7 +64,8 @@ public class RegistrationsDAO extends DBContext {
         List<Registrations> registrations = new ArrayList<>();
         String sql = "SELECT r.RegistrationID, u.Email, r.Registration_Time, s.Title AS Subject, "
                 + "p.Name AS Package, r.Total_Cost, r.Status, r.Valid_From, r.Valid_To, "
-                + "r.Note, r.UserID, r.SubjectID, r.PackageID, r.StaffID, c.CampaignName "
+                + "r.Note, r.UserID, r.SubjectID, r.PackageID, r.StaffID, "
+                + "(CASE WHEN cs.discount != 0 AND r.Registration_Time <= c.EndDate  AND r.Registration_Time >= c.StartDate THEN c.CampaignName ELSE NULL END) AS CampaignName "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
@@ -72,7 +73,9 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Users us ON r.StaffID = us.UserID "
                 + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
                 + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID "
-                + "ORDER BY r.Registration_Time "
+                + "ORDER BY r.Registration_Time DESC, "
+                + "(CASE WHEN r.Status = 'Processing' THEN 0 ELSE 1 END), "
+                + "r.Status "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -93,7 +96,7 @@ public class RegistrationsDAO extends DBContext {
                 registration.setValidTo(rs.getDate("Valid_To"));
                 registration.setStaffId(rs.getInt("StaffID"));
                 registration.setNote(rs.getString("Note"));
-                registration.setCampaignName(rs.getString("CampaignName"));
+                registration.setCampaignName(rs.getString("CampaignName")); // Set campaign name
                 registrations.add(registration);
             }
         } catch (SQLException e) {
@@ -108,7 +111,7 @@ public class RegistrationsDAO extends DBContext {
                 + "FROM Registrations r "
                 + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
                 + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID "
-                +"WHERE r.RegistrationID = ?";
+                + "WHERE r.RegistrationID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -137,11 +140,11 @@ public class RegistrationsDAO extends DBContext {
 
         return registration;
     }
-    
+
     //Add a registration
- public void addRegistration(int userId, int subjectId, int packageId, double totalCost) throws SQLException {
+    public void addRegistration(int userId, int subjectId, int packageId, double totalCost) throws SQLException {
         String sql = "INSERT INTO Registrations (UserID, SubjectID, PackageID, Total_Cost, Registration_Time, Status) "
-                   + "VALUES (?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, userId);
@@ -156,6 +159,33 @@ public class RegistrationsDAO extends DBContext {
             // Handle SQL exception
             e.printStackTrace();
             throw e; // Re-throw exception after logging
+        }
+    }
+
+    public void addNewRegistration(int userId, int subjectId, int packageId, double totalCost,
+            Date registrationTime, Date validFrom, Date validTo,
+            int staffId, String note) throws SQLException {
+        String sql = "INSERT INTO Registrations (UserID, SubjectID, PackageID, Total_Cost, "
+                + "Registration_Time, Valid_From, Valid_To, Status, StaffID, Note) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, subjectId);
+            preparedStatement.setInt(3, packageId);
+            preparedStatement.setDouble(4, totalCost);
+            preparedStatement.setTimestamp(5, new java.sql.Timestamp(registrationTime.getTime()));
+            preparedStatement.setTimestamp(6, new java.sql.Timestamp(validFrom.getTime()));
+            preparedStatement.setTimestamp(7, new java.sql.Timestamp(validTo.getTime()));
+            preparedStatement.setString(8, "Active"); // Set status to "Active"
+            preparedStatement.setInt(9, staffId);
+            preparedStatement.setString(10, note);
+
+            preparedStatement.executeUpdate(); // Execute the insert operation
+        } catch (SQLException e) {
+            throw new SQLException("Error adding registration: " + e.getMessage(), e);
         }
     }
 }

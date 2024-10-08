@@ -41,4 +41,82 @@ public class CampaignsDAO extends DBContext {
         return list;
     }
 
+    public boolean stopCampaign(int campaignId) {
+        String sql = "UPDATE Campaigns SET EndDate = GETDATE(), Status = 'End' WHERE CampaignID = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, campaignId);
+            int rowsAffected = st.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public boolean startCampaign(int campaignId) {
+        String sql = "UPDATE Campaigns SET StartDate = GETDATE(), Status = 'Processing' WHERE CampaignID = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, campaignId);
+            int rowsAffected = st.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public Campaigns getCampaignByID(int campaignId) {
+        Campaigns campaign = null;
+        String sql = "SELECT * FROM Campaigns WHERE CampaignID = ?";
+
+        try (
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setInt(1, campaignId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                campaign = new Campaigns();
+                campaign.setCampaignId(rs.getInt("CampaignID"));
+                campaign.setCampaignName(rs.getString("CampaignName"));
+                campaign.setDescription(rs.getString("Description"));
+                campaign.setStartDate(rs.getDate("StartDate"));
+                campaign.setEndDate(rs.getDate("EndDate"));
+                campaign.setImage(rs.getString("Image"));
+                campaign.setStatus(rs.getString("Status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        }
+        return campaign;
+    }
+
+    public boolean updateCampaign(Campaigns campaign) {
+        String sql = "UPDATE Campaigns SET CampaignName = ?, Description = ?, StartDate = ?, EndDate = ?, Status = ? WHERE CampaignID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, campaign.getCampaignName());
+            pstmt.setString(2, campaign.getDescription());
+
+            // Set the start date and end date using java.sql.Date
+            pstmt.setDate(3, new java.sql.Date(campaign.getStartDate().getTime()));
+            pstmt.setDate(4, new java.sql.Date(campaign.getEndDate().getTime()));
+
+            pstmt.setString(5, campaign.getStatus());
+            pstmt.setInt(6, campaign.getCampaignId());
+
+            int rowsUpdated = pstmt.executeUpdate();
+            return rowsUpdated > 0; // Return true if the update was successful
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exceptions properly
+            return false;
+        }
+    }
+
 }

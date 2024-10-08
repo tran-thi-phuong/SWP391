@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Admin
  */
 public class Registrations {
-private int registrationId;
+    private int registrationId;
     private int userId;
     private int subjectId;
     private int packageId;

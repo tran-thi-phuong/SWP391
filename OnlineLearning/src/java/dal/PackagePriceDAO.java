@@ -17,7 +17,7 @@ public class PackagePriceDAO extends DBContext {
 
     public List<PackagePrice> searchBySubjectId(int subjectId) {
         List<PackagePrice> packages = new ArrayList<>();
-        String query = "SELECT * FROM Package_Price WHERE subjectId = ?"; 
+        String query = "SELECT * FROM Package_Price WHERE subjectId = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, subjectId);
@@ -38,46 +38,47 @@ public class PackagePriceDAO extends DBContext {
         }
         return packages;
     }
+
     public PackagePrice searchByPackagePriceId(int packagePriceId) {
-    PackagePrice packagePrice = null; // Initialize to null
-    String query = "SELECT * FROM Package_Price WHERE PackageId = ?";
-    
-    try {
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setInt(1, packagePriceId);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        
-        if (resultSet.next()) { // Check if there's a result
-            packagePrice = new PackagePrice();
-            packagePrice.setPackageId(resultSet.getInt("PackageId"));
-            packagePrice.setSubjectId(resultSet.getInt("SubjectId"));
-            packagePrice.setName(resultSet.getString("name"));
-            packagePrice.setDurationTime(resultSet.getInt("duration_time"));
-            packagePrice.setSalePrice(resultSet.getDouble("sale_price"));
-            packagePrice.setPrice(resultSet.getDouble("price"));
+        PackagePrice packagePrice = null; // Initialize to null
+        String query = "SELECT * FROM Package_Price WHERE PackageId = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, packagePriceId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) { // Check if there's a result
+                packagePrice = new PackagePrice();
+                packagePrice.setPackageId(resultSet.getInt("PackageId"));
+                packagePrice.setSubjectId(resultSet.getInt("SubjectId"));
+                packagePrice.setName(resultSet.getString("name"));
+                packagePrice.setDurationTime(resultSet.getInt("duration_time"));
+                packagePrice.setSalePrice(resultSet.getDouble("sale_price"));
+                packagePrice.setPrice(resultSet.getDouble("price"));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-    } catch (Exception e) {
-        System.out.println(e.getMessage());
+
+        return packagePrice; // Return the single PackagePrice object or null if not found
     }
-    
-    return packagePrice; // Return the single PackagePrice object or null if not found
-}
 
     public double findLowestPrice(List<PackagePrice> packagePrices) {
-    double lowestPrice = Double.MAX_VALUE; 
-    for (PackagePrice packagePrice : packagePrices) {
-        double salePrice = packagePrice.getSalePrice();
-        if (salePrice < lowestPrice) {
-            lowestPrice = salePrice;
+        double lowestPrice = Double.MAX_VALUE;
+        for (PackagePrice packagePrice : packagePrices) {
+            double salePrice = packagePrice.getSalePrice();
+            if (salePrice < lowestPrice) {
+                lowestPrice = salePrice;
+            }
+            double originalPrice = packagePrice.getPrice();
+            if (originalPrice < lowestPrice) {
+                lowestPrice = originalPrice;
+            }
         }
-        double originalPrice = packagePrice.getPrice();
-        if (originalPrice < lowestPrice) {
-            lowestPrice = originalPrice;
-       }
+        return lowestPrice == Double.MAX_VALUE ? 0 : lowestPrice;
     }
-    return lowestPrice == Double.MAX_VALUE ? 0 : lowestPrice;
-}
-    
+
     public String getNameByPackageId(int packageId) {
         String name = "";
 
@@ -87,7 +88,7 @@ public class PackagePriceDAO extends DBContext {
                 statement.setInt(1, packageId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                      name = resultSet.getString("name");
+                        name = resultSet.getString("name");
                     }
                 }
             }
@@ -96,4 +97,41 @@ public class PackagePriceDAO extends DBContext {
         }
         return name;
     }
+
+    public int getDurationByPackageId(int packageId) {
+        int durationTime = 0;
+
+        String query = "SELECT Duration_Time FROM Package_Price WHERE PackageID = ?";
+        try (
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, packageId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    durationTime = resultSet.getInt("Duration_Time");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return durationTime;
+    }
+
+    public PackagePrice getPriceByPackageId(int packageId) {
+        String query = "SELECT Price, Sale_Price FROM Package_Price WHERE PackageID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, packageId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    PackagePrice packagePrice = new PackagePrice();
+                    packagePrice.setPrice(rs.getDouble("Price"));      
+                    packagePrice.setSalePrice(rs.getDouble("Sale_Price")); 
+                    return packagePrice;  // Return the PackagePrice object
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;  // Return null if no result is found
+    }
+
 }
