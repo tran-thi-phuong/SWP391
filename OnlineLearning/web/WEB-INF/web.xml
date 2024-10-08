@@ -166,8 +166,12 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>RegistrationLists</servlet-name>
-        <url-pattern>/listRegistration</url-pattern>
+        <servlet-class>controller.RegistrationLists</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>RegistrationLists</servlet-name>
+        <url-pattern>/listRegistration</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegistrationDetail</servlet-name>
         <url-pattern>/registrationDetail</url-pattern>
