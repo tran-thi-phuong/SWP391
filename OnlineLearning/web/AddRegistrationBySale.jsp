@@ -80,15 +80,15 @@
             emailInput.addEventListener('input', validateEmail);
 
             $(document).ready(function () {
-                $('#subjectID').select2({
-                    placeholder: '',
-                    allowClear: true
-                });
-
-                $('#packageID').select2({
-                    placeholder: '',
-                    allowClear: true
-                });
+//                $('#subjectID').select2({
+//                    placeholder: '',
+//                    allowClear: true
+//                });
+//
+//                $('#packageID').select2({
+//                    placeholder: '',
+//                    allowClear: true
+//                });
 
                 $('#subjectID').change(function () {
                     var subjectID = $(this).val();
@@ -103,7 +103,7 @@
                    
                     if (subjectID && packageID) {
                         window.location.href = 'addRegistrationBySale?subjectID=' + subjectID + '&packageID=' + packageID;
-                    }
+                    }   
                 });
             });
         </script>
