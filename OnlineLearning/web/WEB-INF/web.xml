@@ -53,6 +53,26 @@
         <servlet-class>controller.BlogList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>controller.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>blogDetail</servlet-name>
+        <servlet-class>controller.blogDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>authorInformation</servlet-name>
+        <servlet-class>controller.authorInformation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>myRegistration</servlet-name>
+        <servlet-class>controller.myRegistration</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>myCourse</servlet-name>
+        <servlet-class>controller.myCourse</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RegistrationLists</servlet-name>
         <servlet-class>controller.RegistrationLists</servlet-class>
     </servlet>
@@ -113,6 +133,26 @@
         <url-pattern>/blogs</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>blogDetail</servlet-name>
+        <url-pattern>/blogDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>authorInformation</servlet-name>
+        <url-pattern>/authorInformation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>myRegistration</servlet-name>
+        <url-pattern>/myRegistration</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>myCourse</servlet-name>
+        <url-pattern>/myCourse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>RegistrationLists</servlet-name>
         <url-pattern>/listRegistration</url-pattern>
     </servlet-mapping>
@@ -121,6 +161,6 @@
         <url-pattern>/registrationDetail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>Homepage.jsp</welcome-file>
+        <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
 </web-app>

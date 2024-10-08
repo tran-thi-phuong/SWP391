@@ -8,7 +8,6 @@ package dal;
  *
  * @author sonna
  */
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,16 +18,17 @@ import model.Users;
 import model.BlogCategory;
 
 public class BlogDAO extends DBContext {
+
     public List<Blog> getBlogsByPage(int page, int pageSize) {
         List<Blog> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle " +
-                 "FROM Blogs b " +
-                 "JOIN Users u ON b.UserID = u.UserID " +
-                 "JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID " +
-                 "ORDER BY b.Create_At DESC " +
-                 "OFFSET ? ROWS " +
-                 "FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle "
+                + "FROM Blogs b "
+                + "JOIN Users u ON b.UserID = u.UserID "
+                + "JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID "
+                + "ORDER BY b.Create_At DESC "
+                + "OFFSET ? ROWS "
+                + "FETCH NEXT ? ROWS ONLY";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, offset);
@@ -40,18 +40,18 @@ public class BlogDAO extends DBContext {
                 b.setTitle(rs.getString("Title"));
                 b.setContent(rs.getString("Content"));
                 b.setCreateAt(rs.getDate("Create_At"));
-                
+
                 Users u = new Users();
                 u.setUserID(rs.getInt("UserID"));
                 u.setUsername(rs.getString("Username"));
                 u.setName(rs.getString("Name"));
                 b.setUserId(u);
-                
+
                 BlogCategory c = new BlogCategory();
                 c.setBlogCategoryId(rs.getInt("Blog_CategoryID"));
                 c.setTitle(rs.getString("CategoryTitle"));
                 b.setBlogCategoryId(c);
-                
+
                 list.add(b);
             }
         } catch (SQLException e) {
@@ -73,7 +73,7 @@ public class BlogDAO extends DBContext {
         }
         return 0;
     }
-    
+
     public List<BlogCategory> getAllCategories() {
         List<BlogCategory> list = new ArrayList<>();
         String sql = "SELECT Blog_CategoryID, Title FROM Blog_Category";
@@ -90,6 +90,42 @@ public class BlogDAO extends DBContext {
             System.out.println(e);
         }
         return list;
+    }
+
+    public Blog getBlogById(int blogId) {
+        Blog blog = null;
+        String sql = "SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle "
+                + "FROM Blogs b "
+                + "JOIN Users u ON b.UserID = u.UserID "
+                + "JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID "
+                + "WHERE b.BlogID = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, blogId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                blog = new Blog();
+                blog.setBlogId(rs.getInt("BlogID"));
+                blog.setTitle(rs.getString("Title"));
+                blog.setContent(rs.getString("Content"));
+                blog.setCreateAt(rs.getDate("Create_At"));
+
+                Users u = new Users();
+                u.setUserID(rs.getInt("UserID"));
+                u.setUsername(rs.getString("Username"));
+                u.setName(rs.getString("Name"));
+                blog.setUserId(u);
+
+                BlogCategory c = new BlogCategory();
+                c.setBlogCategoryId(rs.getInt("Blog_CategoryID"));
+                c.setTitle(rs.getString("CategoryTitle"));
+                blog.setBlogCategoryId(c);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return blog;
     }
 
     public static void main(String[] args) {
@@ -116,5 +152,23 @@ public class BlogDAO extends DBContext {
             System.out.println("Category: " + blog.getBlogCategoryId().getTitle());
         }
         System.out.println("------------------------------");
+        
+        // Kiểm tra getBlogById
+    System.out.println("------------------------------");
+    System.out.println("Testing getBlogById:");
+
+    int testBlogId = 4; // Thay bằng một blogId hợp lệ từ cơ sở dữ liệu của bạn
+    Blog blogById = blogDAO.getBlogById(testBlogId);
+    
+    if (blogById != null) {
+        System.out.println("Blog ID: " + blogById.getBlogId());
+        System.out.println("Title: " + blogById.getTitle());
+        System.out.println("Content: " + (blogById.getContent().length() > 50 ? blogById.getContent().substring(0, 50) + "..." : blogById.getContent()));
+        System.out.println("Created At: " + blogById.getCreateAt());
+        System.out.println("Author: " + blogById.getUserId().getName());
+        System.out.println("Category: " + blogById.getBlogCategoryId().getTitle());
+    } else {
+        System.out.println("No blog found with ID: " + testBlogId);
+    }
     }
 }
