@@ -364,14 +364,25 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
-    
+     public Integer getUserIdByEmail(String email) throws SQLException {
+        String query = "SELECT UserID FROM Users WHERE Email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("UserID");
+            }
+        }
+        return null; // Return null if email not found
+    }
+
     public int addUser(String email, String password, String gender, String phone, String username) throws SQLException {
         String sql = "INSERT INTO Users (Email, Password, Gender, Phone, Status, Role, Username) VALUES (?, ?, ?, ?, ?, ?, ?)";
         int generatedUserId = -1;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, email);
-            pstmt.setString(2, password);
+            pstmt.setString(2, "12345678");
             pstmt.setString(3, gender);
             pstmt.setString(4, phone);
             pstmt.setString(5, "Inactive");

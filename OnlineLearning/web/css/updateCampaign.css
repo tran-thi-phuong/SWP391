@@ -1,0 +1,49 @@
+
+body {
+    background-color: #f8f9fa; 
+}
+
+.container2 {
+    background-color: white; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.update{
+    margin-left: 150px;
+    margin-right: 150px
+}
+/* Heading style */
+h2 {
+    color: green; 
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-control {
+    border: 1px solid greenyellow; 
+    border-radius: 5px; 
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Blue border on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow on focus */
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: #007bff; /* Bootstrap primary color */
+    border-color: #007bff; /* Match border with background */
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Bootstrap secondary color */
+    border-color: #6c757d; /* Match border with background */
+}
+
+/* Alert styles */
+.alert {
+    border-radius: 5px; /* Rounded corners for alerts */
+}

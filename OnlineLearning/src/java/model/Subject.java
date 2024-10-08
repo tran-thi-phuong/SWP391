@@ -4,17 +4,31 @@ import java.util.Date;
 
 public class Subject {
     private int subjectID;
+    private int userID;
     private String title;
     private String description;
     private int subjectCategoryId;
     private String status;
     private String thumbnail;
     private Date updateDate;
+    private String userName;
 
     // Default constructor
     public Subject() {}
 
     // Parameterized constructor
+    public Subject(int subjectID,int userID, String title, String description, int subjectCategoryId,
+                   String status, String thumbnail, Date updateDate, String userName) {
+        this.subjectID = subjectID;
+        this.userID = userID;
+        this.title = title;
+        this.description = description;
+        this.subjectCategoryId = subjectCategoryId;
+        this.status = status;
+        this.thumbnail = thumbnail;
+        this.updateDate = updateDate;
+        this.userName = userName;
+    }
     public Subject(int subjectID, String title, String description, int subjectCategoryId,
                    String status, String thumbnail, Date updateDate) {
         this.subjectID = subjectID;
@@ -24,6 +38,21 @@ public class Subject {
         this.status = status;
         this.thumbnail = thumbnail;
         this.updateDate = updateDate;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     // Getters and Setters
@@ -87,6 +116,7 @@ public class Subject {
     public String toString() {
         return "Subject{" +
                 "subjectId=" + subjectID +
+                ", userID='" + userID + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", subjectCategoryId=" + subjectCategoryId +

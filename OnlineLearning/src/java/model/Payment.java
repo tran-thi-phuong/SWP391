@@ -11,27 +11,24 @@ package model;
 import java.sql.Date;
 
 public class Payment {
-
     private int paymentId;
     private int userId;
+    private int subjectId;
     private Date paymentDate;
     private double amount;
     private String paymentMethod;
 
-    // Default constructor
     public Payment() {
     }
 
-    // Parameterized constructor
-    public Payment(int paymentId, int userId, Date paymentDate, double amount, String paymentMethod) {
+    public Payment(int paymentId, int userId, int subjectId, Date paymentDate, double amount, String paymentMethod) {
         this.paymentId = paymentId;
         this.userId = userId;
+        this.subjectId = subjectId;
         this.paymentDate = paymentDate;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
     }
-
-    // Getters and Setters
 
     public int getPaymentId() {
         return paymentId;
@@ -47,6 +44,14 @@ public class Payment {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
     }
 
     public Date getPaymentDate() {
@@ -75,13 +80,8 @@ public class Payment {
 
     @Override
     public String toString() {
-        return "Payment{" +
-                "paymentId=" + paymentId +
-                ", userId=" + userId +
-                ", paymentDate=" + paymentDate +
-                ", amount=" + amount +
-                ", paymentMethod='" + paymentMethod + '\'' +
-                '}';
+        return "Payment{" + "paymentId=" + paymentId + ", userId=" + userId + ", subjectId=" + subjectId + ", paymentDate=" + paymentDate + ", amount=" + amount + ", paymentMethod=" + paymentMethod + '}';
     }
+
 }
 

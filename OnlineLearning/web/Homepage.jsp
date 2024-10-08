@@ -37,7 +37,7 @@
                 <div class="slides">
                     <c:forEach var="subject" items="${topSubjects}">
                         <div class="slide">
-                            <img src="images/${subject.thumbnail}" alt="${subject.title}">
+                            <img src="${subject.thumbnail}" alt="${subject.title}">
                         </div>
                     </c:forEach>
                 </div>
@@ -52,32 +52,6 @@
             </div>
         </div>
 
-        <section id="subjects">
-            <h2 class="text-center mt-5 mb-4">Top Subjects</h2>
-            <div class="container">
-                <div class="row">
-                    <c:forEach var="subject" items="${topSubjects}">
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img class="card-img-top" src="images/${subject.thumbnail}" alt="${subject.title}">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="subjectDetail.jsp?subjectId=${subject.subjectID}">
-                                            ${subject.title}
-                                        </a>
-                                    </h5>
-                                    <p class="card-text">
-                                        ${fn:substring(subject.description, 0, 100)}...
-                                    </p>
-                                    <p class="text-muted">Updated on: ${subject.updateDate}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
-        </section>
-        
         <section id="latest-blogs">
             <h2 class="text-center mt-5 mb-4">Latest Blogs</h2>
             <div class="container">
@@ -85,7 +59,7 @@
                     <c:forEach var="blog" items="${latestBlogs}">
                         <div class="col-md-4 mb-4">
                             <div class="card">
-                                <img class="card-img-top" src="images/default-thumbnail.jpg" alt="${blog.title}">
+                                <img class="card-img-top" src="image/default-thumbnail.jpg" alt="${blog.title}">
                                 <div class="card-body">
                                     <h5 class="card-title">
                                         <a href="blogDetail?blogId=${blog.blogId}">
@@ -96,6 +70,32 @@
                                         ${fn:substring(blog.content, 0, 100)}...
                                     </p>
                                     <p class="text-muted">Created at: ${blog.createAt}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </section>
+
+        <section id="subjects">
+            <h2 class="text-center mt-5 mb-4">Top Subjects</h2>
+            <div class="container">
+                <div class="row">
+                    <c:forEach var="subject" items="${topSubjects}">
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img class="card-img-top" src="${subject.thumbnail}" alt="${subject.title}">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="subject-detail.jsp?subjectId=${subject.subjectID}">
+                                            ${subject.title}
+                                        </a>
+                                    </h5>
+                                    <p class="card-text">
+                                        ${fn:substring(subject.description, 0, 100)}...
+                                    </p>
+                                    <p class="text-muted">Updated on: ${subject.updateDate}</p>
                                 </div>
                             </div>
                         </div>

@@ -61,6 +61,16 @@
         <servlet-class>controller.blogDetail</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>CourseStat</servlet-name>
+        <servlet-class>controller.CourseStat</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RegistrationStat</servlet-name>
+        <servlet-class>controller.RegistrationStat</servlet-class>
+    </servlet>
+    <servlet>
+    </servlet>
+    <servlet>
         <servlet-name>authorInformation</servlet-name>
         <servlet-class>controller.authorInformation</servlet-class>
     </servlet>
@@ -79,6 +89,26 @@
     <servlet>
         <servlet-name>RegistrationDetail</servlet-name>
         <servlet-class>controller.RegistrationDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddRegistrationBySale</servlet-name>
+        <servlet-class>controller.AddRegistrationBySale</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CampaignList</servlet-name>
+        <servlet-class>controller.CampaignList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StopCampaign</servlet-name>
+        <servlet-class>controller.StopCampaign</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StartCampaign</servlet-name>
+        <servlet-class>controller.StartCampaign</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCampaign</servlet-name>
+        <servlet-class>controller.UpdateCampaign</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
@@ -141,17 +171,17 @@
         <url-pattern>/blogDetail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>authorInformation</servlet-name>
-        <url-pattern>/authorInformation</url-pattern>
+        <servlet-name>CourseStat</servlet-name>
+        <url-pattern>/courseStat</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>myRegistration</servlet-name>
-        <url-pattern>/myRegistration</url-pattern>
+        <servlet-name>RegistrationStat</servlet-name>
+        <url-pattern>/registrationStat</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>myCourse</servlet-name>
-        <url-pattern>/myCourse</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>RegistrationLists</servlet-name>
+        <servlet-class>controller.RegistrationLists</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegistrationLists</servlet-name>
         <url-pattern>/listRegistration</url-pattern>
@@ -159,6 +189,26 @@
     <servlet-mapping>
         <servlet-name>RegistrationDetail</servlet-name>
         <url-pattern>/registrationDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddRegistrationBySale</servlet-name>
+        <url-pattern>/addRegistrationBySale</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CampaignList</servlet-name>
+        <url-pattern>/campaignList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StopCampaign</servlet-name>
+        <url-pattern>/stopCampaign</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StartCampaign</servlet-name>
+        <url-pattern>/startCampaign</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCampaign</servlet-name>
+        <url-pattern>/updateCampaign</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
