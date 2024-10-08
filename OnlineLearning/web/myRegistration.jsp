@@ -12,11 +12,13 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
         <link href="css/myRegistration.css" rel="stylesheet"> 
-        <title>Danh sách ??ng ký c?a tôi</title>
+        <script src="js/myRegistration.js"></script>
+        <title>My Registration</title>
     </head>
-    <body style="display: flex; flex-direction: column; min-height: 100vh;">
+    <body>
         <%@include file="Header.jsp" %>
-        <div style=" padding: 0 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <p></p>
+        <div style="padding: 0 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
             <h1>My Registration</h1>
             <div class="search-container" style="text-align: right;">
                 <form action="myRegistration" method="get">
@@ -26,7 +28,7 @@
             </div>
         </div>
 
-        <div>
+        <div style="padding: 0 15px; display: inline-block;">
             <form action="myRegistration" method="get" style="display: inline-flex; gap: 10px;">
                 <input type="hidden" name="status" value="Submitted" />
                 <button type="submit">Submitted</button>
@@ -48,6 +50,16 @@
             </form>
         </div>
 
+        <div style="padding: 0 15px; display: inline-block;">
+            <label><input type="checkbox" data-attr="packageId"> Package</label>
+            <label><input type="checkbox" data-attr="totalCost"> Cost</label>
+            <label><input type="checkbox" data-attr="status"> Status</label>
+            <label><input type="checkbox" data-attr="validFrom"> Valid From</label>
+            <label><input type="checkbox" data-attr="validTo"> Valid To</label>
+            <label><input type="checkbox" data-attr="staffName"> Teacher</label>
+            <label><input type="checkbox" data-attr="note"> Note</label>
+        </div>
+
         <c:if test="${not empty registrationList}">
             <div id="registrations">
                 <c:forEach var="registration" items="${registrationList}">
@@ -64,8 +76,9 @@
                         </div>
                         <div class="registration-card-footer">
                             <c:if test="${registration.status == 'Submitted'}">
-                                <form action="myRegistration" method="post" style=" display: inline;">
+                                <form action="myRegistration" method="post" style="display: inline;">
                                     <input type="hidden" name="registrationId" value="${registration.registrationId}" />
+                                    <input type="hidden" name="action" value="cancel" />
                                     <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
                                 </form>
                                 <button class="btn btn-primary btn-sm" onclick="openEditPopup(${registration.registrationId})">Edit</button>

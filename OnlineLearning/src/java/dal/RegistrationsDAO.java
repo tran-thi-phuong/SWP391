@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
+import java.sql.Connection;
 import java.sql.Timestamp;
 
 public class RegistrationsDAO extends DBContext {
@@ -179,12 +180,13 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ?"; 
+                + "WHERE r.UserID = ? AND r.Status != 'Cancelled'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId); 
+            ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Registrations reg = new Registrations();
+                reg.setRegistrationId(rs.getInt("RegistrationID"));
                 reg.setSubjectId(rs.getInt("SubjectID"));
                 reg.setPackageId(rs.getInt("PackageID"));
                 reg.setTotalCost(rs.getDouble("Total_Cost"));
@@ -200,19 +202,6 @@ public class RegistrationsDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
-    }
-
-    public boolean cancelRegistration(int registrationId) {
-        // SQL query to update the registration status to 'cancelled'
-        String sql = "UPDATE registrations SET status = 'cancelled' WHERE registrationId = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, registrationId); // Set the registration ID parameter
-            int rowsAffected = stmt.executeUpdate(); // Execute the update
-            return rowsAffected > 0; // Return true if at least one row was updated
-        } catch (SQLException e) {
-            e.printStackTrace(); // Print the stack trace for debugging
-            return false; // Return false if there was an error
-        }
     }
 
     public List<Registrations> searchRegistrationsByUserId(int userId, String searchQuery) {
@@ -285,7 +274,7 @@ public class RegistrationsDAO extends DBContext {
                     + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                     + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                     + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                    + "WHERE r.UserID = ?"; // Không lọc theo trạng thái
+                    + "WHERE r.UserID = ? AND r.Status != 'Cancelled'"; // Không lọc theo trạng thái
         } else {
             // Lấy đăng ký theo trạng thái cụ thể
             sql = "SELECT r.RegistrationID, "
@@ -334,152 +323,47 @@ public class RegistrationsDAO extends DBContext {
         return list;
     }
 
-    public List<Registrations> getRegistrationsByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
-    List<Registrations> list = new ArrayList<>();
-    String sql;
-
-    // Tính toán chỉ số bắt đầu
-    int start = (page - 1) * pageSize;
-
-    if ("All".equals(status)) {
-        // Lấy tất cả đăng ký của người dùng với phân trang
-        sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-                + "       r.Valid_From, "
-                + "       r.Valid_To, "
-                + "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? "
-                + "LIMIT ?, ?"; // Thêm LIMIT cho phân trang
-    } else {
-        // Lấy đăng ký theo trạng thái cụ thể với phân trang
-        sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-                + "       r.Valid_From, "
-                + "       r.Valid_To, "
-                + "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND r.Status = ? "
-                + "LIMIT ?, ?"; // Thêm LIMIT cho phân trang
-    }
-
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, userId); // Set user ID
-        if (!"All".equals(status)) {
-            ps.setString(2, status); // Set trạng thái
-            ps.setInt(3, start); // Set chỉ số bắt đầu
-            ps.setInt(4, pageSize); // Set số lượng mục
-        } else {
-            ps.setInt(2, start); // Set chỉ số bắt đầu
-            ps.setInt(3, pageSize); // Set số lượng mục
+    public boolean updateStatusToCancelled(int registrationId) {
+        String sql = "UPDATE Registrations SET Status = 'Cancelled' WHERE RegistrationID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, registrationId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu có ít nhất 1 hàng được cập nhật
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Registrations reg = new Registrations();
-            reg.setSubjectId(rs.getInt("SubjectID"));
-            reg.setPackageId(rs.getInt("PackageID"));
-            reg.setTotalCost(rs.getDouble("Total_Cost"));
-            reg.setStatus(rs.getString("Status"));
-            reg.setValidFrom(rs.getDate("Valid_From"));
-            reg.setValidTo(rs.getDate("Valid_To"));
-            reg.setNote(rs.getString("Note"));
-            reg.setSubjectName(rs.getString("SubjectName"));
-            reg.setStaffName(rs.getString("StaffName"));
-            list.add(reg);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-    return list;
-}
-    
-    public int getTotalRegistrationsByUserIdAndStatus(int userId, String status) {
-    int total = 0;
-    String sql;
-
-    if ("All".equals(status)) {
-        sql = "SELECT COUNT(*) FROM Registrations WHERE UserID = ?";
-    } else {
-        sql = "SELECT COUNT(*) FROM Registrations WHERE UserID = ? AND Status = ?";
-    }
-
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, userId);
-        if (!"All".equals(status)) {
-            ps.setString(2, status);
-        }
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            total = rs.getInt(1);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return total;
-}
-
-
 
     public static void main(String[] args) {
-        // Create DAO object
         RegistrationsDAO registrationsDAO = new RegistrationsDAO();
 
-        // User ID to check (you can change this value as needed)
-        int userId = 1; // Example with user ID = 1
+        // ID của đăng ký cần hủy (có thể thay đổi giá trị này theo nhu cầu)
+        int registrationId = 3; // Ví dụ với RegistrationID = 1
 
-        // Call getRegistrationsByUserId and get results
-        List<Registrations> registrations = registrationsDAO.getRegistrationsByUserId(userId);
+        // Gọi phương thức hủy đăng ký và kiểm tra kết quả
+        boolean isCancelled = registrationsDAO.updateStatusToCancelled(registrationId);
 
-        // Check if data is returned
-        if (registrations.isEmpty()) {
-            System.out.println("No registrations found for user ID = " + userId);
-        } else {
-            // Print user registrations
-            System.out.println("User registrations for user ID = " + userId + ":");
-            for (Registrations registration : registrations) {
-                System.out.println(
-                        " Subject Name: " + registration.getSubjectName()
-                        + ", Total Cost: " + registration.getTotalCost()
-                        + ", Status: " + registration.getStatus()
-                        + ", Valid From: " + registration.getValidFrom()
-                        + ", Valid To: " + registration.getValidTo()
-                        + ", Staff Name: " + registration.getStaffName()
-                        + ", Note: " + registration.getNote());
-            }
-        }
-
-        int registrationIdToCancel = registrations.get(5).getRegistrationId(); // Assuming your model has a method getRegistrationId()
-        boolean isCancelled = registrationsDAO.cancelRegistration(registrationIdToCancel); // Call the cancel method
-
-        // Check if the cancellation was successful
+        // Kiểm tra nếu trạng thái đã được cập nhật
         if (isCancelled) {
-            System.out.println("Registration with ID " + registrationIdToCancel + " has been cancelled successfully.");
+            System.out.println("Registration with ID = " + registrationId + " has been cancelled successfully.");
         } else {
-            System.out.println("Failed to cancel registration with ID " + registrationIdToCancel + ".");
+            System.out.println("Failed to cancel registration with ID = " + registrationId + ".");
         }
+        int userId = 1; // Thay đổi userId nếu cần
+    List<Registrations> registrationsList = registrationsDAO.getRegistrationsByUserId(userId);
+
+    // In thông tin các đăng ký
+    for (Registrations registration : registrationsList) {
+        System.out.println("Registration ID: " + registration.getRegistrationId());
+        System.out.println("Subject Name: " + registration.getSubjectName());
+        System.out.println("Total Cost: " + registration.getTotalCost());
+        System.out.println("Status: " + registration.getStatus());
+        System.out.println("Valid From: " + registration.getValidFrom());
+        System.out.println("Valid To: " + registration.getValidTo());
+        System.out.println("Note: " + registration.getNote());
+        System.out.println("Staff Name: " + registration.getStaffName());
+        System.out.println("--------------------------------------------------");
+    }
     }
 }

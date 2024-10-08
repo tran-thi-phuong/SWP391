@@ -18,72 +18,74 @@ import model.Users;
 public class myRegistration extends HttpServlet {
 
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String searchQuery = request.getParameter("searchQuery");
-    String statusFilter = request.getParameter("status"); 
-    String pageParam = request.getParameter("page");
-    int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1; 
-    int pageSize = 6; 
-    
-    HttpSession session = request.getSession();
-    Users user = (Users) session.getAttribute("user");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String searchQuery = request.getParameter("searchQuery");
+        String statusFilter = request.getParameter("status");
+        String pageParam = request.getParameter("page");
+        int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
+        int pageSize = 6;
 
-    if (user == null) {
-        response.sendRedirect("login.jsp");
-        return;
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        int userId = user.getUserID();
+
+        RegistrationsDAO registrationsDAO = new RegistrationsDAO();
+        List<Registrations> registrationList;
+
+        if (statusFilter != null) {
+            // Lấy danh sách đăng ký dựa trên trạng thái
+            registrationList = registrationsDAO.getRegistrationsByUserIdAndStatus(userId, statusFilter);
+        } else if (searchQuery != null && !searchQuery.isEmpty()) {
+            // Tìm kiếm đăng ký dựa trên từ khóa
+            registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQuery);
+        } else {
+            // Nếu không có từ khóa, lấy tất cả các đăng ký
+            registrationList = registrationsDAO.getRegistrationsByUserId(userId);
+        }
+
+        // Đặt danh sách đăng ký vào request attribute để hiển thị trong JSP
+        request.setAttribute("registrationList", registrationList);
+        request.setAttribute("searchQuery", searchQuery);
+
+        // Chuyển tiếp request tới trang JSP
+        request.getRequestDispatcher("myRegistration.jsp").forward(request, response);
     }
-    int userId = user.getUserID();
-
-    RegistrationsDAO registrationsDAO = new RegistrationsDAO();
-    List<Registrations> registrationList;
-
-    if (statusFilter != null) {
-        // Lấy danh sách đăng ký dựa trên trạng thái
-        registrationList = registrationsDAO.getRegistrationsByUserIdAndStatus(userId, statusFilter);
-    } else if (searchQuery != null && !searchQuery.isEmpty()) {
-        // Tìm kiếm đăng ký dựa trên từ khóa
-        registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQuery);
-    } else {
-        // Nếu không có từ khóa, lấy tất cả các đăng ký
-        registrationList = registrationsDAO.getRegistrationsByUserId(userId);
-    }
-
-    // Đặt danh sách đăng ký vào request attribute để hiển thị trong JSP
-    request.setAttribute("registrationList", registrationList);
-    request.setAttribute("searchQuery", searchQuery); // Đặt từ khóa tìm kiếm vào request để hiển thị lại trong JSP
-
-    // Chuyển tiếp request tới trang JSP
-    request.getRequestDispatcher("myRegistration.jsp").forward(request, response);
-}
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String action = request.getParameter("action");
-        String registrationIdStr = request.getParameter("registrationId");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
 
-        System.out.println("Action: " + action);
-        System.out.println("Registration ID: " + registrationIdStr);
+        int userId = user.getUserID(); 
 
-        if ("cancel".equals(action) && registrationIdStr != null) {
+        if ("cancel".equals(action)) {
+            String registrationIdStr = request.getParameter("registrationId");
+            System.out.println("Registration ID: " + registrationIdStr); // Ghi ra giá trị của registrationId
             int registrationId = Integer.parseInt(registrationIdStr);
             RegistrationsDAO registrationsDAO = new RegistrationsDAO();
-            boolean success = registrationsDAO.cancelRegistration(registrationId);
+            List<Registrations> registrationList;
 
-            // Redirect back to the registration list page with a message
-            if (success) {
+            // Hủy đăng ký
+            boolean isCancelled = registrationsDAO.updateStatusToCancelled(registrationId);
+
+            // Nếu hủy thành công, có thể lấy danh sách đăng ký mới
+            if (isCancelled) {
+                registrationList = registrationsDAO.getRegistrationsByUserId(userId);
+                request.setAttribute("registrationList", registrationList);
                 request.setAttribute("message", "Registration cancelled successfully.");
             } else {
-                request.setAttribute("error", "Failed to cancel registration.");
+                request.setAttribute("message", "Failed to cancel registration.");
             }
-
-            // Use doGet to display the updated registration list
-            doGet(request, response);
-        } else {
-            // Handle other POST actions or invalid action
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action.");
         }
+
+        request.getRequestDispatcher("myRegistration.jsp").forward(request, response);
     }
 }

@@ -7,9 +7,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Author     : sonna
 */
 
+body{
+    display: flex; 
+    flex-direction: column; 
+    min-height: 100vh;
+}
 /*---------------------------------------
     Registration Cards
 -----------------------------------------*/
+
 #registrations {
     display: flex;
     flex-wrap: wrap;
@@ -68,5 +74,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .registration-card-footer a:hover {
     color: var(--primary-color);
 }
+footer{
+    margin-top: auto;
+}
+
+
 
 

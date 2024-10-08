@@ -302,3 +302,12 @@ VALUES
 (1, 'Language Technology in 2024: The Future of Learning', 
 'The field of language learning has undergone a revolution with the rise of new technologies. From artificial intelligence-powered language apps to virtual reality platforms, the tools available to today’s language learners are more advanced than ever before. In this blog post, we explore the cutting-edge technologies that are transforming how we learn languages. We will discuss the most popular apps, such as Duolingo, Babbel, and Rosetta Stone, and examine how AI is being used to create personalized learning experiences. Furthermore, we’ll dive into the world of virtual reality (VR) and augmented reality (AR), which are allowing learners to immerse themselves in simulated environments where they can practice their language skills in real-time. Imagine walking through a virtual Paris while practicing your French or taking a VR tour of Tokyo while speaking Japanese. These innovations are making language learning more engaging, interactive, and accessible to learners around the world. We’ll also take a look at the future of language technology and what we can expect in the coming years as AI continues to evolve.', 
 '2024-09-30 14:00:00', 5);
+
+DELETE FROM Registrations 
+WHERE UserID = 1 
+AND Status = 'Active';
+
+INSERT INTO Registrations (UserID, SubjectID, PackageID, Status, Valid_From, Valid_To)
+VALUES
+(1, 11, 1, 'Cancelled','2024-08-15','2024-11-15'),
+(1, 19, 3, 'Cancelled', '2024-09-10', '2024-12-10');
