@@ -52,11 +52,15 @@ public class TestController extends HttpServlet {
     }
         }
         String search = request.getParameter("search");
-        String pageStr = request.getParameter("page");
+        String currentPage = request.getParameter("page");
+        //default is 1
+        if(currentPage == null){
+            currentPage ="1";
+        }
         String subjectId = request.getParameter("subjectId");
-        String type = request.getParameter("type");
+        String type = request.getParameter("quizType");
 
-        int pageNumber = (pageStr != null) ? Integer.parseInt(pageStr) : 1;
+        int pageNumber = (currentPage != null) ? Integer.parseInt(currentPage) : 1;
         int pageSize = (setting != null) ? setting.getNumberOfItems() : 10;
 
         List<Test> tests = testDAO.getAllTests(pageNumber, pageSize, search, subjectId, type);
@@ -66,6 +70,7 @@ public class TestController extends HttpServlet {
 
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("testList", tests);
+        request.setAttribute("currentPage",currentPage);
         // Forward to the JSP
         request.getRequestDispatcher("QuizList.jsp").forward(request, response);
 

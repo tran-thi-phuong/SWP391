@@ -32,7 +32,9 @@
     width: 100%;
     height: auto;
 }
-
+        .setting{
+            margin: 10px;
+        }
 .media-display video {
     width: 100%;
     height: auto;
@@ -82,3 +84,4 @@
             display: block;
             margin: 10px 0 5px;
         }
+        

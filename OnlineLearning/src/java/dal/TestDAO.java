@@ -78,7 +78,7 @@ public List<Test> getAllTests(int pageNumber, int pageSize, String search, Strin
         sql.append(" AND SubjectID = ?");
     }
     if (type != null && !type.isEmpty()) {
-        sql.append(" AND Type = ?");
+        sql.append(" AND Type Like ?");
     }
 
     // Add pagination using OFFSET and FETCH NEXT
@@ -134,7 +134,7 @@ public int getTotalTestCount(String search, String subjectId, String type) {
         sql.append(" AND SubjectID = ?");
     }
     if (type != null && !type.isEmpty()) {
-        sql.append(" AND Type = ?");
+        sql.append(" AND Type Like ?");
     }
 
     try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
@@ -210,6 +210,23 @@ public int getTotalTestCount(String search, String subjectId, String type) {
         }
         return count;
     }
+    public List<String> getAllQuizTypes() {
+    List<String> quizTypes = new ArrayList<>();
+    String sql = "SELECT DISTINCT Type FROM Tests"; // Assuming 'Type' is the column name for quiz types
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        
+        while (rs.next()) {
+            quizTypes.add(rs.getString("Type"));
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    
+    return quizTypes;
+}
+
 
     // Additional methods for update and delete can be added similarly
 }
