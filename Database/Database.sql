@@ -57,7 +57,7 @@ GO
 -- Tạo bảng Subjects
 CREATE TABLE Subjects (
     SubjectID INT PRIMARY KEY IDENTITY(1,1),
-	UserID INT,
+	OwnerID INT,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
     Subject_CategoryID INT,
