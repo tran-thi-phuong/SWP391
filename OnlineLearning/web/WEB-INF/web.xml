@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <!-- Authentication Servlets -->
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>controller.Login</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RevenueStat</servlet-name>
+        <servlet-class>controller.RevenueStat</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Register</servlet-name>
+        <servlet-class>controller.Register</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Verify</servlet-name>
+        <servlet-class>controller.Verify</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResendCode</servlet-name>
+        <servlet-class>controller.ResendCode</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>controller.Logout</servlet-class>
+    </servlet>
+
+    <!-- Password Management Servlets -->
     <servlet>
         <servlet-name>changePassword</servlet-name>
         <servlet-class>controller.changePassword</servlet-class>
@@ -16,34 +44,14 @@
         <servlet-name>resetPassword</servlet-name>
         <servlet-class>controller.resetPassword</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>Login</servlet-name>
-        <servlet-class>controller.Login</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Register</servlet-name>
-        <servlet-class>controller.Register</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Verify</servlet-name>
-        <servlet-class>controller.Verify</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ResendCode</servlet-name>
-        <servlet-class>controller.ResendCode</servlet-class>
-    </servlet>
+
+    <!-- Profile Management Servlets -->
     <servlet>
         <servlet-name>UpdateProfile</servlet-name>
         <servlet-class>controller.UpdateProfile</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>SliderServlet</servlet-name>
-        <servlet-class>controller.SliderServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>SubjectServlet</servlet-name>
-        <servlet-class>controller.SubjectServlet</servlet-class>
-    </servlet>
+
+    <!-- Homepage and Content Servlets -->
     <servlet>
         <servlet-name>Homepage</servlet-name>
         <servlet-class>controller.Homepage</servlet-class>
@@ -53,13 +61,19 @@
         <servlet-class>controller.BlogList</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Logout</servlet-name>
-        <servlet-class>controller.Logout</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>blogDetail</servlet-name>
         <servlet-class>controller.blogDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SliderServlet</servlet-name>
+        <servlet-class>controller.SliderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SubjectServlet</servlet-name>
+        <servlet-class>controller.SubjectServlet</servlet-class>
+    </servlet>
+
+    <!-- Statistics Servlets -->
     <servlet>
         <servlet-name>CourseStat</servlet-name>
         <servlet-class>controller.CourseStat</servlet-class>
@@ -68,23 +82,11 @@
         <servlet-name>RegistrationStat</servlet-name>
         <servlet-class>controller.RegistrationStat</servlet-class>
     </servlet>
-    <servlet>
-    </servlet>
-    <servlet>
-        <servlet-name>authorInformation</servlet-name>
-        <servlet-class>controller.authorInformation</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>myRegistration</servlet-name>
-        <servlet-class>controller.myRegistration</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>myCourse</servlet-name>
-        <servlet-class>controller.myCourse</servlet-class>
-    </servlet>
+
+    <!-- Registration Management Servlets -->
     <servlet>
         <servlet-name>RegistrationLists</servlet-name>
-        <servlet-class>controller.RegistrationLists</servlet-class>
+<servlet-class>controller.RegistrationLists</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegistrationDetail</servlet-name>
@@ -94,6 +96,8 @@
         <servlet-name>AddRegistrationBySale</servlet-name>
         <servlet-class>controller.AddRegistrationBySale</servlet-class>
     </servlet>
+
+    <!-- Campaign Management Servlets -->
     <servlet>
         <servlet-name>CampaignList</servlet-name>
         <servlet-class>controller.CampaignList</servlet-class>
@@ -110,6 +114,8 @@
         <servlet-name>UpdateCampaign</servlet-name>
         <servlet-class>controller.UpdateCampaign</servlet-class>
     </servlet>
+
+    <!-- Servlet Mappings -->
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -166,7 +172,7 @@
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
+<servlet-mapping>
         <servlet-name>blogDetail</servlet-name>
         <url-pattern>/blogDetail</url-pattern>
     </servlet-mapping>
@@ -178,10 +184,6 @@
         <servlet-name>RegistrationStat</servlet-name>
         <url-pattern>/registrationStat</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>RegistrationLists</servlet-name>
-        <servlet-class>controller.RegistrationLists</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>RegistrationLists</servlet-name>
         <url-pattern>/listRegistration</url-pattern>
@@ -210,7 +212,14 @@
         <servlet-name>UpdateCampaign</servlet-name>
         <url-pattern>/updateCampaign</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RevenueStat</servlet-name>
+        <url-pattern>/revenueStat</url-pattern>
+    </servlet-mapping>
+
+    <!-- Welcome File List -->
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
+
 </web-app>
