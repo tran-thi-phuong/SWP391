@@ -68,6 +68,10 @@
         <servlet-name>myRegistration</servlet-name>
         <servlet-class>controller.myRegistration</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>myCourse</servlet-name>
+        <servlet-class>controller.myCourse</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -135,6 +139,10 @@
     <servlet-mapping>
         <servlet-name>myRegistration</servlet-name>
         <url-pattern>/myRegistration</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>myCourse</servlet-name>
+        <url-pattern>/myCourse</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

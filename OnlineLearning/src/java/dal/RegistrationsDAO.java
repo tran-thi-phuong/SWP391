@@ -224,7 +224,7 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)"; // Tìm kiếm theo tiêu đề môn học và tên gói
+                + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)"; 
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId); // Set user ID trong truy vấn
@@ -334,6 +334,97 @@ public class RegistrationsDAO extends DBContext {
             return false;
         }
     }
+    
+    public List<Registrations> getCourseByUserId(int userId) {
+        List<Registrations> list = new ArrayList<>();
+        String sql = "SELECT r.RegistrationID, "
+                + "       u.UserID, "
+                + "       s.SubjectID, "
+                + "       s.Title AS SubjectName, "
+                + "       pp.PackageID, "
+                + "       pp.Name AS PackageName, "
+                + "       r.Total_Cost, "
+                + "       r.Status, "
+                + "       r.Valid_From, "
+                + "       r.Valid_To, "
+                + "       staff.UserID AS StaffID, "
+                + "       staff.Name AS StaffName, "
+                + "       r.Note "
+                + "FROM Registrations r "
+                + "JOIN Users u ON r.UserID = u.UserID "
+                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
+                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
+                + "WHERE r.UserID = ? AND r.Status = 'In-progress'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Registrations reg = new Registrations();
+                reg.setRegistrationId(rs.getInt("RegistrationID"));
+                reg.setSubjectId(rs.getInt("SubjectID"));
+                reg.setPackageId(rs.getInt("PackageID"));
+                reg.setTotalCost(rs.getDouble("Total_Cost"));
+                reg.setStatus(rs.getString("Status"));
+                reg.setValidFrom(rs.getDate("Valid_From"));
+                reg.setValidTo(rs.getDate("Valid_To"));
+                reg.setNote(rs.getString("Note"));
+                reg.setSubjectName(rs.getString("SubjectName"));
+                reg.setStaffName(rs.getString("StaffName"));
+                list.add(reg);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public List<Registrations> searchCourseByUserId(int userId, String searchQuery) {
+        List<Registrations> list = new ArrayList<>();
+        String sql = "SELECT r.RegistrationID, "
+                + "       u.UserID, "
+                + "       s.SubjectID, "
+                + "       s.Title AS SubjectName, "
+                + "       pp.PackageID, "
+                + "       pp.Name AS PackageName, "
+                + "       r.Total_Cost, "
+                + "       r.Status, "
+                + "       r.Valid_From, "
+                + "       r.Valid_To, "
+                + "       staff.UserID AS StaffID, "
+                + "       staff.Name AS StaffName, "
+                + "       r.Note "
+                + "FROM Registrations r "
+                + "JOIN Users u ON r.UserID = u.UserID "
+                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
+                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
+                + "WHERE r.UserID = ? AND r.Status = 'In-progress' "
+                + "AND (s.Title LIKE ? OR pp.Name LIKE ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId); // Set user ID trong truy vấn
+            ps.setString(2, "%" + searchQuery + "%"); // Tìm kiếm theo tên môn học
+            ps.setString(3, "%" + searchQuery + "%"); // Tìm kiếm theo tên gói
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Registrations reg = new Registrations();
+                reg.setSubjectId(rs.getInt("SubjectID"));
+                reg.setPackageId(rs.getInt("PackageID"));
+                reg.setTotalCost(rs.getDouble("Total_Cost"));
+                reg.setStatus(rs.getString("Status"));
+                reg.setValidFrom(rs.getDate("Valid_From"));
+                reg.setValidTo(rs.getDate("Valid_To"));
+                reg.setNote(rs.getString("Note"));
+                reg.setSubjectName(rs.getString("SubjectName"));
+                reg.setStaffName(rs.getString("StaffName"));
+                list.add(reg);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     public static void main(String[] args) {
         RegistrationsDAO registrationsDAO = new RegistrationsDAO();
@@ -351,18 +442,18 @@ public class RegistrationsDAO extends DBContext {
             System.out.println("Failed to cancel registration with ID = " + registrationId + ".");
         }
         int userId = 1; // Thay đổi userId nếu cần
-    List<Registrations> registrationsList = registrationsDAO.getRegistrationsByUserId(userId);
+    List<Registrations> courseList = registrationsDAO.getCourseByUserId(userId);
 
     // In thông tin các đăng ký
-    for (Registrations registration : registrationsList) {
-        System.out.println("Registration ID: " + registration.getRegistrationId());
-        System.out.println("Subject Name: " + registration.getSubjectName());
-        System.out.println("Total Cost: " + registration.getTotalCost());
-        System.out.println("Status: " + registration.getStatus());
-        System.out.println("Valid From: " + registration.getValidFrom());
-        System.out.println("Valid To: " + registration.getValidTo());
-        System.out.println("Note: " + registration.getNote());
-        System.out.println("Staff Name: " + registration.getStaffName());
+    for (Registrations course : courseList) {
+        System.out.println("Registration ID: " + course.getRegistrationId());
+        System.out.println("Subject Name: " + course.getSubjectName());
+        System.out.println("Total Cost: " + course.getTotalCost());
+        System.out.println("Status: " + course.getStatus());
+        System.out.println("Valid From: " + course.getValidFrom());
+        System.out.println("Valid To: " + course.getValidTo());
+        System.out.println("Note: " + course.getNote());
+        System.out.println("Staff Name: " + course.getStaffName());
         System.out.println("--------------------------------------------------");
     }
     }
