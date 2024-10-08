@@ -20,7 +20,7 @@
                     <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
                     <a class="nav-link active" href="Homepage">Homepage</a>
                     </c:if>
-                    <c:if test="${sessionScope.user.role=='Staff'}">
+                    <c:if test="${sessionScope.user.role=='Admin'}">
                     <a class="nav-link active" href="#">Dashboard</a>
                     </c:if>
                 </li>
