@@ -8,14 +8,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 */
 .content-container{
     background-color: #F4F7FE;
+    height: 750px;
 }
 .content {
     display: flex;
     margin-left: 0;
     padding: 20px;
     flex-grow: 1;
-    
-
 }
 .card-1, .card-2, .card-5{
     background-color: white;

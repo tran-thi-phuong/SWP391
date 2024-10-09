@@ -20,6 +20,7 @@ CREATE TABLE Users(
 	Avatar NVARCHAR(255),
     Role NVARCHAR(20) Not Null, 
 	Status NVARCHAR(10) NOT NULL,
+	Create_At DATETIME DEFAULT GETDATE(),
     Token NVARCHAR(MAX));
 GO
 CREATE TABLE VerificationCode (

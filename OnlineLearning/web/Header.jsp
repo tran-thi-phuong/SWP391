@@ -21,7 +21,7 @@
                     <a class="nav-link active" href="Homepage">Homepage</a>
                     </c:if>
                     <c:if test="${sessionScope.user.role=='Admin'}">
-                    <a class="nav-link active" href="#">Dashboard</a>
+                    <a class="nav-link active" href="courseStat">Dashboard</a>
                     </c:if>
                 </li>
 
