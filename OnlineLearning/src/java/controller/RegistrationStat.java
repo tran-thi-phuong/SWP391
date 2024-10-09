@@ -58,27 +58,27 @@ public class RegistrationStat extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        LocalDate endDateLocal = LocalDate.now();
-        LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
-        Date endDate = Date.valueOf(endDateLocal);
-        Date startDate = Date.valueOf(startDateLocal);
-        RegistrationsDAO r = new RegistrationsDAO();
-        int successRegistration = r.getTotalRegistrationByStatus("Active");
-        int submittedRegistration = r.getTotalRegistrationByStatus("Processing");
-        int cancelledRegistration = r.getTotalRegistrationByStatus("Inactive");
-        int newRegistration = r.getNewRegistrationByTime(startDate, endDate);
-        int totalRegistration = r.getTotalRegistrations();
-        List<SubjectCategoryCount> registrationAllocation = r.getRegistrationAllocation();
-        List<SubjectCategoryCount> bestSeller = r.getBestSeller(5);
-        request.setAttribute("successRegistration", successRegistration);
-        request.setAttribute("submittedRegistration", submittedRegistration);
-        request.setAttribute("cancelledRegistration", cancelledRegistration);
-        request.setAttribute("bestSeller", bestSeller);
-        request.setAttribute("registrationAllocation", registrationAllocation);
-        request.setAttribute("newRegistration", newRegistration);
-        request.setAttribute("totalRegistration", totalRegistration);
-        request.setAttribute("action", "registrationStat");
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+//        LocalDate endDateLocal = LocalDate.now();
+//        LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
+//        Date endDate = Date.valueOf(endDateLocal);
+//        Date startDate = Date.valueOf(startDateLocal);
+//        RegistrationsDAO r = new RegistrationsDAO();
+//        int successRegistration = r.getTotalRegistrationByStatus("Active");
+//        int submittedRegistration = r.getTotalRegistrationByStatus("Processing");
+//        int cancelledRegistration = r.getTotalRegistrationByStatus("Inactive");
+//        int newRegistration = r.getNewRegistrationByTime(startDate, endDate);
+//        int totalRegistration = r.getTotalRegistrations();
+//        List<SubjectCategoryCount> registrationAllocation = r.getRegistrationAllocation();
+//        List<SubjectCategoryCount> bestSeller = r.getBestSeller(5);
+//        request.setAttribute("successRegistration", successRegistration);
+//        request.setAttribute("submittedRegistration", submittedRegistration);
+//        request.setAttribute("cancelledRegistration", cancelledRegistration);
+//        request.setAttribute("bestSeller", bestSeller);
+//        request.setAttribute("registrationAllocation", registrationAllocation);
+//        request.setAttribute("newRegistration", newRegistration);
+//        request.setAttribute("totalRegistration", totalRegistration);
+//        request.setAttribute("action", "registrationStat");
+//        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     } 
 
     /** 

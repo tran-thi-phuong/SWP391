@@ -31,17 +31,16 @@ public class myCourse extends HttpServlet {
         }
         int userId = user.getUserID();
 
-        RegistrationsDAO registrationsDAO = new RegistrationsDAO();
-        List<Registrations> registrationList;
+        RegistrationsDAO course = new RegistrationsDAO();
+        List<Registrations> courseList;
 
-        if (searchQuery != null && !searchQuery.isEmpty()) {
-            registrationList = registrationsDAO.searchCourseByUserId(userId, searchQuery);
+        if (searchQuery != null) {
+            courseList = course.searchCourseByUserId(userId, searchQuery);
         } else {
-            registrationList = registrationsDAO.getCourseByUserId(userId);
+            courseList = course.getCourseByUserId(userId);
         }
 
-        // Đặt danh sách đăng ký vào request attribute để hiển thị trong JSP
-        request.setAttribute("registrationList", registrationList);
+        request.setAttribute("courseList", courseList);
         request.setAttribute("searchQuery", searchQuery);
 
         // Chuyển tiếp request tới trang JSP

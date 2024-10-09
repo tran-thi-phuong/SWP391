@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Blog;
 import model.BlogCategory;
 
-public class BlogList extends HttpServlet {
+public class blogList extends HttpServlet {
     
     private static final int PAGE_SIZE = 8; 
     @Override
