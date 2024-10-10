@@ -112,6 +112,10 @@
         <servlet-name>CustomerStat</servlet-name>
         <servlet-class>controller.CustomerStat</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CampaignStat</servlet-name>
+        <servlet-class>controller.CampaignStat</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -216,6 +220,10 @@
     <servlet-mapping>
         <servlet-name>CustomerStat</servlet-name>
         <url-pattern>/customerStat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CampaignStat</servlet-name>
+        <url-pattern>/campaignStat</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

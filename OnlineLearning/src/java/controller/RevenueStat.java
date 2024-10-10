@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -87,7 +89,45 @@ public class RevenueStat extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String select = request.getParameter("select-action");
+        String timeRange = request.getParameter("timeRange"); 
+        PaymentDAO p = new PaymentDAO();
+        double totalRevenue = p.getTotalRevenue();
+        double lastMonthRevenue = 0;
+        List<Revenue> revenueAllocation = p.getRevenueAllocation();
+        if (select.equals("7days")) {
+            LocalDate endDateLocal = LocalDate.now();
+            LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
+            Date endDate = Date.valueOf(endDateLocal);
+            Date startDate = Date.valueOf(startDateLocal);
+            lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
+        }else if(select.equals("30days")){
+            LocalDate endDateLocal = LocalDate.now();
+            LocalDate startDateLocal = endDateLocal.minus(30, ChronoUnit.DAYS);
+            Date endDate = Date.valueOf(endDateLocal);
+            Date startDate = Date.valueOf(startDateLocal);
+            lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
+        }else{
+            String[] timeRangeSplit = timeRange.split(" to ");
+            String startDateStr = timeRangeSplit[0];
+            String endDateStr = timeRangeSplit[1];
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date startDate = new Date(dateFormat.parse(startDateStr).getTime());
+                Date endDate = new Date(dateFormat.parse(endDateStr).getTime());
+                lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+        request.setAttribute("lastMonthRevenue", lastMonthRevenue);
+        request.setAttribute("revenueAllocation", revenueAllocation);
+        request.setAttribute("totalRevenue", totalRevenue);
+        request.setAttribute("action", "revenueStat");
+        request.setAttribute("select", select);
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }
 
     /**

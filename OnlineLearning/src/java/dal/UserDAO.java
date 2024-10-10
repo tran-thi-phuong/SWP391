@@ -4,7 +4,6 @@
  */
 package dal;
 
-import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import model.Users;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -417,12 +416,12 @@ public class UserDAO extends DBContext {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            System.out.println("Error in getTotalSubjects: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
         return 0;
     }
     public int getNewCustomer(Date startDate, Date endDate){
-        String sql = "SELECT COUNT(*) FROM Users WHERE Create_At BETWEEN ? AND ? and Status = 'Active'";
+        String sql = "SELECT COUNT(*) FROM Users WHERE Create_At BETWEEN ? AND ? and Status = 'Active' and Role = 'Customer'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(startDate.getTime()));
             ps.setDate(2, new java.sql.Date(endDate.getTime()));
@@ -436,12 +435,39 @@ public class UserDAO extends DBContext {
         }
         return 0;
     }
+    public int getNewlyBoughtCustomer(Date startDate, Date endDate){
+        String sql = "SELECT COUNT(*) FROM (SELECT UserID FROM Payment where PaymentDate between ? and ? GROUP BY UserID HAVING COUNT(UserID) = 1) AS NewlyBought";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDate(1, new java.sql.Date(startDate.getTime()));
+            ps.setDate(2, new java.sql.Date(endDate.getTime()));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
+    }
+    public int getTotalBoughtCustomer(){
+        String sql = "SELECT COUNT(DISTINCT UserID) FROM Payment;";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error" + e.getMessage());
+        }
+        return 0;
+    }
+    
     public static void main(String[] args){
         UserDAO u = new UserDAO();
         LocalDate endDateLocal = LocalDate.now();
         LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
         java.sql.Date endDate = java.sql.Date.valueOf(endDateLocal);
         java.sql.Date startDate = java.sql.Date.valueOf(startDateLocal);
-        System.out.println(u.getNewCustomer(startDate, endDate));
+        System.out.println(u.getTotalBoughtCustomer());
     }
 }
