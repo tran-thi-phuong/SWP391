@@ -1,19 +1,15 @@
-* Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dal;
 import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-@@ -13,7 +13,6 @@
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import model.SubjectCategoryCount;
 
-/**
- *
-@@ -23,7 +22,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllSubjects(int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
@@ -21,7 +17,6 @@ import model.SubjectCategoryCount;
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             // Set the offset and limit parameters
-@@ -34,7 +33,7 @@ public List<Subject> getAllSubjects(int offset, int limit) {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectID"));
@@ -29,7 +24,6 @@ import model.SubjectCategoryCount;
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
-@@ -54,14 +53,14 @@ public List<Subject> getAllSubjects(int offset, int limit) {
 
     public List<Subject> getAllSubjects() {
         List<Subject> subjects = new ArrayList<>();
@@ -44,7 +38,6 @@ import model.SubjectCategoryCount;
                 subject.setTitle(rs.getString("Title"));
                 subject.setDescription(rs.getString("Description"));
                 subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
-@@ -90,37 +89,9 @@ public int getTotalSubjects() {
         return 0;
     }
 
@@ -80,7 +73,6 @@ import model.SubjectCategoryCount;
                 + "ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-@@ -132,14 +103,14 @@ public List<Subject> getSubjectsByCategory(int categoryId, int offset, int limit
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectID"));
@@ -94,7 +86,6 @@ import model.SubjectCategoryCount;
                     list.add(subject);
                 }
             }
-@@ -221,7 +192,7 @@ public Subject getSubjectById(int subjectId) {
                 if (rs.next()) {
                     subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
@@ -102,7 +93,6 @@ import model.SubjectCategoryCount;
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
-@@ -256,7 +227,7 @@ public String getSubjectNameById(int subjectId) {
     }
     public List<Subject> searchSubjects(String query, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
@@ -110,7 +100,6 @@ import model.SubjectCategoryCount;
                 + "ORDER BY Update_Date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-@@ -269,13 +240,14 @@ public List<Subject> searchSubjects(String query, int offset, int limit) {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
@@ -124,7 +113,6 @@ import model.SubjectCategoryCount;
                     list.add(subject);
                 }
             }
-@@ -303,11 +275,16 @@ public int getTotalSearchSubjects(String query) {
         return 0;
     }
 
@@ -136,7 +124,6 @@ import model.SubjectCategoryCount;
             while (rs.next()) {
                 Subject subject = new Subject();
                 // Set subject properties from ResultSet
-@@ -342,33 +319,5 @@ public Map<Integer, Subject> getAllSubject() {
         }
         return list;
     }  
@@ -165,5 +152,3 @@ import model.SubjectCategoryCount;
          
     }
 }
-
-    
