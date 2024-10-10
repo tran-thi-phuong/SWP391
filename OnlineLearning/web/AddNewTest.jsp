@@ -91,8 +91,13 @@
                 </p>
                 <p>
                     <strong>Type:</strong>
-                    <input type="text" name="type" required/> 
+                    <select name="type" required>
+                        <option value="">Select Type</option>
+                        <option value="Test">Test</option>
+                        <option value="Quiz">Quiz</option>
+                    </select>
                 </p>
+
                 <p>
                     <strong>Duration:</strong>
                     <input type="number" name="duration" required/> minutes
@@ -101,10 +106,14 @@
                     <strong>Pass Condition:</strong>
                     <input type="text" name="passCondition" required/> %
                 </p>
-                <p>
-                    <strong>Level:</strong>
-                    <input type="text" name="level" required/>
-                </p>
+                    <strong for="level">Level:</strong>
+                    <select id="level" name="level" required>
+                        <option value="">Select Level</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+
                 <p>
                     <strong>Number of Questions:</strong>
                     <input type="number" name="quantity" value="0" readonly/>
@@ -123,40 +132,39 @@
         </div>
     </body>
     <script>
-            function toggleMediaFields() {
-                var mediaType = document.getElementById("mediaType").value;
-                var mediaURLField = document.getElementById("mediaURLField");
-                var mediaFileInput = document.getElementById("mediaFile");
+        function toggleMediaFields() {
+            var mediaType = document.getElementById("mediaType").value;
+            var mediaURLField = document.getElementById("mediaURLField");
+            var mediaFileInput = document.getElementById("mediaFile");
 
-                if (mediaType === "image") {
-                    mediaURLField.style.display = "block";
-                    mediaFileInput.accept = "image/*"; // Accept only images
-                } else if (mediaType === "video") {
-                    mediaURLField.style.display = "block";
-                    mediaFileInput.accept = "video/*"; // Accept only videos
-                } else {
-                    mediaURLField.style.display = "none";
-                    mediaFileInput.accept = ""; // No file accepted
-                }
+            if (mediaType === "image") {
+                mediaURLField.style.display = "block";
+                mediaFileInput.accept = "image/*"; // Accept only images
+            } else if (mediaType === "video") {
+                mediaURLField.style.display = "block";
+                mediaFileInput.accept = "video/*"; // Accept only videos
+            } else {
+                mediaURLField.style.display = "none";
+                mediaFileInput.accept = ""; // No file accepted
             }
-            function initializeFileInput() {
-                const mediaType = document.getElementById('mediaType').value;
-                if (mediaType) {
-                    setFileInputAccept(mediaType); // Set accept attribute based on current media type
-                    document.getElementById('mediaURLField').style.display = 'block'; // Ensure the field is visible
-                }
-                else{
-                    document.getElementById('mediaURLField').style.display = 'none';
-                }
+        }
+        function initializeFileInput() {
+            const mediaType = document.getElementById('mediaType').value;
+            if (mediaType) {
+                setFileInputAccept(mediaType); // Set accept attribute based on current media type
+                document.getElementById('mediaURLField').style.display = 'block'; // Ensure the field is visible
+            } else {
+                document.getElementById('mediaURLField').style.display = 'none';
             }
-            function setFileInputAccept(mediaType) {
-                const fileInput = document.getElementById('mediaFile');
-                if (mediaType === 'image') {
-                    fileInput.accept = 'image/*'; // Accept image files
-                } else if (mediaType === 'video') {
-                    fileInput.accept = 'video/*'; // Accept video files
-                }
+        }
+        function setFileInputAccept(mediaType) {
+            const fileInput = document.getElementById('mediaFile');
+            if (mediaType === 'image') {
+                fileInput.accept = 'image/*'; // Accept image files
+            } else if (mediaType === 'video') {
+                fileInput.accept = 'video/*'; // Accept video files
             }
-        </script>
+        }
+    </script>
     <%@ include file="Footer.jsp" %>
 </html>
