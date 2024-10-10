@@ -101,7 +101,6 @@ public class SubjectDAO extends DBContext {
         }
         return 0;
     }
-
     public int getNewSubjectByTime(Date startDate, Date endDate) {
         String sql = "SELECT COUNT(*) FROM Subjects WHERE Update_Date BETWEEN ? AND ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -117,7 +116,6 @@ public class SubjectDAO extends DBContext {
         }
         return 0;
     }
-
     public List<Subject> getSubjectsByCategory(int categoryId, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM Subjects s JOIN Users u ON s.UserID = u.UserID WHERE Subject_CategoryID = ? "
@@ -139,7 +137,6 @@ public class SubjectDAO extends DBContext {
                     subject.setStatus(rs.getString("Status"));
                     subject.setUpdateDate(rs.getDate("Update_Date"));
                     subject.setThumbnail(rs.getString("Thumbnail"));
-
                     list.add(subject);
                 }
             }
@@ -319,7 +316,7 @@ public class SubjectDAO extends DBContext {
         return featuredSubjects;
     }
 
-    
+
   public Map<Integer, Subject> getAllSubject() {
         Map<Integer, Subject> list = new HashMap<>();
         try {
@@ -362,13 +359,8 @@ public class SubjectDAO extends DBContext {
         }
         return list;
     }
-
     public static void main(String[] args) {
-
         SubjectDAO subjectDAO = new SubjectDAO();
          
     }
 }
-
-    
-
