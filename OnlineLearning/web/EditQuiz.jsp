@@ -179,8 +179,13 @@
 
                 <div class="form-group">
                     <label for="type">Type:</label>
-                    <input type="text" id="type" name="type" value="${currentTest.type}" required/>
+                    <select id="type" name="type" required>
+                        <option value="">Select Type</option>
+                        <option value="Test" ${currentTest.type == 'Test' ? 'selected' : ''}>Test</option>
+                        <option value="Quiz" ${currentTest.type == 'Quiz' ? 'selected' : ''}>Quiz</option>
+                    </select>
                 </div>
+
 
                 <div class="form-group">
                     <label for="duration">Duration:</label>
@@ -194,8 +199,14 @@
 
                 <div class="form-group">
                     <label for="level">Level:</label>
-                    <input type="text" id="level" name="level" value="${currentTest.level}" required/>
+                    <select id="level" name="level" required>
+                        <option value="">Select Level</option>
+                        <option value="Beginner" ${currentTest.level == 'Beginner' ? 'selected' : ''}>Beginner</option>
+                        <option value="Advanced" ${currentTest.level == 'Advanced' ? 'selected' : ''}>Advanced</option>
+                        <option value="Expert" ${currentTest.level == 'Expert' ? 'selected' : ''}>Expert</option>
+                    </select>
                 </div>
+
 
                 <div class="form-group">
                     <label for="quantity">Number of Questions:</label>

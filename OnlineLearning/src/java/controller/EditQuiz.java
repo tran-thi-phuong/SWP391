@@ -74,7 +74,8 @@ public class EditQuiz extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.setAttribute("errorMessage", "You cannot access this page directly.");
+        request.getRequestDispatcher("error.jsp").forward(request, response);
     }
 
     /**
@@ -102,6 +103,14 @@ public class EditQuiz extends HttpServlet {
             return;
         }
         int testId = Integer.parseInt(testIdStr);
+        int attemptCount = testDAO.countAttemptsByTestID(testId);
+
+        if (attemptCount > 0) {
+            // Set error message and redirect to error page
+            request.setAttribute("errorMessage", "Test already taken.");
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+            return; // Exit to prevent further processing
+        }
         request.setAttribute("testId", testId);
         switch (action) {
             case "edit":
@@ -139,7 +148,7 @@ public class EditQuiz extends HttpServlet {
         int subjectId = Integer.parseInt(request.getParameter("subjectId"));
         Test current = testDAO.getTestById(testId);
         // Handle file upload
-        String mediaURL = current.getMediaURL(); 
+        String mediaURL = current.getMediaURL();
         Part mediaFilePart;
         try {
             mediaFilePart = request.getPart("mediaURL");
@@ -153,8 +162,8 @@ public class EditQuiz extends HttpServlet {
             Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Test updatedTest = new Test( testId,  subjectId,  title,  description,  type,  level,  mediaType,  mediaURL, duration,  passCondition,  mediaDescription,  quantity);
-    
+        Test updatedTest = new Test(testId, subjectId, title, description, type, level, mediaType, mediaURL, duration, passCondition, mediaDescription, quantity);
+
         testDAO.updateTest(updatedTest); // Update quiz details in the database
     }
 
@@ -175,31 +184,30 @@ public class EditQuiz extends HttpServlet {
     }
 
     private String saveMediaFile(Part filePart, String uploadDir) throws IOException {
-    if (filePart != null && filePart.getSize() > 0) {
-        // Get the file name from the uploaded part
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        
-        // Construct the upload path using the web application context
-        String uploadPath = getServletContext().getRealPath("/") + uploadDir;
-        
-        // Create the directory if it does not exist
-        File uploadDirectory = new File(uploadPath);
-        if (!uploadDirectory.exists()) {
-            uploadDirectory.mkdirs(); // Create any necessary parent directories
+        if (filePart != null && filePart.getSize() > 0) {
+            // Get the file name from the uploaded part
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+            // Construct the upload path using the web application context
+            String uploadPath = getServletContext().getRealPath("/") + uploadDir;
+
+            // Create the directory if it does not exist
+            File uploadDirectory = new File(uploadPath);
+            if (!uploadDirectory.exists()) {
+                uploadDirectory.mkdirs(); // Create any necessary parent directories
+            }
+
+            // Create a new file object for the uploaded file
+            File file = new File(uploadDirectory, fileName);
+
+            // Write the file to the upload path
+            filePart.write(file.getAbsolutePath());
+
+            // Return the relative path for accessing the file
+            return uploadDir + "" + fileName; // Ensure the path is relative to the web context
         }
-
-        // Create a new file object for the uploaded file
-        File file = new File(uploadDirectory, fileName);
-        
-        // Write the file to the upload path
-        filePart.write(file.getAbsolutePath());
-        
-        // Return the relative path for accessing the file
-        return uploadDir + "" + fileName; // Ensure the path is relative to the web context
+        return null; // Return null if no file was uploaded
     }
-    return null; // Return null if no file was uploaded
-}
-
 
     /**
      * Returns a short description of the servlet.
@@ -221,12 +229,12 @@ public class EditQuiz extends HttpServlet {
                 int questionId = Integer.parseInt(questionIdStr);
                 // Logic to associate each selected question with the quiz
                 testQuestionDAO.addTestQuestion(new TestQuestion(testId, questionId));
-                
+
             }
         }
-            Test test = testDAO.getTestById(testId);
-                test.setQuantity(selectedQuestions.length);
-                testDAO.updateTest(test);
+        Test test = testDAO.getTestById(testId);
+        test.setQuantity(selectedQuestions.length);
+        testDAO.updateTest(test);
     }
 
 }

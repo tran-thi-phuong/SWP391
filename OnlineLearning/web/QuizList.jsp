@@ -35,6 +35,12 @@
         .add-new:hover, .setting:hover {
             background-color: #218838; 
         }
+        a{
+            color:blue;
+        }
+        table th{
+            background-color: #A8B1F9;
+        }
     </style>
     <%@include file="Header.jsp" %>
     <body>
