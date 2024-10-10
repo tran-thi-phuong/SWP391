@@ -14,10 +14,26 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <link rel="stylesheet" href="css/registration_list.css">
     </head>
-    <body>
-        <%@include file="Header.jsp" %>
-        <div class="container mt-5">
+    <%@include file="Header.jsp" %>
+    <body class="regist">
+        <div class="container2 mt-5">
             <h1>List of Registrations</h1>
+            <br>
+            <br>
+            <div style="display: flex; justify-content: flex-end; padding: 10px;">
+                <form action="addRegistrationBySale" method="get">
+                    <button type="submit" id="add" style="background-color: 	#90EE90; color: black;
+                            border: 1px solid #FF6347 ; padding: 10px 20px; cursor: pointer; border-radius: 5px;">
+                        New Registration
+                    </button>
+                </form>
+            </div>
+                            <form action="campaignList" method="get">
+                    <button type="submit" id="add" style="background-color: #FF0000; color: white;
+                            border: 1px solid #FF6347 ; padding: 10px 20px; cursor: pointer; border-radius: 5px;">
+                        Campaign List
+                    </button>
+                </form>
             <br>
             <form id="searchForm" action="listRegistration" method="get">
                 <div class="row mb-3">
@@ -142,7 +158,7 @@
                 </ul>
             </nav>
         </div>
-        <%@include file="Footer.jsp" %>
+
 
         <script>
 
@@ -288,8 +304,9 @@
                     fromDateInput.max = toDate;
                 }
             });
-            let sortDirection = true; 
+            let sortDirection = true;
         </script>
 
     </body>
+    <%@include file="Footer.jsp" %>
 </html>

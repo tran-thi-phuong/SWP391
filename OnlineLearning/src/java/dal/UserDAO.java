@@ -4,10 +4,14 @@
  */
 package dal;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import model.Users;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 /**
  *
@@ -263,7 +267,7 @@ public class UserDAO extends DBContext {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = st.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        userId = generatedKeys.getInt(1); // Retrieve the generated ID
+                        userId = generatedKeys.getInt(1);
                     } else {
                         throw new SQLException("Creating user failed, no ID obtained.");
                     }
@@ -276,7 +280,7 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
 
-        return userId; // Return the generated ID
+        return userId;
     }
 
     public Users getUserByInfo(String info, String content) {
@@ -364,14 +368,25 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
-    
+     public Integer getUserIdByEmail(String email) throws SQLException {
+        String query = "SELECT UserID FROM Users WHERE Email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("UserID");
+            }
+        }
+        return null; // Return null if email not found
+    }
+
     public int addUser(String email, String password, String gender, String phone, String username) throws SQLException {
         String sql = "INSERT INTO Users (Email, Password, Gender, Phone, Status, Role, Username) VALUES (?, ?, ?, ?, ?, ?, ?)";
         int generatedUserId = -1;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, email);
-            pstmt.setString(2, password);
+            pstmt.setString(2, "12345678");
             pstmt.setString(3, gender);
             pstmt.setString(4, phone);
             pstmt.setString(5, "Inactive");
@@ -394,5 +409,39 @@ public class UserDAO extends DBContext {
         }
 
         return generatedUserId;
+    }
+    public int getTotalCustomer(){
+        String sql = "SELECT COUNT(*) FROM Users where Role = 'Customer' and Status = 'Active'";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getTotalSubjects: " + e.getMessage());
+        }
+        return 0;
+    }
+    public int getNewCustomer(Date startDate, Date endDate){
+        String sql = "SELECT COUNT(*) FROM Users WHERE Create_At BETWEEN ? AND ? and Status = 'Active'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDate(1, new java.sql.Date(startDate.getTime()));
+            ps.setDate(2, new java.sql.Date(endDate.getTime()));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
+    }
+    public static void main(String[] args){
+        UserDAO u = new UserDAO();
+        LocalDate endDateLocal = LocalDate.now();
+        LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
+        java.sql.Date endDate = java.sql.Date.valueOf(endDateLocal);
+        java.sql.Date startDate = java.sql.Date.valueOf(startDateLocal);
+        System.out.println(u.getNewCustomer(startDate, endDate));
     }
 }

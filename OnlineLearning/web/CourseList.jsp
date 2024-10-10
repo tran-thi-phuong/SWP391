@@ -15,6 +15,7 @@
     </head>
     <body>
         <%@include file="Header.jsp" %>
+        
         <div class="container">
             <div class="content">
                 <aside class="sidebar">

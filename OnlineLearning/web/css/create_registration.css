@@ -1,0 +1,54 @@
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: Navy;
+    text-align: center;
+}
+
+.create .container2 {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #FFE5B4;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-start; /* Có thể thay đổi thành center hoặc space-between tùy yêu cầu */
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+.button-group button {
+    background-color: #7FFF00;
+    color: black;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+
+.button-group .cancel-button {
+    background-color: #FF6347;
+    color: white;
+}
+
+.button-group button:hover {
+    background-color: #FF7F50;
+}

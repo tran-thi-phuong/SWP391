@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Admin
  */
 public class Registrations {
-private int registrationId;
+    private int registrationId;
     private int userId;
     private int subjectId;
     private int packageId;
@@ -23,6 +23,8 @@ private int registrationId;
     private int staffId;
     private String note;
     private String campaignName;
+    private String subjectName; 
+    private String staffName;
 
     public Registrations() {
     }
@@ -140,5 +142,23 @@ private int registrationId;
     public void setNote(String note) {
         this.note = note;
     }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
+    
+    
 
 }

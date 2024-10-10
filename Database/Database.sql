@@ -261,4 +261,3 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
-GO
