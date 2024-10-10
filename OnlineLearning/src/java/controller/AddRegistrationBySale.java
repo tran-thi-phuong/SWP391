@@ -128,7 +128,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             userId = existingUser.getUserID();
         } else {
             
-            userId = userDAO.addUser(email, phone, gender, phone, generateRandomString(0));
+            userId = userDAO.addUser(email, phone, gender, phone, generateRandomString(10));
         }
 
         // Add the registration

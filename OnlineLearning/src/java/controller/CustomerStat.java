@@ -11,17 +11,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import dal.RegistrationsDAO;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import model.SubjectCategoryCount;
+
 /**
  *
  * @author tuant
  */
-public class RegistrationStat extends HttpServlet {
+public class CustomerStat extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +33,10 @@ public class RegistrationStat extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegistrationStat</title>");  
+            out.println("<title>Servlet CustomerStat</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegistrationStat at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet CustomerStat at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,27 +53,9 @@ public class RegistrationStat extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-//        LocalDate endDateLocal = LocalDate.now();
-//        LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
-//        Date endDate = Date.valueOf(endDateLocal);
-//        Date startDate = Date.valueOf(startDateLocal);
-//        RegistrationsDAO r = new RegistrationsDAO();
-//        int successRegistration = r.getTotalRegistrationByStatus("Active");
-//        int submittedRegistration = r.getTotalRegistrationByStatus("Processing");
-//        int cancelledRegistration = r.getTotalRegistrationByStatus("Inactive");
-//        int newRegistration = r.getNewRegistrationByTime(startDate, endDate);
-//        int totalRegistration = r.getTotalRegistrations();
-//        List<SubjectCategoryCount> registrationAllocation = r.getRegistrationAllocation();
-//        List<SubjectCategoryCount> bestSeller = r.getBestSeller(5);
-//        request.setAttribute("successRegistration", successRegistration);
-//        request.setAttribute("submittedRegistration", submittedRegistration);
-//        request.setAttribute("cancelledRegistration", cancelledRegistration);
-//        request.setAttribute("bestSeller", bestSeller);
-//        request.setAttribute("registrationAllocation", registrationAllocation);
-//        request.setAttribute("newRegistration", newRegistration);
-//        request.setAttribute("totalRegistration", totalRegistration);
-//        request.setAttribute("action", "registrationStat");
-//        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        
+        request.setAttribute("action", "courseStat");
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     } 
 
     /** 
