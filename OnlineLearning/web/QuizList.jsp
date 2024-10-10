@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        
+
         <meta charset="UTF-8">
         <title>Test List</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,19 +19,34 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet">
         <link rel="stylesheet" href="css/quiz-list-style.css">
-          <!-- Link to your CSS file -->
+        <!-- Link to your CSS file -->
     </head>
+    <style>
+        .add-new, .setting {
+            padding: 10px 15px;
+            background-color: #28a745; /* Green color for add button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px; 
+        }
+
+        .add-new:hover, .setting:hover {
+            background-color: #218838; 
+        }
+    </style>
     <%@include file="Header.jsp" %>
     <body>
         <c:set var="subjectDAO" value="<%=new dal.SubjectDAO()%>" />
         <c:set var="testDAO" value="<%=new dal.TestDAO()%>" />
         <button class="setting" onclick="document.getElementById('settingsModal').style.display = 'block'">Settings</button> <!-- Settings Button -->
-        <!-- Settings Modal -->
+        <button class="add-new" onclick="window.location.href = 'AddNewTest.jsp'">Add New</button>
         <div id="settingsModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="document.getElementById('settingsModal').style.display = 'none'">&times;</span>
                 <h2>Update Settings</h2>
-                <form id="settingsForm" class="settings-form" method="post" action="SettingServlet"> <!-- Action to SettingServlet -->
+                <form id="settingsForm" class="settings-form" method="post" action="SettingServlet" onsubmit="return validateNumberOfItems()">
                     <label for="numberOfItems">Number of Items per Page:</label>
                     <input type="number" id="numberOfItems" name="numberOfItems" value="${sessionScope.setting.numberOfItems != null ? sessionScope.setting.numberOfItems : 10}">
                     <label><input type="checkbox" name="title" ${sessionScope.setting.title != null ? (sessionScope.setting.title ? 'checked' : '') : 'checked'}> Title</label>
@@ -43,10 +58,6 @@
                     <label><input type="checkbox" name="passCondition" ${sessionScope.setting.passCondition != null ? (sessionScope.setting.passCondition ? 'checked' : '') : 'checked'}> Pass Condition</label>
                     <label><input type="checkbox" name="passRate" ${sessionScope.setting.passRate != null ? (sessionScope.setting.passRate ? 'checked' : '') : 'checked'}> Pass Rate</label>
                     <label><input type="checkbox" name="quizType" ${sessionScope.setting.quizType != null ? (sessionScope.setting.quizType ? 'checked' : '') : 'checked'}> Quiz Type</label>
-
-
-
-
                     <button type="submit">Save</button>
                 </form>
             </div>
@@ -205,11 +216,21 @@
     </body>
     <%@include file="Footer.jsp" %>
     <script>
-        // Modal close functionality
         window.onclick = function (event) {
             if (event.target == document.getElementById('settingsModal')) {
                 document.getElementById('settingsModal').style.display = "none";
             }
         }
+        function validateNumberOfItems() {
+            const numberOfItems = document.getElementById("numberOfItems").value;
+
+            if (numberOfItems <= 0) {
+                alert("The number of items per page must be greater than 0.");
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
+        }
     </script>
+
+
 </html>
