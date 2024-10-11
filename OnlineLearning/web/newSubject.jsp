@@ -4,9 +4,11 @@
     Author     : Admin
 --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
+    
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,7 +79,7 @@
             <input type="text" id="courseName" name="courseName" required>
 
             <label for="thumbnail">Thumbnail Image:</label>
-            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required>
+            <input type="file" id="thumbnail" name="thumbnail"required>
 
             <label for="category">Category:</label>
             <select id="category" name="category" required>

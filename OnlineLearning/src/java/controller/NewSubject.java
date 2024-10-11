@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller;
-
 import dal.CategoryDAO;
 import dal.SubjectDAO;
 import java.io.File;
@@ -20,25 +19,21 @@ import jakarta.servlet.http.Part;
 import java.sql.SQLException;
 import java.util.List;
 import model.SubjectCategory;
-
 /**
  *
  * @author Admin
  */
 @MultipartConfig
-@WebServlet(urlPatterns = {"/newSubject"})
-
 public class NewSubject extends HttpServlet {
     private SubjectDAO subjectDAO;
     private CategoryDAO categoryDAO;
-
+    private static final String UPLOAD_DIR = "images";
     @Override
     public void init() throws ServletException {
         super.init();
         subjectDAO = new SubjectDAO();
         categoryDAO = new CategoryDAO();
     }
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,41 +45,39 @@ public class NewSubject extends HttpServlet {
             throw new ServletException(ex);
         }
     }
-    
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         // Get form parameters
         String courseName = request.getParameter("courseName");
         String category = request.getParameter("category");
         String status = request.getParameter("status");
         String description = request.getParameter("description");
-
-        // Process the uploaded file (thumbnail image)
-        Part filePart = request.getPart("thumbnail");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
-        String uploadPath = getServletContext().getRealPath("/") + "uploads" + File.separator;
-
-        // Create uploads directory if it doesn't exist
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+        Part filePart = request.getPart("thumbnail"); 
+        String fileName = null;
+        String filePath = null;
+        if (filePart != null && filePart.getSize() > 0) {
+            fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            File file = new File(uploadDir, fileName);
+            filePart.write(file.getAbsolutePath());
+            filePath = UPLOAD_DIR + "/" + fileName;
         }
-
-        // Save the uploaded file
-        filePart.write(uploadPath + fileName);
-
-        // After saving the file, you could save the form data and file path to a database
-
-        // For now, just set attributes to forward them to a JSP
-        request.setAttribute("courseName", courseName);
-        request.setAttribute("category", category);
-        request.setAttribute("status", status);
-        request.setAttribute("description", description);
-        request.setAttribute("thumbnailPath", "uploads/" + fileName);
-
-        // Redirect to a success page or display the submitted data
-        request.getRequestDispatcher("courseSuccess.jsp").forward(request, response);
+        // Save course information to the database (giả sử bạn có SubjectDAO hoặc SubjectService để thêm vào DB)
+        SubjectDAO subjectDAO = new SubjectDAO();
+        boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath);
+        if (isAdded) {
+            // Redirect to success page or list of courses if add is successful
+            response.sendRedirect("SubjectList.jsp");
+        } else {
+            // Handle failure to add course (gửi lỗi và chuyển về trang thêm mới)
+            request.setAttribute("errorMessage", "Failed to add the course.");
+            request.getRequestDispatcher("newSubject").forward(request, response);
+        }
     }
+
 }
