@@ -16,6 +16,8 @@ public class Slider {
     private String title;
     private String image;
     private String content;
+    private String status;
+    private String backlink;
 
     public Slider() {
     }
@@ -77,4 +79,22 @@ public class Slider {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getBacklink() {
+        return backlink;
+    }
+
+    public void setBacklink(String backlink) {
+        this.backlink = backlink;
+    }
+    
+    
 }

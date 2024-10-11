@@ -1,0 +1,116 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Oct 7, 2024, 11:05:39 PM
+    Author     : sonna
+*/
+
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+/*---------------------------------------
+    Registration Cards
+-----------------------------------------*/
+
+#registrations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 1rem 10px;
+    margin-top: 0rem;
+    background-color: #fff;
+}
+
+.registration-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    background-color: #f9f9f9;
+    flex: 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.registration-card:hover {
+    transform: translateY(-5px);
+}
+
+.registration-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
+}
+
+.registration-card-text {
+    font-size: 0.875rem;
+    color: var(--p-color);
+    margin-bottom: 0.5rem;
+}
+
+.registration-card-text strong {
+    color: var(--primary-color);
+}
+
+.registration-card-footer {
+    font-size: 0.875rem;
+    color: #999;
+    margin-top: 1rem;
+    text-align: right;
+}
+
+.registration-card-footer a {
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
+.registration-card-footer a:hover {
+    color: var(--primary-color);
+}
+footer{
+    margin-top: auto;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+

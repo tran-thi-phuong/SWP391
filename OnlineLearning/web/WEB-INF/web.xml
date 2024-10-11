@@ -1,27 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-    <!-- Authentication Servlets -->
-    <servlet>
-        <servlet-name>Login</servlet-name>
-        <servlet-class>controller.Login</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Register</servlet-name>
-        <servlet-class>controller.Register</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Verify</servlet-name>
-        <servlet-class>controller.Verify</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ResendCode</servlet-name>
-        <servlet-class>controller.ResendCode</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Logout</servlet-name>
-        <servlet-class>controller.Logout</servlet-class>
-    </servlet>
-    <!-- Password Management Servlets -->
     <servlet>
         <servlet-name>changePassword</servlet-name>
         <servlet-class>controller.changePassword</servlet-class>
@@ -38,12 +16,35 @@
         <servlet-name>resetPassword</servlet-name>
         <servlet-class>controller.resetPassword</servlet-class>
     </servlet>
-    <!-- Profile Management Servlets -->
     <servlet>
         <servlet-name>UpdateProfile</servlet-name>
         <servlet-class>controller.UpdateProfile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NewSubject</servlet-name>
+        <servlet-class>controller.NewSubject</servlet-class>
+    </servlet>
     <!-- Homepage and Content Servlets -->
+    <servlet>
+        <servlet-name>Homepage</servlet-name>
+        <servlet-class>controller.Homepage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>blogList</servlet-name>
+        <servlet-class>controller.blogList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateProfile</servlet-name>
+        <servlet-class>controller.UpdateProfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>findAccount</servlet-name>
+        <servlet-class>controller.findAccount</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>forgotPassword</servlet-name>
+        <servlet-class>controller.forgotPassword</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>Homepage</servlet-name>
         <servlet-class>controller.Homepage</servlet-class>
@@ -53,18 +54,13 @@
         <servlet-class>controller.BlogList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>controller.Logout</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>blogDetail</servlet-name>
         <servlet-class>controller.blogDetail</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>SliderServlet</servlet-name>
-        <servlet-class>controller.SliderServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>SubjectServlet</servlet-name>
-        <servlet-class>controller.SubjectServlet</servlet-class>
-    </servlet>
-    <!-- Statistics Servlets -->
     <servlet>
         <servlet-name>CourseStat</servlet-name>
         <servlet-class>controller.CourseStat</servlet-class>
@@ -76,6 +72,7 @@
     <!-- Registration Management Servlets -->
     <servlet>
         <servlet-name>RegistrationLists</servlet-name>
+        <servlet-class>controller.RegistrationLists</servlet-class>
         <servlet-class>controller.RegistrationLists</servlet-class>
     </servlet>
     <servlet>
@@ -102,19 +99,6 @@
     <servlet>
         <servlet-name>UpdateCampaign</servlet-name>
         <servlet-class>controller.UpdateCampaign</servlet-class>
-    </servlet>
-    <!-- Servlet Mappings -->
-    <servlet>
-        <servlet-name>CompleteProfile</servlet-name>
-        <servlet-class>controller.CompleteProfile</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>updateRegistration</servlet-name>
-        <servlet-class>controller.updateRegistration</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AddCampaign</servlet-name>
-        <servlet-class>controller.AddCampaign</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
@@ -153,6 +137,10 @@
         <url-pattern>/updateProfile</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>NewSubject</servlet-name>
+        <url-pattern>/newSubject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>SliderServlet</servlet-name>
         <url-pattern>/SliderServlet</url-pattern>
     </servlet-mapping>
@@ -165,13 +153,14 @@
         <url-pattern>/Homepage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>BlogList</servlet-name>
-        <url-pattern>/blogs</url-pattern>
+        <servlet-name>blogList</servlet-name>
+        <url-pattern>/blogList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
     <servlet-mapping>
         <servlet-name>blogDetail</servlet-name>
         <url-pattern>/blogDetail</url-pattern>
@@ -212,20 +201,8 @@
         <servlet-name>UpdateCampaign</servlet-name>
         <url-pattern>/updateCampaign</url-pattern>
     </servlet-mapping>
-    <!-- Welcome File List -->
-    <servlet-mapping>
-        <servlet-name>CompleteProfile</servlet-name>
-        <url-pattern>/CompleteProfile</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>updateRegistration</servlet-name>
-        <url-pattern>/updateRegistration</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AddCampaign</servlet-name>
-        <url-pattern>/AddCampaign</url-pattern>
-    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
 </web-app>
+

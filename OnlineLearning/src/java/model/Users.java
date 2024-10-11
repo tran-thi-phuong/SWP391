@@ -24,7 +24,6 @@ public class Users {
     private String status;
     private String token;
     private Date create_At;
-
     public Users() {
     }
 
@@ -43,6 +42,17 @@ public class Users {
         this.token = token;
         this.create_At = create_At;
     }
+
+    public Date getCreate_At() {
+        return create_At;
+    }
+
+    public void setCreate_At(Date create_At) {
+        this.create_At = create_At;
+    }
+
+    
+
    
     public int getUserID() {
         return userID;
@@ -151,7 +161,9 @@ public class Users {
     
     @Override
     public String toString() {
-        return "Users{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", name=" + name + ", gender=" + gender + ", phone=" + phone + ", email=" + email + ", address=" + address + ", avatar=" + avatar + ", role=" + role + ", status=" + status + '}';
+        return "Users{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", name=" + name + ", gender=" + gender + ", phone=" + phone + ", email=" + email + ", address=" + address + ", avatar=" + avatar + ", role=" + role + ", status=" + status + ", token=" + token + ", create_At=" + create_At + '}';
     }
+
+    
     
 }

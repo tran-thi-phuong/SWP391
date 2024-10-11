@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Blog;
 import dal.SliderDAO;
 import java.util.List;
+import model.BlogCategory;
 
 /**
  *
@@ -29,8 +30,10 @@ public class blogDetail extends HttpServlet {
         request.setAttribute("blog", blog);
         
         SliderDAO sliderDAO = new SliderDAO();
-        List<Blog> latestBlogs = sliderDAO.getLatestBlogs();
+        List<Blog> latestBlogs = sliderDAO.getLatestBlogs(10);
+        List<BlogCategory> categories = blogDAO.getAllCategories();
         request.setAttribute("latestBlogs", latestBlogs);
+        request.setAttribute("categories", categories);
 
         request.getRequestDispatcher("blogDetail.jsp").forward(request, response);
     }
