@@ -46,28 +46,30 @@ public class NewSubject extends HttpServlet {
         }
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
         // Get form parameters
         String courseName = request.getParameter("courseName");
         String category = request.getParameter("category");
         String status = request.getParameter("status");
         String description = request.getParameter("description");
-        Part filePart = request.getPart("thumbnail"); 
-        String fileName = null;
-        String filePath = null;
-        if (filePart != null && filePart.getSize() > 0) {
-            fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            File file = new File(uploadDir, fileName);
-            filePart.write(file.getAbsolutePath());
-            filePath = UPLOAD_DIR + "/" + fileName;
+
+        // Process the uploaded file (thumbnail image)
+        Part filePart = request.getPart("thumbnail");
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+        String uploadPath = getServletContext().getRealPath("/") + "images" + File.separator;
+
+        // Create uploads directory if it doesn't exist
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
         }
-        // Save course information to the database (giả sử bạn có SubjectDAO hoặc SubjectService để thêm vào DB)
+
+        // Save the uploaded file
+        filePart.write(uploadPath + fileName);
+        String filePath =fileName;
+        // After saving the file, you could save the form data and file path to a database
         SubjectDAO subjectDAO = new SubjectDAO();
         boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath);
         if (isAdded) {
@@ -79,5 +81,4 @@ public class NewSubject extends HttpServlet {
             request.getRequestDispatcher("newSubject").forward(request, response);
         }
     }
-
-}
+    }
