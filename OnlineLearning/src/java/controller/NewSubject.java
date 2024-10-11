@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller;
-
 import dal.CategoryDAO;
 import dal.SubjectDAO;
 import java.io.File;
@@ -20,25 +19,21 @@ import jakarta.servlet.http.Part;
 import java.sql.SQLException;
 import java.util.List;
 import model.SubjectCategory;
-
 /**
  *
  * @author Admin
  */
 @MultipartConfig
-@WebServlet(urlPatterns = {"/newSubject"})
-
 public class NewSubject extends HttpServlet {
     private SubjectDAO subjectDAO;
     private CategoryDAO categoryDAO;
-
+    private static final String UPLOAD_DIR = "images";
     @Override
     public void init() throws ServletException {
         super.init();
         subjectDAO = new SubjectDAO();
         categoryDAO = new CategoryDAO();
     }
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,11 +45,9 @@ public class NewSubject extends HttpServlet {
             throw new ServletException(ex);
         }
     }
-    
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         // Get form parameters
         String courseName = request.getParameter("courseName");
         String category = request.getParameter("category");
