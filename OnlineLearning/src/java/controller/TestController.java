@@ -63,6 +63,7 @@ public class TestController extends HttpServlet {
         int pageNumber = (currentPage != null) ? Integer.parseInt(currentPage) : 1;
         int pageSize = (setting != null) ? setting.getNumberOfItems() : 10;
 
+
         List<Test> tests = testDAO.getAllTests(pageNumber, pageSize, search, subjectId, type);
         int totalTests = testDAO.getTotalTestCount(search, subjectId, type);
         

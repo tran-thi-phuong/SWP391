@@ -1,8 +1,36 @@
 <div class="col-md-9 content-container">
+    <div class="filter-course-regis">
+        <form id="toggleForm" method="post" action="revenueStat">
+            <div class="checkBox">
+                <label><input type="checkbox" class="section-toggle" data-target=".total-revenue-section" checked> Total revenue</label><br>
+                <label><input type="checkbox" class="section-toggle" data-target=".time-revenue-section" checked>Revenue by time</label><br>
+                <label><input type="checkbox" class="section-toggle" data-target=".revenue-chart-section" checked>Revenue distribution by category</label>
 
+            </div>
+            <div class="select-time">
+                <div id="customDateRange" style="display: none;">
+                    <div class="date-input">
+                        <label for="timeRange" class="form-label">Select time range</label>
+                        <input type="text" id="timeRange" name="timeRange" class="form-control" placeholder="Select time range" required>
+                    </div>
+
+                </div>
+                <div>
+                    <label for="dateSelect" class="form-label">Select Date Range</label>
+                    <select name="select-action" class="form-select" id="dateSelect" onchange="toggleCustomDateRange()">
+                        <option value="30days" ${requestScope.select == "30days" ? "selected" : ""}>Last 30 days</option>
+                        <option value="7days" ${requestScope.select == "7days" ? "selected" : ""}>Last 7 days</option>
+                        <option value="custom" ${requestScope.select == "custom" ? "selected" : ""}>Custom</option>
+                    </select>
+                </div>
+                <div class="apply-btn"><input type="submit" value="Apply"></div>
+            </div>
+        </form>
+        <p class="error-mess" >${requestScope.error}</p>
+    </div>
     <div class="content">
         <div class="total-course-card">
-            <div class="card-1">
+            <div class="card-1 total-revenue-section">
                 <p class="card-title">Total revenue</p>
                 <div class="course-stat">
                     <div class="icon bi bi-currency-dollar"></div>
@@ -10,15 +38,15 @@
                 </div>
 <!--                    <div class="inactive-course">${requestScope.inactiveCourse} courses inactive</div>-->
             </div>
-            <div class="card-2">
-                <p class="card-title">Last month revenue</p>
+            <div class="card-2 time-revenue-section">
+                <p class="card-title">Revenue by time</p>
                 <div class="course-stat">
                     <div class="icon bi bi-currency-dollar"></div>
                     <div class="revenue-number">${requestScope.lastMonthRevenue}</div>
                 </div>
             </div>
         </div>
-        <div class="course-category-card">
+        <div class="course-category-card revenue-chart-section">
             <div class="card-3">
                 <div class="chart-container" style="width: 63%; margin: auto;">
                     <canvas id="subjectChart"></canvas>
@@ -42,15 +70,15 @@
             type: 'pie',
             data: {
                 labels: [
-                    <c:forEach items="${requestScope.revenueAllocation}" var="category" varStatus="statu               s">
-                    '${category.category}'${!status.last ? ',' : ''}
-                </c:forEach>
+                            <c:forEach items="${requestScope.revenueAllocation}" var="revenue" varStatus="statu               s">
+        '${revenue.category}'${!status.last ? ',' : ''}
+                        </c:forEach>
                 ],
                 datasets: [{
                         data: [
-                            <c:forEach items="${requestScope.revenueAllocation}" var="category" varStatus="status">
-                        ${category.revenue}${!status.last ? ',' : ''}
-                        </c:forEach>
+                <c:forEach items="${requestScope.revenueAllocation}" var="revenue" varStatus="status">
+                    ${revenue.revenue}${!status.last ? ',' : ''}
+            </c:forEach>
                         ],
                         backgroundColor: colors
                     }]
@@ -88,4 +116,32 @@
             }
         });
     });
-</script>
+    document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            var target = document.querySelector(this.dataset.target);
+            if (this.checked) {
+                target.style.display = '';
+            } else {
+                target.style.display = 'none';
+            }
+        });
+    });
+    toggleCustomDateRange();
+    function toggleCustomDateRange() {
+        const dateRangeSection = document.getElementById("customDateRange");
+        const selectElement = document.getElementById("dateSelect");
+
+        if (selectElement.value === "custom") {
+            dateRangeSection.style.display = "";
+        } else {
+            dateRangeSection.style.display = "none";
+        }
+    }
+    flatpickr("#timeRange", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        onChange: function (selectedDates, dateStr, instance) {
+            console.log("First selected date range: ", dateStr);
+        }
+    });
+            </script>

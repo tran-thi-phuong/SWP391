@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dal.PaymentDAO;
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,14 +16,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import model.Revenue;
 
 /**
  *
  * @author tuant
  */
-public class RevenueStat extends HttpServlet {
+public class CustomerStat extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +40,10 @@ public class RevenueStat extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RevenueStat</title>");
+            out.println("<title>Servlet CustomerStat</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RevenueStat at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CustomerStat at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,18 +61,20 @@ public class RevenueStat extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        UserDAO u = new UserDAO();
         LocalDate endDateLocal = LocalDate.now();
-        LocalDate startDateLocal = endDateLocal.minus(30, ChronoUnit.DAYS);
-        Date endDate = Date.valueOf(endDateLocal);
-        Date startDate = Date.valueOf(startDateLocal);
-        PaymentDAO p = new PaymentDAO();
-        double totalRevenue = p.getTotalRevenue();
-        double lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
-        List<Revenue> revenueAllocation = p.getRevenueAllocation();
-        request.setAttribute("lastMonthRevenue", lastMonthRevenue);
-        request.setAttribute("revenueAllocation", revenueAllocation);
-        request.setAttribute("totalRevenue", totalRevenue);
-        request.setAttribute("action", "revenueStat");
+        LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
+        java.sql.Date endDate = java.sql.Date.valueOf(endDateLocal);
+        java.sql.Date startDate = java.sql.Date.valueOf(startDateLocal);
+        int newCustomer = u.getNewCustomer(startDate, endDate);
+        int totalCustomer = u.getTotalCustomer();
+        int newlyBoughtCustomer = u.getNewlyBoughtCustomer(startDate, endDate);
+        int totalBoughtCustomer = u.getTotalBoughtCustomer();
+        request.setAttribute("totalBoughtCustomer", totalBoughtCustomer);
+        request.setAttribute("newlyBoughtCustomer", newlyBoughtCustomer);
+        request.setAttribute("newCustomer", newCustomer);
+        request.setAttribute("totalCustomer", totalCustomer);
+        request.setAttribute("action", "customerStat");
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }
 
@@ -91,39 +91,45 @@ public class RevenueStat extends HttpServlet {
             throws ServletException, IOException {
         String select = request.getParameter("select-action");
         String timeRange = request.getParameter("timeRange");
-        PaymentDAO p = new PaymentDAO();
-        double totalRevenue = p.getTotalRevenue();
-        double lastMonthRevenue = 0;
-        List<Revenue> revenueAllocation = p.getRevenueAllocation();
+        UserDAO u = new UserDAO();
+        int newCustomer = 0;
+        int totalCustomer = u.getTotalCustomer();
+        int newlyBoughtCustomer = 0;
+        int totalBoughtCustomer = u.getTotalBoughtCustomer();
         if (select.equals("7days")) {
             LocalDate endDateLocal = LocalDate.now();
             LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
             Date endDate = Date.valueOf(endDateLocal);
             Date startDate = Date.valueOf(startDateLocal);
-            lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
+            newlyBoughtCustomer = u.getNewlyBoughtCustomer(startDate, endDate);
+            newCustomer = u.getNewCustomer(startDate, endDate);
         } else if (select.equals("30days")) {
             LocalDate endDateLocal = LocalDate.now();
             LocalDate startDateLocal = endDateLocal.minus(30, ChronoUnit.DAYS);
             Date endDate = Date.valueOf(endDateLocal);
             Date startDate = Date.valueOf(startDateLocal);
-            lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
+            newlyBoughtCustomer = u.getNewlyBoughtCustomer(startDate, endDate);
+            newCustomer = u.getNewCustomer(startDate, endDate);
+
         } else if (select.equals("custom")) {
             if (timeRange == null || timeRange.trim().isEmpty()) {
                 request.setAttribute("error", "Please select a valid date range.");
-                request.setAttribute("lastMonthRevenue", lastMonthRevenue);
-                request.setAttribute("revenueAllocation", revenueAllocation);
-                request.setAttribute("totalRevenue", totalRevenue);
-                request.setAttribute("action", "revenueStat");
+                request.setAttribute("totalBoughtCustomer", totalBoughtCustomer);
+                request.setAttribute("newlyBoughtCustomer", newlyBoughtCustomer);
+                request.setAttribute("newCustomer", newCustomer);
+                request.setAttribute("totalCustomer", totalCustomer);
+                request.setAttribute("action", "customerStat");
                 request.setAttribute("select", select);
                 request.getRequestDispatcher("dashboard.jsp").forward(request, response);
             }
             String[] timeRangeSplit = timeRange.split(" to ");
-            if (timeRangeSplit.length != 2) {
+            if (timeRangeSplit.length != 2){
                 request.setAttribute("error", "Please select a valid date range.");
-                request.setAttribute("lastMonthRevenue", lastMonthRevenue);
-                request.setAttribute("revenueAllocation", revenueAllocation);
-                request.setAttribute("totalRevenue", totalRevenue);
-                request.setAttribute("action", "revenueStat");
+                request.setAttribute("totalBoughtCustomer", totalBoughtCustomer);
+                request.setAttribute("newlyBoughtCustomer", newlyBoughtCustomer);
+                request.setAttribute("newCustomer", newCustomer);
+                request.setAttribute("totalCustomer", totalCustomer);
+                request.setAttribute("action", "customerStat");
                 request.setAttribute("select", select);
                 request.getRequestDispatcher("dashboard.jsp").forward(request, response);
             }
@@ -134,16 +140,19 @@ public class RevenueStat extends HttpServlet {
             try {
                 Date startDate = new Date(dateFormat.parse(startDateStr).getTime());
                 Date endDate = new Date(dateFormat.parse(endDateStr).getTime());
-                lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
+                newlyBoughtCustomer = u.getNewlyBoughtCustomer(startDate, endDate);
+                newCustomer = u.getNewCustomer(startDate, endDate);
+
             } catch (ParseException e) {
                 e.printStackTrace();
                 return;
             }
         }
-        request.setAttribute("lastMonthRevenue", lastMonthRevenue);
-        request.setAttribute("revenueAllocation", revenueAllocation);
-        request.setAttribute("totalRevenue", totalRevenue);
-        request.setAttribute("action", "revenueStat");
+        request.setAttribute("totalBoughtCustomer", totalBoughtCustomer);
+        request.setAttribute("newlyBoughtCustomer", newlyBoughtCustomer);
+        request.setAttribute("newCustomer", newCustomer);
+        request.setAttribute("totalCustomer", totalCustomer);
+        request.setAttribute("action", "customerStat");
         request.setAttribute("select", select);
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }

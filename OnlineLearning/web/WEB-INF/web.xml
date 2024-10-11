@@ -47,6 +47,10 @@
         <servlet-name>UpdateProfile</servlet-name>
         <servlet-class>controller.UpdateProfile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NewSubject</servlet-name>
+        <servlet-class>controller.NewSubject</servlet-class>
+    </servlet>
     <!-- Homepage and Content Servlets -->
     <servlet>
         <servlet-name>Homepage</servlet-name>
@@ -80,6 +84,7 @@
     <!-- Registration Management Servlets -->
     <servlet>
         <servlet-name>RegistrationLists</servlet-name>
+        <servlet-class>controller.RegistrationLists</servlet-class>
         <servlet-class>controller.RegistrationLists</servlet-class>
     </servlet>
     <servlet>
@@ -121,6 +126,14 @@
     </servlet>
     <!-- Servlet Mappings -->
     <servlet>
+        <servlet-name>CustomerStat</servlet-name>
+        <servlet-class>controller.CustomerStat</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CampaignStat</servlet-name>
+        <servlet-class>controller.CampaignStat</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>sliderList</servlet-name>
         <servlet-class>controller.sliderList</servlet-class>
     </servlet>
@@ -161,6 +174,10 @@
         <url-pattern>/updateProfile</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>NewSubject</servlet-name>
+        <url-pattern>/newSubject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>SliderServlet</servlet-name>
         <url-pattern>/SliderServlet</url-pattern>
     </servlet-mapping>
@@ -180,6 +197,7 @@
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
     <servlet-mapping>
         <servlet-name>blogDetail</servlet-name>
         <url-pattern>/blogDetail</url-pattern>
@@ -238,6 +256,14 @@
     </servlet-mapping>
     <!-- Welcome File List -->
     <servlet-mapping>
+        <servlet-name>CustomerStat</servlet-name>
+        <url-pattern>/customerStat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CampaignStat</servlet-name>
+        <url-pattern>/campaignStat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>sliderList</servlet-name>
         <url-pattern>/sliderList</url-pattern>
     </servlet-mapping>
@@ -245,3 +271,4 @@
         <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
 </web-app>
+

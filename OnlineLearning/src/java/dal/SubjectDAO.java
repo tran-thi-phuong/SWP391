@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dal;
+
 import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -23,7 +24,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllSubjects(int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.UserID = u.UserID ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             // Set the offset and limit parameters
@@ -34,7 +35,7 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectID"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -54,14 +55,14 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllSubjects() {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.UserID = u.UserID"; // Select all subjects
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID"; // Select all subjects
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Subject subject = new Subject();
                 subject.setSubjectID(rs.getInt("SubjectID"));
-                subject.setUserID(rs.getInt("UserID"));
+                subject.setUserID(rs.getInt("OwnerID"));
                 subject.setTitle(rs.getString("Title"));
                 subject.setDescription(rs.getString("Description"));
                 subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -120,7 +121,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getSubjectsByCategory(int categoryId, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.UserID = u.UserID WHERE Subject_CategoryID = ? "
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE Subject_CategoryID = ? "
                 + "ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -132,14 +133,13 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectID"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
                     subject.setStatus(rs.getString("Status"));
                     subject.setUpdateDate(rs.getDate("Update_Date"));
                     subject.setThumbnail(rs.getString("Thumbnail"));
-
                     list.add(subject);
                 }
             }
@@ -221,7 +221,7 @@ public class SubjectDAO extends DBContext {
                 if (rs.next()) {
                     subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
@@ -245,7 +245,7 @@ public class SubjectDAO extends DBContext {
                 statement.setInt(1, subjectId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                       title = resultSet.getString("title");
+                        title = resultSet.getString("title");
                     }
                 }
             }
@@ -254,6 +254,7 @@ public class SubjectDAO extends DBContext {
         }
         return title;
     }
+
     public List<Subject> searchSubjects(String query, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM Subjects WHERE title LIKE ? OR description LIKE ? "
@@ -269,7 +270,7 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
@@ -319,8 +320,7 @@ public class SubjectDAO extends DBContext {
         return featuredSubjects;
     }
 
-    
-  public Map<Integer, Subject> getAllSubject() {
+    public Map<Integer, Subject> getAllSubject() {
         Map<Integer, Subject> list = new HashMap<>();
         try {
             String sql = "SELECT * FROM Subjects";
@@ -328,21 +328,22 @@ public class SubjectDAO extends DBContext {
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 Subject subject = new Subject();
-                    subject.setSubjectID(rs.getInt("SubjectID"));
-                    subject.setTitle(rs.getString("Title"));
-                    subject.setDescription(rs.getString("Description"));
-                    subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
-                    subject.setStatus(rs.getString("Status"));
-                    subject.setUpdateDate(rs.getDate("Update_Date"));
-                    subject.setThumbnail(rs.getString("Thumbnail"));;
+                subject.setSubjectID(rs.getInt("SubjectID"));
+                subject.setTitle(rs.getString("Title"));
+                subject.setDescription(rs.getString("Description"));
+                subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
+                subject.setStatus(rs.getString("Status"));
+                subject.setUpdateDate(rs.getDate("Update_Date"));
+                subject.setThumbnail(rs.getString("Thumbnail"));;
                 list.put(subject.getSubjectID(), subject);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return list;
-    }  
-  public List<SubjectCategoryCount> getSubjectAllocation() {
+    }
+
+    public List<SubjectCategoryCount> getSubjectAllocation() {
         List<SubjectCategoryCount> list = new ArrayList<>();
         try {
             String sql = "SELECT sc.Title, COUNT(s.SubjectID) as SubjectCount "
@@ -363,12 +364,31 @@ public class SubjectDAO extends DBContext {
         return list;
     }
 
-    public static void main(String[] args) {
+    public boolean addSubject(String courseName, String category, String status, String description, String thumbnailPath) {
+        boolean isAdded = false;
+        String sql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) VALUES (?, ?, ?, ?, ?, GETDATE(),?)";
 
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, courseName);
+            ps.setString(2, description);
+            ps.setInt(3, Integer.parseInt(category));
+            ps.setString(4, status);
+            ps.setString(5, thumbnailPath);
+            ps.setInt(6, 1);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                isAdded = true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in addSubject: " + e.getMessage());
+        }
+
+        return isAdded;
+    }
+
+    public static void main(String[] args) {
         SubjectDAO subjectDAO = new SubjectDAO();
-         
+
     }
 }
-
-    
-

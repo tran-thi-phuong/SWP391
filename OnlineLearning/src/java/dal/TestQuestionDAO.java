@@ -10,12 +10,13 @@ package dal;
  */
 import java.sql.*;
 import model.TestQuestion;
+
 public class TestQuestionDAO extends DBContext {
 
     public void addTestQuestion(TestQuestion testQuestion) {
         String sql = "INSERT INTO Test_Question (TestID, QuestionID) VALUES (?, ?)";
         try (
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, testQuestion.getTestID());
             stmt.setInt(2, testQuestion.getQuestionID());
             stmt.executeUpdate();
@@ -23,5 +24,33 @@ public class TestQuestionDAO extends DBContext {
             ex.printStackTrace();
         }
     }
-}
 
+    public void clearQuestionsByTestId(int testId) {
+        String sql = "DELETE FROM Test_Question WHERE TestID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, testId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public int countQuestionsByTestId(int testId) {
+        String sql = "SELECT COUNT(*) FROM Test_Question WHERE TestID = ?";
+        int count = 0;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, testId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1); // Get the count from the first column
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return count; // Return the count
+    }
+
+}
