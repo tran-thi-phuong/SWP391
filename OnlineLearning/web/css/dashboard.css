@@ -173,3 +173,21 @@ footer{
     height: 85px;
     margin-bottom: 10px;
 }
+.error-mess{
+    text-align: right;
+    margin-top: -17px;
+    margin-right: 165px;
+    color: red;
+}
+.error-mess-regis{
+    text-align: right;
+    margin-top: -37px;
+    margin-right: 165px;
+    color: red;
+}
+.error-mess-customer{
+    text-align: right;
+    margin-top: 0px;
+    margin-right: 165px;
+    color: red;
+}

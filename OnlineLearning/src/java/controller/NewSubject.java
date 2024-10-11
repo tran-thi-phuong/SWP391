@@ -64,7 +64,7 @@ public class NewSubject extends HttpServlet {
         // Process the uploaded file (thumbnail image)
         Part filePart = request.getPart("thumbnail");
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
-        String uploadPath = getServletContext().getRealPath("/") + "uploads" + File.separator;
+        String uploadPath = getServletContext().getRealPath("/") + "images" + File.separator;
 
         // Create uploads directory if it doesn't exist
         File uploadDir = new File(uploadPath);
@@ -76,6 +76,7 @@ public class NewSubject extends HttpServlet {
         filePart.write(uploadPath + fileName);
 
         // After saving the file, you could save the form data and file path to a database
+        
 
         // For now, just set attributes to forward them to a JSP
         request.setAttribute("courseName", courseName);

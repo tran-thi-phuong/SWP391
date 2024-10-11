@@ -29,8 +29,8 @@
                 </div>
                 <div class="apply-btn"><input type="submit" value="Apply"></div>
             </div>
-
         </form>
+        <p class="error-mess-regis" >${requestScope.error}</p>
     </div>
     <div class="content">
         <div class="total-course-card">
@@ -152,31 +152,30 @@
     });
     });
     document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                var target = document.querySelector(this.dataset.target);
-                if (this.checked) {
-                    target.style.display = '';
-                } else {
-                    target.style.display = 'none';
-                }
-            });
-        });
-    
+    checkbox.addEventListener('change', function () {
+    var target = document.querySelector(this.dataset.target);
+    if (this.checked) {
+    target.style.display = '';
+    } else {
+    target.style.display = 'none';
+    }
+    });
+    });
+    toggleCustomDateRange();
     function toggleCustomDateRange() {
-        const dateRangeSection = document.getElementById("customDateRange");
-        const selectElement = document.getElementById("dateSelect");
-
-        if (selectElement.value === "custom") {
-            dateRangeSection.style.display = "";
-        } else {
-            dateRangeSection.style.display = "none";
-        }
+    const dateRangeSection = document.getElementById("customDateRange");
+    const selectElement = document.getElementById("dateSelect");
+    if (selectElement.value === "custom") {
+    dateRangeSection.style.display = "";
+    } else {
+    dateRangeSection.style.display = "none";
+    }
     }
     flatpickr("#timeRange", {
-        mode: "range",
-        dateFormat: "Y-m-d", 
-        onChange: function (selectedDates, dateStr, instance) {
-            console.log("First selected date range: ", dateStr); 
-        }
+    mode: "range",
+            dateFormat: "Y-m-d",
+            onChange: function (selectedDates, dateStr, instance) {
+            console.log("First selected date range: ", dateStr);
+            }
     });
 </script>

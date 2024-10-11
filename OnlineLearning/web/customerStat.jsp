@@ -27,6 +27,7 @@
             </div>
 
         </form>
+        <p class="error-mess-customer" >${requestScope.error}</p>
     </div>
     <div class="content">
         <div class="total-course-card">
@@ -79,7 +80,7 @@
             }
         });
     });
-
+    toggleCustomDateRange();
     function toggleCustomDateRange() {
         const dateRangeSection = document.getElementById("customDateRange");
         const selectElement = document.getElementById("dateSelect");

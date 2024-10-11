@@ -90,7 +90,7 @@ public class RevenueStat extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String select = request.getParameter("select-action");
-        String timeRange = request.getParameter("timeRange"); 
+        String timeRange = request.getParameter("timeRange");
         PaymentDAO p = new PaymentDAO();
         double totalRevenue = p.getTotalRevenue();
         double lastMonthRevenue = 0;
@@ -101,14 +101,32 @@ public class RevenueStat extends HttpServlet {
             Date endDate = Date.valueOf(endDateLocal);
             Date startDate = Date.valueOf(startDateLocal);
             lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
-        }else if(select.equals("30days")){
+        } else if (select.equals("30days")) {
             LocalDate endDateLocal = LocalDate.now();
             LocalDate startDateLocal = endDateLocal.minus(30, ChronoUnit.DAYS);
             Date endDate = Date.valueOf(endDateLocal);
             Date startDate = Date.valueOf(startDateLocal);
             lastMonthRevenue = p.getRevenueByTime(startDate, endDate);
-        }else{
+        } else if (select.equals("custom")) {
+            if (timeRange == null || timeRange.trim().isEmpty()) {
+                request.setAttribute("error", "Please select a valid date range.");
+                request.setAttribute("lastMonthRevenue", lastMonthRevenue);
+                request.setAttribute("revenueAllocation", revenueAllocation);
+                request.setAttribute("totalRevenue", totalRevenue);
+                request.setAttribute("action", "revenueStat");
+                request.setAttribute("select", select);
+                request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+            }
             String[] timeRangeSplit = timeRange.split(" to ");
+            if (timeRangeSplit.length != 2) {
+                request.setAttribute("error", "Please select a valid date range.");
+                request.setAttribute("lastMonthRevenue", lastMonthRevenue);
+                request.setAttribute("revenueAllocation", revenueAllocation);
+                request.setAttribute("totalRevenue", totalRevenue);
+                request.setAttribute("action", "revenueStat");
+                request.setAttribute("select", select);
+                request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+            }
             String startDateStr = timeRangeSplit[0];
             String endDateStr = timeRangeSplit[1];
 
