@@ -28,29 +28,32 @@
             <h2 class="slider-title">Hot</h2>
             <div class="slider">
                 <!-- Radio buttons for navigation -->
-                <input type="radio" name="slider" id="slide1" checked>
-                <input type="radio" name="slider" id="slide2">
-                <input type="radio" name="slider" id="slide3">
-                <input type="radio" name="slider" id="slide4">
-                <input type="radio" name="slider" id="slide5">
-                <!-- Slider images -->
+                <c:forEach var="slider" items="${sliders}" varStatus="status">
+                    <c:if test="${slider.status == 'shown'}">
+                        <input type="radio" name="slider" id="slide${status.index + 1}" <c:if test="${status.index == 0}">checked</c:if>>
+                    </c:if>
+                </c:forEach>
+
                 <div class="slides">
-                    <c:forEach var="subject" items="${topSubjects}">
-                        <div class="slide">
-                            <img src="${subject.thumbnail}" alt="${subject.title}">
-                        </div>
+                    <c:forEach var="slider" items="${sliders}" varStatus="status">
+                        <c:if test="${slider.status == 'shown'}">
+                            <div class="slide">
+                                <img src="${slider.image}" alt="${slider.title}">
+                            </div>
+                        </c:if>
                     </c:forEach>
                 </div>
-                <!-- Radio controls -->
+
                 <div class="radio-controls">
-                    <label for="slide1"></label>
-                    <label for="slide2"></label>
-                    <label for="slide3"></label>
-                    <label for="slide4"></label>
-                    <label for="slide5"></label>
+                    <c:forEach var="slider" items="${sliders}" varStatus="status">
+                        <c:if test="${slider.status == 'shown'}">
+                            <label for="slide${status.index + 1}"></label>
+                        </c:if>
+                    </c:forEach>
                 </div>
             </div>
         </div>
+
 
         <section id="latest-blogs">
             <h2 class="text-center mt-5 mb-4">Latest Blogs</h2>

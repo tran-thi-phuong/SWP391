@@ -3,24 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/js/sliderList.js</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/myRegistration.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/myRegistration.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/RegistrationsDAO.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/css/myRegistration.css</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/myRegistration.js</file>
-=======
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/dal/RegistrationsDAO.java</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/controller/RegistrationStat.java</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/dal/PaymentDAO.java</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/web/css/dashboard.css</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/web/WEB-INF/web.xml</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/web/Header.jsp</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/dal/DBContext.java</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/controller/AddRegistrationBySale.java</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/model/Payment.java</file>
-            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/controller/RevenueStat.java</file>
->>>>>>> 20586ee90d5fcac6dfb729225e63b570d56c3511
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/SliderDAO.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/Slider.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/SubjectList.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/sliderList.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/sliderList.java</file>
         </group>
     </open-files>
 </project-private>
