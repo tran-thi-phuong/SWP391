@@ -44,9 +44,6 @@
                     <label><input type="checkbox" name="passRate" ${sessionScope.setting.passRate != null ? (sessionScope.setting.passRate ? 'checked' : '') : 'checked'}> Pass Rate</label>
                     <label><input type="checkbox" name="quizType" ${sessionScope.setting.quizType != null ? (sessionScope.setting.quizType ? 'checked' : '') : 'checked'}> Quiz Type</label>
 
-
-
-
                     <button type="submit">Save</button>
                 </form>
             </div>
@@ -144,11 +141,12 @@
                                     <td> <a href="<c:url value='QuizDetail' />?id=${test.testID}">
                                             ${test.testID}
                                         </a></td>
+                                        <td>${test.title}</td>
                                     <td>
                                         <c:set var="subjectName" value="${subjectDAO.getSubjectById(test.subjectID).title}" />
                                         ${subjectName}
                                     </td>
-                                    <td>${test.title}</td>
+                                    
                                     <td>${test.description}</td>
                                     <td>${test.level}</td>
                                     <td>${test.quantity}</td>

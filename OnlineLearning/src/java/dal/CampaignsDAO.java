@@ -4,6 +4,7 @@
  */
 package dal;
 
+import java.sql.Date;
 import model.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -118,5 +119,17 @@ public class CampaignsDAO extends DBContext {
             return false;
         }
     }
-
+public void addCampaign(Campaign campaign) throws SQLException {
+        String sql = "INSERT INTO campaigns (CampaignName, Description, StartDate, EndDate, Image, Status) VALUES (?, ?, ?, ?, ?, ?)";
+        try (
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, campaign.getCampaignName());
+            stmt.setString(2, campaign.getDescription());
+            stmt.setDate(3, (Date) campaign.getStartDate());
+            stmt.setDate(4, (Date) campaign.getEndDate());
+            stmt.setString(5, campaign.getImage());
+            stmt.setString(6, campaign.getStatus());
+            stmt.executeUpdate();
+        }
+    }
 }

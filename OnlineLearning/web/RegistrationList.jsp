@@ -5,7 +5,6 @@
     <head>
         <title>Registration List</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -28,66 +27,98 @@
                     </button>
                 </form>
             </div>
-                            <form action="campaignList" method="get">
-                    <button type="submit" id="add" style="background-color: #FF0000; color: white;
-                            border: 1px solid #FF6347 ; padding: 10px 20px; cursor: pointer; border-radius: 5px;">
-                        Campaign List
-                    </button>
-                </form>
+            <form action="campaignList" method="get">
+                <button type="submit" id="add" style="background-color: #FF0000; color: white;
+                        border: 1px solid #FF6347 ; padding: 10px 20px; cursor: pointer; border-radius: 5px;">
+                    Campaign List
+                </button>
+            </form>
             <br>
             <form id="searchForm" action="listRegistration" method="get">
                 <div class="row mb-3">
                     <div class="col">
-                        <input type="text" class="form-control" id="emailSearch" name="email" placeholder="Search by Email" value="${param.email}" oninput="filterRegistrations()"/>
+                        <input type="text" class="form-control" id="emailSearch" name="email"
+                               placeholder="Search by Email" value="${param.email != null ? param.email : ''}"/>
                     </div>
                     <div class="col">
-                        <select class="form-select" id="campaignSearch" name="campaignId" onchange="filterRegistrations()">
+                        <select class="form-select" id="campaignSearch" name="campaign">
                             <option value="">Select Campaign</option>
                             <c:forEach items="${listC.keySet()}" var="caId">
-                                <option value="${caId}" ${caId == param.campaignId ? "selected" : ""}>${listC[caId].campaignName}</option>
+                                <option value="${caId}"
+                                        <c:if test="${not empty param.campaignId && param.campaignId == caId}">selected</c:if>>
+                                    ${listC[caId].campaignName}
+                                </option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" id="subjectSearch" name="subject" placeholder="Search by Subject" value="${param.subjectID}" oninput="filterRegistrations()"/>
+                        <input type="text" class="form-control" id="subjectSearch"  name="subject" 
+                               placeholder="Search by Subject" value="${param.subjectID != null ? param.subjectID : ''}"  oninput="submitForm()"/>
                     </div>
                     <div class="col">
                         <div class="input-group">
                             <span class="input-group-text">From</span>
-                            <input type="date" class="form-control" id="registrationFrom" name="validFrom" value="${param.validFrom}" onchange="filterRegistrations()"/>
+                            <input type="date" class="form-control" id="registrationFrom"
+                                   name="validFrom" value="${param.validFrom}"/>
                         </div>
                     </div>
                     <div class="col">
                         <div class="input-group">
                             <span class="input-group-text">To</span>
-                            <input type="date" class="form-control" id="registrationTo" name="validTo" value="${param.validTo}" onchange="filterRegistrations()"/>
+                            <input type="date" class="form-control" id="registrationTo"
+                                   name="validTo" value="${param.validTo}"/>
                         </div>
                     </div>
                     <div class="col">
-                        <select class="form-select" id="statusSearch" name="status" onchange="filterRegistrations()">
+                        <select class="form-select" id="statusSearch" name="status">
                             <option value="">Select Status</option>
                             <option value="Active" ${param.status == "Active" ? "selected" : ""}>Active</option>
-                            <option value="Expired" ${param.status == "Expired" ? "selected" : ""}>Expired</option>
+                            <option value="Inactive" ${param.status == "Inactive" ? "selected" : ""}>Expired</option>
                             <option value="Processing" ${param.status == "Processing" ? "selected" : ""}>Processing</option>
                         </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col text-end">
+                        <button type="submit" class="btn btn-primary" onclick="submitForm()">Save</button>
                     </div>
                 </div>
             </form>
 
             <div>
-                <h5 style=" color: #FF0000">Show/Hide Columns:</h5>
-                <label><input type="checkbox" checked onchange="toggleColumn(0)"> ID</label>
-                <label><input type="checkbox" checked onchange="toggleColumn(1)"> Email</label>
-                <label><input type="checkbox" checked onchange="toggleColumn(2)"> Registration Time</label>
-                <label><input type="checkbox" onchange="toggleColumn(3)"> Subject</label>
-                <label><input type="checkbox" onchange="toggleColumn(4)"> Campaign</label>
-                <label><input type="checkbox" onchange="toggleColumn(5)"> Package</label>
-                <label><input type="checkbox" onchange="toggleColumn(6)"> Total Cost</label>
-                <label><input type="checkbox" onchange="toggleColumn(7)"> Valid From</label>
-                <label><input type="checkbox" onchange="toggleColumn(8)"> Valid To</label>
-                <label><input type="checkbox" onchange="toggleColumn(9)"> Status</label>
-                <label><input type="checkbox" onchange="toggleColumn(10)"> Last Updated By</label>
-                <label><input type="checkbox" onchange="toggleColumn(11)"> Note</label>
+                <form id="settingsForm" class="settings-form" method="post" action="registrationSetting">
+                    <label for="numberOfItems">Number of Items per Page:</label>
+                    <input type="number" id="numberOfItems" name="numberOfItems" 
+                           value="${sessionScope.setting.numberOfItems != null ? sessionScope.setting.numberOfItems : 20}">
+
+                    <h5 style="color: #FF0000">Show/Hide Columns:</h5>
+                    <label><input type="checkbox" name="RegistrationID" onchange="toggleColumn(0)" 
+                                  ${sessionScope.setting.registrationId != null ? (sessionScope.setting.registrationId ? 'checked' : '') : 'checked'}> ID</label>
+                    <label><input type="checkbox" name="email" onchange="toggleColumn(1)" 
+                                  ${sessionScope.setting.email != null ? (sessionScope.setting.email ? 'checked' : '') : 'checked'}> Email</label>
+                    <label><input type="checkbox" name="registrationTime" onchange="toggleColumn(2)" 
+                                  ${sessionScope.setting.registrationTime != null ? (sessionScope.setting.registrationTime ? 'checked' : '') : 'checked'}> Registration Time</label>
+                    <label><input type="checkbox" name="subject" onchange="toggleColumn(3)" 
+                                  ${sessionScope.setting.subject != null ? (sessionScope.setting.subject ? 'checked' : '') : 'checked'}> Subject</label>
+                    <label><input type="checkbox" name="campaign" onchange="toggleColumn(4)" 
+                                  ${sessionScope.setting.campaign != null ? (sessionScope.setting.campaign ? 'checked' : '') : 'checked'}> Campaign</label>
+                    <label><input type="checkbox" name="package" onchange="toggleColumn(5)" 
+                                  ${sessionScope.setting.packageId != null ? (sessionScope.setting.packageId ? 'checked' : '') : 'checked'}> Package</label>
+                    <label><input type="checkbox" name="totalCost" onchange="toggleColumn(6)" 
+                                  ${sessionScope.setting.totalCost != null ? (sessionScope.setting.totalCost ? 'checked' : '') : 'checked'}> Total Cost</label>
+                    <label><input type="checkbox" name="validFrom" onchange="toggleColumn(7)" 
+                                  ${sessionScope.setting.validFrom != null ? (sessionScope.setting.validFrom ? 'checked' : '') : 'checked'}> Valid From</label>
+                    <label><input type="checkbox" name="validTo" onchange="toggleColumn(8)" 
+                                  ${sessionScope.setting.validTo != null ? (sessionScope.setting.validTo ? 'checked' : '') : 'checked'}> Valid To</label>
+                    <label><input type="checkbox" name="status" onchange="toggleColumn(9)" 
+                                  ${sessionScope.setting.status != null ? (sessionScope.setting.status ? 'checked' : '') : 'checked'}> Status</label>
+                    <label><input type="checkbox" name="staff" onchange="toggleColumn(10)" 
+                                  ${sessionScope.setting.staff != null ? (sessionScope.setting.staff ? 'checked' : '') : 'checked'}> Last Updated By</label>
+                    <label><input type="checkbox" name="note" onchange="toggleColumn(11)" 
+                                  ${sessionScope.setting.note != null ? (sessionScope.setting.note ? 'checked' : '') : 'checked'}> Note</label>
+
+                    <button type="submit" onclick="saveSettings()">Save</button>
+                </form>
             </div>
 
             <div class="registrationTable" id="registrationList">
@@ -95,39 +126,39 @@
                     <table class="table table-bordered" id="registrationTable">
                         <thead>
                             <tr>
-                                <th onclick="sortTable(0)">ID <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(1)">Email <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(2)">Registration Time <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(3)">Subject <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(4)">Campaign <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(5)">Package <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(6)">Total Cost <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(7)">Valid From <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(8)">Valid To <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(9)">Status <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(10)">Last Updated By <i class="bi bi-chevron-expand"></i></th>
-                                <th onclick="sortTable(11)">Note <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.registrationId ? '' : 'display:none;'}" onclick="sortTable(0)">ID <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.email ? '' : 'display:none;'}" onclick="sortTable(1)">Email <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.registrationTime ? '' : 'display:none;'}"  onclick="sortTable(2)">Registration Time <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.subject ? '' : 'display:none;'}" onclick="sortTable(3)">Subject <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.campaign ? '' : 'display:none;'}" onclick="sortTable(4)">Campaign <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.packageId ? '' : 'display:none;'}" onclick="sortTable(5)">Package <i class="bi bi-chevron-expand"></i></th>
+                                <th  style="${sessionScope.setting.totalCost ? '' : 'display:none;'}"onclick="sortTable(6)">Total Cost <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.validFrom ? '' : 'display:none;'}" onclick="sortTable(7)">Valid From <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.validTo ? '' : 'display:none;'}"onclick="sortTable(8)">Valid To <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.status ? '' : 'display:none;'}"onclick="sortTable(9)">Status <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.staff ? '' : 'display:none;'}" onclick="sortTable(10)">Last Updated By <i class="bi bi-chevron-expand"></i></th>
+                                <th style="${sessionScope.setting.note ? '' : 'display:none;'}" onclick="sortTable(11)">Note <i class="bi bi-chevron-expand"></i></th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="registration" items="${listR}">
                                 <tr>
-                                    <td>
+                                    <td style="${sessionScope.setting.registrationId ? '' : 'display:none;'}" >
                                         <a href="registrationDetail?id=${registration.registrationId}" class="text-decoration-none">
                                             ${registration.registrationId}
                                         </a>
                                     </td>
-                                    <td>${customerEmail[registration.userId]}</td>
-                                    <td>${registration.registrationTime}</td>
-                                    <td>${subjectTitle[registration.subjectId]}</td>
-                                    <td data-campaign-name="${registration.campaignName}">${registration.campaignName}</td>
-                                    <td>${packageName[registration.packageId]}</td>
-                                    <td>${registration.totalCost}</td>
-                                    <td>${registration.validFrom}</td>
-                                    <td>${registration.validTo}</td>
-                                    <td>${registration.status}</td>
-                                    <td>${staffUsername[registration.staffId]}</td>
-                                    <td>${registration.note}</td>
+                                    <td  style="${sessionScope.setting.email ? '' : 'display:none;'}">${customerEmail[registration.userId]}</td>
+                                    <td style="${sessionScope.setting.registrationTime ? '' : 'display:none;'}">${registration.registrationTime}</td>
+                                    <td style="${sessionScope.setting.subject ? '' : 'display:none;'}">${subjectTitle[registration.subjectId]}</td>
+                                    <td style="${sessionScope.setting.campaign ? '' : 'display:none;'}"  data-campaign-name="${registration.campaignName}">${registration.campaignName}</td>
+                                    <td style="${sessionScope.setting.packageId ? '' : 'display:none;'}">${packageName[registration.packageId]}</td>
+                                    <td style="${sessionScope.setting.totalCost ? '' : 'display:none;'}">${registration.totalCost}</td>
+                                    <td style="${sessionScope.setting.validFrom ? '' : 'display:none;'}">${registration.validFrom}</td>
+                                    <td style="${sessionScope.setting.validTo ? '' : 'display:none;'}">${registration.validTo}</td>
+                                    <td style="${sessionScope.setting.status ? '' : 'display:none;'}">${registration.status}</td>
+                                    <td style="${sessionScope.setting.staff ? '' : 'display:none;'}">${staffUsername[registration.staffId]}</td>
+                                    <td style="${sessionScope.setting.note ? '' : 'display:none;'}">${registration.note}</td>
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -146,9 +177,10 @@
                         </li>
                     </c:if>
                     <c:forEach var="i" begin="1" end="${totalPages}">
-                        <li class="page-item <c:if test='${i == currentPage}'>active</c:if>'">
+                        <li class="page-item <c:if test='${i == currentPage}'>ctive</c:if>'">
                             <a class="page-link" href="listRegistration?page=${i}">${i}</a>
                         </li>
+
                     </c:forEach>
                     <c:if test="${currentPage < totalPages}">
                         <li class="page-item">
@@ -159,154 +191,38 @@
             </nav>
         </div>
 
-
         <script>
-
-
-            window.onload = function () {
-                for (let i = 3; i <= 11; i++) {
-                    toggleColumn(i);
-                }
-            };
-
-            function toggleColumn(index) {
-                const table = document.getElementById('registrationTable');
-                const rows = table.getElementsByTagName('tr');
-
-                for (let i = 0; i < rows.length; i++) {
-                    const cell = rows[i].getElementsByTagName('th')[index] || rows[i].getElementsByTagName('td')[index];
-                    if (cell) {
-                        cell.style.display = cell.style.display === 'none' ? '' : 'none';
-                    }
-                }
+            function submitForm() {
+                const searchForm = document.getElementById('searchForm');
+                const settingsForm = document.getElementById('settingsForm');
             }
+            function sortTable(columnIndex) {
+                const table = document.getElementById("registrationTable");
+                const tbody = table.getElementsByTagName("tbody")[0];
+                const rows = Array.from(tbody.getElementsByTagName("tr"));
+                const isAscending = table.dataset.sortOrder === 'asc';
 
-            function sortTable(index) {
-                const table = document.getElementById('registrationTable');
-                const rows = Array.from(table.rows).slice(1);
-                const isAscending = table.getAttribute('data-order') === 'asc';
+                // Determine sort order
+                table.dataset.sortOrder = isAscending ? 'desc' : 'asc';
 
-                rows.sort((a, b) => {
-                    const aText = a.cells[index].textContent.trim();
-                    const bText = b.cells[index].textContent.trim();
+                rows.sort((rowA, rowB) => {
+                    const cellA = rowA.getElementsByTagName("td")[columnIndex].innerText;
+                    const cellB = rowB.getElementsByTagName("td")[columnIndex].innerText;
 
-                    return aText.localeCompare(bText, undefined, {numeric: true}) * (isAscending ? 1 : -1);
+                    // Log the cells being compared
+                    console.log(`Comparing ${cellA} to ${cellB} in ${isAscending ? 'ascending' : 'descending'} order.`);
+
+                    // You might want to handle different data types
+                    const compareA = isNaN(cellA) ? cellA : parseFloat(cellA);
+                    const compareB = isNaN(cellB) ? cellB : parseFloat(cellB);
+
+                    return isAscending ? (compareA > compareB ? 1 : -1) : (compareA < compareB ? 1 : -1);
                 });
 
-                rows.forEach(row => table.appendChild(row));
-                table.setAttribute('data-order', isAscending ? 'desc' : 'asc');
+                // Append sorted rows back to the table
+                rows.forEach(row => tbody.appendChild(row));
             }
-
-
-            function filterRegistrations() {
-                const email = document.getElementById('emailSearch').value.toLowerCase().trim();
-                const subject = document.getElementById('subjectSearch').value.toLowerCase().trim();
-                const validFromInput = document.getElementById('registrationFrom').value;
-                const validToInput = document.getElementById('registrationTo').value;
-                const status = document.getElementById('statusSearch').value;
-                const selectedCampaignName = document.getElementById('campaignSearch').options[document.getElementById('campaignSearch').selectedIndex].text;
-
-                // Convert the input dates to Date objects
-                const filterFromDate = validFromInput ? new Date(validFromInput) : null;
-                const filterToDate = validToInput ? new Date(validToInput) : null;
-
-                // Set the time of toDate to end of day for inclusive comparison
-                if (filterToDate) {
-                    filterToDate.setHours(23, 59, 59, 999);
-                }
-
-                const table = document.getElementById('registrationTable');
-                const rows = table.getElementsByTagName('tr');
-
-                for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header
-                    const emailCell = rows[i].getElementsByTagName('td')[1];
-                    const subjectCell = rows[i].getElementsByTagName('td')[3];
-                    const validFromCell = rows[i].getElementsByTagName('td')[2];
-                    const validToCell = rows[i].getElementsByTagName('td')[8];
-                    const statusCell = rows[i].getElementsByTagName('td')[9];
-                    const campaignCell = rows[i].getElementsByTagName('td')[4];
-
-                    const emailText = emailCell.textContent || emailCell.innerText;
-                    const subjectText = subjectCell.textContent || subjectCell.innerText;
-                    const validFromText = (validFromCell.textContent || validFromCell.innerText).trim();
-                    const validToText = (validToCell.textContent || validToCell.innerText).trim();
-                    const statusText = statusCell.textContent || statusCell.innerText;
-                    const campaignName = campaignCell.getAttribute("data-campaign-name") || "";
-
-                    const rowValidFromDate = new Date(validFromText);
-                    const rowValidToDate = new Date(validToText);
-
-                    let showRow = true;
-
-                    // Email filter
-                    if (email && !emailText.toLowerCase().includes(email)) {
-                        showRow = false;
-                    }
-
-                    // Subject filter (modified to use text input)
-                    if (subject && !subjectText.toLowerCase().includes(subject)) {
-                        showRow = false;
-                    }
-                    // Date range filter
-                    if (filterFromDate || filterToDate) {
-                        // Check if rowValidFromDate is within the date range
-                        if (filterFromDate && rowValidFromDate < filterFromDate) {
-                            showRow = false;
-                        }
-                        // Check if rowValidToDate is within the date range
-                        if (filterToDate && rowValidToDate > filterToDate) {
-                            showRow = false;
-                        }
-                    }
-
-                    // Status filter
-                    if (status && status !== "Select Status" && statusText.trim() !== status) {
-                        showRow = false;
-                    }
-
-                    // Campaign filter
-                    if (selectedCampaignName && selectedCampaignName !== "Select Campaign" && campaignName !== selectedCampaignName) {
-                        showRow = false;
-                    }
-
-                    // Display or hide the row based on filter
-                    rows[i].style.display = showRow ? "" : "none";
-                }
-            }
-
-            function formatDate(dateString) {
-                if (!dateString)
-                    return null;
-                const [year, month, day] = dateString.split('-');
-                return new Date(year, month - 1, day);
-            }
-
-            // Add all necessary event listeners
-            document.getElementById('emailSearch').addEventListener('input', filterRegistrations);
-            document.getElementById('subjectSearch').addEventListener('change', filterRegistrations);
-            document.getElementById('registrationFrom').addEventListener('change', filterRegistrations);
-            document.getElementById('registrationTo').addEventListener('change', filterRegistrations);
-            document.getElementById('statusSearch').addEventListener('change', filterRegistrations);
-            document.getElementById('campaignSearch').addEventListener('change', filterRegistrations);
-
-            document.getElementById('registrationFrom').addEventListener('change', function () {
-                const fromDate = this.value;
-                const toDateInput = document.getElementById('registrationTo');
-                if (fromDate) {
-                    toDateInput.min = fromDate;
-                }
-            });
-
-            document.getElementById('registrationTo').addEventListener('change', function () {
-                const toDate = this.value;
-                const fromDateInput = document.getElementById('registrationFrom');
-                if (toDate) {
-                    fromDateInput.max = toDate;
-                }
-            });
-            let sortDirection = true;
         </script>
-
+        <%@include file="Footer.jsp" %>
     </body>
-    <%@include file="Footer.jsp" %>
 </html>

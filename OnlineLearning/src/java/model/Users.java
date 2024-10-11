@@ -1,8 +1,10 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+
+import java.util.Date;
 
 /**
  *
@@ -21,11 +23,12 @@ public class Users {
     private String role;
     private String status;
     private String token;
+    private Date create_At;
 
     public Users() {
     }
 
-    public Users(int userID, String username, String password, String name, String gender, String phone, String email, String address, String avatar, String role, String status, String token) {
+    public Users(int userID, String username, String password, String name, String gender, String phone, String email, String address, String avatar, String role, String status, String token, Date create_At) {
         this.userID = userID;
         this.username = username;
         this.password = password;
@@ -38,8 +41,8 @@ public class Users {
         this.role = role;
         this.status = status;
         this.token = token;
+        this.create_At = create_At;
     }
-
    
     public int getUserID() {
         return userID;
@@ -137,6 +140,15 @@ public class Users {
         this.token = token;
     }
 
+    public Date getCreate_At() {
+        return create_At;
+    }
+
+    public void setCreate_At(Date create_At) {
+        this.create_At = create_At;
+    }
+
+    
     @Override
     public String toString() {
         return "Users{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", name=" + name + ", gender=" + gender + ", phone=" + phone + ", email=" + email + ", address=" + address + ", avatar=" + avatar + ", role=" + role + ", status=" + status + '}';

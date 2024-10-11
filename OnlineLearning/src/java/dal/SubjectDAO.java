@@ -23,7 +23,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllSubjects(int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.UserID = u.UserID ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             // Set the offset and limit parameters
@@ -34,7 +34,7 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectID"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -54,14 +54,14 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllSubjects() {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.UserID = u.UserID"; // Select all subjects
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID"; // Select all subjects
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Subject subject = new Subject();
                 subject.setSubjectID(rs.getInt("SubjectID"));
-                subject.setUserID(rs.getInt("UserID"));
+                subject.setUserID(rs.getInt("OwnerID"));
                 subject.setTitle(rs.getString("Title"));
                 subject.setDescription(rs.getString("Description"));
                 subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -132,7 +132,7 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectID"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -221,7 +221,7 @@ public class SubjectDAO extends DBContext {
                 if (rs.next()) {
                     subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
@@ -269,7 +269,7 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
