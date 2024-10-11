@@ -111,8 +111,28 @@ public class CustomerStat extends HttpServlet {
             newlyBoughtCustomer = u.getNewlyBoughtCustomer(startDate, endDate);
             newCustomer = u.getNewCustomer(startDate, endDate);
 
-        } else {
+        } else if (select.equals("custom")) {
+            if (timeRange == null || timeRange.trim().isEmpty()) {
+                request.setAttribute("error", "Please select a valid date range.");
+                request.setAttribute("totalBoughtCustomer", totalBoughtCustomer);
+                request.setAttribute("newlyBoughtCustomer", newlyBoughtCustomer);
+                request.setAttribute("newCustomer", newCustomer);
+                request.setAttribute("totalCustomer", totalCustomer);
+                request.setAttribute("action", "customerStat");
+                request.setAttribute("select", select);
+                request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+            }
             String[] timeRangeSplit = timeRange.split(" to ");
+            if (timeRangeSplit.length != 2){
+                request.setAttribute("error", "Please select a valid date range.");
+                request.setAttribute("totalBoughtCustomer", totalBoughtCustomer);
+                request.setAttribute("newlyBoughtCustomer", newlyBoughtCustomer);
+                request.setAttribute("newCustomer", newCustomer);
+                request.setAttribute("totalCustomer", totalCustomer);
+                request.setAttribute("action", "customerStat");
+                request.setAttribute("select", select);
+                request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+            }
             String startDateStr = timeRangeSplit[0];
             String endDateStr = timeRangeSplit[1];
 

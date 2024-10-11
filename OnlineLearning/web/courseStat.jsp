@@ -5,6 +5,7 @@
                 <label><input type="checkbox" class="section-toggle" data-target=".total-course-section" checked> Total courses</label><br>
                 <label><input type="checkbox" class="section-toggle" data-target=".new-course-section" checked> New courses</label><br>
                 <label><input type="checkbox" class="section-toggle" data-target=".course-chart-section" checked> Subject distribution by category</label>
+
             </div>
             <div class="select-time">
                 <div id="customDateRange" style="display: none;">
@@ -24,8 +25,8 @@
                 </div>
                 <div class="apply-btn"><input type="submit" value="Apply"></div>
             </div>
-
         </form>
+        <p class="error-mess" >${requestScope.error}</p>           
     </div>
 
     <div class="content">
@@ -72,15 +73,15 @@
             type: 'pie',
             data: {
                 labels: [
-                    <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
-                '${category.category}'${!status.last ? ',' : ''}
-                    </c:forEach>
+                            <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
+                            '${category.category}'${!status.last ? ',' : ''}
+                                </c:forEach>
                 ],
                 datasets: [{
                         data: [
-                            <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
-            ${category.count}${!status.last ? ',' : ''}
-    </c:forEach>
+                                    <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
+                                    ${category.count}${!status.last ? ',' : ''}
+                                </c:forEach>
                         ],
                         backgroundColor: colors
                     }]
@@ -127,6 +128,7 @@
             });
         });
     });
+    toggleCustomDateRange();
     function toggleCustomDateRange() {
         const dateRangeSection = document.getElementById("customDateRange");
         const selectElement = document.getElementById("dateSelect");
@@ -139,9 +141,9 @@
     }
     flatpickr("#timeRange", {
         mode: "range",
-        dateFormat: "Y-m-d", 
+        dateFormat: "Y-m-d",
         onChange: function (selectedDates, dateStr, instance) {
-            console.log("First selected date range: ", dateStr); 
+            console.log("First selected date range: ", dateStr);
         }
     });
-</script>
+            </script>

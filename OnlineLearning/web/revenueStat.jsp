@@ -5,7 +5,7 @@
                 <label><input type="checkbox" class="section-toggle" data-target=".total-revenue-section" checked> Total revenue</label><br>
                 <label><input type="checkbox" class="section-toggle" data-target=".time-revenue-section" checked>Revenue by time</label><br>
                 <label><input type="checkbox" class="section-toggle" data-target=".revenue-chart-section" checked>Revenue distribution by category</label>
-                
+
             </div>
             <div class="select-time">
                 <div id="customDateRange" style="display: none;">
@@ -18,15 +18,15 @@
                 <div>
                     <label for="dateSelect" class="form-label">Select Date Range</label>
                     <select name="select-action" class="form-select" id="dateSelect" onchange="toggleCustomDateRange()">
-                        <option value="7days" ${requestScope.select == "7days" ? "selected" : ""}>Last 7 days</option>
                         <option value="30days" ${requestScope.select == "30days" ? "selected" : ""}>Last 30 days</option>
+                        <option value="7days" ${requestScope.select == "7days" ? "selected" : ""}>Last 7 days</option>
                         <option value="custom" ${requestScope.select == "custom" ? "selected" : ""}>Custom</option>
                     </select>
                 </div>
                 <div class="apply-btn"><input type="submit" value="Apply"></div>
             </div>
-
         </form>
+        <p class="error-mess" >${requestScope.error}</p>
     </div>
     <div class="content">
         <div class="total-course-card">
@@ -39,7 +39,7 @@
 <!--                    <div class="inactive-course">${requestScope.inactiveCourse} courses inactive</div>-->
             </div>
             <div class="card-2 time-revenue-section">
-                <p class="card-title">Last month revenue</p>
+                <p class="card-title">Revenue by time</p>
                 <div class="course-stat">
                     <div class="icon bi bi-currency-dollar"></div>
                     <div class="revenue-number">${requestScope.lastMonthRevenue}</div>
@@ -70,15 +70,15 @@
             type: 'pie',
             data: {
                 labels: [
-    <c:forEach items="${requestScope.revenueAllocation}" var="revenue" varStatus="statu               s">
-                '${revenue.category}'${!status.last ? ',' : ''}
-        </c:forEach>
+                            <c:forEach items="${requestScope.revenueAllocation}" var="revenue" varStatus="statu               s">
+        '${revenue.category}'${!status.last ? ',' : ''}
+                        </c:forEach>
                 ],
                 datasets: [{
                         data: [
-        <c:forEach items="${requestScope.revenueAllocation}" var="revenue" varStatus="status">
-            ${revenue.revenue}${!status.last ? ',' : ''}
-    </c:forEach>
+                <c:forEach items="${requestScope.revenueAllocation}" var="revenue" varStatus="status">
+                    ${revenue.revenue}${!status.last ? ',' : ''}
+            </c:forEach>
                         ],
                         backgroundColor: colors
                     }]
@@ -117,16 +117,16 @@
         });
     });
     document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                var target = document.querySelector(this.dataset.target);
-                if (this.checked) {
-                    target.style.display = '';
-                } else {
-                    target.style.display = 'none';
-                }
-            });
+        checkbox.addEventListener('change', function () {
+            var target = document.querySelector(this.dataset.target);
+            if (this.checked) {
+                target.style.display = '';
+            } else {
+                target.style.display = 'none';
+            }
         });
-    
+    });
+    toggleCustomDateRange();
     function toggleCustomDateRange() {
         const dateRangeSection = document.getElementById("customDateRange");
         const selectElement = document.getElementById("dateSelect");
@@ -139,9 +139,9 @@
     }
     flatpickr("#timeRange", {
         mode: "range",
-        dateFormat: "Y-m-d", 
+        dateFormat: "Y-m-d",
         onChange: function (selectedDates, dateStr, instance) {
-            console.log("First selected date range: ", dateStr); 
+            console.log("First selected date range: ", dateStr);
         }
     });
-</script>
+            </script>

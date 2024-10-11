@@ -61,6 +61,7 @@ public class CourseStat extends HttpServlet {
         SubjectDAO sDAO = new SubjectDAO();
         int totalCourse = sDAO.getTotalSubjects();
         int totalActiveCourse = sDAO.getTotalActiveSubjects();
+        List<SubjectCategoryCount> subjectAllocation = sDAO.getSubjectAllocation();
         int newCourse = 0;
         if (select.equals("7days")) {
             LocalDate endDateLocal = LocalDate.now();
@@ -68,14 +69,36 @@ public class CourseStat extends HttpServlet {
             Date endDate = Date.valueOf(endDateLocal);
             Date startDate = Date.valueOf(startDateLocal);
             newCourse = sDAO.getNewSubjectByTime(startDate, endDate);
-        }else if(select.equals("30days")){
+        } else if (select.equals("30days")) {
             LocalDate endDateLocal = LocalDate.now();
             LocalDate startDateLocal = endDateLocal.minus(30, ChronoUnit.DAYS);
             Date endDate = Date.valueOf(endDateLocal);
             Date startDate = Date.valueOf(startDateLocal);
             newCourse = sDAO.getNewSubjectByTime(startDate, endDate);
-        }else{
+        } else if (select.equals("custom")) {
+            if (timeRange == null || timeRange.trim().isEmpty()) {
+                request.setAttribute("error", "Please select a valid date range.");
+                request.setAttribute("inactiveCourse", totalCourse - totalActiveCourse);
+                request.setAttribute("newCourse", newCourse);
+                request.setAttribute("totalCourse", totalCourse);
+                request.setAttribute("subjectAllocation", subjectAllocation);
+                request.setAttribute("action", "courseStat");
+                request.setAttribute("select", select);
+                request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+                return;
+            }
             String[] timeRangeSplit = timeRange.split(" to ");
+            if (timeRangeSplit.length != 2) {
+                request.setAttribute("error", "Please select a valid date range.");
+                request.setAttribute("inactiveCourse", totalCourse - totalActiveCourse);
+                request.setAttribute("newCourse", newCourse);
+                request.setAttribute("totalCourse", totalCourse);
+                request.setAttribute("subjectAllocation", subjectAllocation);
+                request.setAttribute("action", "courseStat");
+                request.setAttribute("select", select);
+                request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+                return;
+            }
             String startDateStr = timeRangeSplit[0];
             String endDateStr = timeRangeSplit[1];
 
@@ -89,7 +112,7 @@ public class CourseStat extends HttpServlet {
                 return;
             }
         }
-        List<SubjectCategoryCount> subjectAllocation = sDAO.getSubjectAllocation();
+
         request.setAttribute("inactiveCourse", totalCourse - totalActiveCourse);
         request.setAttribute("newCourse", newCourse);
         request.setAttribute("totalCourse", totalCourse);
