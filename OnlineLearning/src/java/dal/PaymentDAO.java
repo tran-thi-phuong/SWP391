@@ -4,7 +4,7 @@
  */
 package dal;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,6 +56,35 @@ public class PaymentDAO extends DBContext {
         }
         return list;
     }
+    public List<Revenue> getRevenueAllocationByTime(Date startDate, Date endDate) {
+    List<Revenue> list = new ArrayList<>();
+    String sql = """
+        SELECT sc.Title AS Title, SUM(p.Amount) AS Revenue
+        FROM Payment p
+        JOIN Subjects s ON p.SubjectID = s.SubjectID
+        JOIN Subject_Category sc ON s.Subject_CategoryID = sc.Subject_CategoryID
+        WHERE p.PaymentDate BETWEEN ? AND ?
+        GROUP BY sc.Title
+    """;
+    
+    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        pstmt.setDate(1, new java.sql.Date(startDate.getTime()));
+        pstmt.setDate(2, new java.sql.Date(endDate.getTime()));
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                Revenue revenue = new Revenue();
+                revenue.setCategory(rs.getString("Title"));
+                revenue.setRevenue(rs.getDouble("Revenue"));
+                list.add(revenue);
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return list;
+}
     public double getRevenueByTime(java.util.Date startDate, java.util.Date endDate) {
         String sql = "  select sum(Amount) from Payment where PaymentDate between ? and ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -67,7 +96,7 @@ public class PaymentDAO extends DBContext {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error in getTotalUpdatedSubjects: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
         return 0;
     }
@@ -75,8 +104,6 @@ public class PaymentDAO extends DBContext {
         PaymentDAO p = new PaymentDAO();
         LocalDate endDateLocal = LocalDate.now();
         LocalDate startDateLocal = endDateLocal.minus(3, ChronoUnit.DAYS);
-        Date endDate = Date.valueOf(endDateLocal);
-        Date startDate = Date.valueOf(startDateLocal);
-        System.out.println(p.getRevenueByTime(startDate, endDate));
+
     }
 }

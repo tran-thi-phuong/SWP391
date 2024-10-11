@@ -484,8 +484,8 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-    public int getTotalRegistrationByStatus(String status){
-        String sql = "select count(*) from Registrations where Status = '" + status + "'";
+    public int getTotalRegistrationByStatus(String status, Date startDate, Date endDate){
+        String sql = "select count(*) from Registrations where Status = '" + status + "' and Registration_Time BETWEEN '" + startDate + "' AND '" + endDate +"'";
         try (PreparedStatement ps = connection.prepareStatement(sql); 
                 ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {

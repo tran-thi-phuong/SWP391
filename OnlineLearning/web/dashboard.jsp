@@ -18,8 +18,10 @@
         <link href="css/Header_Footer.css" rel="stylesheet">
         <link rel="stylesheet" href="css/sidebar.css"/>
         <link rel="stylesheet" href="css/dashboard.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
     <body>
         <%@include file="Header.jsp" %>
@@ -40,6 +42,9 @@
                     </c:when>
                     <c:when test="${requestScope.action == 'customerStat'}">
                         <%@include file="customerStat.jsp" %>
+                    </c:when>
+                    <c:when test="${requestScope.action == 'campaignStat'}">
+                        <%@include file="campaignStat.jsp" %>
                     </c:when>
                 </c:choose>
             </div>
