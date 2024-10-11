@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -150,6 +150,15 @@ public class Users {
         this.token = token;
     }
 
+    public Date getCreate_At() {
+        return create_At;
+    }
+
+    public void setCreate_At(Date create_At) {
+        this.create_At = create_At;
+    }
+
+    
     @Override
     public String toString() {
         return "Users{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", name=" + name + ", gender=" + gender + ", phone=" + phone + ", email=" + email + ", address=" + address + ", avatar=" + avatar + ", role=" + role + ", status=" + status + ", token=" + token + ", create_At=" + create_At + '}';

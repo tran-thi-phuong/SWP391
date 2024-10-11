@@ -21,7 +21,7 @@
     <hr>
     <h5 class="mb-3">Campaign</h5>
     <c:forEach items="${sessionScope.campaigns}" var="cam">
-        <div class="sidebar-item">
+        <div class="sidebar-item" onclick="window.location.href = 'campaignStat?campaignID=${cam.campaignID}'">
             <i class="bi bi-cash-coin sidebar-icon"></i>
             ${cam.campaignName}
         </div>

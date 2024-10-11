@@ -15,6 +15,7 @@ body {
 h1 {
     font-weight: 600;
     margin-bottom: 20px;
+    color: #FF6347	
 }
 
 /* Định dạng cho thẻ card */
@@ -27,6 +28,8 @@ h1 {
 /* Định dạng cho phần thân card */
 .card-body {
     padding: 20px; /* Padding cho card body */
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 /* Định dạng cho tiêu đề card */

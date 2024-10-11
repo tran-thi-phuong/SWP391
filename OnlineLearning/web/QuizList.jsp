@@ -161,11 +161,12 @@
                                     <td> <a href="<c:url value='QuizDetail' />?id=${test.testID}">
                                             ${test.testID}
                                         </a></td>
+                                        <td>${test.title}</td>
                                     <td>
                                         <c:set var="subjectName" value="${subjectDAO.getSubjectById(test.subjectID).title}" />
                                         ${subjectName}
                                     </td>
-                                    <td>${test.title}</td>
+                                    
                                     <td>${test.description}</td>
                                     <td>${test.level}</td>
                                     <td>${test.quantity}</td>

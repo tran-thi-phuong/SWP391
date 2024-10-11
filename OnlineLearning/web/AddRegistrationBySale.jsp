@@ -80,15 +80,6 @@
             emailInput.addEventListener('input', validateEmail);
 
             $(document).ready(function () {
-//                $('#subjectID').select2({
-//                    placeholder: '',
-//                    allowClear: true
-//                });
-//
-//                $('#packageID').select2({
-//                    placeholder: '',
-//                    allowClear: true
-//                });
 
                 $('#subjectID').change(function () {
                     var subjectID = $(this).val();
