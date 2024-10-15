@@ -75,7 +75,11 @@ public class myRegistration extends HttpServlet {
             registrationList = registrationsDAO.getRegistrationsByUserIdAndStatus(userId, statusFilter, page, PAGE_SIZE);
             totalRegistrations = registrationsDAO.getTotalRegistrationsByUserIdAndStatus(userId, statusFilter);
         } else if (searchQuery != null && !searchQuery.isEmpty()) {
+<<<<<<< HEAD
 registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQuery, page, PAGE_SIZE);
+=======
+            registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQuery, page, PAGE_SIZE);
+>>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
             totalRegistrations = registrationsDAO.getTotalSearchResultsByUserId(userId, searchQuery);
         } else {
             registrationList = registrationsDAO.getRegistrationsByUserId(userId, page, PAGE_SIZE);

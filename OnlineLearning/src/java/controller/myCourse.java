@@ -77,7 +77,11 @@ public class myCourse extends HttpServlet {
         request.setAttribute("courseList", courseList);
         request.setAttribute("searchQuery", searchQuery);
         request.setAttribute("currentPage", page);
+<<<<<<< HEAD
 request.setAttribute("pageSize", PAGE_SIZE);
+=======
+        request.setAttribute("pageSize", PAGE_SIZE);
+>>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
         request.setAttribute("totalPages", totalPages);
 
         // Chuyển tiếp request tới trang JSP

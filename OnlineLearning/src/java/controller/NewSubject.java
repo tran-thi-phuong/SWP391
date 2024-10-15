@@ -74,11 +74,18 @@ public class NewSubject extends HttpServlet {
         boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath);
         if (isAdded) {
             // Redirect to success page or list of courses if add is successful
+<<<<<<< HEAD
             response.sendRedirect("CourseList");
+=======
+            response.sendRedirect("SubjectList.jsp");
+>>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
         } else {
             // Handle failure to add course (gửi lỗi và chuyển về trang thêm mới)
             request.setAttribute("errorMessage", "Failed to add the course.");
             request.getRequestDispatcher("newSubject").forward(request, response);
         }
+<<<<<<< HEAD
+=======
     }
-}
+>>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
+    }

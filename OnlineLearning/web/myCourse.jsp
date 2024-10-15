@@ -48,6 +48,24 @@
                     <option value="15" ${pageSize == 15 ? 'selected' : ''}>15</option>
                 </select>
             </form>
+            <form id="toggleForm">
+                <label><input type="checkbox" class="section-toggle" data-target=".subjectName" checked> Subject</label>
+                <label><input type="checkbox" class="section-toggle" data-target=".package" checked> Package</label>
+                <label><input type="checkbox" class="section-toggle" data-target=".totalCost" checked> Cost</label>
+                <label><input type="checkbox" class="section-toggle" data-target=".validFrom" checked> Valid From</label>
+                <label><input type="checkbox" class="section-toggle" data-target=".validTo" checked> Valid To</label>
+                <label><input type="checkbox" class="section-toggle" data-target=".staffName" checked> Teacher</label>
+            </form>
+        </div>
+        <div style="padding: 0 15px; display: inline-block;">
+            <form action="myCourse" method="get" style="display: inline-flex; gap: 10px;">
+                <label for="pageSize">Items per page:</label>
+                <select name="pageSize" id="pageSize" onchange="updatePageSize(this)">
+                    <option value="5" ${pageSize == 5 ? 'selected' : ''}>5</option>
+                    <option value="10" ${pageSize == 10 ? 'selected' : ''}>10</option>
+                    <option value="15" ${pageSize == 15 ? 'selected' : ''}>15</option>
+                </select>
+            </form>
         </div>
 
         <script>
@@ -92,7 +110,9 @@ localStorage.setItem('pageSize', selectedValue);
         </c:if>
 
         <div style="text-align: center">
+        <div style="text-align: center">
             <c:if test="${currentPage > 1}">
+                <a class="btn btn-secondary" href="myCourse?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}">Previous</a>
                 <a class="btn btn-secondary" href="myCourse?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}">Previous</a>
             </c:if>
 
@@ -105,9 +125,18 @@ localStorage.setItem('pageSize', selectedValue);
                         <a class="btn btn-secondary" href="myCourse?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}">${i}</a>
                     </c:otherwise>
                 </c:choose>
+                <c:choose>
+                    <c:when test="${currentPage eq i}">
+                        <span class="btn btn-primary">${i}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="btn btn-secondary" href="myCourse?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}">${i}</a>
+                    </c:otherwise>
+                </c:choose>
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
+                <a class="btn btn-secondary" href="myCourse?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}">Next</a>
                 <a class="btn btn-secondary" href="myCourse?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}">Next</a>
             </c:if>
         </div>
