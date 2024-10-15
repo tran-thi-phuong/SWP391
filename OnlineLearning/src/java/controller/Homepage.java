@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import model.Blog;
+import model.Slider;
 import model.Subject;
 
 public class Homepage extends HttpServlet {
@@ -21,13 +22,15 @@ public class Homepage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         SliderDAO sliderDAO = new SliderDAO();
-        List<Blog> latestBlogs = sliderDAO.getLatestBlogs();
+        List<Slider> sliders = sliderDAO.getAllSliders();
+        List<Blog> latestBlogs = sliderDAO.getLatestBlogs(5);
 
         // Đẩy danh sách blog mới nhất sang trang homepage.jsp
         request.setAttribute("latestBlogs", latestBlogs);
+        request.setAttribute("sliders", sliders);
         
         try {
-        List<Subject> topSubjects = sliderDAO.getTopSubjects();
+        List<Subject> topSubjects = sliderDAO.getTopSubjects(5);
         request.setAttribute("topSubjects", topSubjects);
     } catch (SQLException e) {
         e.printStackTrace();

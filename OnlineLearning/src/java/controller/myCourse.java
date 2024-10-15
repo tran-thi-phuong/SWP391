@@ -17,11 +17,9 @@ import model.Users;
 
 public class myCourse extends HttpServlet {
 
-     @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String searchQuery = request.getParameter("searchQuery");
-
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
 
@@ -30,18 +28,57 @@ public class myCourse extends HttpServlet {
             return;
         }
         int userId = user.getUserID();
+        
+        String searchQuery = request.getParameter("searchQuery");
+        String pageStr = request.getParameter("page");
+        String pageSizeStr = request.getParameter("pageSize");
+ 
+        if (searchQuery == null) {
+            searchQuery = (String) session.getAttribute("searchQuery");
+        }
+        if (pageSizeStr == null) {
+            pageSizeStr = (String) session.getAttribute("pageSizeStr");
+        }
+
+        // Lưu các giá trị hiện tại vào session cho các request tiếp theo
+        session.setAttribute("searchQuery", searchQuery);
+        session.setAttribute("pageSizeStr", pageSizeStr);
+        int PAGE_SIZE = 5;
+        if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
+            try {
+                PAGE_SIZE = Integer.parseInt(pageSizeStr);
+            } catch (NumberFormatException e) {
+                PAGE_SIZE = 5;
+            }
+        }
+
+        // Xác định trang hiện tại
+        int page = 1;
+        if (pageStr != null && !pageStr.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageStr);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
 
         RegistrationsDAO course = new RegistrationsDAO();
         List<Registrations> courseList;
+        int totalCourse;
 
-        if (searchQuery != null) {
-            courseList = course.searchCourseByUserId(userId, searchQuery);
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            courseList = course.searchCourseByUserId(userId, searchQuery, page, PAGE_SIZE);
+            totalCourse = course.getTotalSearchResultsCourseByUserId(userId, searchQuery);
         } else {
-            courseList = course.getCourseByUserId(userId);
+            courseList = course.getCourseByUserId(userId, page, PAGE_SIZE);
+            totalCourse = course.getTotalCourseByUserId(userId);
         }
-
+        int totalPages = (int) Math.ceil((double) totalCourse / PAGE_SIZE);
         request.setAttribute("courseList", courseList);
         request.setAttribute("searchQuery", searchQuery);
+        request.setAttribute("currentPage", page);
+request.setAttribute("pageSize", PAGE_SIZE);
+        request.setAttribute("totalPages", totalPages);
 
         // Chuyển tiếp request tới trang JSP
         request.getRequestDispatcher("myCourse.jsp").forward(request, response);

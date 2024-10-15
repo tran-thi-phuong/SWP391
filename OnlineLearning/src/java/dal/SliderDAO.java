@@ -10,16 +10,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Blog;
+import model.Slider;
 import model.Subject;
 
 public class SliderDAO extends DBContext {
 
     // Hàm lấy 5 blog mới nhất
-    public List<Blog> getLatestBlogs() {
+    public List<Blog> getLatestBlogs(int n) {
         List<Blog> list = new ArrayList<>();
-        String sql = "SELECT TOP 5 BlogId, Title, Content, Create_At " +
-                     "FROM Blogs " +
-                     "ORDER BY Create_At DESC";
+        String sql = "SELECT TOP " + n + " BlogId, Title, Content, Create_At "
+                + "FROM Blogs "
+                + "ORDER BY Create_At DESC";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
@@ -36,16 +37,18 @@ public class SliderDAO extends DBContext {
         }
         return list;
     }
-    
-    public List<Subject> getTopSubjects() throws SQLException {
-        List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT TOP 5 * FROM Subjects ORDER BY SubjectID"; 
-        
-        try (
-             PreparedStatement st = connection.prepareStatement(sql);
-             ResultSet rs = st.executeQuery()) {
 
-             while (rs.next()) {
+    public List<Subject> getTopSubjects(int n) throws SQLException {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT TOP " + n + " s.* "
+                + "FROM Subjects s "
+                + "JOIN (SELECT SubjectID, COUNT(*) as RegistrationCount "
+                + "      FROM Registrations "
+                + "      GROUP BY SubjectID) r ON s.SubjectID = r.SubjectID "
+                + "ORDER BY r.RegistrationCount DESC";
+
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
                 Subject subject = new Subject();
                 subject.setSubjectID(rs.getInt("SubjectID"));
                 subject.setTitle(rs.getString("Title"));
@@ -58,37 +61,154 @@ public class SliderDAO extends DBContext {
         return subjects;
     }
 
+    public void autoCreateSliders() throws SQLException {
+        List<Subject> topSubjects = getTopSubjects(5);
+        List<Blog> latestBlogs = getLatestBlogs(3);
+
+        String sql = "INSERT INTO Sliders (BlogID, SubjectID, Title, Image, Content) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            // Tạo slider từ khóa học bán chạy nhất
+            for (Subject subject : topSubjects) {
+                if (!isSliderExists(null, subject.getSubjectID())) {
+                    st.setNull(1, java.sql.Types.INTEGER);
+st.setInt(2, subject.getSubjectID());
+                    st.setString(3, "Slider for " + subject.getTitle());
+                    st.setString(4, subject.getThumbnail());
+                    st.setString(5, subject.getDescription());
+                    st.executeUpdate();
+                }
+            }
+
+            // Tạo slider từ bài viết mới nhất
+            for (Blog blog : latestBlogs) {
+                if (!isSliderExists(blog.getBlogId(), null)) {
+                    st.setInt(1, blog.getBlogId());
+                    st.setNull(2, java.sql.Types.INTEGER);
+                    st.setString(3, "Slider for " + blog.getTitle());
+                    st.setString(4, "default_image.jpg");
+                    st.setString(5, blog.getContent().substring(0, 100));
+                    st.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while creating sliders: " + e.getMessage());
+        }
+    }
+
+    public boolean isSliderExists(Integer blogId, Integer subjectId) {
+        String sql = "SELECT COUNT(*) FROM Sliders WHERE BlogID = ? OR SubjectID = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setObject(1, blogId); // có thể là null
+            st.setObject(2, subjectId); // có thể là null
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public List<Slider> getAllSliders() {
+        List<Slider> sliders = new ArrayList<>();
+        String sql = "SELECT * FROM Sliders";
+
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Slider slider = new Slider();
+                slider.setSliderID(rs.getInt("SliderID"));
+                slider.setTitle(rs.getString("Title"));
+                slider.setImage(rs.getString("Image"));
+                slider.setContent(rs.getString("Content"));
+                slider.setStatus(rs.getString("Status"));
+                slider.setBacklink(rs.getString("Backlink"));
+                sliders.add(slider);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while fetching sliders: " + e.getMessage());
+        }
+        return sliders;
+    }
+
+    public void updateSliderStatus(int sliderID, String status) {
+        String sql = "UPDATE Sliders SET status = ? WHERE sliderID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, sliderID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Slider> searchAndFilterSliders(String searchQuery, String statusFilter) {
+List<Slider> sliders = new ArrayList<>();
+
+        String sql = "SELECT * FROM Sliders WHERE 1=1";
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            sql += " AND (title LIKE ? OR backlink LIKE ?)";
+        }
+
+        if (statusFilter != null && !statusFilter.equals("All")) {
+            sql += " AND status = ?";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int paramIndex = 1;
+
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchQuery + "%");
+                ps.setString(paramIndex++, "%" + searchQuery + "%");
+            }
+
+            if (statusFilter != null && !statusFilter.equals("All")) {
+                ps.setString(paramIndex++, statusFilter);
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Slider slider = new Slider();
+                slider.setSliderID(rs.getInt("sliderID"));
+                slider.setTitle(rs.getString("title"));
+                slider.setImage(rs.getString("image"));
+                slider.setContent(rs.getString("content"));
+                slider.setStatus(rs.getString("status"));
+                sliders.add(slider);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return sliders;
+    }
+
     public static void main(String[] args) {
         SliderDAO sliderDAO = new SliderDAO();
 
-        // Test lấy 5 blog mới nhất
-        List<Blog> latestBlogs = sliderDAO.getLatestBlogs();
+        // Test tự động tạo sliders
+        try {
+            sliderDAO.autoCreateSliders();
+            System.out.println("Sliders đã được tạo thành công.");
+        } catch (SQLException e) {
+            System.out.println("Error while auto-creating sliders: " + e.getMessage());
+        }
 
-        // In thông tin các blog mới nhất
-        System.out.println("Latest 5 Blogs:");
-        for (Blog blog : latestBlogs) {
+        List<Slider> allSliders = sliderDAO.getAllSliders();
+
+        // In thông tin các sliders
+        System.out.println("All Sliders:");
+        for (Slider slider : allSliders) {
             System.out.println("------------------------------");
-            System.out.println("Blog ID: " + blog.getBlogId());
-            System.out.println("Title: " + blog.getTitle());
-            System.out.println("Content: " + (blog.getContent().length() > 50 ? blog.getContent().substring(0, 50) + "..." : blog.getContent()));
-            System.out.println("Created At: " + blog.getCreateAt());
+            System.out.println("Slider ID: " + slider.getSliderID());
+            System.out.println("Title: " + slider.getTitle());
+            System.out.println("Image: " + slider.getImage());
+            System.out.println("Content: " + slider.getContent());
+            System.out.println("Status: " + slider.getStatus());
         }
         System.out.println("------------------------------");
-        
-        try {
-            List<Subject> topSubjects = sliderDAO.getTopSubjects();
-            System.out.println("Top 5 Subjects:");
-            for (Subject subject : topSubjects) {
-                System.out.println("------------------------------");
-                System.out.println("Subject ID: " + subject.getSubjectID());
-                System.out.println("Title: " + subject.getTitle());
-                System.out.println("Description: " + subject.getDescription());
-                System.out.println("Thumbnail: " + subject.getThumbnail());
-                System.out.println("Update Date: " + subject.getUpdateDate());
-            }
-            System.out.println("------------------------------");
-        } catch (SQLException e) {
-            System.out.println("Error fetching subjects: " + e.getMessage());
-        }
     }
 }

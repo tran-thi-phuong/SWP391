@@ -121,7 +121,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getSubjectsByCategory(int categoryId, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.UserID = u.UserID WHERE Subject_CategoryID = ? "
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE Subject_CategoryID = ? "
                 + "ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -133,7 +133,7 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectID"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("Title"));
                     subject.setDescription(rs.getString("Description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
@@ -270,7 +270,7 @@ public class SubjectDAO extends DBContext {
                 while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));
@@ -334,7 +334,7 @@ public class SubjectDAO extends DBContext {
                 subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
                 subject.setStatus(rs.getString("Status"));
                 subject.setUpdateDate(rs.getDate("Update_Date"));
-                subject.setThumbnail(rs.getString("Thumbnail"));;
+                subject.setThumbnail(rs.getString("Thumbnail"));
                 list.put(subject.getSubjectID(), subject);
             }
         } catch (SQLException e) {
@@ -374,7 +374,7 @@ public class SubjectDAO extends DBContext {
             ps.setInt(3, Integer.parseInt(category));
             ps.setString(4, status);
             ps.setString(5, thumbnailPath);
-            ps.setInt(3, 1);
+            ps.setInt(6, 1);
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {

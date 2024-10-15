@@ -56,9 +56,8 @@
 
             <select name="status">
                 <option value="">Tất cả trạng thái</option>
-                <c:forEach items="${subjects}" var="status">
-                    <option value="${status}" ${param.status == status ? 'selected' : ''}>${status.status}</option>
-                </c:forEach>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
             </select>
 
             <input type="submit" value="Tìm kiếm">
@@ -89,7 +88,7 @@
                     <td class="col-id">${course.subjectID}</td>
                     <td class="col-name">${course.title}</td>
                     <td class="col-category">${course.subjectCategoryId}</td>
-                    <td class="col-lessons">${course.title}</td>
+                    <td class="col-lessons">0</td>
                     <td class="col-owner">${course.userName}</td>
                     <td class="col-status">${course.status}</td>
                     <td>

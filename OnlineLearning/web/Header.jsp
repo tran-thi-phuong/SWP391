@@ -24,6 +24,11 @@
                     <a class="nav-link active" href="courseStat">Dashboard</a>
                     </c:if>
                 </li>
+                <li class="nav-item">
+                    <c:if test="${sessionScope.user.role=='Admin'}">
+                    <a class="nav-link active" href="QuizList">Quiz List</a>
+                    </c:if>
+                </li>
 
                 <li class="nav-item">
                     <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
@@ -40,8 +45,10 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Support</a>
-                </li>
+                        <c:if test="${sessionScope.user.role=='Admin'}">
+                            <a class="nav-link active" href="sliderList">Slider</a>
+                        </c:if>
+                    </li>
             </ul>
         </div>
        

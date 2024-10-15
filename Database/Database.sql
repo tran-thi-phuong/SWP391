@@ -97,6 +97,8 @@ CREATE TABLE Lessons (
     Type NVARCHAR(50),
     Content NVARCHAR(MAX),
     Video_Link NVARCHAR(255),
+	Description NVARCHAR(255),
+	Status NVARCHAR(50),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO

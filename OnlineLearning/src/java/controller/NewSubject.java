@@ -46,8 +46,9 @@ public class NewSubject extends HttpServlet {
         }
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
         // Get form parameters
         String courseName = request.getParameter("courseName");
         String category = request.getParameter("category");
@@ -67,18 +68,17 @@ public class NewSubject extends HttpServlet {
 
         // Save the uploaded file
         filePart.write(uploadPath + fileName);
-
+        String filePath =fileName;
         // After saving the file, you could save the form data and file path to a database
-        
-
-        // For now, just set attributes to forward them to a JSP
-        request.setAttribute("courseName", courseName);
-        request.setAttribute("category", category);
-        request.setAttribute("status", status);
-        request.setAttribute("description", description);
-        request.setAttribute("thumbnailPath", "uploads/" + fileName);
-
-        // Redirect to a success page or display the submitted data
-        request.getRequestDispatcher("courseSuccess.jsp").forward(request, response);
+        SubjectDAO subjectDAO = new SubjectDAO();
+        boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath);
+        if (isAdded) {
+            // Redirect to success page or list of courses if add is successful
+            response.sendRedirect("CourseList");
+        } else {
+            // Handle failure to add course (gửi lỗi và chuyển về trang thêm mới)
+            request.setAttribute("errorMessage", "Failed to add the course.");
+            request.getRequestDispatcher("newSubject").forward(request, response);
+        }
     }
 }

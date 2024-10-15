@@ -30,7 +30,7 @@ public class blogDetail extends HttpServlet {
         request.setAttribute("blog", blog);
         
         SliderDAO sliderDAO = new SliderDAO();
-        List<Blog> latestBlogs = sliderDAO.getLatestBlogs();
+        List<Blog> latestBlogs = sliderDAO.getLatestBlogs(10);
         List<BlogCategory> categories = blogDAO.getAllCategories();
         request.setAttribute("latestBlogs", latestBlogs);
         request.setAttribute("categories", categories);
