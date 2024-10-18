@@ -72,14 +72,11 @@ public class myRegistration extends HttpServlet {
 
         // Lấy danh sách đăng ký theo bộ lọc trạng thái, tìm kiếm hoặc phân trang
         if (statusFilter != null && !statusFilter.isEmpty() && !"All".equals(statusFilter)) {
-            registrationList = registrationsDAO.getRegistrationsByUserIdAndStatus(userId, statusFilter, page, PAGE_SIZE);
+            registrationList = registrationsDAO.getRegistrationsByUserIdAndStatus(userId, statusFilter, page,
+                    PAGE_SIZE);
             totalRegistrations = registrationsDAO.getTotalRegistrationsByUserIdAndStatus(userId, statusFilter);
         } else if (searchQuery != null && !searchQuery.isEmpty()) {
-<<<<<<< HEAD
-registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQuery, page, PAGE_SIZE);
-=======
             registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQuery, page, PAGE_SIZE);
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
             totalRegistrations = registrationsDAO.getTotalSearchResultsByUserId(userId, searchQuery);
         } else {
             registrationList = registrationsDAO.getRegistrationsByUserId(userId, page, PAGE_SIZE);
@@ -111,7 +108,6 @@ registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQu
         int PAGE_SIZE = 5;
         int page = 1;
 
-
         int userId = user.getUserID();
 
         if ("cancel".equals(action)) {
@@ -125,7 +121,8 @@ registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQu
 
             // Nếu hủy thành công, cập nhật danh sách đăng ký mới
             if (isCancelled) {
-                List<Registrations> registrationList = registrationsDAO.getRegistrationsByUserId(userId, page, PAGE_SIZE);
+                List<Registrations> registrationList = registrationsDAO.getRegistrationsByUserId(userId, page,
+                        PAGE_SIZE);
                 request.setAttribute("registrationList", registrationList);
                 request.setAttribute("message", "Registration cancelled successfully.");
             } else {
@@ -134,10 +131,9 @@ registrationList = registrationsDAO.searchRegistrationsByUserId(userId, searchQu
             int totalPages = (int) Math.ceil((double) totalRegistrations / PAGE_SIZE);
             request.setAttribute("totalPages", totalPages);
         }
-        
+
         request.setAttribute("pageSize", PAGE_SIZE);
         request.setAttribute("currentPage", page);
-        
 
         request.getRequestDispatcher("myRegistration.jsp").forward(request, response);
     }

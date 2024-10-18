@@ -63,23 +63,14 @@ public class SliderDAO extends DBContext {
 
     public void autoCreateSliders() throws SQLException {
         List<Subject> topSubjects = getTopSubjects(5);
-<<<<<<< HEAD
         List<Blog> latestBlogs = getLatestBlogs(3);
-=======
-        List<Blog> latestBlogs = getLatestBlogs(5);
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
-
         String sql = "INSERT INTO Sliders (BlogID, SubjectID, Title, Image, Content) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             // Tạo slider từ khóa học bán chạy nhất
             for (Subject subject : topSubjects) {
                 if (!isSliderExists(null, subject.getSubjectID())) {
                     st.setNull(1, java.sql.Types.INTEGER);
-<<<<<<< HEAD
-st.setInt(2, subject.getSubjectID());
-=======
                     st.setInt(2, subject.getSubjectID());
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
                     st.setString(3, "Slider for " + subject.getTitle());
                     st.setString(4, subject.getThumbnail());
                     st.setString(5, subject.getDescription());
@@ -151,11 +142,7 @@ st.setInt(2, subject.getSubjectID());
     }
 
     public List<Slider> searchAndFilterSliders(String searchQuery, String statusFilter) {
-<<<<<<< HEAD
-List<Slider> sliders = new ArrayList<>();
-=======
         List<Slider> sliders = new ArrayList<>();
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
 
         String sql = "SELECT * FROM Sliders WHERE 1=1";
 

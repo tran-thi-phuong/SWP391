@@ -10,11 +10,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import model.SubjectCategoryCount;
 
 public class RegistrationsDAO extends DBContext {
 
+    public int getTotalRegistrations() {
+        int total = 0;
+        String sql = "SELECT COUNT(*) FROM Registrations";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
     public List<Registrations> getAllRegistrations() {
         List<Registrations> registrations = new ArrayList<>();
         String sql = "SELECT r.RegistrationID, u.Email, r.Registration_Time, s.Title AS Subject, "
@@ -541,10 +555,6 @@ public class RegistrationsDAO extends DBContext {
         return 0;
     }
 
-<<<<<<< HEAD
-    
-    public List<Registrations> getCourseByUserId(int userId) {
-=======
     //Cancel summitted course
     public boolean updateStatusToCancelled(int registrationId) {
         String sql = "UPDATE Registrations SET Status = 'Cancelled' WHERE RegistrationID = ?";
@@ -561,7 +571,6 @@ public class RegistrationsDAO extends DBContext {
 
 //myCourseDAO
     public List<Registrations> getCourseByUserId(int userId, int page, int pageSize) {
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
         List<Registrations> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
         String sql = "SELECT r.RegistrationID, "
@@ -665,7 +674,7 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-    
+
     public int getTotalSearchResultsCourseByUserId(int userId, String searchQuery) {
         String sql = "SELECT COUNT(*) FROM Registrations r "
                 + "JOIN Subjects s ON r.subjectId = s.subjectId "
@@ -700,7 +709,7 @@ public class RegistrationsDAO extends DBContext {
         return 0;
     }
 //end myCourseDAO
-    
+
     public List<SubjectCategoryCount> getRegistrationAllocation() {
         List<SubjectCategoryCount> list = new ArrayList<>();
         try {
@@ -757,9 +766,10 @@ public class RegistrationsDAO extends DBContext {
         return list;
     }
 
-    public int getTotalRegistrationByStatus(String status) {
-        String sql = "select count(*) from Registrations where Status = '" + status + "'";
-        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+    public int getTotalRegistrationByStatus(String status, Date startDate, Date endDate){
+        String sql = "select count(*) from Registrations where Status = '" + status + "' and Registration_Time BETWEEN '" + startDate + "' AND '" + endDate +"'";
+        try (PreparedStatement ps = connection.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
@@ -832,330 +842,9 @@ public class RegistrationsDAO extends DBContext {
             throw new SQLException("Error adding registration: " + e.getMessage(), e);
         }
     }
-<<<<<<< HEAD
+
     //myRegistration DAO
-    public List<Registrations> getRegistrationsByUserIdAndStatus(int userId, String status, int page, int pageSize) {
-        List<Registrations> list = new ArrayList<>();
-        int offset = (page - 1) * pageSize;
-        String sql;
-
-        if ("All".equals(status)) {
-            sql = "SELECT r.RegistrationID, "
-                    + "       u.UserID, "
-                    + "       s.SubjectID, "
-                    + "       s.Title AS SubjectName, "
-                    + "       pp.PackageID, "
-                    + "       pp.Name AS PackageName, "
-                    + "       r.Registration_Time, "
-                    + "       r.Total_Cost, "
-                    + "       r.Status, "
-                    + "       r.Valid_From, "
-                    + "       r.Valid_To, "
-                    + "       staff.UserID AS StaffID, "
-                    + "       staff.Name AS StaffName, "
-                    + "       r.Note "
-                    + "FROM Registrations r "
-                    + "JOIN Users u ON r.UserID = u.UserID "
-                    + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                    + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                    + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                    + "WHERE r.UserID = ? AND r.Status != 'Cancelled' "
-                    + "ORDER BY r.Registration_Time DESC "
-                    + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
-        } else {
-            sql = "SELECT r.RegistrationID, "
-                    + "       u.UserID, "
-                    + "       s.SubjectID, "
-                    + "       s.Title AS SubjectName, "
-                    + "       pp.PackageID, "
-                    + "       pp.Name AS PackageName, "
-                    + "       r.Registration_Time, "
-                    + "       r.Total_Cost, "
-                    + "       r.Status, "
-                    + "       r.Valid_From, "
-                    + "       r.Valid_To, "
-                    + "       staff.UserID AS StaffID, "
-                    + "       staff.Name AS StaffName, "
-                    + "       r.Note "
-                    + "FROM Registrations r "
-                    + "JOIN Users u ON r.UserID = u.UserID "
-                    + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                    + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                    + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                    + "WHERE r.UserID = ? AND r.Status = ? "
-                    + "ORDER BY r.Registration_Time DESC "
-                    + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
-        }
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId); // Set user ID
-            if (!"All".equals(status)) {
-                ps.setString(2, status); // Set trạng thái
-ps.setInt(3, offset); // Set giá trị offset
-                ps.setInt(4, pageSize); // Set số lượng bản ghi cần lấy
-            } else {
-                ps.setInt(2, offset); // Set giá trị offset
-                ps.setInt(3, pageSize); // Set số lượng bản ghi cần lấy
-            }
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Registrations reg = new Registrations();
-                reg.setSubjectId(rs.getInt("SubjectID"));
-                reg.setPackageId(rs.getInt("PackageID"));
-                reg.setTotalCost(rs.getDouble("Total_Cost"));
-                reg.setRegistrationTime(rs.getDate("Registration_Time"));
-                reg.setStatus(rs.getString("Status"));
-                reg.setValidFrom(rs.getDate("Valid_From"));
-                reg.setValidTo(rs.getDate("Valid_To"));
-                reg.setNote(rs.getString("Note"));
-                reg.setSubjectName(rs.getString("SubjectName"));
-                reg.setStaffName(rs.getString("StaffName"));
-                list.add(reg);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public int getTotalRegistrationsByUserIdAndStatus(int userId, String status) {
-        String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND status = ? AND Status != 'Cancelled'";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, userId);
-            st.setString(2, status);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-
-    public List<Registrations> searchRegistrationsByUserId(int userId, String searchQuery, int page, int pageSize) {
-        List<Registrations> list = new ArrayList<>();
-        int offset = (page - 1) * pageSize;
-        String sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Registration_Time, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-                + "       r.Valid_From, "
-                + "       r.Valid_To, "
-                + "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID  "
-+ "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)AND r.Status != 'Cancelled' "
-                + "ORDER BY r.Registration_Time DESC "
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId); // Set user ID
-            ps.setString(2, "%" + searchQuery + "%"); // Set từ khóa tìm kiếm
-            ps.setString(3, "%" + searchQuery + "%"); // Set từ khóa tìm kiếm
-            ps.setInt(4, offset); // Set giá trị offset
-            ps.setInt(5, pageSize); // Set số lượng bản ghi cần lấy
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Registrations reg = new Registrations();
-                reg.setSubjectId(rs.getInt("SubjectID"));
-                reg.setPackageId(rs.getInt("PackageID"));
-                reg.setTotalCost(rs.getDouble("Total_Cost"));
-                reg.setRegistrationTime(rs.getDate("Registration_Time"));
-                reg.setStatus(rs.getString("Status"));
-                reg.setValidFrom(rs.getDate("Valid_From"));
-                reg.setValidTo(rs.getDate("Valid_To"));
-                reg.setNote(rs.getString("Note"));
-                reg.setSubjectName(rs.getString("SubjectName"));
-                reg.setStaffName(rs.getString("StaffName"));
-                list.add(reg);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public int getTotalSearchResultsByUserId(int userId, String searchQuery) {
-        String sql = "SELECT COUNT(*) FROM Registrations r "
-                + "JOIN Subjects s ON r.subjectId = s.subjectId "
-                + "WHERE r.userId = ? AND (s.subjectName LIKE ? OR r.status LIKE ?) AND r.Status != 'Cancelled'";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, userId);
-            st.setString(2, "%" + searchQuery + "%");
-            st.setString(3, "%" + searchQuery + "%");
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-
-    public List<Registrations> getRegistrationsByUserId(int userId, int page, int pageSize) {
-        List<Registrations> list = new ArrayList<>();
-        int offset = (page - 1) * pageSize;
-        String sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Registration_Time, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-                + "       r.Valid_From, "
-                + "       r.Valid_To, "
-+ "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND r.Status != 'Cancelled'"
-                + "ORDER BY r.Registration_Time DESC "
-                + "OFFSET ? ROWS "
-                + "FETCH NEXT ? ROWS ONLY";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.setInt(2, offset);
-            ps.setInt(3, pageSize);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Registrations reg = new Registrations();
-                reg.setRegistrationId(rs.getInt("RegistrationID"));
-                reg.setSubjectId(rs.getInt("SubjectID"));
-                reg.setPackageId(rs.getInt("PackageID"));
-                reg.setTotalCost(rs.getDouble("Total_Cost"));
-                reg.setRegistrationTime(rs.getDate("Registration_Time"));
-                reg.setStatus(rs.getString("Status"));
-                reg.setValidFrom(rs.getDate("Valid_From"));
-                reg.setValidTo(rs.getDate("Valid_To"));
-                reg.setNote(rs.getString("Note"));
-                reg.setSubjectName(rs.getString("SubjectName"));
-                reg.setStaffName(rs.getString("StaffName"));
-                list.add(reg);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public int getTotalRegistrationsByUserId(int userId) {
-        String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status != 'Cancelled'";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, userId);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-
     //Cancel summitted course
-    public boolean updateStatusToCancelled(int registrationId) {
-        String sql = "UPDATE Registrations SET Status = 'Cancelled' WHERE RegistrationID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, registrationId);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0; // Trả về true nếu có ít nhất 1 hàng được cập nhật
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-//End myRegistrationDAO
-
-//myCourseDAO
-    public List<Registrations> getCourseByUserId(int userId, int page, int pageSize) {
-List<Registrations> list = new ArrayList<>();
-        int offset = (page - 1) * pageSize;
-        String sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Registration_Time, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-                + "       r.Valid_From, "
-                + "       r.Valid_To, "
-                + "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND r.Status = 'In-progress'"
-                + "ORDER BY r.Registration_Time DESC "
-                + "OFFSET ? ROWS "
-                + "FETCH NEXT ? ROWS ONLY";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.setInt(2, offset);
-            ps.setInt(3, pageSize);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Registrations reg = new Registrations();
-                reg.setRegistrationId(rs.getInt("RegistrationID"));
-                reg.setSubjectId(rs.getInt("SubjectID"));
-                reg.setPackageId(rs.getInt("PackageID"));
-                reg.setTotalCost(rs.getDouble("Total_Cost"));
-                reg.setRegistrationTime(rs.getDate("Registration_Time"));
-                reg.setStatus(rs.getString("Status"));
-                reg.setValidFrom(rs.getDate("Valid_From"));
-                reg.setValidTo(rs.getDate("Valid_To"));
-                reg.setNote(rs.getString("Note"));
-                reg.setSubjectName(rs.getString("SubjectName"));
-                reg.setStaffName(rs.getString("StaffName"));
-                list.add(reg);
-=======
-
-    public boolean updateRegistration(Registrations registration) {
-        String sql = "UPDATE Registrations SET Status = ?, Note = ?, StaffID = ?, Valid_From = ?, Valid_To = ? WHERE RegistrationID = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            // Ensure you're using the correct values from the registration object
-            ps.setString(1, registration.getStatus());
-            ps.setString(2, registration.getNote()); // Assuming you have a getNote() method
-            ps.setInt(3, registration.getStaffId()); // Assuming you have a getStaffID() method
-            ps.setDate(4, (java.sql.Date) registration.getValidFrom()); // Assuming you have a getValidFrom() method
-            ps.setDate(5, (java.sql.Date) registration.getValidTo()); // Assuming you have a getValidTo() method
-            ps.setInt(6, registration.getRegistrationId()); // Assuming you have a getRegistrationID() method
-
-            System.out.println("Executing SQL: " + ps);  // Log the SQL statement
-            int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();  // Log the exception for debugging
-            return false;
-        }
-    }
-
     public String getCustomerEmailByRegistrationId(String registrationId) {
         String email = null;
         String sql = "SELECT u.email FROM Registrations r "
@@ -1168,62 +857,10 @@ List<Registrations> list = new ArrayList<>();
                 if (resultSet.next()) {
                     email = resultSet.getString("email");
                 }
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-        return list;
-    }
-
-    public List<Registrations> searchCourseByUserId(int userId, String searchQuery, int page, int pageSize) {
-        List<Registrations> list = new ArrayList<>();
-        int offset = (page - 1) * pageSize;
-        String sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Registration_Time, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-+ "       r.Valid_From, "
-                + "       r.Valid_To, "
-                + "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID  "
-                + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)AND r.Status = 'In-progress' "
-                + "ORDER BY r.Registration_Time DESC "
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId); // Set user ID
-            ps.setString(2, "%" + searchQuery + "%"); // Set từ khóa tìm kiếm
-            ps.setString(3, "%" + searchQuery + "%"); // Set từ khóa tìm kiếm
-            ps.setInt(4, offset); // Set giá trị offset
-            ps.setInt(5, pageSize); // Set số lượng bản ghi cần lấy
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Registrations reg = new Registrations();
-                reg.setSubjectId(rs.getInt("SubjectID"));
-                reg.setPackageId(rs.getInt("PackageID"));
-                reg.setTotalCost(rs.getDouble("Total_Cost"));
-                reg.setRegistrationTime(rs.getDate("Registration_Time"));
-                reg.setStatus(rs.getString("Status"));
-                reg.setValidFrom(rs.getDate("Valid_From"));
-                reg.setValidTo(rs.getDate("Valid_To"));
-                reg.setNote(rs.getString("Note"));
-                reg.setSubjectName(rs.getString("SubjectName"));
-                reg.setStaffName(rs.getString("StaffName"));
-                list.add(reg);
-=======
         return email;
     }
 
@@ -1269,51 +906,10 @@ List<Registrations> list = new ArrayList<>();
 
             if (rs.next()) {
                 status = rs.getString("Status");
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-        return list;
-    }
-    
-    public int getTotalSearchResultsCourseByUserId(int userId, String searchQuery) {
-        String sql = "SELECT COUNT(*) FROM Registrations r "
-                + "JOIN Subjects s ON r.subjectId = s.subjectId "
-                + "WHERE r.userId = ? AND (s.subjectName LIKE ? OR r.status LIKE ?) AND r.Status = 'In-progress'";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, userId);
-            st.setString(2, "%" + searchQuery + "%");
-            st.setString(3, "%" + searchQuery + "%");
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-
-    public int getTotalCourseByUserId(int userId) {
-String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status = 'In-progress'";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, userId);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-//end myCourseDAO
-=======
-
         return status;
     }
 
@@ -1338,8 +934,4 @@ String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status = '
         return validFrom;
     }
 
-    public static void main(String[] args) {
-
-    }
->>>>>>> 25afc447e0040b696071e5408d52430a217b57ad
 }
