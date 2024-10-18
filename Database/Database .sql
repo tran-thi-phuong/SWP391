@@ -88,21 +88,42 @@ CREATE TABLE Tests (
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
+CREATE TABLE LessonType (
+    TypeID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(50)
+);
+GO
 
 -- Tạo bảng Lessons
 CREATE TABLE Lessons (
     LessonID INT PRIMARY KEY IDENTITY(1,1),
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
-    Type NVARCHAR(50),
+    TypeID INT,
     Content NVARCHAR(MAX),
-    Video_Link NVARCHAR(255),
+	[Order] int,
 	Description NVARCHAR(255),
 	Status NVARCHAR(50),
+    FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID),
+	FOREIGN KEY (TypeID) REFERENCES LessonType(TypeID)
+);
+GO
+CREATE TABLE LessonMedia (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+	Media_Link NVARCHAR(MAX),
+	LessonID INT,
+    Description NVARCHAR(50),
+	FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
+);
+GO
+CREATE TABLE Lesson_Subject (
+    TypeID INT,
+    SubjectID INT,
+	[Order] INT,
+	FOREIGN KEY (TypeID) REFERENCES LessonType(TypeID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
-
 -- Tạo bảng Package_Price
 CREATE TABLE Package_Price (
     PackageID INT PRIMARY KEY IDENTITY(1,1),
@@ -129,7 +150,7 @@ CREATE TABLE Registrations (
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID),
     FOREIGN KEY (PackageID) REFERENCES Package_Price(PackageID),
-    FOREIGN KEY (StaffID) REFERENCES Users(UserID),
+    FOREIGN KEY (StaffID) REFERENCES Users(UserID)
 );
 GO
 
@@ -185,7 +206,7 @@ CREATE TABLE Result (
     QuestionID INT,
     AttemptID INT,
 	UserAnswer NVARCHAR(255),
-    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID),
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
 );
 GO
 
@@ -238,18 +259,7 @@ CREATE TABLE System_Setting (
     PassCondition BIT DEFAULT 0, 
     Level BIT DEFAULT 0,                   
     Quantity BIT DEFAULT 0,     
-    PassRate BIT DEFAULT 0,
-	RegistrationID BIT DEFAULT 0,
-	CustomerEmail BIT DEFAULT 0,
-	campaign BIT DEFAULT 0,
-	PackageID BIT DEFAULT 0,
-	Total_Cost BIT DEFAULT 0,
-	Registration_Time BIT DEFAULT 0,
-	Valid_From BIT DEFAULT 0,
-	Valid_To BIT DEFAULT 0,
-	Status BIT DEFAULT 0,
-	Staff BIT DEFAULT 0,
-	Note BIT DEFAULT 0,
+    PassRate BIT DEFAULT 0,                
     NumberOfItems INT DEFAULT 10,          -- Number of items per page
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),
@@ -274,4 +284,5 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
-GO
+
+
