@@ -25,13 +25,11 @@ import model.SubjectCategory;
  */
 @MultipartConfig
 public class NewSubject extends HttpServlet {
-    private SubjectDAO subjectDAO;
     private CategoryDAO categoryDAO;
-    private static final String UPLOAD_DIR = "images";
+    public static final String UPLOAD_DIR = "images";
     @Override
     public void init() throws ServletException {
         super.init();
-        subjectDAO = new SubjectDAO();
         categoryDAO = new CategoryDAO();
     }
     @Override
@@ -74,11 +72,11 @@ public class NewSubject extends HttpServlet {
         boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath);
         if (isAdded) {
             // Redirect to success page or list of courses if add is successful
-            response.sendRedirect("CourseList");
+            response.sendRedirect("SubjectList.jsp");
         } else {
             // Handle failure to add course (gửi lỗi và chuyển về trang thêm mới)
             request.setAttribute("errorMessage", "Failed to add the course.");
             request.getRequestDispatcher("newSubject").forward(request, response);
         }
     }
-}
+    }

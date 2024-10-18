@@ -221,7 +221,7 @@ public class SubjectDAO extends DBContext {
                 if (rs.next()) {
                     subject = new Subject();
                     subject.setSubjectID(rs.getInt("SubjectId"));
-                    subject.setUserID(rs.getInt("UserID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
                     subject.setTitle(rs.getString("title"));
                     subject.setDescription(rs.getString("description"));
                     subject.setSubjectCategoryId(rs.getInt("Subject_CategoryId"));

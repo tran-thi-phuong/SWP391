@@ -98,6 +98,7 @@
         </div>
         <c:set var="subjectDAO" value="<%=new dal.SubjectDAO()%>" />
         <c:set var="questionDAO" value="<%=new dal.QuestionDAO()%>" />
+        <c:set var="testDAO" value="<%=new dal.TestDAO()%>" />
         <div class="form-container">
             <h1>Quiz Details</h1>
             <form action="QuizDetail" method="post">
@@ -137,6 +138,10 @@
                     </p>
                 </c:if>
                 <p>
+                    <strong>Type:</strong>
+                    <input type="number" value="${currentTest != null ? currentTest.type : ''}" readonly/> minutes
+                </p>
+                <p>
                     <strong>Duration:</strong>
                     <input type="number" value="${currentTest != null ? currentTest.duration : ''}" readonly/> minutes
                 </p>
@@ -151,6 +156,10 @@
                 <p>
                     <strong>Number of Questions:</strong>
                     <input type="number" value="${currentTest != null ? currentTest.quantity : ''}" readonly/>
+                </p>
+                <p>
+                    <strong>Pass Rate:</strong>
+                    <input type="text" value="${currentTest != null ? testDAO.calculatePassRate(currentTest.testID) : ''}" readonly/>
                 </p>
                 <p>
                     <strong>Subject:</strong>

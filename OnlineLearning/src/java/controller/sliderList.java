@@ -56,4 +56,8 @@ public class sliderList extends HttpServlet {
         // Redirect back to the slider list after the status update
         response.sendRedirect("sliderList"); // Ensure "sliderList" maps to the servlet displaying the sliders
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 25afc447e0040b696071e5408d52430a217b57ad

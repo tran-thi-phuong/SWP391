@@ -14,6 +14,7 @@
         <link href="css/myRegistration.css" rel="stylesheet"> 
         <script src="js/myRegistration.js"></script>
         <script src="js/registrationPopup.js"></script>
+        <script src="js/registrationPopup.js"></script>
         <title>My Registration</title>
     </head>
     <body>
@@ -23,6 +24,7 @@
             <h1>My Registration</h1>
             <div class="search-container" style="text-align: right;">
                 <form action="myRegistration" method="get">
+
 
                     <input type="text" name="searchQuery" placeholder="Search course..." value="${searchQuery}" />
                     <button type="submit">Search</button>
@@ -92,6 +94,22 @@
             });
         </script>
 
+        <script>
+            function updatePageSize(select) {
+                const selectedValue = select.value;
+                localStorage.setItem('pageSize', selectedValue);
+                select.form.submit();
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const savedPageSize = localStorage.getItem('pageSize');
+                if (savedPageSize) {
+                    const pageSizeSelect = document.getElementById('pageSize');
+                    pageSizeSelect.value = savedPageSize; 
+                }
+            });
+        </script>
+
         <c:if test="${not empty registrationList}">
             <div id="registrations">
                 <c:forEach var="registration" items="${registrationList}">
@@ -126,7 +144,9 @@
         </c:if>
 
         <div style="text-align: center">
+        <div style="text-align: center">
             <c:if test="${currentPage > 1}">
+                <a class="btn btn-secondary" href="myRegistration?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}&status=${statusFilter}">Previous</a>
                 <a class="btn btn-secondary" href="myRegistration?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}&status=${statusFilter}">Previous</a>
             </c:if>
 
@@ -139,12 +159,22 @@
                         <a class="btn btn-secondary" href="myRegistration?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">${i}</a>
                     </c:otherwise>
                 </c:choose>
+                <c:choose>
+                    <c:when test="${currentPage eq i}">
+                        <span class="btn btn-primary">${i}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="btn btn-secondary" href="myRegistration?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">${i}</a>
+                    </c:otherwise>
+                </c:choose>
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
                 <a class="btn btn-secondary" href="myRegistration?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">Next</a>
+                <a class="btn btn-secondary" href="myRegistration?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">Next</a>
             </c:if>
         </div>
+
 
 
         <%@include file="Footer.jsp" %>

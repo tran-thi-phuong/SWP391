@@ -74,12 +74,12 @@
                             </c:if>
                             <c:forEach var="i" begin="1" end="${totalPages}">
                                 <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="blogs?page=${i}">${i}</a>
+                                    <a class="page-link" href="blogList?page=${i}">${i}</a>
                                 </li>
                             </c:forEach>
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="blogs?page=${currentPage + 1}" aria-label="Next">
+                                    <a class="page-link" href="blogList?page=${currentPage + 1}" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>

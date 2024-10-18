@@ -30,19 +30,19 @@
                     </c:if>
                 </li>
 
-                <li class="nav-item">
-                    <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
-                        <a class="nav-link" href="CourseList">Course</a>
-                    </c:if>
-                    
-                    <c:if test="${sessionScope.user.role=='Staff'}">
-                        <a class="nav-link" href="CourseList">Course</a>
-                    </c:if>
-                </li>
+                    <li class="nav-item">
+                        <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
+                            <a class="nav-link" href="CourseList">Course</a>
+                        </c:if>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="blogList">News</a>
-                </li>
+                        <c:if test="${sessionScope.user.role=='Staff'}">
+                            <a class="nav-link" href="CourseList">Course</a>
+                        </c:if>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="blogList">News</a>
+                    </li>
 
                 <li class="nav-item">
                         <c:if test="${sessionScope.user.role=='Admin'}">

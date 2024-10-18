@@ -367,7 +367,32 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
-     public Integer getUserIdByEmail(String email) throws SQLException {
+
+public boolean completeProfile(String fullname, String username, String password, String phone, String address, String gender, String token) {
+    String sql = "UPDATE Users SET Name = ?, Username = ?, Password = ?, Phone = ?, Address = ?, Gender = ?, Status = 'Active' WHERE Token = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        // Set parameters
+        stmt.setString(1, fullname); // Set fullname
+        stmt.setString(2, username); // Set username
+        stmt.setString(3, password); // Set password (Consider hashing it before storing)
+        stmt.setString(4, phone); // Set phone
+        stmt.setString(5, address); // Set address
+        stmt.setString(6, gender); // Set gender
+        stmt.setString(7, token); // Set token as the 7th parameter
+
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0; // Return true if update was successful
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false; // Return false if update failed
+}
+
+
+
+    public Integer getUserIdByEmail(String email) throws SQLException {
         String query = "SELECT UserID FROM Users WHERE Email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
