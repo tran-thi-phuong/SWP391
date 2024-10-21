@@ -14,6 +14,11 @@
     </head>
     <%@include file="Header.jsp" %>
     <body class="create">
+                 <c:choose>
+            <c:when test="${empty sessionScope.user || (sessionScope.user.role != 'Sale')}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:otherwise>
         <div class="container2">
             <h2>Create New Registration</h2>
             <form action="addRegistrationBySale" method="post">
@@ -60,6 +65,8 @@
                 </div>
             </form>
         </div>
+            </c:otherwise>
+                 </c:choose>
         <script>
             const emailInput = document.getElementById('email');
             const emailError = document.getElementById('emailError');

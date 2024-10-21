@@ -15,57 +15,64 @@
     </head>
     <%@ include file="Header.jsp" %>
     <body>
-        <div class="container2 ">
-            <h2>Add New Campaign</h2>
+        <c:choose>
+            <c:when test="${empty sessionScope.user || (sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Sale')}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:otherwise>
+                <div class="container2 ">
+                    <h2>Add New Campaign</h2>
 
-            <!-- Display success or error message -->
-            <c:if test="${not empty error}">
-                <div class="alert alert-danger" role="alert">
-                    ${error}
-                </div>
-            </c:if>
-            <c:if test="${not empty success}">
-                <div class="alert alert-success" role="alert">
-                    ${success}
-                </div>
-            </c:if>
+                    <!-- Display success or error message -->
+                    <c:if test="${not empty error}">
+                        <div class="alert alert-danger" role="alert">
+                            ${error}
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty success}">
+                        <div class="alert alert-success" role="alert">
+                            ${success}
+                        </div>
+                    </c:if>
 
-            <form action="AddCampaign" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="campaignName">Campaign Name:</label>
-                    <input type="text" name="campaignName" required class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea name="description" required class="form-control"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="startDate">Start Date:</label>
-                    <input type="date" name="startDate" required class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label for="endDate">End Date:</label>
-                    <input type="date" name="endDate" required class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label for="status">Status:</label>
-                    <input type="text" name="status" required class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label for="image">Upload Image:</label>
-                    <input type="file" name="image" class="form-control" />
-                </div>
+                    <form action="AddCampaign" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="campaignName">Campaign Name:</label>
+                            <input type="text" name="campaignName" required class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea name="description" required class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" name="startDate" required class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" name="endDate" required class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <input type="text" name="status" required class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Upload Image:</label>
+                            <input type="file" name="image" class="form-control" />
+                        </div>
 
-                <!-- Button Row -->
-                <div class="d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn btn-primary">Add Campaign</button>
-                    <form action="campaignList" method="get" style="margin: 0;">
-                        <button type="submit" class="btn btn-secondary">Cancel</button>
+                        <!-- Button Row -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="submit" class="btn btn-primary">Add Campaign</button>
+                            <form action="campaignList" method="get" style="margin: 0;">
+                                <button type="submit" class="btn btn-secondary">Cancel</button>
+                            </form>
+                        </div>
                     </form>
-                </div>
-            </form>
 
-        </div>
-    </body>
-    <%@ include file="Footer.jsp" %>
-</html>
+                </div>
+            </c:otherwise>
+        </c:choose>
+            </body>
+            <%@ include file="Footer.jsp" %>
+        </html>

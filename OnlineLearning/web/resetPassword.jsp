@@ -4,7 +4,7 @@
 <html>
     <head>
         <title>Reset Password</title>
-        <link rel="stylesheet" type="text/css" href="css/change_reset_password.css">
+        <link rel="stylesheet" type="text/css" href="css/reset_password.css">
     </head>
     <body>
         <div class="body2">

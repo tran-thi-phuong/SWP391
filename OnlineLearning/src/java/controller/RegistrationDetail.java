@@ -45,10 +45,11 @@ public class RegistrationDetail extends HttpServlet {
                 request.setAttribute("subjectTitle", subjectTitle);
                 request.setAttribute("packageName", packageName);
                 request.setAttribute("saleUsername", saleUsername);
-                
+
                 request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
             } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Registration not found");
+                request.setAttribute("errorMessage", "Registration not found");
+                request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
             }
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid registration ID format");
