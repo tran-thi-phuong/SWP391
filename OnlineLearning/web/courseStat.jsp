@@ -1,10 +1,32 @@
 <div class="col-md-9 content-container">
-    <div>
-        <form id="toggleForm">
-        <label><input type="checkbox" class="section-toggle" data-target=".total-course-section" checked> Total registration</label>
-        <label><input type="checkbox" class="section-toggle" data-target=".new-course-section" checked> New registration</label>
-        <label><input type="checkbox" class="section-toggle" data-target=".course-chart-section" checked> Subject distribution by category</label>
-    </form>
+    <div class="filter-course">
+        <form id="toggleForm" method="post" action="courseStat">
+            <div class="checkBox">
+                <label><input type="checkbox" class="section-toggle" data-target=".total-course-section" checked> Total courses</label><br>
+                <label><input type="checkbox" class="section-toggle" data-target=".new-course-section" checked> New courses</label><br>
+                <label><input type="checkbox" class="section-toggle" data-target=".course-chart-section" checked> Subject distribution by category</label>
+
+            </div>
+            <div class="select-time">
+                <div id="customDateRange" style="display: none;">
+                    <div class="date-input">
+                        <label for="timeRange" class="form-label">Select time range</label>
+                        <input type="text" id="timeRange" name="timeRange" class="form-control" placeholder="Select time range" required>
+                    </div>
+
+                </div>
+                <div>
+                    <label for="dateSelect" class="form-label">Select Date Range</label>
+                    <select name="select-action" class="form-select" id="dateSelect" onchange="toggleCustomDateRange()">
+                        <option value="7days" ${requestScope.select == "7days" ? "selected" : ""}>Last 7 days</option>
+                        <option value="30days" ${requestScope.select == "30days" ? "selected" : ""}>Last 30 days</option>
+                        <option value="custom" ${requestScope.select == "custom" ? "selected" : ""}>Custom</option>
+                    </select>
+                </div>
+                <div class="apply-btn"><input type="submit" value="Apply"></div>
+            </div>
+        </form>
+        <p class="error-mess" >${requestScope.error}</p>           
     </div>
 
     <div class="content">
@@ -42,7 +64,7 @@
         '#FF6384', '#C9CBCF', '#7CFC00', '#008080', '#FF69B4', '#CD5C5C',
         '#40E0D0', '#8A2BE2', '#32CD32', '#FFD700', '#48D1CC', '#FF4500',
         '#00CED1', '#FF1493', '#00FA9A', '#FF6347', '#1E90FF', '#DC143C'];
-    
+
     document.addEventListener('DOMContentLoaded', function () {
         Chart.register(ChartDataLabels);
 
@@ -51,18 +73,18 @@
             type: 'pie',
             data: {
                 labels: [
-                    <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
-                        '${category.category}'${!status.last ? ',' : ''}
-                    </c:forEach>
+                            <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
+                            '${category.category}'${!status.last ? ',' : ''}
+                                </c:forEach>
                 ],
                 datasets: [{
-                    data: [
-                        <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
-                            ${category.count}${!status.last ? ',' : ''}
-                        </c:forEach>
-                    ],
-                    backgroundColor: colors
-                }]
+                        data: [
+                                    <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
+                                    ${category.count}${!status.last ? ',' : ''}
+                                </c:forEach>
+                        ],
+                        backgroundColor: colors
+                    }]
             },
             options: {
                 responsive: true,
@@ -95,8 +117,6 @@
                 }
             }
         });
-
-        // Checkbox section toggle logic
         document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
             checkbox.addEventListener('change', function () {
                 var target = document.querySelector(this.dataset.target);
@@ -108,4 +128,22 @@
             });
         });
     });
-</script>
+    toggleCustomDateRange();
+    function toggleCustomDateRange() {
+        const dateRangeSection = document.getElementById("customDateRange");
+        const selectElement = document.getElementById("dateSelect");
+
+        if (selectElement.value === "custom") {
+            dateRangeSection.style.display = "";
+        } else {
+            dateRangeSection.style.display = "none";
+        }
+    }
+    flatpickr("#timeRange", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        onChange: function (selectedDates, dateStr, instance) {
+            console.log("First selected date range: ", dateStr);
+        }
+    });
+            </script>

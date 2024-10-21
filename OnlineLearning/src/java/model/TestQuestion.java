@@ -14,6 +14,15 @@ public class TestQuestion {
 
     // Getters and Setters
 
+    public TestQuestion() {
+    }
+
+    public TestQuestion(int testID, int questionID) {
+        this.testID = testID;
+        this.questionID = questionID;
+    }
+
+    
     public int getTestID() {
         return testID;
     }

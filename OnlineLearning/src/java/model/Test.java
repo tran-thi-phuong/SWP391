@@ -14,6 +14,26 @@ public class Test {
     private String mediaURL;            // New field for media URL
     private String mediaDescription;     // New field for media description
 
+    public Test() {
+    }
+
+    
+    public Test(int testID, int subjectID, String title, String description, String type, String level, String mediaType, String mediaURL, int duration, double passCondition, String mediaDescription, int quantity) {
+        this.testID = testID;
+        this.subjectID = subjectID;
+        this.title = title;
+        this.description = description;
+        this.type = type;
+        this.duration = duration;
+        this.passCondition = passCondition;
+        this.level = level;
+        this.quantity = quantity;
+        this.mediaType = mediaType;
+        this.mediaURL = mediaURL;
+        this.mediaDescription = mediaDescription;
+    }
+
+    
     // Getters and Setters
 
     public int getTestID() {
