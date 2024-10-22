@@ -61,6 +61,32 @@ public class QuestionDAO extends DBContext {
         }
         return questions;
     }
+    public List<Question> getQuestionsBySubjectID(int subjectID) {
+    List<Question> questions = new ArrayList<>();
+    String sql = "SELECT q.* FROM Questions q " +
+                 "JOIN Lessons l ON q.LessonID = l.LessonID " +
+                 "WHERE l.SubjectID = ?";
+    
+    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        pstmt.setInt(1, subjectID);
+
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                Question question = new Question();
+                question.setQuestionID(rs.getInt("QuestionID"));
+                question.setLessonID(rs.getInt("LessonID"));
+                question.setStatus(rs.getString("Status"));
+                question.setContent(rs.getString("Content"));
+                question.setLevel(rs.getString("Level"));
+                questions.add(question);
+            }
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return questions;
+}
+
 
     public List<Question> getQuestionsByTestId(int testID) {
         List<Question> questions = new ArrayList<>();
