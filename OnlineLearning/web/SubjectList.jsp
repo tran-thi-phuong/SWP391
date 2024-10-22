@@ -86,7 +86,7 @@
             <c:forEach items="${subjects}" var="course">
                 <tr>
                     <td class="col-id">${course.subjectID}</td>
-                    <td class="col-name">${course.title}</td>
+                    <td class="col-name"><a href="subjectLesson?courseId=${course.subjectID}&courseName=${course.title}">${course.title}</a></td>
                     <td class="col-category">${course.subjectCategoryId}</td>
                     <td class="col-lessons">0</td>
                     <td class="col-owner">${course.userName}</td>
