@@ -10,13 +10,24 @@ package model;
  */
 public class Question {
     private int questionID;
-    private int subjectID;
     private int lessonID;
+    private String status;
     private String content;
     private String level;
 
-    // Getters and Setters
+    public Question() {
+    }
 
+    
+    // Constructor
+    public Question(int lessonID, String status, String content, String level) {
+        this.lessonID = lessonID;
+        this.status = status;
+        this.content = content;
+        this.level = level;
+    }
+
+    // Getters and Setters
     public int getQuestionID() {
         return questionID;
     }
@@ -25,20 +36,20 @@ public class Question {
         this.questionID = questionID;
     }
 
-    public int getSubjectID() {
-        return subjectID;
-    }
-
-    public void setSubjectID(int subjectID) {
-        this.subjectID = subjectID;
-    }
-
     public int getLessonID() {
         return lessonID;
     }
 
     public void setLessonID(int lessonID) {
         this.lessonID = lessonID;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getContent() {
@@ -56,4 +67,16 @@ public class Question {
     public void setLevel(String level) {
         this.level = level;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "questionID=" + questionID +
+                ", lessonID=" + lessonID +
+                ", status='" + status + '\'' +
+                ", content='" + content + '\'' +
+                ", level='" + level + '\'' +
+                '}';
+    }
 }
+
