@@ -171,14 +171,22 @@ GO
 -- Tạo bảng Questions
 CREATE TABLE Questions (
     QuestionID INT PRIMARY KEY IDENTITY(1,1),
-    SubjectID INT,
     LessonID INT,
+Status NVARCHAR(50) NOT NULL,
     Content NVARCHAR(MAX) NOT NULL,
     Level NVARCHAR(50),
-    FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID),
     FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
 );
 GO
+CREATE TABLE QuestionMedia (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+    QuestionID INT NOT NULL,
+    MediaLink NVARCHAR(MAX) NOT NULL,
+    Description NVARCHAR(255),
+    FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
+);
+GO
+
 
 -- Tạo bảng Test_Question
 CREATE TABLE Test_Question (
@@ -195,10 +203,12 @@ CREATE TABLE Answers (
     AnswerID INT PRIMARY KEY IDENTITY(1,1),
     QuestionID INT,
     Content NVARCHAR(MAX) NOT NULL,
+Explaination NVARCHAR(MAX) NOT NULL,
     isCorrect BIT,
     FOREIGN KEY (QuestionID) REFERENCES Questions(QuestionID)
 );
 GO
+
 
 -- Tạo bảng Result
 CREATE TABLE Result (

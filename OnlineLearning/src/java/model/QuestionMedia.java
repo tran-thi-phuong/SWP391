@@ -14,6 +14,10 @@ public class QuestionMedia {
     private String mediaLink;
     private String description;
 
+    public QuestionMedia() {
+    }
+
+    
     // Constructor
     public QuestionMedia(int questionID, String mediaLink, String description) {
         this.questionID = questionID;
