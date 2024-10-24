@@ -65,6 +65,9 @@ public class SubjectLesson extends HttpServlet {
         request.setAttribute("lessonType", lessonType);
         request.setAttribute("lessonList", lessonList);
         request.setAttribute("courseName", courseName);
+        request.setAttribute("courseId", courseId);
+        request.setAttribute("selectStatus", "all");
+        request.setAttribute("selectTopic", "all");
         request.getRequestDispatcher("subjectLesson.jsp").forward(request, response);
     } 
 
@@ -78,7 +81,27 @@ public class SubjectLesson extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String courseId = request.getParameter("courseId");
+        String courseName = request.getParameter("courseName");
+        String searchValue = request.getParameter("search-value");
+        String status = request.getParameter("select-status");
+        String topic = request.getParameter("select-topic");
+        LessonDAO l = new LessonDAO();
+        List<LessonSubject> lessonType = l.getAllLessonTypeBySubjectId(Integer.parseInt(courseId));
+        List<Lesson> lessonList;
+        if(searchValue != null && !searchValue.trim().isEmpty()){
+            request.setAttribute("searchValue", searchValue);
+           lessonList = l.searchLesson(Integer.parseInt(courseId), searchValue);
+        }else{
+           lessonList = l.getAllLessonBySubjectId(Integer.parseInt(courseId)); 
+        }
+        request.setAttribute("lessonType", lessonType);
+        request.setAttribute("lessonList", lessonList);
+        request.setAttribute("courseName", courseName);
+        request.setAttribute("courseId", courseId);
+        request.setAttribute("selectStatus", status);
+        request.setAttribute("selectTopic", topic);
+        request.getRequestDispatcher("subjectLesson.jsp").forward(request, response);
     }
 
     /** 

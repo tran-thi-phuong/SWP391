@@ -120,6 +120,10 @@
         <servlet-name>SubjectLesson</servlet-name>
         <servlet-class>controller.SubjectLesson</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateLessonStatus</servlet-name>
+        <servlet-class>controller.UpdateLessonStatus</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -236,6 +240,10 @@
     <servlet-mapping>
         <servlet-name>SubjectLesson</servlet-name>
         <url-pattern>/subjectLesson</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateLessonStatus</servlet-name>
+        <url-pattern>/updateLessonStatus</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

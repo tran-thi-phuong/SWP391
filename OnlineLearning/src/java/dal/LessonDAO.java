@@ -61,9 +61,44 @@ public class LessonDAO extends DBContext{
         }
         return list;
     }
+    public List<Lesson> searchLesson(int subjectID, String searchValue){
+        List<Lesson> list = new ArrayList<>();
+        String sql = "select * from Lessons where SubjectID = ? and Title like ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectID);         
+            ps.setString(2, "%" + searchValue + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Lesson lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setSubjectID(rs.getInt("SubjectID"));
+                    lesson.setTitle(rs.getString("Title"));
+                    lesson.setTypeID(rs.getInt("TypeID"));
+                    lesson.setContent(rs.getString("Content"));
+                    lesson.setOrder(rs.getInt("Order"));
+                    lesson.setDescription(rs.getString("Description"));
+                    lesson.setStatus(rs.getString("Status"));
+                    list.add(lesson);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public void updateLessonStatus(int lessonID, String status){
+        String sql = "update Lessons set Status = ? where LessonID = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, status);
+            pstmt.setInt(2, lessonID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
     public static void main(String[] args) {
         LessonDAO lDAO = new LessonDAO();
-        System.out.println(lDAO.getAllLessonBySubjectId(11));
+        lDAO.updateLessonStatus(11, "Inactive");
     }
 }
