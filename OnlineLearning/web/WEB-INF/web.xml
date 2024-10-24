@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-
     <servlet>
         <servlet-name>changePassword</servlet-name>
         <servlet-class>controller.changePassword</servlet-class>
@@ -33,7 +32,7 @@
         <servlet-name>SubjectServlet</servlet-name>
         <servlet-class>controller.SubjectServlet</servlet-class>
     </servlet>
-     <servlet>
+    <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>controller.Login</servlet-class>
     </servlet>
@@ -41,7 +40,7 @@
         <servlet-name>Verify</servlet-name>
         <servlet-class>controller.Verify</servlet-class>
     </servlet>
-     <servlet>
+    <servlet>
         <servlet-name>Register</servlet-name>
         <servlet-class>controller.Register</servlet-class>
     </servlet>
@@ -116,8 +115,11 @@
         <servlet-name>RevenueStat</servlet-name>
         <servlet-class>controller.RevenueStat</servlet-class>
     </servlet>
-
     <!-- Servlet Mappings -->
+    <servlet>
+        <servlet-name>SubjectLesson</servlet-name>
+        <servlet-class>controller.SubjectLesson</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
@@ -231,9 +233,11 @@
         <servlet-name>UpdateCampaign</servlet-name>
         <url-pattern>/updateCampaign</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>SubjectLesson</servlet-name>
+        <url-pattern>/subjectLesson</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
 </web-app>
-

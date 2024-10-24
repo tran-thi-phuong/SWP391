@@ -493,6 +493,6 @@ public boolean completeProfile(String fullname, String username, String password
         LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
         java.sql.Date endDate = java.sql.Date.valueOf(endDateLocal);
         java.sql.Date startDate = java.sql.Date.valueOf(startDateLocal);
-        System.out.println(u.getTotalBoughtCustomer());
+        System.out.println(u.getUserByUsername("tuan"));
     }
 }

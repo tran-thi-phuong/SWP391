@@ -6,26 +6,26 @@ package model;
 
 /**
  *
- * @author 84336
+ * @author tuant
  */
 public class Lesson {
-    private int lessonID;
-    private int subjectID;
-    private String title;
-    private String type;
-    private String content;
-    private String videoLink;
+    private int lessonID, subjectID, typeID, order;
+    private String title, content, description, status;
 
-    // Constructor
-    public Lesson(int subjectID, String title, String type, String content, String videoLink) {
-        this.subjectID = subjectID;
-        this.title = title;
-        this.type = type;
-        this.content = content;
-        this.videoLink = videoLink;
+    public Lesson() {
     }
 
-    // Getters and Setters
+    public Lesson(int lessonID, int subjectID, int typeID, int order, String title, String content, String description, String status) {
+        this.lessonID = lessonID;
+        this.subjectID = subjectID;
+        this.typeID = typeID;
+        this.order = order;
+        this.title = title;
+        this.content = content;
+        this.description = description;
+        this.status = status;
+    }
+
     public int getLessonID() {
         return lessonID;
     }
@@ -42,20 +42,28 @@ public class Lesson {
         this.subjectID = subjectID;
     }
 
+    public int getTypeID() {
+        return typeID;
+    }
+
+    public void setTypeID(int typeID) {
+        this.typeID = typeID;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getContent() {
@@ -66,23 +74,25 @@ public class Lesson {
         this.content = content;
     }
 
-    public String getVideoLink() {
-        return videoLink;
+    public String getDescription() {
+        return description;
     }
 
-    public void setVideoLink(String videoLink) {
-        this.videoLink = videoLink;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return "Lesson{" +
-                "lessonID=" + lessonID +
-                ", subjectID=" + subjectID +
-                ", title='" + title + '\'' +
-                ", type='" + type + '\'' +
-                ", content='" + content + '\'' +
-                ", videoLink='" + videoLink + '\'' +
-                '}';
+        return "Lesson{" + "lessonID=" + lessonID + ", subjectID=" + subjectID + ", typeID=" + typeID + ", order=" + order + ", title=" + title + ", content=" + content + ", description=" + description + ", status=" + status + '}';
     }
+    
 }
