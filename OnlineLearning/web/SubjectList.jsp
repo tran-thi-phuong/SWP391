@@ -42,35 +42,46 @@
         </script>
     </head>
     <body>
-        <%@include file="Header.jsp" %>
-        <h1>Subject List</h1>
-        <form action="SubjectList" method="GET">
-            <input type="text" name="search" placeholder="search by name" value="${param.search}">
+        <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
+            <c:otherwise>
 
-            <select name="category">
-                <option value="">All</option>
-                <c:forEach items="${categories}" var="category">
-                    <option value="${category.subjectCategoryId}" ${param.category == category.subjectCategoryId ? 'selected' : ''}>${category.title}</option>
-                </c:forEach>
-            </select>
+                <%@include file="Header.jsp" %>
+                <h1>Subject List</h1>
+                <form action="SubjectList" method="GET">
+                    <input type="text" name="search" placeholder="search by name" value="${param.search}">
 
-            <select name="status">
-                <option value="">Tất cả trạng thái</option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-            </select>
+                    <select name="category">
+                        <option value="">All</option>
+                        <c:forEach items="${categories}" var="category">
+                            <option value="${category.subjectCategoryId}" ${param.category == category.subjectCategoryId ? 'selected' : ''}>${category.title}</option>
+                        </c:forEach>
+                    </select>
 
-            <input type="submit" value="Tìm kiếm">
-        </form>
-        <div>
-            <!--        <input type="checkbox" onclick="toggleColumn('col-id')" checked> ID
-                    <input type="checkbox" onclick="toggleColumn('col-name')" checked> Name
-                    <input type="checkbox" onclick="toggleColumn('col-category')" checked> Category-->
-            <input type="checkbox" onclick="toggleColumn('col-lessons')" checked> Number of lesson
-            <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
-            <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
-        </div>
-        <a href="newSubject"  class="btn btn-success"><span>Add New Product</span></a>
+                    <select name="status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+
+                    <input type="submit" value="Tìm kiếm">
+                </form>
+                <div>
+                    <!--        <input type="checkbox" onclick="toggleColumn('col-id')" checked> ID
+                            <input type="checkbox" onclick="toggleColumn('col-name')" checked> Name
+                            <input type="checkbox" onclick="toggleColumn('col-category')" checked> Category-->
+                    <input type="checkbox" onclick="toggleColumn('col-lessons')" checked> Number of lesson
+                    <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
+                    <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
+                </div>
+                     <c:if test="${sessionScope.user.role == 'Instructor'}">
+                <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
+                     </c:if>
 
 
         <table>
@@ -98,22 +109,24 @@
             </c:forEach>
         </table>
 
-        <!-- Phân trang -->
-        <c:if test="${totalPages > 1}">
-            <div class="pagination">
-                <c:forEach begin="1" end="${totalPages}" var="i">
-                    <c:choose>
-                        <c:when test="${currentPage eq i}">
-                            <span>${i}</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="?page=${i}&search=${param.search}&category=${param.category}&status=${param.status}">${i}</a>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
-            </div>
-        </c:if>
+                <!-- Phân trang -->
+                <c:if test="${totalPages > 1}">
+                    <div class="pagination">
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <c:choose>
+                                <c:when test="${currentPage eq i}">
+                                    <span>${i}</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="?page=${i}&search=${param.search}&category=${param.category}&status=${param.status}">${i}</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </div>
+                </c:if>
+            </c:otherwise>
+        </c:choose>
 
-    </body>
-    <%@include file="Footer.jsp" %>
-</html>
+            </body>
+            <%@include file="Footer.jsp" %>
+        </html>

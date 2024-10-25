@@ -37,43 +37,51 @@ public class TestController extends HttpServlet {
     TestDAO testDAO = new TestDAO();
     SettingDAO settingDAO = new SettingDAO();
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
-        SystemSetting setting = (SystemSetting)session.getAttribute("setting");
-        if (setting == null) {
-           // Create a new setting if none exists
-           setting = settingDAO.getSettingsByUserID(user.getUserID());
-           if (setting != null) {
-        session.setAttribute("setting", setting);
+protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    Users user = (Users) session.getAttribute("user");
+
+    // Check if user is null, if so, redirect to login.jsp
+    if (user == null) {
+        response.sendRedirect("login.jsp");
+        return; // Stop further processing
     }
+
+    SystemSetting setting = (SystemSetting) session.getAttribute("setting");
+    if (setting == null) {
+        // Create a new setting if none exists
+        setting = settingDAO.getSettingsByUserID(user.getUserID());
+        if (setting != null) {
+            session.setAttribute("setting", setting);
         }
-        String search = request.getParameter("search");
-        String currentPage = request.getParameter("page");
-        //default is 1
-        if(currentPage == null){
-            currentPage ="1";
-        }
-        String subjectId = request.getParameter("subjectId");
-        String type = request.getParameter("quizType");
-
-        int pageNumber = (currentPage != null) ? Integer.parseInt(currentPage) : 1;
-        int pageSize = (setting != null) ? setting.getNumberOfItems() : 10;
-
-
-        List<Test> tests = testDAO.getAllTests(pageNumber, pageSize, search, subjectId, type);
-        int totalTests = testDAO.getTotalTestCount(search, subjectId, type);
-        
-        int totalPages = (int) Math.ceil((double) totalTests / pageSize);
-
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("testList", tests);
-        request.setAttribute("currentPage",currentPage);
-        // Forward to the JSP
-        request.getRequestDispatcher("QuizList.jsp").forward(request, response);
-
     }
+
+    String search = request.getParameter("search");
+    String currentPage = request.getParameter("page");
+    // default is 1
+    if (currentPage == null) {
+        currentPage = "1";
+    }
+    String subjectId = request.getParameter("subjectId");
+    String type = request.getParameter("quizType");
+
+    int pageNumber = (currentPage != null) ? Integer.parseInt(currentPage) : 1;
+    int pageSize = (setting != null) ? setting.getNumberOfItems() : 10;
+
+    List<Test> tests = testDAO.getAllTests(pageNumber, pageSize, search, subjectId, type);
+    int totalTests = testDAO.getTotalTestCount(search, subjectId, type);
+
+    int totalPages = (int) Math.ceil((double) totalTests / pageSize);
+
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("testList", tests);
+    request.setAttribute("currentPage", currentPage);
+    
+    // Forward to the JSP
+    request.getRequestDispatcher("QuizList.jsp").forward(request, response);
+}
+
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

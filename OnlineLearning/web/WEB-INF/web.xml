@@ -25,6 +25,11 @@
         <servlet-class>controller.SliderServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AddCampaign</servlet-name>
+        <servlet-class>controller.AddCampaign</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>ResendCode</servlet-name>
         <servlet-class>controller.ResendCode</servlet-class>
     </servlet>
@@ -86,6 +91,10 @@
         <servlet-name>AddRegistrationBySale</servlet-name>
         <servlet-class>controller.AddRegistrationBySale</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>updateRegistration</servlet-name>
+        <servlet-class>controller.updateRegistration</servlet-class>
+    </servlet>
     <!-- Campaign Management Servlets -->
     <servlet>
         <servlet-name>CampaignList</servlet-name>
@@ -112,9 +121,26 @@
         <servlet-class>controller.CampaignStat</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>authorInformation</servlet-name>
+        <servlet-class>controller.authorInformation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>myRegistration</servlet-name>
+        <servlet-class>controller.myRegistration</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>myCourse</servlet-name>
+        <servlet-class>controller.myCourse</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RevenueStat</servlet-name>
         <servlet-class>controller.RevenueStat</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>sliderList</servlet-name>
+        <servlet-class>controller.sliderList</servlet-class>
+    </servlet>
+
     <!-- Servlet Mappings -->
     <servlet>
         <servlet-name>SubjectLesson</servlet-name>
@@ -125,12 +151,36 @@
         <servlet-class>controller.UpdateLessonStatus</servlet-class>
     </servlet>
     <servlet-mapping>
+        <servlet-name>updateRegistration</servlet-name>
+        <url-pattern>/updateRegistration</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>sliderList</servlet-name>
+        <url-pattern>/sliderList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>myCourse</servlet-name>
+        <url-pattern>/myCourse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>myRegistration</servlet-name>
+        <url-pattern>/myRegistration</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>authorInformation</servlet-name>
+        <url-pattern>/authorInformation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>changePassword</servlet-name>
         <url-pattern>/changePassword</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>findAccount</servlet-name>
         <url-pattern>/findAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCampaign</servlet-name>
+        <url-pattern>/AddCampaign</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>forgotPassword</servlet-name>

@@ -37,6 +37,14 @@
         </style>
     </head>
     <body>
+        <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
+            <c:otherwise>
         <div class="question-list">
             <h1>Select Questions for Quiz</h1>
             <form action="EditQuiz" method="post" onsubmit="return validateSelection()">
@@ -60,6 +68,8 @@
             </form>
 
         </div>
+            </c:otherwise>
+        </c:choose>
     </body>
     <script>
         function filterQuestions() {
