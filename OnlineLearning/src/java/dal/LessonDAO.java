@@ -61,33 +61,44 @@ public class LessonDAO extends DBContext{
         }
         return list;
     }
+    public List<Lesson> searchLesson(int subjectID, String searchValue){
+        List<Lesson> list = new ArrayList<>();
+        String sql = "select * from Lessons where SubjectID = ? and Title like ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectID);         
+            ps.setString(2, "%" + searchValue + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Lesson lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setSubjectID(rs.getInt("SubjectID"));
+                    lesson.setTitle(rs.getString("Title"));
+                    lesson.setTypeID(rs.getInt("TypeID"));
+                    lesson.setContent(rs.getString("Content"));
+                    lesson.setOrder(rs.getInt("Order"));
+                    lesson.setDescription(rs.getString("Description"));
+                    lesson.setStatus(rs.getString("Status"));
+                    list.add(lesson);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public void updateLessonStatus(int lessonID, String status){
+        String sql = "update Lessons set Status = ? where LessonID = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, status);
+            pstmt.setInt(2, lessonID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
     public static void main(String[] args) {
         LessonDAO lDAO = new LessonDAO();
-
-    // Kiểm tra hàm getAllLessonBySubjectId
-    System.out.println("List of Lessons for Subject ID 11:");
-    List<Lesson> lessons = lDAO.getAllLessonBySubjectId(1);
-    for (Lesson lesson : lessons) {
-        System.out.println("Lesson ID: " + lesson.getLessonID());
-        System.out.println("Title: " + lesson.getTitle());
-        System.out.println("Type ID: " + lesson.getTypeID());
-        System.out.println("Content: " + lesson.getContent());
-        System.out.println("Order: " + lesson.getOrder());
-        System.out.println("Description: " + lesson.getDescription());
-        System.out.println("Status: " + lesson.getStatus());
-        System.out.println("--------------");
-    }
-
-    // Kiểm tra hàm getAllLessonTypeBySubjectId
-    System.out.println("List of Lesson Types for Subject ID 11:");
-    List<LessonSubject> lessonSubjects = lDAO.getAllLessonTypeBySubjectId(1);
-    for (LessonSubject lessonSubject : lessonSubjects) {
-        System.out.println("Type Name: " + lessonSubject.getTypeName());
-        System.out.println("Type ID: " + lessonSubject.getTypeID());
-        System.out.println("Subject ID: " + lessonSubject.getSubjectID());
-        System.out.println("Order: " + lessonSubject.getOrder());
-        System.out.println("--------------");
-    }
+        lDAO.updateLessonStatus(11, "Inactive");
     }
 }

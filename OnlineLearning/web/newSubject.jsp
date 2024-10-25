@@ -6,6 +6,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
     
@@ -71,6 +72,15 @@
     <body>
 
         <h1>Add New Subject</h1>
+         <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Instructor'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
+            <c:otherwise>
+
 
         <form action="newSubject" method="POST" enctype="multipart/form-data">
             <a href="SubjectList" class="back-button">Back to subject list</a>
@@ -79,7 +89,7 @@
             <input type="text" id="courseName" name="courseName" required>
 
             <label for="thumbnail">Thumbnail Image:</label>
-            <input type="file" id="thumbnail" name="thumbnail"required>
+            <input type="file" id="thumbnail" name="thumbnail" required>
 
             <label for="category">Category:</label>
             <select id="category" name="category" required>
@@ -102,6 +112,8 @@
             <button type="submit">Add Course</button>
             
         </form>
+            </c:otherwise>
+         </c:choose>
 
     </body>
 </html>

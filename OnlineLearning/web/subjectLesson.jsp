@@ -16,64 +16,41 @@
         <%@include file="Header.jsp" %>
         <div class="">
             <div>
-
-            </div>
-            <div>
                 <nav class="navbar navbar-light ">
-                    <form class="form-inline row filter-form">
-
-                        <div class="col-md-7 row search-bar"><h3 class="col-md-4 subject-name">${requestScope.courseName}</h3>
-                            <input class="form-control mr-sm-2 search-lesson col-md-8" name="searchValue" type="search" placeholder="Search" aria-label="Search">
+                    <form class="form-inline row filter-form" method="post" action="subjectLesson">
+                        <input type="hidden" name="courseName" value="${requestScope.courseName}">
+                        <input type="hidden" name="courseId" value="${requestScope.courseId}">
+                        <div class="col-md-7 row search-bar">
+                            <h3 class="col-md-4 subject-name">${requestScope.courseName}<br><span style="font-size: 12px;">Subject ID: ${requestScope.courseId}</span></h3>
+                            <input class="form-control mr-sm-2 search-lesson col-md-8" name="search-value" type="search"
+                                   value="${requestScope.searchValue}" placeholder="Search" aria-label="Search">
                         </div>
                         <div class="col-md-2 status-select"><label for="dateSelect" class="form-label">Status</label>
-                            <select name="select-action" class="form-select select-1">
-                                <option value="all" >All</option>
-                                <option value="active" >Active</option>
-                                <option value="inactive">Inactive</option>
+                            <select name="select-status" class="form-select select-1">
+                                <option value="all" ${requestScope.selectStatus eq 'all' ? "selected" : ""}>All</option>
+                                <option value="Active" ${requestScope.selectStatus eq 'Active' ? "selected" : ""}>Active</option>
+                                <option value="Inactive" ${requestScope.selectStatus eq 'Inactive' ? "selected" : ""}>Inactive</option>
                             </select></div>
                         <div class="col-md-2 topic-select"><label for="dateSelect" class="form-label">Filter by topic</label>
-                            <select name="select-action" class="form-select select-2">
-                                <option value="all">All</option>
+                            <select name="select-topic" class="form-select select-2">
+                                <option value="all" ${requestScope.selectTopic eq 'all' ? "selected" : ""}>All</option>
                                 <c:forEach items="${lessonType}" var="type">
-                                    <option value="active">${type.typeName}</option>
+                                    <option value="${type.typeID}" ${requestScope.selectTopic eq type.typeID.toString() ? "selected" : ""}>${type.typeName}</option>
                                 </c:forEach>
-                            </select></div>
+                            </select>
+                        </div>
                         <div class="col-md-1 search-btn "><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button></div>
                     </form>
                 </nav>
             </div>
         </div>
-        <div class="lesson-list">
-            <c:forEach items="${lessonType}" var="type">
-                <div class="lesson-type mb-1">
-                    <div class="btn btn-primary mb-2 btn-size" 
-                         type="button" 
-                         id="btn${type.typeID}"
-                         onclick="toggleContent('collapse${type.typeID}')">
-                        <span>${type.typeName}</span><button class="btn btn-sm btn-success" onclick="window.location.href = '#'">+</button>
-                    </div>  
-                    <div class="collapse" id="collapse${type.typeID}">
-                        <div class="card">
-                            <ul class="list-group">
-                                <c:forEach items="${lessonList}" var="lesson">
-                                    <c:if test="${lesson.typeID == type.typeID}">
-                                        <li class="list-group-item"><span><a href="#">${lesson.title}</a>
-                                            </span>
-                                            <c:if test="${lesson.status eq 'Active'}">
-                                                <button class="btn btn-danger">Deactive</button>
-                                            </c:if>
-                                            <c:if test="${lesson.status eq 'Inactive'}">
-                                                <button class="btn btn-success">Active</button>
-                                            </c:if>
-                                        </li>
-                                    </c:if>
-                                </c:forEach>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </c:forEach>
-        </div>
+        <c:if test="${not empty requestScope.searchValue}">
+            <%@include file="searchLesson.jsp" %>
+        </c:if>
+        <c:if test="${empty requestScope.searchValue}">
+            <%@include file="notSearchLesson.jsp" %>
+        </c:if>
+
 
 
         <script>

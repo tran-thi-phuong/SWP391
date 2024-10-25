@@ -18,6 +18,12 @@ import java.util.Map;
  */
 public class CampaignsDAO extends DBContext {
 
+    private boolean throwError = false;
+
+    public void setThrowError(boolean throwError) {
+        this.throwError = throwError;
+    }
+
     public Map<Integer, Campaigns> getAllCampaigns() {
         Map<Integer, Campaigns> list = new HashMap<>();
         String sql = "SELECT * FROM Campaigns"; // Sửa SQL cho đúng tên bảng
@@ -58,15 +64,20 @@ public class CampaignsDAO extends DBContext {
     }
 
     public boolean startCampaign(int campaignId) {
-        String sql = "UPDATE Campaigns SET StartDate = GETDATE(), Status = 'Processing' WHERE CampaignID = ?";
+        if (throwError) {
+            throw new RuntimeException("Simulated database error");
+        }
 
+        String sql = "UPDATE Campaigns SET StartDate = GETDATE(), Status = 'Processing' WHERE CampaignID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, campaignId);
             int rowsAffected = st.executeUpdate();
             return rowsAffected > 0;
-
         } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        } catch (RuntimeException e) {
             System.out.println(e);
             return false;
         }
@@ -93,7 +104,7 @@ public class CampaignsDAO extends DBContext {
                 campaign.setStatus(rs.getString("Status"));
             }
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
         return campaign;
     }
@@ -119,10 +130,11 @@ public class CampaignsDAO extends DBContext {
             return false;
         }
     }
-public void addCampaign(Campaign campaign) throws SQLException {
+
+    public void addCampaign(Campaign campaign) throws SQLException {
         String sql = "INSERT INTO campaigns (CampaignName, Description, StartDate, EndDate, Image, Status) VALUES (?, ?, ?, ?, ?, ?)";
         try (
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, campaign.getCampaignName());
             stmt.setString(2, campaign.getDescription());
             stmt.setDate(3, (Date) campaign.getStartDate());

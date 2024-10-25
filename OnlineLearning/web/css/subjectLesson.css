@@ -26,7 +26,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 .lesson-list{
     padding-left: 275px;
-    padding-top: 20px;
+    padding-top: 0px;
+    padding-bottom: 50px;
 }
 .subject-name{
     font-size: 20px;
@@ -45,6 +46,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-top: -27px;
 }
 .search-bar{
+    position: relative; left: 39px; top: -4px;
     align-items: center;
 }
 .topic-select{
@@ -52,4 +54,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 .search-btn{
     margin-top: 5px;
+}
+.search-card{
+    width: 698px;;
+}
+.subject-id{
+    font-size: 14px;
+}
+.btn-add{
+    position: relative;
+    top: 37px;
+    left: 720px;
+}
+.numOfTopic{
+    position: relative;
+    top: 0px;
+    left: -240px;
+    width: 200px;
 }

@@ -29,6 +29,7 @@ public class RegistrationsDAO extends DBContext {
         }
         return total;
     }
+
     public List<Registrations> getAllRegistrations() {
         List<Registrations> registrations = new ArrayList<>();
         String sql = "SELECT r.RegistrationID, u.Email, r.Registration_Time, s.Title AS Subject, "
@@ -510,7 +511,7 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND r.Status != 'Cancelled'"
+                + "WHERE r.UserID = ?"
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS "
                 + "FETCH NEXT ? ROWS ONLY";
@@ -765,11 +766,9 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-
-    public int getTotalRegistrationByStatus(String status, Date startDate, Date endDate){
-        String sql = "select count(*) from Registrations where Status = '" + status + "' and Registration_Time BETWEEN '" + startDate + "' AND '" + endDate +"'";
-        try (PreparedStatement ps = connection.prepareStatement(sql); 
-                ResultSet rs = ps.executeQuery()) {
+    public int getTotalRegistrationByStatus(String status, Date startDate, Date endDate) {
+        String sql = "select count(*) from Registrations where Status = '" + status + "' and Registration_Time BETWEEN '" + startDate + "' AND '" + endDate + "'";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
@@ -780,7 +779,11 @@ public class RegistrationsDAO extends DBContext {
     }
 
     public boolean updateRegistration(Registrations registration) {
-        String sql = "UPDATE Registrations SET validFrom = ?, validTo = ?, status = ? WHERE registrationId = ?";
+        
+        if (registration.getValidFrom().after(registration.getValidTo())) {
+            return false; // Invalid date range
+        }
+        String sql = "UPDATE Registrations SET Valid_From = ?, Valid_To = ?, Status = ? WHERE RegistrationID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setDate(1, new java.sql.Date(registration.getValidFrom().getTime()));
@@ -797,28 +800,15 @@ public class RegistrationsDAO extends DBContext {
         return false;
     }
 
-    public static void main(String[] args) {
-        RegistrationsDAO registrationsDAO = new RegistrationsDAO();
-
-        // Thay thế ID người dùng và từ khóa tìm kiếm
-        int userId = 1; // Giả định người dùng có ID là 1
-        String searchQuery = "Al"; // Từ khóa tìm kiếm giả định
-        int page = 1; // Trang hiện tại
-        int pageSize = 5; // Số lượng bản ghi mỗi trang
-
-        // Gọi phương thức tìm kiếm
-        List<Registrations> results = registrationsDAO.searchRegistrationsByUserId(userId, searchQuery, page, pageSize);
-
-        // In kết quả ra console
-        System.out.println("Search Results for User ID " + userId + " with query '" + searchQuery + "':");
-        for (Registrations reg : results) {
-            System.out.println(reg);
-        }
-    }
-
     public void addNewRegistration(int userId, int subjectId, int packageId, double totalCost,
             Date registrationTime, Date validFrom, Date validTo,
             int staffId, String note) throws SQLException {
+        if (registrationTime == null) {
+            throw new SQLException("Date parameters cannot be null");
+        }
+        if (validTo.before(validFrom)) {
+            throw new SQLException("Valid to date cannot be before valid from date");
+        }
         String sql = "INSERT INTO Registrations (UserID, SubjectID, PackageID, Total_Cost, "
                 + "Registration_Time, Valid_From, Valid_To, Status, StaffID, Note) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -843,8 +833,6 @@ public class RegistrationsDAO extends DBContext {
         }
     }
 
-    //myRegistration DAO
-    //Cancel summitted course
     public String getCustomerEmailByRegistrationId(String registrationId) {
         String email = null;
         String sql = "SELECT u.email FROM Registrations r "
