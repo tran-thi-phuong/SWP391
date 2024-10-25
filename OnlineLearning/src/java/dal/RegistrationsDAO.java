@@ -592,7 +592,7 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND r.Status = 'In-progress'"
+                + "WHERE r.UserID = ? AND r.Status = 'Active'"
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS "
                 + "FETCH NEXT ? ROWS ONLY";

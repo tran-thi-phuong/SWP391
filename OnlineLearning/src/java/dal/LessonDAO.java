@@ -64,6 +64,30 @@ public class LessonDAO extends DBContext{
     
     public static void main(String[] args) {
         LessonDAO lDAO = new LessonDAO();
-        System.out.println(lDAO.getAllLessonBySubjectId(11));
+
+    // Kiểm tra hàm getAllLessonBySubjectId
+    System.out.println("List of Lessons for Subject ID 11:");
+    List<Lesson> lessons = lDAO.getAllLessonBySubjectId(1);
+    for (Lesson lesson : lessons) {
+        System.out.println("Lesson ID: " + lesson.getLessonID());
+        System.out.println("Title: " + lesson.getTitle());
+        System.out.println("Type ID: " + lesson.getTypeID());
+        System.out.println("Content: " + lesson.getContent());
+        System.out.println("Order: " + lesson.getOrder());
+        System.out.println("Description: " + lesson.getDescription());
+        System.out.println("Status: " + lesson.getStatus());
+        System.out.println("--------------");
+    }
+
+    // Kiểm tra hàm getAllLessonTypeBySubjectId
+    System.out.println("List of Lesson Types for Subject ID 11:");
+    List<LessonSubject> lessonSubjects = lDAO.getAllLessonTypeBySubjectId(1);
+    for (LessonSubject lessonSubject : lessonSubjects) {
+        System.out.println("Type Name: " + lessonSubject.getTypeName());
+        System.out.println("Type ID: " + lessonSubject.getTypeID());
+        System.out.println("Subject ID: " + lessonSubject.getSubjectID());
+        System.out.println("Order: " + lessonSubject.getOrder());
+        System.out.println("--------------");
+    }
     }
 }

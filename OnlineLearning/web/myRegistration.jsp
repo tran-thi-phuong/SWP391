@@ -144,9 +144,7 @@
         </c:if>
 
         <div style="text-align: center">
-        <div style="text-align: center">
             <c:if test="${currentPage > 1}">
-                <a class="btn btn-secondary" href="myRegistration?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}&status=${statusFilter}">Previous</a>
                 <a class="btn btn-secondary" href="myRegistration?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}&status=${statusFilter}">Previous</a>
             </c:if>
 
@@ -159,18 +157,9 @@
                         <a class="btn btn-secondary" href="myRegistration?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">${i}</a>
                     </c:otherwise>
                 </c:choose>
-                <c:choose>
-                    <c:when test="${currentPage eq i}">
-                        <span class="btn btn-primary">${i}</span>
-                    </c:when>
-                    <c:otherwise>
-                        <a class="btn btn-secondary" href="myRegistration?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">${i}</a>
-                    </c:otherwise>
-                </c:choose>
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
-                <a class="btn btn-secondary" href="myRegistration?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">Next</a>
                 <a class="btn btn-secondary" href="myRegistration?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">Next</a>
             </c:if>
         </div>
