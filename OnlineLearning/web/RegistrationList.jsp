@@ -17,9 +17,12 @@
     </head>
     <%@include file="Header.jsp" %>
     <body class="regist">
-        <c:choose>
-            <c:when test="${empty sessionScope.user || (sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Sale')}">
+       <c:choose>
+            <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
+                <c:redirect url="/Homepage"/>
             </c:when>
             <c:otherwise>
                 
@@ -27,7 +30,7 @@
                     <h1>List of Registrations</h1>
                     <br>
                     <br>
-                    <c:if test="${user.role == 'Sale'}">
+                    <c:if test="${user.role == 'Marketing'}">
                         <div style="display: flex; justify-content: flex-end; padding: 10px;">
                             <form action="addRegistrationBySale" method="get">
                                 <button type="submit" id="add" style="background-color: #90EE90; color: black;
@@ -85,7 +88,7 @@
                                     <option value="Active" ${param.status == "Active" ? "selected" : ""}>Active</option>
                                     <option value="Inactive" ${param.status == "Inactive" ? "selected" : ""}>Expired</option>
                                     <option value="Processing" ${param.status == "Processing" ? "selected" : ""}>Processing</option>
-                                    <option value="Cancel" ${param.status == "Cancel" ? "selected" : ""}>Cancel</option>
+                                    <option value="Cancelled" ${param.status == "Cancelled" ? "selected" : ""}>Cancelled</option>
                                 </select>
                             </div>
                         </div>

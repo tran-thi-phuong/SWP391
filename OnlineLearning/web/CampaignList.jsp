@@ -15,9 +15,12 @@
     </head>
     <%@ include file="Header.jsp" %>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user || (sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Sale')}">
+       <c:choose>
+            <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
+                <c:redirect url="/Homepage"/>
             </c:when>
             <c:otherwise>
                 <div class="container mt-4">
@@ -48,6 +51,7 @@
                                 <th class="campaign-description">Description</th>
                                 <th class="campaign-start-date">Start Date</th>
                                 <th class="campaign-end-date">End Date</th>
+                                <th class="campaign-image">Image</th>
                                 <th class="campaign-status">Status</th>
                                 <th class="campaign-action">Action</th>
                             </tr>
@@ -65,6 +69,7 @@
                                     <td class="campaign-description-value">${campaign.description}</td>
                                     <td class="campaign-start-date-value">${campaign.startDate}</td>
                                     <td class="campaign-end-date-value">${campaign.endDate}</td>
+                                    <td class="campaign-end-date-value">${campaign.image}</td>
                                     <td class="campaign-status-value">${campaign.status}</td>
                                     <td class="campaign-action-cell">
                                         <c:choose>

@@ -60,8 +60,4 @@ public class CampaignDAO extends DBContext{
         }
         return cam;
     }
-    public static void main(String[] args){
-        CampaignDAO cam = new CampaignDAO();
-        System.out.println(cam.getAllCampaign());
-    }
 }

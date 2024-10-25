@@ -21,6 +21,11 @@
         <link rel="stylesheet" href="css/profile.css"/>
     </head>
     <body>
+         <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:otherwise>
         <%@include file="Header.jsp" %>
         <div class="form-size">
             <form method="post" action="updateProfile" enctype="multipart/form-data">
@@ -196,6 +201,7 @@
             });
         </script>
 
-
+            </c:otherwise>
+         </c:choose>
     </body>
 </html>
