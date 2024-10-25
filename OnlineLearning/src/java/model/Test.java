@@ -131,4 +131,10 @@ public class Test {
     public void setMediaDescription(String mediaDescription) {
         this.mediaDescription = mediaDescription;
     }
+
+    @Override
+    public String toString() {
+        return "Test{" + "testID=" + testID + ", subjectID=" + subjectID + ", title=" + title + ", description=" + description + ", type=" + type + ", duration=" + duration + ", passCondition=" + passCondition + ", level=" + level + ", quantity=" + quantity + ", mediaType=" + mediaType + ", mediaURL=" + mediaURL + ", mediaDescription=" + mediaDescription + '}';
+    }
+    
 }

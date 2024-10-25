@@ -12,10 +12,18 @@ public class Answer {
     private int answerID;
     private int questionID;
     private String content;
+    private String explanation;
     private boolean isCorrect;
 
-    // Getters and Setters
+    // Constructor
+    public Answer(int questionID, String content, String explanation, boolean isCorrect) {
+        this.questionID = questionID;
+        this.content = content;
+        this.explanation = explanation;
+        this.isCorrect = isCorrect;
+    }
 
+    // Getters and Setters
     public int getAnswerID() {
         return answerID;
     }
@@ -40,12 +48,31 @@ public class Answer {
         this.content = content;
     }
 
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
     public boolean isCorrect() {
         return isCorrect;
     }
 
     public void setCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "answerID=" + answerID +
+                ", questionID=" + questionID +
+                ", content='" + content + '\'' +
+                ", explanation='" + explanation + '\'' +
+                ", isCorrect=" + isCorrect +
+                '}';
     }
 }
 

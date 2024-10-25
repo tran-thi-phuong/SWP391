@@ -380,6 +380,9 @@ public class TestDAO extends DBContext {
             ex.printStackTrace();
         }
     }
-
-    // Additional methods for update and delete can be added similarly
+    public static void main(String[] args) {
+        TestDAO d = new TestDAO();
+        model.Test testToUpdate = d.getTestById(153);
+        System.out.println(testToUpdate);
+    }
 }

@@ -84,30 +84,30 @@
                      </c:if>
 
 
-                <table>
-                    <tr>
-                        <th class="col-id">ID</th>
-                        <th class="col-name">Name</th>
-                        <th class="col-category">Category</th>
-                        <th class="col-lessons">Number of lesson</th>
-                        <th class="col-owner">Owner</th>
-                        <th class="col-status">Status</th>
-                        <th>Action</th>
-                    </tr>
-                    <c:forEach items="${subjects}" var="course">
-                        <tr>
-                            <td class="col-id">${course.subjectID}</td>
-                            <td class="col-name">${course.title}</td>
-                            <td class="col-category">${course.subjectCategoryId}</td>
-                            <td class="col-lessons">0</td>
-                            <td class="col-owner">${course.userName}</td>
-                            <td class="col-status">${course.status}</td>
-                            <td>
-                                <a href="editCourse.jsp?id=${course.subjectID}">Chỉnh sửa</a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
+        <table>
+            <tr>
+                <th class="col-id">ID</th>
+                <th class="col-name">Name</th>
+                <th class="col-category">Category</th>
+                <th class="col-lessons">Number of lesson</th>
+                <th class="col-owner">Owner</th>
+                <th class="col-status">Status</th>
+                <th>Action</th>
+            </tr>
+            <c:forEach items="${subjects}" var="course">
+                <tr>
+                    <td class="col-id">${course.subjectID}</td>
+                    <td class="col-name"><a href="subjectLesson?courseId=${course.subjectID}&courseName=${course.title}">${course.title}</a></td>
+                    <td class="col-category">${course.subjectCategoryId}</td>
+                    <td class="col-lessons">0</td>
+                    <td class="col-owner">${course.userName}</td>
+                    <td class="col-status">${course.status}</td>
+                    <td>
+                        <a href="editCourse.jsp?id=${course.subjectID}">Chỉnh sửa</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
 
                 <!-- Phân trang -->
                 <c:if test="${totalPages > 1}">
