@@ -124,7 +124,7 @@
                             <div class="registration-card">
                                 <div>
                                     <p class="registration-card-text"><img src="${registration.subjectName}" alt="${registration.subjectName}"></p>
-                                    <p class="registration-card-title subjectName">${registration.subjectName}</p>
+                                    <p class="registration-card-title subjectName"><a href="SubjectView?subjectId=${registration.subjectId}">${registration.subjectName}</a></p>
                                     <p class="registration-card-text package"><strong>Package:</strong> ${registration.packageId}</p>
                                     <p class="registration-card-text registrationTime"><strong>Registration Time:</strong> ${registration.registrationTime}</p>
                                     <p class="registration-card-text totalCost"><strong>Cost:</strong> ${registration.totalCost}</p>

@@ -294,5 +294,14 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
+CREATE TABLE Lesson_User (
+    LessonID INT,
+    UserID INT,
+    Status NVARCHAR(50) NOT NULL, 
+    PRIMARY KEY (LessonID, UserID),
+    FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+GO
 
 
