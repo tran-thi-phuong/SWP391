@@ -37,11 +37,10 @@
                     <div class="lesson-type" onclick="toggleLessons('${lessonType.typeID}')">
                         <p>${lessonType.name}</p>
                     </div>
-                    <div id="lessons-${lessonType.typeID}" class="lessons-container">
-                        <h4>Bài học:</h4>
+                    <div id="lessons-${lessonType.typeID}" class="lessons-container" style="display: block;">
                         <c:forEach var="lesson" items="${lessonType.lessons}">
                             <div class="lesson-item">
-                                <p><a href="LessonView?lessonId=${lesson.lessonID}">${lesson.title}</a></p>
+                                <p><a href="LessonView?lessonId=${lesson.lessonID}&subjectId=${subject.subjectID}">${lesson.title}</a></p>
                                 <c:if test="${not empty sessionScope.user}">
                                     <c:choose>
                                         <c:when test="${lesson.status == 'Completed'}">
