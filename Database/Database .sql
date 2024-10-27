@@ -51,6 +51,7 @@ CREATE TABLE Blogs (
     Content NVARCHAR(MAX) NOT NULL,
     Create_At DATETIME DEFAULT GETDATE(),
     Blog_CategoryID INT,
+	Status NVARCHAR(10) NOT NULL DEFAULT 'Show';
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (Blog_CategoryID) REFERENCES Blog_Category(Blog_CategoryID)
 );
@@ -178,6 +179,7 @@ Status NVARCHAR(50) NOT NULL,
     FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
 );
 GO
+
 CREATE TABLE QuestionMedia (
     MediaID INT PRIMARY KEY IDENTITY(1,1),
     QuestionID INT NOT NULL,
@@ -303,5 +305,4 @@ CREATE TABLE Lesson_User (
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 GO
-
 
