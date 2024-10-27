@@ -28,7 +28,6 @@
         <servlet-name>AddCampaign</servlet-name>
         <servlet-class>controller.AddCampaign</servlet-class>
     </servlet>
-    
     <servlet>
         <servlet-name>ResendCode</servlet-name>
         <servlet-class>controller.ResendCode</servlet-class>
@@ -78,7 +77,7 @@
         <servlet-name>RegistrationStat</servlet-name>
         <servlet-class>controller.RegistrationStat</servlet-class>
     </servlet>
-<!-- Registration Management Servlets -->
+    <!-- Registration Management Servlets -->
     <servlet>
         <servlet-name>RegistrationLists</servlet-name>
         <servlet-class>controller.RegistrationLists</servlet-class>
@@ -140,7 +139,6 @@
         <servlet-name>sliderList</servlet-name>
         <servlet-class>controller.sliderList</servlet-class>
     </servlet>
-
     <!-- Servlet Mappings -->
     <servlet>
         <servlet-name>SubjectLesson</servlet-name>
@@ -158,6 +156,14 @@
         <servlet-name>LessonView</servlet-name>
         <servlet-class>controller.LessonView</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PostDetail</servlet-name>
+        <servlet-class>controller.PostDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddBlog</servlet-name>
+        <servlet-class>controller.AddBlog</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>updateRegistration</servlet-name>
         <url-pattern>/updateRegistration</url-pattern>
@@ -168,7 +174,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>myCourse</servlet-name>
-<url-pattern>/myCourse</url-pattern>
+        <url-pattern>/myCourse</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>myRegistration</servlet-name>
@@ -252,7 +258,7 @@
         <url-pattern>/blogList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-<servlet-name>Logout</servlet-name>
+        <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -310,6 +316,14 @@
     <servlet-mapping>
         <servlet-name>LessonView</servlet-name>
         <url-pattern>/LessonView</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostDetail</servlet-name>
+        <url-pattern>/PostDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddBlog</servlet-name>
+        <url-pattern>/AddBlog</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

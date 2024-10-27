@@ -3,10 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/LessonView.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/myRegistration.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/SubjectView.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/LessonView.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/PostDetail.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/blogDetail.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/BlogDAO.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/Blog.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/blogDetail.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/AddBlog.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/BlogMedia.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/AddBlog.jsp</file>
         </group>
     </open-files>
 </project-private>
