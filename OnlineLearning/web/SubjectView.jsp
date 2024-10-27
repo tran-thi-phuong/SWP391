@@ -41,9 +41,17 @@
                         <h4>Bài học:</h4>
                         <c:forEach var="lesson" items="${lessonType.lessons}">
                             <div class="lesson-item">
-                                <p>${lesson.title}</p>
+                                <p><a href="LessonView?lessonId=${lesson.lessonID}">${lesson.title}</a></p>
                                 <c:if test="${not empty sessionScope.user}">
-                                    <p>${lesson.status}</p>
+                                    <c:choose>
+                                        <c:when test="${lesson.status == 'Completed'}">
+                                            <span class="status-icon">
+                                                <i class="bi bi-check-circle-fill text-success"></i> Completed
+                                            </span>
+                                        </c:when>
+                                        <c:otherwise>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:if>
                             </div>
                         </c:forEach>

@@ -79,3 +79,16 @@ p {
     font-weight: bold; /* Chữ đậm */
     color: #28a745; /* Màu xanh lá */
 }
+
+.status-icon {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: green;
+}
+
+.status-icon .bi-check-circle-fill {
+    margin-right: 5px;
+    font-size: 1.2em; /* Tùy chỉnh kích thước biểu tượng */
+}
+
