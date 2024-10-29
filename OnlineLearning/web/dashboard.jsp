@@ -23,31 +23,41 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
     <body>
-        <%@include file="Header.jsp" %>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
-                    <%@include file="sidebar.jsp" %>
+        <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
+            <c:otherwise>
+                <%@include file="Header.jsp" %>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <%@include file="sidebar.jsp" %>
+                        </div>
+                        <c:choose>
+                            <c:when test="${requestScope.action == 'courseStat'}">
+                                <%@include file="courseStat.jsp" %>
+                            </c:when>
+                            <c:when test="${requestScope.action == 'registrationStat'}">
+                                <%@include file="registrationStat.jsp" %>
+                            </c:when>
+                            <c:when test="${requestScope.action == 'revenueStat'}">
+                                <%@include file="revenueStat.jsp" %>
+                            </c:when>
+                            <c:when test="${requestScope.action == 'customerStat'}">
+                                <%@include file="customerStat.jsp" %>
+                            </c:when>
+                            <c:when test="${requestScope.action == 'campaignStat'}">
+                                <%@include file="campaignStat.jsp" %>
+                            </c:when>
+                        </c:choose>
+                    </div>
                 </div>
-                <c:choose>
-                    <c:when test="${requestScope.action == 'courseStat'}">
-                        <%@include file="courseStat.jsp" %>
-                    </c:when>
-                    <c:when test="${requestScope.action == 'registrationStat'}">
-                        <%@include file="registrationStat.jsp" %>
-                    </c:when>
-                    <c:when test="${requestScope.action == 'revenueStat'}">
-                        <%@include file="revenueStat.jsp" %>
-                    </c:when>
-                    <c:when test="${requestScope.action == 'customerStat'}">
-                        <%@include file="customerStat.jsp" %>
-                    </c:when>
-                    <c:when test="${requestScope.action == 'campaignStat'}">
-                        <%@include file="campaignStat.jsp" %>
-                    </c:when>
-                </c:choose>
-            </div>
-        </div>
-        <%@include file="Footer.jsp" %>
-    </body>
-</html>
+                <%@include file="Footer.jsp" %>
+            </c:otherwise>
+        </c:choose>
+            </body>
+        </html>

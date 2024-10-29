@@ -91,6 +91,14 @@
     </head>
     <%@include file="Header.jsp" %>
     <body>
+        <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
+            <c:otherwise>
         <div style="text-align: center; margin-bottom: 20px;">
             <button onclick="window.location.href = 'QuizList'" style="padding: 10px 20px; border: none; border-radius: 5px; background-color: #28a745; color: white; cursor: pointer;">
                 Back to Quiz List
@@ -173,11 +181,13 @@
                     </select>
                 </p>
                 <button type="button" onclick="showQuestionList()">View Question List</button>
+                <c:if test="${sessionScope.user.role == 'Instructor'}">
                 <button type="submit" name="action" value="edit" 
                         ${attemptCount > 0 ? 'disabled' : ''}>Edit</button>
                 <button type="submit" name="action" value="delete" 
                         ${attemptCount > 0 ? 'disabled' : ''}
                         onclick="return confirmDelete()">Delete</button>
+                        </c:if>
             </form>
             <div id="questionModal" class="modal">
                 <div class="modal-content">
@@ -191,6 +201,8 @@
                 </div>
             </div>
         </div>
+            </c:otherwise>
+        </c:choose>
     </body>
     <%@include file="Footer.jsp" %>
     <script>

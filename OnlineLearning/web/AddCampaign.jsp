@@ -15,9 +15,12 @@
     </head>
     <%@ include file="Header.jsp" %>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user || (sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Sale')}">
+      <c:choose>
+            <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
+                <c:redirect url="/Homepage"/>
             </c:when>
             <c:otherwise>
                 <div class="container2 ">

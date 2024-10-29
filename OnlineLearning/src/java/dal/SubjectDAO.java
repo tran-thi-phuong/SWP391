@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
+import model.Lesson;
+import model.LessonType;
 import model.SubjectCategoryCount;
 
 /**
@@ -387,8 +389,196 @@ public class SubjectDAO extends DBContext {
         return isAdded;
     }
 
+    public List<Subject> getSubjectDetailsByUserIdandSubjectID(int userId, int subjectId) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = """
+          SELECT s.SubjectID,staff.username,staff.UserID AS OwnerID,staff.Name AS OwnerName,s.Title AS SubjectTitle, 
+          lt.TypeID, lt.Name AS LessonTypeName, 
+          l.LessonID, l.Title AS LessonTitle, l.[Order] AS LessonOrder,
+          lu.Status AS UserLessonStatus
+          FROM Subjects s 
+          JOIN Registrations r ON s.SubjectID = r.SubjectID 
+          JOIN Lessons l ON l.SubjectID = s.SubjectID 
+          JOIN LessonType lt ON lt.TypeID = l.TypeID
+          JOIN Users staff ON s.OwnerID = staff.UserID
+          LEFT JOIN Lesson_User lu ON l.LessonID = lu.LessonID AND lu.UserID = ?
+          WHERE r.UserID = ?
+          AND s.SubjectID = ?
+          ORDER BY s.SubjectID, lt.TypeID, l.[Order], l.LessonID
+          """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId); // Đặt userId cho trạng thái bài học
+            ps.setInt(2, userId); // Đặt userId cho điều kiện của bảng Registrations
+            ps.setInt(3, subjectId); // Đặt subjectId cho điều kiện của bảng Subjects
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // Kiểm tra xem môn học đã tồn tại trong danh sách hay chưa
+                    Subject subject = null;
+                    for (Subject existingSubject : subjects) {
+                        if (existingSubject.getSubjectID() == rs.getInt("SubjectID")) {
+                            subject = existingSubject;
+                            break;
+                        }
+                    }
+
+                    // Nếu môn học chưa tồn tại, tạo mới
+                    if (subject == null) {
+                        subject = new Subject();
+                        subject.setSubjectID(rs.getInt("SubjectID"));
+                        subject.setOwnerName(rs.getString("OwnerName"));
+                        subject.setUserName(rs.getString("username"));
+                        subject.setTitle(rs.getString("SubjectTitle"));
+                        subject.setLessonTypes(new ArrayList<>());
+                        subjects.add(subject);
+                    }
+
+                    // Tạo LessonType và Lesson
+                    LessonType lessonType = new LessonType();
+                    lessonType.setTypeID(rs.getInt("TypeID"));
+                    lessonType.setName(rs.getString("LessonTypeName"));
+
+                    Lesson lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setTitle(rs.getString("LessonTitle"));
+                    lesson.setStatus(rs.getString("UserLessonStatus"));
+
+                    // Kiểm tra xem LessonType đã tồn tại trong Subject chưa
+                    boolean lessonTypeExists = false;
+                    for (LessonType existingLessonType : subject.getLessonTypes()) {
+                        if (existingLessonType.getTypeID() == lessonType.getTypeID()) {
+                            existingLessonType.getLessons().add(lesson);
+                            lessonTypeExists = true;
+                            break;
+                        }
+                    }
+
+                    // Nếu LessonType chưa tồn tại, thêm vào
+                    if (!lessonTypeExists) {
+                        List<Lesson> lessons = new ArrayList<>();
+                        lessons.add(lesson);
+                        lessonType.setLessons(lessons);
+                        subject.getLessonTypes().add(lessonType);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getSubjectDetailsByUserIdandSubjectID: " + e.getMessage());
+        }
+        return subjects;
+    }
+
+    public List<Subject> getSubjectDetailsBySubjectID(int subjectId) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = """
+          SELECT s.SubjectID, staff.username,staff.UserID AS OwnerID, staff.Name AS OwnerName, s.Title AS SubjectTitle, 
+          lt.TypeID, lt.Name AS LessonTypeName, 
+          l.LessonID, l.Title AS LessonTitle, l.[Order] AS LessonOrder
+          FROM Subjects s 
+          JOIN Registrations r ON s.SubjectID = r.SubjectID 
+          JOIN Lessons l ON l.SubjectID = s.SubjectID 
+          JOIN LessonType lt ON lt.TypeID = l.TypeID
+          JOIN Users staff ON s.OwnerID = staff.UserID
+          WHERE s.SubjectID = ?
+          ORDER BY s.SubjectID, lt.TypeID, l.[Order], l.LessonID
+          """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId); // Set subjectId for the Subjects table condition
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // Check if the subject already exists in the list
+                    Subject subject = null;
+                    for (Subject existingSubject : subjects) {
+                        if (existingSubject.getSubjectID() == rs.getInt("SubjectID")) {
+                            subject = existingSubject;
+                            break;
+                        }
+                    }
+
+                    // If the subject doesn't exist, create a new one
+                    if (subject == null) {
+                        subject = new Subject();
+                        subject.setSubjectID(rs.getInt("SubjectID"));
+                        subject.setOwnerName(rs.getString("OwnerName"));
+                        subject.setUserName(rs.getString("username"));
+                        subject.setTitle(rs.getString("SubjectTitle"));
+                        subject.setLessonTypes(new ArrayList<>());
+                        subjects.add(subject);
+                    }
+
+                    // Create LessonType and Lesson
+                    LessonType lessonType = new LessonType();
+                    lessonType.setTypeID(rs.getInt("TypeID"));
+                    lessonType.setName(rs.getString("LessonTypeName"));
+
+                    Lesson lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setTitle(rs.getString("LessonTitle"));
+
+                    // Check if LessonType already exists in the Subject
+                    boolean lessonTypeExists = false;
+                    for (LessonType existingLessonType : subject.getLessonTypes()) {
+                        if (existingLessonType.getTypeID() == lessonType.getTypeID()) {
+                            existingLessonType.getLessons().add(lesson);
+                            lessonTypeExists = true;
+                            break;
+                        }
+                    }
+
+                    // If LessonType doesn't exist, add it
+                    if (!lessonTypeExists) {
+                        List<Lesson> lessons = new ArrayList<>();
+                        lessons.add(lesson);
+                        lessonType.setLessons(lessons);
+                        subject.getLessonTypes().add(lessonType);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getSubjectDetailsBySubjectID: " + e.getMessage());
+        }
+        return subjects;
+    }
+
     public static void main(String[] args) {
         SubjectDAO subjectDAO = new SubjectDAO();
+        List<Subject> specificSubjects = subjectDAO.getSubjectDetailsBySubjectID(8);
 
+        // Check if the list of specific subjects is not empty
+        if (specificSubjects != null && !specificSubjects.isEmpty()) {
+            System.out.println("Specific subjects found for Subject ID 8:");
+            for (Subject subject : specificSubjects) {
+                System.out.println("Subject ID: " + subject.getSubjectID());
+                System.out.println("Owner Name: " + subject.getOwnerName());
+                System.out.println("Title: " + subject.getTitle());
+                System.out.println("Lesson Types:");
+
+                if (subject.getLessonTypes() != null && !subject.getLessonTypes().isEmpty()) {
+                    for (LessonType lessonType : subject.getLessonTypes()) {
+                        System.out.println("  Type ID: " + lessonType.getTypeID());
+                        System.out.println("  Type Name: " + lessonType.getName());
+
+                        if (lessonType.getLessons() != null && !lessonType.getLessons().isEmpty()) {
+                            for (Lesson lesson : lessonType.getLessons()) {
+                                System.out.println("    Lesson ID: " + lesson.getLessonID());
+                                System.out.println("    Lesson Title: " + lesson.getTitle());
+                                System.out.println("    Lesson Status: " + (lesson.getStatus() != null ? lesson.getStatus() : "N/A"));
+                            }
+                        } else {
+                            System.out.println("    No lessons available for this lesson type.");
+                        }
+                    }
+                } else {
+                    System.out.println("  No lesson types available for this subject.");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("No specific subjects found for Subject ID 8.");
+        }
     }
+
 }

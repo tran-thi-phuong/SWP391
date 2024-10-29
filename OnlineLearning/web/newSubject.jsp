@@ -6,9 +6,10 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
-    
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,44 +65,81 @@
                 float: right;
                 padding: 10px 15px;
                 text-decoration: none;
-                border-radius: 5px; 
+                border-radius: 5px;
             }
         </style>
     </head>
     <body>
-
         <h1>Add New Subject</h1>
 
-        <form action="newSubject" method="POST" enctype="multipart/form-data">
-            <a href="SubjectList" class="back-button">Back to subject list</a>
+        <%-- Access Control Block --%>
+        <c:choose>
+            <%-- Check if user is logged in --%>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
 
-            <label for="courseName">Course Name:</label>
-            <input type="text" id="courseName" name="courseName" required>
+            <%-- Check if user has admin privileges --%>
+            <c:when test="${sessionScope.user.role != 'Admin'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
 
-            <label for="thumbnail">Thumbnail Image:</label>
-            <input type="file" id="thumbnail" name="thumbnail"required>
+            <%-- Main form content for authorized users --%>
+            <c:otherwise>
+                <%-- 
+                    Form Configuration:
+                    - POST method for secure data transmission
+                    - enctype for handling file uploads
+                    - Required fields for data validation 
+                --%>
+                <form action="newSubject" method="POST" enctype="multipart/form-data">
+                    <%-- Navigation back to subject list --%>
+                    <a href="SubjectList" class="back-button">Back to subject list</a>
 
-            <label for="category">Category:</label>
-            <select id="category" name="category" required>
-                <c:forEach items="${categories}" var="category">
-                    <option value="${category.subjectCategoryId}">${category.title}</option>
-                </c:forEach>
-            </select>
+                    <%-- Course Name Input --%>
+                    <label for="courseName">Course Name:</label>
+                    <input type="text" id="courseName" name="courseName" required>
 
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-                <option value="">Select status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <!-- Add more statuses as needed -->
-            </select>
+                    <%-- Thumbnail Upload Field 
+                         Accepts image files for course thumbnail
+                    --%>
+                    <label for="thumbnail">Thumbnail Image:</label>
+                    <input type="file" id="thumbnail" name="thumbnail" required>
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
+                    <%-- Category Dropdown
+                         Populated dynamically from database
+                    --%>
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <c:forEach items="${categories}" var="category">
+                            <option value="${category.subjectCategoryId}">
+                                ${category.title}
+                            </option>
+                        </c:forEach>
+                    </select>
 
-            <button type="submit">Add Course</button>
-            
-        </form>
+                    <%-- Status Selection
+                         Controls course visibility and availability
+                    --%>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <%-- Additional status options can be added here --%>
+                    </select>
 
+                    <%-- Course Description Text Area
+                         Multi-line text input for detailed course information
+                    --%>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
+
+                    <%-- Form Submission Button --%>
+                    <button type="submit">Add Course</button>
+
+                </form>
+            </c:otherwise>
+        </c:choose>
     </body>
 </html>

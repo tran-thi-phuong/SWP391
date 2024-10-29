@@ -15,21 +15,27 @@
     </head>
     <body>
         <%@include file="Header.jsp" %>
-        
+
+        <!-- Main container for all content -->
         <div class="container">
             <div class="content">
+                <!-- Left sidebar containing search and categories -->
                 <aside class="sidebar">
+                    <!-- Search section -->
                     <section class="search">
-                        <h2>Search Subject</h2>
+                        <h2>Search Course</h2>
+                        <!-- Search form that sends GET request to CourseList servlet -->
                         <form action="CourseList" method="get">  
-                            <input type="text" name="query" placeholder="Search subject...">
+                            <input type="text" name="query" placeholder="Search course...">
                             <button type="submit">Search</button>
                         </form>
                     </section>
 
+                    <!-- Subject categories section -->
                     <section class="categories">
-                        <h2>Subject Category</h2>
+                        <h2>Course Category</h2>
                         <ul>
+                            <!-- Link to show all subjects -->
                             <li>
                                 <a href="?category=${category.subjectCategoryId}">All</a>
                             </li>
@@ -42,7 +48,9 @@
                     </section>
                 </aside>
 
+                <!-- Main content area displaying subject list -->
                 <main class="subject-list">
+                    <%-- Check if subjects exist --%>
                     <c:choose>
                         <c:when test="${not empty subjects}">
                             <c:forEach items="${subjects}" var="subject">
@@ -61,16 +69,16 @@
                         </c:otherwise>
                     </c:choose>
                 </main>
-
-
             </div>
 
+            <!-- Footer containing pagination -->
             <footer>
                 <div class="pagination">
                     <c:if test="${currentPage > 1}">
                         <a href="?page=${currentPage - 1}" class="arrow">&laquo;</a>
                     </c:if>
 
+                    <%-- Display page numbers --%>
                     <c:forEach begin="1" end="${totalPages}" var="i">
                         <c:choose>
                             <c:when test="${currentPage eq i}">
@@ -89,5 +97,5 @@
             </footer>
         </div>
     </body>
-<%@include file="Footer.jsp" %>
+    <%@include file="Footer.jsp" %>
 </html>

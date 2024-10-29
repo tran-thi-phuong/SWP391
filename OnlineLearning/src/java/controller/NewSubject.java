@@ -32,6 +32,11 @@ public class NewSubject extends HttpServlet {
         super.init();
         categoryDAO = new CategoryDAO();
     }
+    /**
+     * Handles GET requests
+     * Displays the form for creating a new subject
+     * Loads all available categories for the dropdown menu
+     **/
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -74,7 +79,7 @@ public class NewSubject extends HttpServlet {
             // Redirect to success page or list of courses if add is successful
             response.sendRedirect("SubjectList.jsp");
         } else {
-            // Handle failure to add course (gửi lỗi và chuyển về trang thêm mới)
+            // Handle failure to add course
             request.setAttribute("errorMessage", "Failed to add the course.");
             request.getRequestDispatcher("newSubject").forward(request, response);
         }

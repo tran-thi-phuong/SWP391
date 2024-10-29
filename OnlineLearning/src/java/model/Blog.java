@@ -8,7 +8,9 @@ package model;
  *
  * @author sonna
  */
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Blog {
     private int blogId;
@@ -16,9 +18,12 @@ public class Blog {
     private String title;
     private String content;
     private Date createAt;
-    private BlogCategory blogCategoryId;
+    private String status;
+    private BlogCategory blogCategoryId; 
+    private List<BlogMedia> mediaLinks;
 
     public Blog() {
+        this.mediaLinks = new ArrayList<>(); // Khởi tạo danh sách
     }
 
     public Blog(int blogId, Users userId, String title, String content, Date createAt, BlogCategory blogCategoryId) {
@@ -28,6 +33,7 @@ public class Blog {
         this.content = content;
         this.createAt = createAt;
         this.blogCategoryId = blogCategoryId;
+        this.mediaLinks = new ArrayList<>(); // Khởi tạo danh sách
     }
 
     public int getBlogId() {
@@ -70,6 +76,14 @@ public class Blog {
         this.createAt = createAt;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public BlogCategory getBlogCategoryId() {
         return blogCategoryId;
     }
@@ -77,6 +91,16 @@ public class Blog {
     public void setBlogCategoryId(BlogCategory blogCategoryId) {
         this.blogCategoryId = blogCategoryId;
     }
-    
-    
+
+    public List<BlogMedia> getMediaLinks() {
+        return mediaLinks;
+    }
+
+    public void setMediaLinks(List<BlogMedia> mediaLinks) {
+        this.mediaLinks = mediaLinks;
+    }
+
+    public void addMedia(BlogMedia media) {
+        this.mediaLinks.add(media); // Thêm phương thức để thêm media
+    }
 }
