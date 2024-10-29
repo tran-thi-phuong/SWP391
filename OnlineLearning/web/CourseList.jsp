@@ -23,17 +23,17 @@
                 <aside class="sidebar">
                     <!-- Search section -->
                     <section class="search">
-                        <h2>Search Subject</h2>
+                        <h2>Search Course</h2>
                         <!-- Search form that sends GET request to CourseList servlet -->
                         <form action="CourseList" method="get">  
-                            <input type="text" name="query" placeholder="Search subject...">
+                            <input type="text" name="query" placeholder="Search course...">
                             <button type="submit">Search</button>
                         </form>
                     </section>
 
                     <!-- Subject categories section -->
                     <section class="categories">
-                        <h2>Subject Category</h2>
+                        <h2>Course Category</h2>
                         <ul>
                             <!-- Link to show all subjects -->
                             <li>

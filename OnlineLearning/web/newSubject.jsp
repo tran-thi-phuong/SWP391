@@ -9,7 +9,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,55 +65,81 @@
                 float: right;
                 padding: 10px 15px;
                 text-decoration: none;
-                border-radius: 5px; 
+                border-radius: 5px;
             }
         </style>
     </head>
     <body>
-
         <h1>Add New Subject</h1>
-         <c:choose>
+
+        <%-- Access Control Block --%>
+        <c:choose>
+            <%-- Check if user is logged in --%>
             <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
             </c:when>
-            <c:when test="${sessionScope.user.role != 'Instructor'}">
+
+            <%-- Check if user has admin privileges --%>
+            <c:when test="${sessionScope.user.role != 'Admin'}">
                 <c:redirect url="/Homepage"/>
             </c:when>
+
+            <%-- Main form content for authorized users --%>
             <c:otherwise>
+                <%-- 
+                    Form Configuration:
+                    - POST method for secure data transmission
+                    - enctype for handling file uploads
+                    - Required fields for data validation 
+                --%>
+                <form action="newSubject" method="POST" enctype="multipart/form-data">
+                    <%-- Navigation back to subject list --%>
+                    <a href="SubjectList" class="back-button">Back to subject list</a>
 
+                    <%-- Course Name Input --%>
+                    <label for="courseName">Course Name:</label>
+                    <input type="text" id="courseName" name="courseName" required>
 
-        <form action="newSubject" method="POST" enctype="multipart/form-data">
-            <a href="SubjectList" class="back-button">Back to subject list</a>
+                    <%-- Thumbnail Upload Field 
+                         Accepts image files for course thumbnail
+                    --%>
+                    <label for="thumbnail">Thumbnail Image:</label>
+                    <input type="file" id="thumbnail" name="thumbnail" required>
 
-            <label for="courseName">Course Name:</label>
-            <input type="text" id="courseName" name="courseName" required>
+                    <%-- Category Dropdown
+                         Populated dynamically from database
+                    --%>
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <c:forEach items="${categories}" var="category">
+                            <option value="${category.subjectCategoryId}">
+                                ${category.title}
+                            </option>
+                        </c:forEach>
+                    </select>
 
-            <label for="thumbnail">Thumbnail Image:</label>
-            <input type="file" id="thumbnail" name="thumbnail" required>
+                    <%-- Status Selection
+                         Controls course visibility and availability
+                    --%>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <%-- Additional status options can be added here --%>
+                    </select>
 
-            <label for="category">Category:</label>
-            <select id="category" name="category" required>
-                <c:forEach items="${categories}" var="category">
-                    <option value="${category.subjectCategoryId}">${category.title}</option>
-                </c:forEach>
-            </select>
+                    <%-- Course Description Text Area
+                         Multi-line text input for detailed course information
+                    --%>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
 
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-                <option value="">Select status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <!-- Add more statuses as needed -->
-            </select>
+                    <%-- Form Submission Button --%>
+                    <button type="submit">Add Course</button>
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
-
-            <button type="submit">Add Course</button>
-            
-        </form>
+                </form>
             </c:otherwise>
-         </c:choose>
-
+        </c:choose>
     </body>
 </html>
