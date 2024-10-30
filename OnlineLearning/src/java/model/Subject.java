@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Subject {
     private int subjectID;
@@ -12,6 +13,9 @@ public class Subject {
     private String thumbnail;
     private Date updateDate;
     private String userName;
+    private List<LessonType> lessonTypes;
+    private int ownerID;
+    private String ownerName;
 
     // Default constructor
     public Subject() {}
@@ -39,6 +43,12 @@ public class Subject {
         this.thumbnail = thumbnail;
         this.updateDate = updateDate;
     }
+
+    public Subject(List<LessonType> lessonTypes) {
+        this.lessonTypes = lessonTypes;
+    }
+    
+    
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -110,6 +120,30 @@ public class Subject {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public List<LessonType> getLessonTypes() {
+        return lessonTypes;
+    }
+
+    public void setLessonTypes(List<LessonType> lessonTypes) {
+        this.lessonTypes = lessonTypes;
+    }
+
+    public int getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(int ownerID) {
+        this.ownerID = ownerID;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     @Override

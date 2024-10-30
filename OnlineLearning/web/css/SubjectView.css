@@ -1,0 +1,94 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Oct 26, 2024, 7:04:44 PM
+    Author     : sonna
+*/
+body, h1, h2, h3, h4, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set the body background and font */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa; /* Màu nền sáng */
+    color: #343a40; /* Màu chữ tối */
+    line-height: 1.6; /* Khoảng cách giữa các dòng */
+}
+
+/* Style cho tiêu đề chính */
+h1 {
+    font-size: 2.5rem; /* Kích thước chữ lớn */
+    margin-bottom: 20px; /* Khoảng cách phía dưới */
+}
+
+/* Style cho tiêu đề môn học */
+h2 {
+    font-size: 2rem; /* Kích thước chữ vừa */
+    color: #007bff; /* Màu xanh dương */
+    margin-top: 20px; /* Khoảng cách phía trên */
+}
+
+/* Style cho các phần tử thông tin môn học */
+h3, h4 {
+    color: #6c757d; /* Màu xám nhạt */
+}
+
+/* Style cho các đoạn văn */
+p {
+    margin: 5px 0; /* Khoảng cách giữa các đoạn */
+}
+
+/* Style cho các danh sách bài học */
+.lesson-list {
+    padding-left: 20px; /* Khoảng cách bên trái */
+    border-left: 2px solid #007bff; /* Đường kẻ bên trái */
+}
+
+.lesson-type {
+    background-color: #e0f7fa; /* Màu nền cho loại bài học */
+    border: 1px solid #009688; /* Đường viền */
+    border-radius: 8px; /* Bo tròn các góc */
+    padding: 15px; /* Khoảng cách bên trong */
+    margin-bottom: 15px; /* Khoảng cách giữa các loại bài học */
+    cursor: pointer; /* Con trỏ chuột thay đổi khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+.lesson-type:hover {
+    background-color: #b2ebf2; /* Màu nền khi hover */
+}
+
+.lessons-container {
+    display: none; /* Ẩn các bài học theo mặc định */
+    margin-left: 20px; /* Khoảng cách bên trái cho danh sách bài học */
+}
+
+.lesson-item {
+    background-color: #f1f1f1; /* Màu nền cho các bài học */
+    border-radius: 5px; /* Bo tròn các góc */
+    padding: 10px; /* Khoảng cách bên trong */
+    margin-bottom: 10px; /* Khoảng cách giữa các bài học */
+}
+
+/* Style cho các trạng thái */
+.status {
+    font-weight: bold; /* Chữ đậm */
+    color: #28a745; /* Màu xanh lá */
+}
+
+.status-icon {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: green;
+}
+
+.status-icon .bi-check-circle-fill {
+    margin-right: 5px;
+    font-size: 1.2em; /* Tùy chỉnh kích thước biểu tượng */
+}
+

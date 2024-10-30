@@ -25,14 +25,6 @@
     <body>
         <%@include file="Header.jsp"%>
         <p></p>
-         <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
         <% 
             Users author = (Users) request.getAttribute("author");
             if (author != null) {
@@ -47,8 +39,6 @@
         <p>Tác giả không tồn tại!</p>
         <% } %>
         <%@include file="Footer.jsp"%>
-            </c:otherwise>
-         </c:choose>
     </body>
 </html>
 

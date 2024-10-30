@@ -51,6 +51,7 @@ CREATE TABLE Blogs (
     Content NVARCHAR(MAX) NOT NULL,
     Create_At DATETIME DEFAULT GETDATE(),
     Blog_CategoryID INT,
+	Status NVARCHAR(10) NOT NULL DEFAULT 'Show';
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (Blog_CategoryID) REFERENCES Blog_Category(Blog_CategoryID)
 );
@@ -178,6 +179,7 @@ Status NVARCHAR(50) NOT NULL,
     FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
 );
 GO
+
 CREATE TABLE QuestionMedia (
     MediaID INT PRIMARY KEY IDENTITY(1,1),
     QuestionID INT NOT NULL,
@@ -294,5 +296,24 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
+CREATE TABLE Lesson_User (
+    LessonID INT,
+    UserID INT,
+    Status NVARCHAR(50) NOT NULL, 
+    PRIMARY KEY (LessonID, UserID),
+    FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+GO
+
+CREATE TABLE Blog_Media (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+    BlogID INT NOT NULL,
+    MediaType NVARCHAR(10), -- 'image' hoặc 'video'
+    MediaLink NVARCHAR(MAX), -- Đường dẫn đến ảnh hoặc video
+    Description NVARCHAR(255),
+    FOREIGN KEY (BlogID) REFERENCES Blogs(BlogId) ON DELETE CASCADE
+);
+GO
 
 

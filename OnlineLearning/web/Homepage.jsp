@@ -91,7 +91,7 @@
                                 <img class="card-img-top" src="${subject.thumbnail}" alt="${subject.title}">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <a href="subject-detail.jsp?subjectId=${subject.subjectID}">
+                                        <a href="SubjectView?subjectId=${subject.subjectID}">
                                             ${subject.title}
                                         </a>
                                     </h5>
