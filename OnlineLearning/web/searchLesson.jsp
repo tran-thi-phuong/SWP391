@@ -27,7 +27,7 @@
                     </c:if>
                     </li>
                 </c:if>
-                <c:if test="${requestScope.selectStatus eq lesson.status && requestScope.selectTopic eq lesson.typeID.toString()}">
+                <c:if test="${requestScope.selectStatus eq lesson.status && requestScope.selectTopic eq lesson.topicID.toString()}">
                     <li class="list-group-item">
                         <span class="subject-info">
                             <a href="#" class="text-primary">${lesson.title}</a>
@@ -57,7 +57,7 @@
                     </c:if>
                     </li>
                 </c:if>
-                <c:if test="${requestScope.selectTopic eq lesson.typeID.toString() && requestScope.selectStatus eq 'all'}">
+                <c:if test="${requestScope.selectTopic eq lesson.topicID.toString() && requestScope.selectStatus eq 'all'}">
                     <li class="list-group-item">
                         <span class="subject-info">
                             <a href="#" class="text-primary">${lesson.title}</a>

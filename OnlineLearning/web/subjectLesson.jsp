@@ -35,7 +35,7 @@
                             <select name="select-topic" class="form-select select-2">
                                 <option value="all" ${requestScope.selectTopic eq 'all' ? "selected" : ""}>All</option>
                                 <c:forEach items="${lessonType}" var="type">
-                                    <option value="${type.typeID}" ${requestScope.selectTopic eq type.typeID.toString() ? "selected" : ""}>${type.typeName}</option>
+                                    <option value="${type.topicID}" ${requestScope.selectTopic eq type.topicID.toString() ? "selected" : ""}>${type.topicName}</option>
                                 </c:forEach>
                             </select>
                         </div>

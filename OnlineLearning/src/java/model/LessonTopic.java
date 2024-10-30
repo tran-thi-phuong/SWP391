@@ -10,26 +10,26 @@ import java.util.List;
  *
  * @author sonna
  */
-public class LessonType {
-    private int typeID;
+public class LessonTopic {
+    private int topicID;
     private String name; // Tên chương
     private List<Lesson> lessons;
 
-    public LessonType() {
+    public LessonTopic() {
     }
 
-    public LessonType(int typeID, String name, List<Lesson> lessons) {
-        this.typeID = typeID;
+    public LessonTopic(int topicID, String name, List<Lesson> lessons) {
+        this.topicID = topicID;
         this.name = name;
         this.lessons = lessons;
     }
 
     public int getTypeID() {
-        return typeID;
+        return topicID;
     }
 
-    public void setTypeID(int typeID) {
-        this.typeID = typeID;
+    public void setTypeID(int topicID) {
+        this.topicID = topicID;
     }
 
     public String getName() {
