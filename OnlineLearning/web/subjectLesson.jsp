@@ -21,7 +21,7 @@
                         <input type="hidden" name="courseName" value="${requestScope.courseName}">
                         <input type="hidden" name="courseId" value="${requestScope.courseId}">
                         <div class="col-md-7 row search-bar">
-                            <h3 class="col-md-4 subject-name">${requestScope.courseName}<br><span style="font-size: 12px;">Subject ID: ${requestScope.courseId}</span></h3>
+                            <h3 class="col-md-4 subject-name">${requestScope.courseName}<br><span class="subject-id-section" style="font-size: 12px;">Subject ID: ${requestScope.courseId}</span></h3>
                             <input class="form-control mr-sm-2 search-lesson col-md-8" name="search-value" type="search"
                                    value="${requestScope.searchValue}" placeholder="Search" aria-label="Search">
                         </div>
