@@ -41,7 +41,9 @@ public class Users {
         this.status = status;
         this.token = token;
         this.create_At = create_At;
-    } 
+    }
+
+    
 
    
     public int getUserID() {
@@ -123,6 +125,10 @@ public class Users {
     public void setRole(String role) {
         this.role = role;
     }
+
+  
+
+    
 
     public String getStatus() {
         return status;

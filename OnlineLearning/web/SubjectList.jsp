@@ -42,14 +42,6 @@
         </script>
     </head>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
 
                 <%@include file="Header.jsp" %>
                 <h1>Subject List</h1>
@@ -79,7 +71,7 @@
                     <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
                     <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
                 </div>
-                     <c:if test="${sessionScope.user.role == 'Instructor'}">
+                     <c:if test="${sessionScope.user.role == 'Admin'}">
                 <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
                      </c:if>
 
@@ -124,8 +116,7 @@
                         </c:forEach>
                     </div>
                 </c:if>
-            </c:otherwise>
-        </c:choose>
+           
 
             </body>
             <%@include file="Footer.jsp" %>

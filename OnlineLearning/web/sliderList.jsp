@@ -34,14 +34,6 @@
         </style>
     </head>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
                 <%@include file="Header.jsp" %>
                 <h1>Slider List</h1>
                 <div class="filter-form">
@@ -105,7 +97,6 @@
                 </table>
                 <p></p>
                 <%@include file="Footer.jsp" %>
-            </c:otherwise>
-        </c:choose>
+          
             </body>
         </html>

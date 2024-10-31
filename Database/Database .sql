@@ -172,7 +172,7 @@ GO
 CREATE TABLE Questions (
     QuestionID INT PRIMARY KEY IDENTITY(1,1),
     LessonID INT,
-Status NVARCHAR(50) NOT NULL,
+	Status NVARCHAR(50) NOT NULL,
     Content NVARCHAR(MAX) NOT NULL,
     Level NVARCHAR(50),
     FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
@@ -269,7 +269,18 @@ CREATE TABLE System_Setting (
     PassCondition BIT DEFAULT 0, 
     Level BIT DEFAULT 0,                   
     Quantity BIT DEFAULT 0,     
-    PassRate BIT DEFAULT 0,                
+    PassRate BIT DEFAULT 0,
+	RegistrationID BIT DEFAULT 0,
+	CustomerEmail BIT DEFAULT 0,
+	PackageID BIT DEFAULT 0,
+	Total_Cost BIT DEFAULT 0,
+	Registration_Time BIT DEFAULT 0,
+	Valid_From BIT DEFAULT 0,
+	Valid_To BIT DEFAULT 0,
+	Status BIT DEFAULT 0,
+	Staff BIT DEFAULT 0,
+	Note BIT DEFAULT 0,
+	campaign BIT DEFAULT 0,
     NumberOfItems INT DEFAULT 10,          -- Number of items per page
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),
@@ -282,8 +293,7 @@ CREATE TABLE Campaigns (
     Description NVARCHAR(MAX),
     StartDate DATE,
     EndDate DATE,
-    Image NVARCHAR(255),
-	Status nvarchar(20) not null	
+    	Status nvarchar(20) not null	
 );
 GO
 CREATE TABLE Campaign_Subject (
@@ -294,5 +304,28 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
+CREATE TABLE CampaignMedia (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+    CampaignID INT NOT NULL,
+    MediaLink NVARCHAR(MAX) NOT NULL,
+    Description NVARCHAR(255),
+    FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID)
+);
+GO
+CREATE TABLE Pages (
+    PageID INT PRIMARY KEY IDENTITY(1,1),
+    PageName NVARCHAR(100) NOT NULL,
+    PageUrl NVARCHAR(255) NOT NULL,
+    Status NVARCHAR(10) NOT NULL,
+    Update_At DATETIME DEFAULT GETDATE()
+);
+CREATE TABLE Role_Permission (
+    RolePermissionID INT PRIMARY KEY IDENTITY(1,1),
+    Role NVARCHAR(50) NOT NULL,  
+    PageID INT NOT NULL,
+    Update_At DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (PageID) REFERENCES Pages(PageID)
+);
+
 
 

@@ -16,14 +16,7 @@
         <title>My Course</title>
     </head>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Customer'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
+       
                 <%@include file="Header.jsp" %>
                 <p></p>
                 <div style="padding: 0 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
@@ -151,7 +144,6 @@
                 </div>
 
                     <%@include file="Footer.jsp" %>
-                </c:otherwise>
-                </c:choose>
+                
             </body>
         </html>

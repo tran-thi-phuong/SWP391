@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dal.PagesDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dal.RegistrationsDAO;
+import dal.RolePermissionDAO;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,6 +21,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import model.SubjectCategoryCount;
+import model.Users;
 
 /**
  *
@@ -50,7 +54,33 @@ public class RegistrationStat extends HttpServlet {
             out.println("</html>");
         }
     }
+ private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
 
+        // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+        String userRole = currentUser.getRole();
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+        // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true; // Người dùng có quyền truy cập trang này
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -63,6 +93,9 @@ public class RegistrationStat extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!hasPermission(request, response)) {
+            return;
+        }
         LocalDate endDateLocal = LocalDate.now();
         LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
         Date endDate = Date.valueOf(endDateLocal);

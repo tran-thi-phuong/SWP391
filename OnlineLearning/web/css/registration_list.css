@@ -82,6 +82,9 @@ input[type="date"] {
 .registrationTable {
     overflow-x: auto; /* Enable horizontal scrolling for small screens */
 }
+.checkBox{
+    display: flex;
+}
 
 @media (max-width: 768px) {
     .container {

@@ -6,6 +6,12 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="model.Users" %>
+<%@ page import="dal.RolePermissionDAO" %>
+<%@ page import="dal.PagesDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.*" %>
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -27,21 +33,21 @@
         <p></p>
         <div class="container">
             
-            <h1 class="mb-4">Danh sách Blog</h1>
+            <h1 class="mb-4">Blogs</h1>
 
             <div class="row">
                 <div class="col-md-3 sidebar">
                     <!-- Thanh tìm kiếm -->
                     <div class="search-bar">
-                        <h4>Tìm kiếm</h4>
+                        <h4>Search </h4>
                         <form action="blogList" method="get">
-                            <input type="text" name="search" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
-                            <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
+                            <input type="text" name="search" class="form-control" placeholder="Enter word to search">
+                            <button type="submit" class="btn btn-primary mt-2">Save</button>
                         </form>
                     </div>
 
                     <div class="categories">
-                        <h4>Danh mục</h4>
+                        <h4>Category</h4>
                         <ul class="list-group">
                             <c:forEach var="category" items="${categories}">
                                 <li class="list-group-item">
@@ -58,7 +64,7 @@
                             <h2><a href="blogDetail?blogId=${blog.blogId}">${blog.title}</a></h2>
 
                             <div class="blog-info">
-                                Đăng bởi ${blog.userId.name} vào ngày ${blog.createAt}
+                                Post by ${blog.userId.name} at ${blog.createAt}
                             </div>
                         </div>
                     </c:forEach>

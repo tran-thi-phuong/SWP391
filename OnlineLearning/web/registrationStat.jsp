@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div class="col-md-9 content-container">
     <div class="filter-course-regis">
         <form id="toggleForm" method="post" action="registrationStat">

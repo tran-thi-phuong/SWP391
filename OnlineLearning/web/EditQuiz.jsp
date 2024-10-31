@@ -131,14 +131,6 @@
     </head>
     <%@include file="Header.jsp" %>
     <body onload="initializeFileInput()">
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
         <div style="text-align: center; margin-bottom: 20px;">
             <a href="QuizDetail?id=${currentTest.testID}" style="text-decoration: none;">
                 <button type="button" style="padding: 10px 20px; background-color: #6c757d; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
@@ -242,8 +234,6 @@
             </form>
 
         </div>
-            </c:otherwise>
-        </c:choose>
     </body>
     <%@include file="Footer.jsp" %>
 </html>

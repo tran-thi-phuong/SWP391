@@ -3,6 +3,7 @@
 <%@ page import="model.Question" %>
 <%@ page import="model.Answer" %>
 <%@ page import="model.QuestionMedia" %>
+
 <html>
     <head>
         <title>Question and Answer Details</title>

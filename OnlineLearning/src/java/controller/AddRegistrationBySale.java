@@ -47,6 +47,9 @@ public class AddRegistrationBySale extends HttpServlet {
     // Handles GET requests to show the registration form
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!hasPermission(request, response)) {
+            return;
+        }
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user"); // Get the user from session
         String subjectIdStr = request.getParameter("subjectID"); // Get subject ID from request parameters
@@ -106,7 +109,17 @@ public class AddRegistrationBySale extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             // Retrieve parameters from the request
-            String email = request.getParameter("email");
+            String email = request.getParameter("email") != null ? request.getParameter("email").trim() : "";
+
+            // Check if the email input is empty
+            if (email.isEmpty()) {
+                // Set an error message for empty input
+                request.setAttribute("errorMessage", "Email field cannot be empty.");
+                // Forward the request to findAccount.jsp
+                request.getRequestDispatcher("/findAccount.jsp").forward(request, response);
+                return;
+            }
+
             int subjectId = Integer.parseInt(request.getParameter("subjectID"));
             int packageId = Integer.parseInt(request.getParameter("packageID"));
             double totalCost = Double.parseDouble(request.getParameter("totalCost"));
@@ -176,8 +189,8 @@ public class AddRegistrationBySale extends HttpServlet {
         String subject = "Complete Your Profile"; // Email subject
 
         // Create the reset link for completing the profile
-        String resetLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-                           request.getContextPath() + "/CompleteProfile?token=" + token;
+        String resetLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                + request.getContextPath() + "/CompleteProfile?token=" + token;
 
         // Email message body
         String messageBody = "Dear Customer,\n\n"
@@ -222,5 +235,33 @@ public class AddRegistrationBySale extends HttpServlet {
             token.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length()))); // Generate token characters
         }
         return token.toString(); // Return generated token
+    }
+
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+
+        // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+        String userRole = currentUser.getRole();
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+        // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true; // Người dùng có quyền truy cập trang này
     }
 }

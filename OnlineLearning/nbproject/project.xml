@@ -38,22 +38,6 @@
                     <file>${file.reference.sqljdbc42.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library dirs="200">
-                    <file>${file.reference.junit-4.13.2.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.junit-jupiter-api-5.11.2.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.junit-jupiter-engine-5.11.2.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.junit-platform-console-standalone-1.11.2.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>

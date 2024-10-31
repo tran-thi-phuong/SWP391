@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dal.CampaignDAO;
+import dal.CampaignsDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import model.Campaign;
+import model.Campaigns;
 import model.Users;
 
 /**
@@ -67,8 +67,8 @@ public class Login extends HttpServlet {
             request.setAttribute("error", error);
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
-            CampaignDAO cam = new CampaignDAO();
-            List<Campaign> campaigns = cam.getAllCampaign();
+            CampaignsDAO cam = new CampaignsDAO();
+            List<Campaigns> campaigns = cam.getAllCampaign();
             if (user.getStatus().toLowerCase().equals("active")) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
@@ -79,13 +79,10 @@ public class Login extends HttpServlet {
                     break;
                 case "marketing":
                     session.setAttribute("campaigns", campaigns);
-                    response.sendRedirect("dashboard.jsp");
+                    response.sendRedirect("courseStat");
                     break;
-                case "sale":
-                    session.setAttribute("campaigns", campaigns);
-                    response.sendRedirect("dashboard.jsp");
-                    break;
-                case "customer":
+                
+                case "austomer":
                     response.sendRedirect("Homepage");
                     break;
                 default:

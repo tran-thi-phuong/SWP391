@@ -6,6 +6,15 @@
 
 <%@ page import="model.Users" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    // Kiểm tra nếu người dùng chưa đăng nhập, chuyển hướng đến login.jsp
+    Users currentUser = (Users) session.getAttribute("user");
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,14 +34,7 @@
     <body>
         <%@include file="Header.jsp"%>
         <p></p>
-         <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
+        
         <% 
             Users author = (Users) request.getAttribute("author");
             if (author != null) {
@@ -47,8 +49,7 @@
         <p>Tác giả không tồn tại!</p>
         <% } %>
         <%@include file="Footer.jsp"%>
-            </c:otherwise>
-         </c:choose>
+          
     </body>
 </html>
 

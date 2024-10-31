@@ -16,19 +16,17 @@ public class Campaigns {
     private String description;
     private Date startDate;
     private Date endDate;
-    private String image;
     private String status;
 
     public Campaigns() {
     }
 
-    public Campaigns(int campaignId, String campaignName, String description, Date startDate, Date endDate, String image, String status) {
+    public Campaigns(int campaignId, String campaignName, String description, Date startDate, Date endDate,String status) {
         this.campaignId = campaignId;
         this.campaignName = campaignName;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.image = image;
         this.status = status;
     }
 
@@ -72,13 +70,6 @@ public class Campaigns {
         this.endDate = endDate;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public String getStatus() {
         return status;

@@ -72,15 +72,6 @@
     <body>
 
         <h1>Add New Subject</h1>
-         <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
-
 
         <form action="newSubject" method="POST" enctype="multipart/form-data">
             <a href="SubjectList" class="back-button">Back to subject list</a>
@@ -112,8 +103,7 @@
             <button type="submit">Add Course</button>
             
         </form>
-            </c:otherwise>
-         </c:choose>
+         
 
     </body>
 </html>
