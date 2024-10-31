@@ -164,6 +164,14 @@
         <servlet-name>AddBlog</servlet-name>
         <servlet-class>controller.AddBlog</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LessonDetail</servlet-name>
+        <servlet-class>controller.LessonDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LessonImage</servlet-name>
+        <servlet-class>controller.LessonImage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>updateRegistration</servlet-name>
         <url-pattern>/updateRegistration</url-pattern>
@@ -324,6 +332,14 @@
     <servlet-mapping>
         <servlet-name>AddBlog</servlet-name>
         <url-pattern>/AddBlog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LessonDetail</servlet-name>
+        <url-pattern>/lessonDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LessonImage</servlet-name>
+        <url-pattern>/lessonImage</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
