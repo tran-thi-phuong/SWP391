@@ -89,8 +89,8 @@ CREATE TABLE Tests (
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO
-CREATE TABLE LessonType (
-    TypeID INT PRIMARY KEY IDENTITY(1,1),
+CREATE TABLE LessonTopic (
+    TopicID INT PRIMARY KEY IDENTITY(1,1),
     Name NVARCHAR(50)
 );
 GO
@@ -100,13 +100,13 @@ CREATE TABLE Lessons (
     LessonID INT PRIMARY KEY IDENTITY(1,1),
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
-    TypeID INT,
+    TopicID INT,
     Content NVARCHAR(MAX),
 	[Order] int,
 	Description NVARCHAR(255),
 	Status NVARCHAR(50),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID),
-	FOREIGN KEY (TypeID) REFERENCES LessonType(TypeID)
+	FOREIGN KEY (TopicID) REFERENCES LessonTopic(TopicID)
 );
 GO
 CREATE TABLE LessonMedia (
@@ -117,11 +117,11 @@ CREATE TABLE LessonMedia (
 	FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
 );
 GO
-CREATE TABLE Lesson_Subject (
-    TypeID INT,
+CREATE TABLE Subject_LessonTopic (
+    TopicID INT,
     SubjectID INT,
 	[Order] INT,
-	FOREIGN KEY (TypeID) REFERENCES LessonType(TypeID),
+	FOREIGN KEY (TopicID) REFERENCES LessonTopic(TopicID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
 GO

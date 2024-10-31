@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Lesson;
-import model.LessonSubject;
+import model.SubjectTopic;
 
 /**
  *
@@ -18,17 +18,17 @@ import model.LessonSubject;
  */
 public class LessonDAO extends DBContext {
 
-    public List<LessonSubject> getAllLessonTypeBySubjectId(int subjectID) {
-        List<LessonSubject> list = new ArrayList<>();
-        String sql = "select lt.Name, ls.TypeID, ls.SubjectID, ls.[Order] from Lesson_Subject ls join LessonType lt "
-                + "on ls.TypeID = lt.TypeID where SubjectID = ? order by [Order]";
+    public List<SubjectTopic> getAllLessonTopicBySubjectId(int subjectID) {
+        List<SubjectTopic> list = new ArrayList<>();
+        String sql = "select lt.Name, ls.TopicID, ls.SubjectID, ls.[Order] from Subject_LessonTopic ls join LessonTopic lt "
+                + "on ls.TopicID = lt.TopicID where SubjectID = ? order by [Order]";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, subjectID);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    LessonSubject lessonSubject = new LessonSubject();
-                    lessonSubject.setTypeName(rs.getString("Name"));
-                    lessonSubject.setTypeID(rs.getInt("TypeID"));
+                    SubjectTopic lessonSubject = new SubjectTopic();
+                    lessonSubject.setTopicName(rs.getString("Name"));
+                    lessonSubject.setTopicID(rs.getInt("TopicID"));
                     lessonSubject.setSubjectID(rs.getInt("SubjectID"));
                     lessonSubject.setOrder(rs.getInt("Order"));
                     list.add(lessonSubject);
@@ -42,7 +42,7 @@ public class LessonDAO extends DBContext {
 
     public List<Lesson> getAllLessonBySubjectId(int subjectID) {
         List<Lesson> list = new ArrayList<>();
-        String sql = "select * from Lessons where SubjectID = ? order by TypeID, [Order]";
+        String sql = "select * from Lessons where SubjectID = ? order by TopicID, [Order]";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, subjectID);
             try (ResultSet rs = ps.executeQuery()) {
@@ -51,7 +51,7 @@ public class LessonDAO extends DBContext {
                     lesson.setLessonID(rs.getInt("LessonID"));
                     lesson.setSubjectID(rs.getInt("SubjectID"));
                     lesson.setTitle(rs.getString("Title"));
-                    lesson.setTypeID(rs.getInt("TypeID"));
+                    lesson.setTopicID(rs.getInt("TopicID"));
                     lesson.setContent(rs.getString("Content"));
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
@@ -77,7 +77,7 @@ public class LessonDAO extends DBContext {
                     lesson.setLessonID(rs.getInt("LessonID"));
                     lesson.setSubjectID(rs.getInt("SubjectID"));
                     lesson.setTitle(rs.getString("Title"));
-                    lesson.setTypeID(rs.getInt("TypeID"));
+                    lesson.setTopicID(rs.getInt("TopicID"));
                     lesson.setContent(rs.getString("Content"));
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
@@ -133,7 +133,6 @@ public class LessonDAO extends DBContext {
                 lesson.setContent(rs.getString("Content"));
                 lesson.setLessonID(rs.getInt("LessonID"));
                 lesson.setDescription(rs.getString("Description"));
-                lesson.setMediaLink(rs.getString("Media_Link"));
                 lesson.setStatus(rs.getString("Status"));
             }
         } catch (SQLException e) {
@@ -207,24 +206,7 @@ public class LessonDAO extends DBContext {
         // Initialize database connection (assumed to be managed in DAO class)
         LessonDAO lessonDAO = new LessonDAO();
 
-        // Test data
-        int lessonID = 57; // Replace with a valid lesson ID from your database
-        int userID = 1;   // Replace with a valid user ID from your database
-
-        // Call the method and retrieve the lesson
-        Lesson lesson = lessonDAO.getLessonByLessonIDAndUserID(lessonID, userID);
-
-        // Check and display result
-        if (lesson != null) {
-            System.out.println("Lesson Details:");
-            System.out.println("Title: " + lesson.getTitle());
-            System.out.println("Content: " + lesson.getContent());
-            System.out.println("Lesson ID: " + lesson.getLessonID());
-            System.out.println("Description: " + lesson.getDescription());
-            System.out.println("Media Link: " + lesson.getMediaLink());
-            System.out.println("Status: " + lesson.getStatus());
-        } else {
-            System.out.println("Lesson not found for the given lesson ID and user ID.");
-        }
+            System.out.println(lessonDAO.getAllLessonTopicBySubjectId(1));
+        
     }
 }
