@@ -99,7 +99,7 @@
                 <tbody>
                     <c:forEach var="blog" items="${blogs}">
                         <tr>
-                            <td>${blog.title}</td>
+                            <td><a href="EditBlog?blogId=${blog.blogId}">${blog.title}</a></td>
                             <td>${blog.userId != null ? blog.userId.name : 'N/A'}</td>
                             <td>${blog.blogCategoryId != null ? blog.blogCategoryId.title : 'N/A'}</td>
                             <td>${blog.createAt}</td>
