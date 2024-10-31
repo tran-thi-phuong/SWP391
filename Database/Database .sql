@@ -2,7 +2,6 @@ drop database OnlineLearning
 -- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
-
 -- Sử dụng cơ sở dữ liệu OnlineLearning
 USE OnlineLearning;
 GO
@@ -51,7 +50,7 @@ CREATE TABLE Blogs (
     Content NVARCHAR(MAX) NOT NULL,
     Create_At DATETIME DEFAULT GETDATE(),
     Blog_CategoryID INT,
-	Status NVARCHAR(10) NOT NULL DEFAULT 'Show';
+	Status NVARCHAR(10) NOT NULL DEFAULT 'Show',
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (Blog_CategoryID) REFERENCES Blog_Category(Blog_CategoryID)
 );
