@@ -153,6 +153,7 @@ public class LessonDAO extends DBContext {
         }
         return false;
     }
+
     //Get all lesson
     public List<Lesson> getAllLessons() {
         List<Lesson> list = new ArrayList<>();
@@ -175,6 +176,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
+
     //search by ID
     public Lesson getLessonById(int lessonID) {
         Lesson lesson = null;
@@ -202,11 +204,79 @@ public class LessonDAO extends DBContext {
         return lesson;
     }
 
-    public static void main(String[] args) {
-        // Initialize database connection (assumed to be managed in DAO class)
-        LessonDAO lessonDAO = new LessonDAO();
+    public boolean addLessonTopic(SubjectTopic topic) {
+        String insertLessonTopicSQL = "INSERT INTO LessonTopic (Name) VALUES (?)";
+        String selectLastInsertedTopicIDSQL = "SELECT MAX(TopicID) AS TopicID FROM LessonTopic";
+        String insertSubjectLessonTopicSQL = "INSERT INTO Subject_LessonTopic (TopicID, SubjectID, [Order]) VALUES (?, ?, ?)";
 
-            System.out.println(lessonDAO.getAllLessonTopicBySubjectId(1));
-        
+        try (PreparedStatement ps1 = connection.prepareStatement(insertLessonTopicSQL)) {
+            // Thêm vào bảng LessonTopic
+            ps1.setString(1, topic.getTopicName());
+            ps1.executeUpdate();
+
+            // Lấy TopicID vừa được thêm
+            try (PreparedStatement ps2 = connection.prepareStatement(selectLastInsertedTopicIDSQL); ResultSet rs = ps2.executeQuery()) {
+                if (rs.next()) {
+                    int generatedTopicID = rs.getInt("TopicID");
+                    topic.setTopicID(generatedTopicID);
+
+                    // Thêm vào bảng Subject_LessonTopic với TopicID mới
+                    try (PreparedStatement ps3 = connection.prepareStatement(insertSubjectLessonTopicSQL)) {
+                        ps3.setInt(1, topic.getTopicID());
+                        ps3.setInt(2, topic.getSubjectID());
+                        ps3.setInt(3, topic.getOrder());
+                        ps3.executeUpdate();
+                    }
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
+
+    public boolean deleteLessonTopic(int topicID, int subjectID) {
+        String deleteSubjectLessonTopicSQL = "DELETE FROM Subject_LessonTopic WHERE TopicID = ? AND SubjectID = ?";
+        String deleteLessonTopicSQL = "DELETE FROM LessonTopic WHERE TopicID = ? AND NOT EXISTS (SELECT 1 FROM Subject_LessonTopic WHERE TopicID = ?)";
+
+        try (PreparedStatement ps1 = connection.prepareStatement(deleteSubjectLessonTopicSQL)) {
+            ps1.setInt(1, topicID);
+            ps1.setInt(2, subjectID);
+            ps1.executeUpdate();
+
+            try (PreparedStatement ps2 = connection.prepareStatement(deleteLessonTopicSQL)) {
+                ps2.setInt(1, topicID);
+                ps2.setInt(2, topicID);
+                ps2.executeUpdate();
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateLessonTopic(SubjectTopic topic) {
+        String updateLessonTopicSQL = "UPDATE LessonTopic SET Name = ? WHERE TopicID = ?";
+        String updateSubjectLessonTopicSQL = "UPDATE Subject_LessonTopic SET [Order] = ? WHERE TopicID = ? AND SubjectID = ?";
+
+        try (PreparedStatement ps1 = connection.prepareStatement(updateLessonTopicSQL)) {
+            ps1.setString(1, topic.getTopicName());
+            ps1.setInt(2, topic.getTopicID());
+            ps1.executeUpdate();
+
+            try (PreparedStatement ps2 = connection.prepareStatement(updateSubjectLessonTopicSQL)) {
+                ps2.setInt(1, topic.getOrder());
+                ps2.setInt(2, topic.getTopicID());
+                ps2.setInt(3, topic.getSubjectID());
+                ps2.executeUpdate();
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
