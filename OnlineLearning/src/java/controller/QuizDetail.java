@@ -6,6 +6,7 @@ package controller;
 
 //database access
 import dal.TestDAO;
+import dal.TestMediaDAO;
 import dal.TestQuestionDAO;
 
 //servlet default
@@ -16,9 +17,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 //model
 import model.Test;
+import model.TestMedia;
 
 /**
  *
@@ -38,6 +41,8 @@ public class QuizDetail extends HttpServlet {
      */
     TestDAO testDAO = new TestDAO();
     TestQuestionDAO testQuestionDAO = new TestQuestionDAO();
+    TestMediaDAO mediaDAO = new TestMediaDAO();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //get id from parameter
@@ -47,8 +52,10 @@ public class QuizDetail extends HttpServlet {
             int testId = Integer.parseInt(testIdStr);
             Test currentTest = testDAO.getTestById(testId);
             int attemptCount = testDAO.countAttemptsByTestID(currentTest.getTestID());
+            List<TestMedia> mediaList = mediaDAO.getMediaByTestId(testId);
             request.setAttribute("attemptCount", attemptCount);
             request.setAttribute("currentTest", currentTest);
+            request.setAttribute("mediaList", mediaList);
             request.getRequestDispatcher("QuizDetail.jsp").forward(request, response);
         } catch (Exception e) {
             Test currentTest = new Test();
@@ -111,11 +118,13 @@ public class QuizDetail extends HttpServlet {
             case "edit":
                 // Perform edit operation
                 Test currentTest = testDAO.getTestById(testId);
+                List<TestMedia> mediaList = mediaDAO.getMediaByTestId(testId);
 
                 // Check if the test exists
                 if (currentTest != null) {
                     // Set the current test information as request attributes
                     request.setAttribute("currentTest", currentTest);
+                    request.setAttribute("mediaList", mediaList);
 
                     // Forward to the editQuiz JSP
                     try {
@@ -137,7 +146,7 @@ public class QuizDetail extends HttpServlet {
                 }
                 testQuestionDAO.clearQuestionsByTestId(testId);
                 testDAO.deleteTest(testId);
-                response.sendRedirect("QuizDetail?id="+testId);
+                response.sendRedirect("QuizDetail?id=" + testId);
                 break;
 
             default:
@@ -149,16 +158,19 @@ public class QuizDetail extends HttpServlet {
 
         // Redirect or forward to the success page or details page after the action
     }
+
     //edit test
     private void editTest(int testId, HttpServletRequest request, HttpServletResponse response) {
 
         // Get the test details from the database using the TestID
         Test currentTest = testDAO.getTestById(testId);
+        List<TestMedia> mediaList = mediaDAO.getMediaByTestId(testId);
 
         // Check if the test exists
         if (currentTest != null) {
             // Set the current test information as request attributes
             request.setAttribute("currentTest", currentTest);
+            request.setAttribute("mediaList", mediaList);
 
             // Forward to the editQuiz JSP
             try {

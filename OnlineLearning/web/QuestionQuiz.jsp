@@ -47,7 +47,7 @@
             <c:otherwise>
         <div class="question-list">
             <h1>Select Questions for Quiz</h1>
-            <form action="EditQuiz" method="post" onsubmit="return validateSelection()">
+            <form action="EditQuiz" method="post"">
                 <input type="hidden" name="testId" value="${testId}"/>
                 <input type="text" id="searchBox" placeholder="Search questions..." onkeyup="filterQuestions()" />
                 <h2>Available Questions</h2>
@@ -90,24 +90,7 @@
                 }
             }
         }
-        function validateSelection() {
-            const checkboxes = document.querySelectorAll('input[name="selectedQuestions"]');
-            let isChecked = false;
-
-            for (let checkbox of checkboxes) {
-                if (checkbox.checked) {
-                    isChecked = true;
-                    break;
-                }
-            }
-
-            if (!isChecked) {
-                alert("Please select at least one question.");
-                return false; // Prevent form submission
-            }
-
-            return true; // Allow form submission
-        }
+        
 
     </script>
 </html>

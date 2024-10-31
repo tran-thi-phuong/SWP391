@@ -163,7 +163,7 @@ public class LessonDAO extends DBContext {
                 lesson.setLessonID(rs.getInt("LessonID"));
                 lesson.setSubjectID(rs.getInt("SubjectID"));
                 lesson.setTitle(rs.getString("Title"));
-                lesson.setTopicID(rs.getInt("TypeID"));
+                lesson.setTopicID(rs.getInt("TopicID"));
                 lesson.setContent(rs.getString("Content"));
                 lesson.setOrder(rs.getInt("Order"));
                 lesson.setDescription(rs.getString("Description"));
@@ -188,7 +188,7 @@ public class LessonDAO extends DBContext {
                     lesson.setLessonID(rs.getInt("LessonID"));
                     lesson.setSubjectID(rs.getInt("SubjectID"));
                     lesson.setTitle(rs.getString("Title"));
-                    lesson.setTopicID(rs.getInt("TypeID"));
+                    lesson.setTopicID(rs.getInt("TopicID"));
                     lesson.setContent(rs.getString("Content"));
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
@@ -207,6 +207,7 @@ public class LessonDAO extends DBContext {
         LessonDAO lessonDAO = new LessonDAO();
 
             System.out.println(lessonDAO.getAllLessonTopicBySubjectId(1));
+            System.out.println(lessonDAO.getAllLessons());
         
     }
 }

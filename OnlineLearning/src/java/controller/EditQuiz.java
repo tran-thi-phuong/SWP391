@@ -7,6 +7,7 @@ package controller;
 //database access
 import dal.QuestionDAO;
 import dal.TestDAO;
+import dal.TestMediaDAO;
 import dal.TestQuestionDAO;
 
 //servlet default
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 //data structure
 import java.util.List;
@@ -32,10 +34,12 @@ import java.util.List;
 //for debugging
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 //model
 import model.Question;
 import model.Test;
+import model.TestMedia;
 import model.TestQuestion;
 
 /**
@@ -99,6 +103,7 @@ public class EditQuiz extends HttpServlet {
     TestDAO testDAO = new TestDAO();
     QuestionDAO questionDAO = new QuestionDAO();
     TestQuestionDAO testQuestionDAO = new TestQuestionDAO();
+    TestMediaDAO mediaDAO = new TestMediaDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -149,12 +154,10 @@ public class EditQuiz extends HttpServlet {
         }
     }
     //Edit Test
-    private void handleEditTest(HttpServletRequest request) {
+    private void handleEditTest(HttpServletRequest request) throws IOException, ServletException {
         int testId = Integer.parseInt(request.getParameter("testId"));
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        String mediaType = request.getParameter("mediaType");
-        String mediaDescription = request.getParameter("mediaDescription");
         String type = request.getParameter("type");
         int duration = Integer.parseInt(request.getParameter("duration"));
         double passCondition = Double.parseDouble(request.getParameter("passCondition"));
@@ -162,24 +165,69 @@ public class EditQuiz extends HttpServlet {
         int quantity = testQuestionDAO.countQuestionsByTestId(testId);
         int subjectId = Integer.parseInt(request.getParameter("subjectId"));
         Test current = testDAO.getTestById(testId);
-        // Handle file upload
-        String mediaURL = current.getMediaURL();
-        Part mediaFilePart;
-        try {
-            mediaFilePart = request.getPart("mediaURL");
+        current.setDescription(description);
+        current.setDuration(duration);
+        current.setLevel(level);
+        current.setPassCondition(passCondition);
+        current.setQuantity(quantity);
+        current.setSubjectID(subjectId);
+        current.setTitle(title);
+        current.setType(type);
+        List<String> mediaFilesExist = new ArrayList<>();
+        List<String> mediaDescriptionsExist = new ArrayList<>();
+        List<Part> mediaFilesParts = request.getParts().stream()
+                .filter(part -> "mediaFiles".equals(part.getName()))
+                .collect(Collectors.toList());
+        List<String> mediaDescriptions = new ArrayList<>();
+        
+        String[] mediaCurrent = request.getParameterValues("current-media");
+        int mediaid;
+        //save current change
+        if (mediaCurrent != null) {
+                    for (String string : mediaCurrent) {
+                        mediaid = Integer.parseInt(string);
+                        TestMedia m = mediaDAO.getMediaById(mediaid);
+                        mediaFilesExist.add(m.getMediaLink());
+                        mediaDescriptionsExist.add(m.getDescription());
+                    }
+                }
+        //delete all
+        mediaDAO.deleteMedia(testId);
+        for (Part mediaFilePart : mediaFilesParts) {
+            String mediaDescription = request.getParameter("mediaDescription");
+            mediaDescriptions.add(mediaDescription);
 
-            if (mediaFilePart != null && mediaFilePart.getSize() > 0) {
-                // Determine the target directory based on media type
-                String uploadDir = mediaType.equals("image") ? "images/" : "videos/";
-                mediaURL = saveMediaFile(mediaFilePart, uploadDir); // Save the file and get the URL
+            String uploadDir = "TestMedia/"; // Directory to save media
+
+            // Save the file and get the saved file URL
+            String mediaLink = saveMediaFile(mediaFilePart, uploadDir);
+
+            if (mediaLink != null) {
+                // Create a new QuestionMedia object
+                TestMedia mediaToAdd = new TestMedia();
+                mediaToAdd.setMediaLink(mediaLink);
+                mediaToAdd.setDescription(mediaDescription);
+                mediaToAdd.setTestId(testId); // Set this to the appropriate Question ID
+
+                // Save the media to the database
+                mediaDAO.saveMedia(mediaToAdd);
             }
-        } catch (IOException | ServletException ex) {
-            Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //add current
+        for (int i = 0; i < mediaFilesExist.size(); i++) {
+                    mediaLink = mediaFilesExist.get(i);
+                    mediaDescription = (i < mediaDescriptionsExist.size()) ? mediaDescriptionsExist.get(i) : ""; // Avoid IndexOutOfBounds
 
-        Test updatedTest = new Test(testId, subjectId, title, description, type, level, mediaType, mediaURL, duration, passCondition, mediaDescription, quantity);
+                    // Create a new QuestionMedia object for existing media
+                    TestMedia existingMedia = new TestMedia();
+                    existingMedia.setMediaLink(mediaLink);
+                    existingMedia.setDescription(mediaDescription);
+                    existingMedia.setTestId(testId); // Assuming you have the questionId available
 
-        testDAO.updateTest(updatedTest); // Update quiz details in the database
+                    // Save the existing media back to the database
+                    mediaDAO.saveMedia(existingMedia);
+                }
+        testDAO.updateTest(current); // Update quiz details in the database
+    }
     }
     //Update Question
     private void handleUpdateQuestions(HttpServletRequest request) throws ServletException, IOException {
@@ -248,7 +296,10 @@ public class EditQuiz extends HttpServlet {
             }
         }
         Test test = testDAO.getTestById(testId);
-        test.setQuantity(selectedQuestions.length);
+        if(selectedQuestions!=null)
+        {
+            test.setQuantity(selectedQuestions.length);
+        }
         testDAO.updateTest(test);
     }
 

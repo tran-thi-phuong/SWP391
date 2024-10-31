@@ -78,15 +78,20 @@ CREATE TABLE Tests (
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
-    MediaType NVARCHAR(10), -- 'image' or 'video'
-    MediaURL NVARCHAR(MAX),  -- URL to the image or video
-    MediaDescription NVARCHAR(MAX), -- Description of the media
     Type NVARCHAR(50),
     Duration INT,
     Pass_Condition DECIMAL(5, 2),
     Level NVARCHAR(50),
     Quantity INT,
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
+);
+GO
+CREATE TABLE TestMedia (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+    Media_Link NVARCHAR(MAX),
+    TestID INT,
+    Description NVARCHAR(50),
+    FOREIGN KEY (TestID) REFERENCES Tests(TestID)
 );
 GO
 CREATE TABLE LessonTopic (

@@ -144,7 +144,7 @@
                                 <img src="${media.mediaLink}" alt="Media Image" />
                             </c:when>
                             <c:when test="${media.mediaLink.endsWith('.mp4')}">
-                                <video controls>
+                                <video controls preload="auto">
                                     <source src="${media.mediaLink}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
