@@ -8,7 +8,7 @@ import model.Answer;
 public class AnswerDAO extends DBContext {
 
     public void addAnswer(Answer answer) {
-        String sql = "INSERT INTO Answers (QuestionID, Content, Explanation, isCorrect) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Answers (QuestionID, Content, Explaination, isCorrect) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, answer.getQuestionID());
             stmt.setString(2, answer.getContent());
@@ -27,10 +27,10 @@ public class AnswerDAO extends DBContext {
             stmt.setInt(1, questionID);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Answer answer = new Answer(rs.getInt("QuestionID"), 
-                                                rs.getString("Content"), 
-                                                rs.getString("Explanation"), 
-                                                rs.getBoolean("isCorrect"));
+                    Answer answer = new Answer(rs.getInt("QuestionID"),
+                            rs.getString("Content"),
+                            rs.getString("Explaination"),
+                            rs.getBoolean("isCorrect"));
                     answer.setAnswerID(rs.getInt("AnswerID"));
                     answers.add(answer);
                 }
@@ -40,4 +40,16 @@ public class AnswerDAO extends DBContext {
         }
         return answers;
     }
+
+    public void clearAnswersByQuestionId(int questionID) {
+        String sql = "DELETE FROM Answers WHERE QuestionID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, questionID);
+            int rowsAffected = stmt.executeUpdate();
+            System.out.println("Deleted " + rowsAffected + " answers for QuestionID: " + questionID);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Lesson;
-import model.LessonSubject;
+import model.SubjectTopic;
 
 /**
  *
@@ -60,7 +60,7 @@ public class SubjectLesson extends HttpServlet {
         String courseId = request.getParameter("courseId");
         String courseName = request.getParameter("courseName");
         LessonDAO l = new LessonDAO();
-        List<LessonSubject> lessonType = l.getAllLessonTypeBySubjectId(Integer.parseInt(courseId));
+        List<SubjectTopic> lessonType = l.getAllLessonTopicBySubjectId(Integer.parseInt(courseId));
         List<Lesson> lessonList = l.getAllLessonBySubjectId(Integer.parseInt(courseId));
         request.setAttribute("lessonType", lessonType);
         request.setAttribute("lessonList", lessonList);
@@ -87,7 +87,7 @@ public class SubjectLesson extends HttpServlet {
         String status = request.getParameter("select-status");
         String topic = request.getParameter("select-topic");
         LessonDAO l = new LessonDAO();
-        List<LessonSubject> lessonType = l.getAllLessonTypeBySubjectId(Integer.parseInt(courseId));
+        List<SubjectTopic> lessonType = l.getAllLessonTopicBySubjectId(Integer.parseInt(courseId));
         List<Lesson> lessonList;
         if(searchValue != null && !searchValue.trim().isEmpty()){
             request.setAttribute("searchValue", searchValue);
