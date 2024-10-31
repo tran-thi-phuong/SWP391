@@ -44,7 +44,7 @@
                             <a class="nav-link" href="CourseList">Course</a>
                         </c:if>
 
-                        <c:if test="${sessionScope.user.role=='Instructor'}">
+                        <c:if test="${sessionScope.user.role=='Instructor' || sessionScope.user.role=='Admin'}">
                             <a class="nav-link" href="SubjectList">Manage Course</a>
                         </c:if>
                     </li>

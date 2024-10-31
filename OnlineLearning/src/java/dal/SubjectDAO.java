@@ -365,7 +365,23 @@ public class SubjectDAO extends DBContext {
         }
         return list;
     }
+    public boolean updateSubject(String courseName, String category, String status, String description, String subjectID, String thumbnailPath) {
+        String query = "UPDATE Subjects SET title = ?, description = ?, Subject_CategoryID = ?, status = ?, Update_Date = GETDATE(), thumbnail = ? WHERE SubjectId = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, courseName);
+            ps.setString(2, description);
+            ps.setInt(3, Integer.parseInt(category));
+            ps.setString(4, status);
+            ps.setString(5, thumbnailPath);
+            ps.setInt(6, Integer.parseInt(subjectID));
 
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public boolean addSubject(String courseName, String category, String status, String description, String thumbnailPath) {
         boolean isAdded = false;
         String sql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) VALUES (?, ?, ?, ?, ?, GETDATE(),?)";
@@ -542,6 +558,7 @@ public class SubjectDAO extends DBContext {
         }
         return subjects;
     }
+    
 
     public static void main(String[] args) {
         SubjectDAO subjectDAO = new SubjectDAO();
