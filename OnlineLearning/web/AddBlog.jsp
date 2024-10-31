@@ -4,17 +4,12 @@
     Author     : sonna
 --%>
 
-<%-- 
-    Document   : AddBlog
-    Created on : Oct 27, 2024, 11:41:23 PM
-    Author     : sonna
---%>
-
 <%@ page import="model.Users" %>
 <%@ page import="dal.BlogDAO" %>
 <%@ page import="model.BlogCategory" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.regex.*" %>
 <html>
     <head>
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,46 +76,45 @@
             }
         </style>
         <script>
-            // Hàm để kiểm tra và hiển thị video từ liên kết
             function previewContent() {
                 const content = document.getElementById('content').value;
                 const previewArea = document.getElementById('previewArea');
 
-                // Xóa nội dung cũ trong preview
+                // Clear previous preview content
                 previewArea.innerHTML = '';
 
-                // Tìm tất cả các URL trong nội dung
-                const urls = content.match(/(https?:\/\/[^\s]+)/g);
-                const textParts = content.split(/(https?:\/\/[^\s]+)/); // Tách thành phần văn bản và link
+                // Split the content by URLs, so we can handle both text and URLs
+                const textParts = content.split(/(https?:\/\/[^\s]+)/); // Separates text and URLs
 
-                // Duyệt qua từng phần để thêm vào preview
+                // Process each part of the content
                 textParts.forEach(part => {
                     if (part.trim()) {
-                        // Nếu là URL
-                        if (part.match(/https?:\/\/[^\s]+/)) {
-                            let isVideo = false;
+                        if (part.match(/https?:\/\/[^\s]+/)) { // Check if part is a URL
+                            let isMediaHandled = false;
 
-                            // Xử lý hình ảnh
+                            // Handle image URLs
                             if (part.match(/\.(jpg|jpeg|png|gif)$/)) {
                                 const img = document.createElement('img');
                                 img.src = part;
-                                img.className = 'img-fluid'; // Bootstrap class for responsive images
+                                img.className = 'img-fluid';
                                 img.alt = 'Image Preview';
                                 previewArea.appendChild(img);
+                                isMediaHandled = true;
                             }
-                            // Xử lý video Youtube
+                            // Handle YouTube video URLs
                             else if (part.match(/https?:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/)) {
-                                const videoId = part.match(/(?:\?v=|\/)([a-zA-Z0-9_-]+)/)[1]; // Sử dụng regex để lấy videoId
+                                const videoId = part.match(/(?:v=)([a-zA-Z0-9_-]+)/)[1];
                                 const iframe = document.createElement('iframe');
                                 iframe.src = `https://www.youtube.com/embed/${videoId}`;
                                 iframe.width = '560';
                                 iframe.height = '315';
                                 iframe.frameBorder = '0';
+                                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
                                 iframe.allowFullscreen = true;
                                 previewArea.appendChild(iframe);
-                                isVideo = true;
+                                isMediaHandled = true;
                             }
-                            // Xử lý video Vimeo
+                            // Handle Vimeo video URLs
                             else if (part.match(/https?:\/\/(www\.)?vimeo\.com\/(\d+)/)) {
                                 const videoId = part.split('/').pop();
                                 const iframe = document.createElement('iframe');
@@ -130,9 +124,9 @@
                                 iframe.frameBorder = '0';
                                 iframe.allowFullscreen = true;
                                 previewArea.appendChild(iframe);
-                                isVideo = true;
+                                isMediaHandled = true;
                             }
-                            // Xử lý video Dailymotion
+                            // Handle Dailymotion video URLs
                             else if (part.match(/https?:\/\/(www\.)?dailymotion\.com\/video\/([a-zA-Z0-9_-]+)/)) {
                                 const videoId = part.split('/').pop();
                                 const iframe = document.createElement('iframe');
@@ -142,9 +136,9 @@
                                 iframe.frameBorder = '0';
                                 iframe.allowFullscreen = true;
                                 previewArea.appendChild(iframe);
-                                isVideo = true;
+                                isMediaHandled = true;
                             }
-                            // Xử lý video từ local (mp4, webm)
+                            // Handle local video files (mp4, webm)
                             else if (part.match(/\.(mp4|webm)$/)) {
                                 const video = document.createElement('video');
                                 video.width = '560';
@@ -155,19 +149,20 @@
                                 source.type = part.endsWith('.mp4') ? 'video/mp4' : 'video/webm';
                                 video.appendChild(source);
                                 previewArea.appendChild(video);
-                                isVideo = true;
+                                isMediaHandled = true;
                             }
 
-                            // Nếu không phải video thì cho thông báo lỗi
-                            if (!isVideo) {
+                            // If media wasn't handled, show an unsupported format message
+                            if (!isMediaHandled) {
                                 const errorMsg = document.createElement('p');
-                                errorMsg.innerText = 'Unable to play this video or the URL is invalid.';
+                                errorMsg.textContent = `Unsupported format or invalid media link: ${part}`;
+                                errorMsg.style.color = 'red';
                                 previewArea.appendChild(errorMsg);
                             }
                         } else {
-                            // Nếu là văn bản, thêm nó vào preview
+                            // For regular text, add it as a paragraph, handling line breaks
                             const textNode = document.createElement('p');
-                            textNode.textContent = part.trim(); // Tạo thẻ p cho văn bản
+                            textNode.innerHTML = part.trim().replace(/\n/g, '<br>'); // Replace newline characters with <br>
                             previewArea.appendChild(textNode);
                         }
                     }
