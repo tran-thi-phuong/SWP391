@@ -87,7 +87,6 @@ public class QuestionDetail extends HttpServlet {
          if (!hasPermission(request, response)) {
             return;
         }
-        String questionIdParam = request.getParameter("questionId");
         //get the id of question
         String questionIdParam = request.getParameter("id");
         if (questionIdParam != null) {
