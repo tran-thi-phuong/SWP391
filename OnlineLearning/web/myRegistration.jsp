@@ -118,7 +118,7 @@
                             <div class="registration-card">
                                 <div>
                                     <p class="registration-card-text"><img src="${registration.subjectName}" alt="${registration.subjectName}"></p>
-                                    <p class="registration-card-title subjectName">${registration.subjectName}</p>
+                                    <p class="registration-card-title subjectName"><a href="SubjectView?subjectId=${registration.subjectId}">${registration.subjectName}</a></p>
                                     <p class="registration-card-text package"><strong>Package:</strong> ${registration.packageId}</p>
                                     <p class="registration-card-text registrationTime"><strong>Registration Time:</strong> ${registration.registrationTime}</p>
                                     <p class="registration-card-text totalCost"><strong>Cost:</strong> ${registration.totalCost}</p>
@@ -149,36 +149,22 @@
                     <div style="text-align: center">
                         <c:if test="${currentPage > 1}">
                             <a class="btn btn-secondary" href="myRegistration?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}&status=${statusFilter}">Previous</a>
-                            <a class="btn btn-secondary" href="myRegistration?page=${currentPage - 1}&pageSize=${pageSize}&searchQuery=${searchQuery}&status=${statusFilter}">Previous</a>
                         </c:if>
 
-                        <c:forEach begin="1" end="${totalPages}" var="i">
-                            <c:choose>
-                                <c:when test="${currentPage eq i}">
-                                    <span class="btn btn-primary">${i}</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="btn btn-secondary" href="myRegistration?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">${i}</a>
-                                </c:otherwise>
-                            </c:choose>
-                            <c:choose>
-                                <c:when test="${currentPage eq i}">
-                                    <span class="btn btn-primary">${i}</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="btn btn-secondary" href="myRegistration?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">${i}</a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
+            <c:forEach begin="1" end="${totalPages}" var="i">
+                <c:choose>
+                    <c:when test="${currentPage eq i}">
+                        <span class="btn btn-primary">${i}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="btn btn-secondary" href="myRegistration?page=${i}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">${i}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
 
-                        <c:if test="${currentPage < totalPages}">
-                            <a class="btn btn-secondary" href="myRegistration?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">Next</a>
-                            <a class="btn btn-secondary" href="myRegistration?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">Next</a>
-                        </c:if>
-                    </div>
-
-
-
+            <c:if test="${currentPage < totalPages}">
+                <a class="btn btn-secondary" href="myRegistration?page=${currentPage + 1}&pageSize=${pageSizeStr}&searchQuery=${searchQuery}&status=${statusFilter}">Next</a>
+            </c:if>
                     <%@include file="Footer.jsp" %>
               
     </body>

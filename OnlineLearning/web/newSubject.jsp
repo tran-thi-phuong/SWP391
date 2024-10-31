@@ -9,7 +9,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,45 +65,69 @@
                 float: right;
                 padding: 10px 15px;
                 text-decoration: none;
-                border-radius: 5px; 
+                border-radius: 5px;
             }
         </style>
     </head>
     <body>
-
         <h1>Add New Subject</h1>
+         <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Instructor'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
+            <c:otherwise>
+
 
         <form action="newSubject" method="POST" enctype="multipart/form-data">
             <a href="SubjectList" class="back-button">Back to subject list</a>
 
-            <label for="courseName">Course Name:</label>
-            <input type="text" id="courseName" name="courseName" required>
+                    <%-- Course Name Input --%>
+                    <label for="courseName">Course Name:</label>
+                    <input type="text" id="courseName" name="courseName" required>
 
-            <label for="thumbnail">Thumbnail Image:</label>
-            <input type="file" id="thumbnail" name="thumbnail" required>
+                    <%-- Thumbnail Upload Field 
+                         Accepts image files for course thumbnail
+                    --%>
+                    <label for="thumbnail">Thumbnail Image:</label>
+                    <input type="file" id="thumbnail" name="thumbnail" required>
 
-            <label for="category">Category:</label>
-            <select id="category" name="category" required>
-                <c:forEach items="${categories}" var="category">
-                    <option value="${category.subjectCategoryId}">${category.title}</option>
-                </c:forEach>
-            </select>
+                    <%-- Category Dropdown
+                         Populated dynamically from database
+                    --%>
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <c:forEach items="${categories}" var="category">
+                            <option value="${category.subjectCategoryId}">
+                                ${category.title}
+                            </option>
+                        </c:forEach>
+                    </select>
 
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-                <option value="">Select status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <!-- Add more statuses as needed -->
-            </select>
+                    <%-- Status Selection
+                         Controls course visibility and availability
+                    --%>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="">Select status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <%-- Additional status options can be added here --%>
+                    </select>
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
+                    <%-- Course Description Text Area
+                         Multi-line text input for detailed course information
+                    --%>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
 
             <button type="submit">Add Course</button>
             
         </form>
-         
+            </c:otherwise>
+         </c:choose>
 
     </body>
 </html>

@@ -16,21 +16,18 @@ import model.Test;
 public class TestDAO extends DBContext {
 
     public int addTest(Test test) {
-        String sql = "INSERT INTO Tests (SubjectID, Title, Description, MediaType, MediaURL, MediaDescription, Type, Duration, Pass_Condition, Level, Quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Tests (SubjectID, Title, Description, Type, Duration, Pass_Condition, Level, Quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         int generatedId = -1; 
 
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, test.getSubjectID());
             stmt.setString(2, test.getTitle());
             stmt.setString(3, test.getDescription());
-            stmt.setString(4, test.getMediaType()); 
-            stmt.setString(5, test.getMediaURL()); 
-            stmt.setString(6, test.getMediaDescription());
-            stmt.setString(7, test.getType());
-            stmt.setInt(8, test.getDuration());
-            stmt.setDouble(9, test.getPassCondition());
-            stmt.setString(10, test.getLevel());
-            stmt.setInt(11, test.getQuantity());
+            stmt.setString(4, test.getType());
+            stmt.setInt(5, test.getDuration());
+            stmt.setDouble(6, test.getPassCondition());
+            stmt.setString(7, test.getLevel());
+            stmt.setInt(8, test.getQuantity());
 
  
             stmt.executeUpdate();
@@ -48,20 +45,17 @@ public class TestDAO extends DBContext {
     }
 
     public void updateTest(Test test) {
-        String sql = "UPDATE Tests SET SubjectID = ?, Title = ?, Description = ?, MediaType = ?, MediaURL = ?, MediaDescription = ?, Type = ?, Duration = ?, Pass_Condition = ?, Level = ?, Quantity = ? WHERE TestID = ?";
+        String sql = "UPDATE Tests SET SubjectID = ?, Title = ?, Description = ?, Type = ?, Duration = ?, Pass_Condition = ?, Level = ?, Quantity = ? WHERE TestID = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, test.getSubjectID());
             stmt.setString(2, test.getTitle());
             stmt.setString(3, test.getDescription());
-            stmt.setString(4, test.getMediaType()); // New field
-            stmt.setString(5, test.getMediaURL()); // New field
-            stmt.setString(6, test.getMediaDescription()); // New field
-            stmt.setString(7, test.getType());
-            stmt.setInt(8, test.getDuration());
-            stmt.setDouble(9, test.getPassCondition());
-            stmt.setString(10, test.getLevel());
-            stmt.setInt(11, test.getQuantity());
-            stmt.setInt(12, test.getTestID()); // Ensure you set the TestID at the end
+            stmt.setString(4, test.getType());
+            stmt.setInt(5, test.getDuration());
+            stmt.setDouble(6, test.getPassCondition());
+            stmt.setString(7, test.getLevel());
+            stmt.setInt(8, test.getQuantity());
+            stmt.setInt(9, test.getTestID()); // Ensure you set the TestID at the end
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -349,9 +343,6 @@ public class TestDAO extends DBContext {
                 test.setSubjectID(rs.getInt("SubjectID"));
                 test.setTitle(rs.getString("Title"));
                 test.setDescription(rs.getString("Description"));
-                test.setMediaType(rs.getString("MediaType"));
-                test.setMediaURL(rs.getString("MediaURL"));
-                test.setMediaDescription(rs.getString("MediaDescription"));
                 test.setType(rs.getString("Type"));
                 test.setDuration(rs.getInt("Duration"));
                 test.setPassCondition(rs.getDouble("Pass_Condition"));
@@ -382,7 +373,8 @@ public class TestDAO extends DBContext {
     }
     public static void main(String[] args) {
         TestDAO d = new TestDAO();
-        model.Test testToUpdate = d.getTestById(153);
-        System.out.println(testToUpdate);
+        Test test = new Test(0, 1, "a", "a", "A", "a", 1, 0, 0);
+        int a = d.addTest(test);
+        System.out.println(a);
     }
 }

@@ -493,28 +493,28 @@ public class RegistrationsDAO extends DBContext {
         List<Registrations> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
         String sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Registration_Time, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-                + "       r.Valid_From, "
-                + "       r.Valid_To, "
-                + "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ?"
-                + "ORDER BY r.Registration_Time DESC "
-                + "OFFSET ? ROWS "
-                + "FETCH NEXT ? ROWS ONLY";
+        + "       u.UserID, "
+        + "       s.SubjectID, "
+        + "       s.Title AS SubjectName, "
+        + "       pp.PackageID, "
+        + "       pp.Name AS PackageName, "
+        + "       r.Registration_Time, "
+        + "       r.Total_Cost, "
+        + "       r.Status, "
+        + "       r.Valid_From, "
+        + "       r.Valid_To, "
+        + "       staff.UserID AS StaffID, "
+        + "       staff.Name AS StaffName, "
+        + "       r.Note "
+        + "FROM Registrations r "
+        + "JOIN Users u ON r.UserID = u.UserID "
+        + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+        + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
+        + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
+        + "WHERE r.UserID = ? "
+        + "ORDER BY r.Registration_Time DESC "
+        + "OFFSET ? ROWS "
+        + "FETCH NEXT ? ROWS ONLY";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, offset);
@@ -540,6 +540,32 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
+    
+    public static void main(String[] args) {
+        int userId = 3; // Replace with a valid user ID
+        int page = 1;
+        int pageSize = 15;
+
+        // Assuming DBContext provides the connection inside RegistrationsDAO
+        RegistrationsDAO registrationDAO = new RegistrationsDAO();
+        List<Registrations> registrations = registrationDAO.getRegistrationsByUserId(userId, page, pageSize);
+
+        // Print the results
+        for (Registrations reg : registrations) {
+            System.out.println("Registration ID: " + reg.getRegistrationId());
+            System.out.println("Subject Name: " + reg.getSubjectName());
+            System.out.println("Package ID: " + reg.getPackageId());
+            System.out.println("Total Cost: " + reg.getTotalCost());
+            System.out.println("Registration Time: " + reg.getRegistrationTime());
+            System.out.println("Status: " + reg.getStatus());
+            System.out.println("Valid From: " + reg.getValidFrom());
+            System.out.println("Valid To: " + reg.getValidTo());
+            System.out.println("Staff Name: " + reg.getStaffName());
+            System.out.println("Note: " + reg.getNote());
+            System.out.println("-------------------------------");
+        }
+    }
+
 
     public int getTotalRegistrationsByUserId(int userId) {
         String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status != 'Cancelled'";
@@ -593,7 +619,7 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND r.Status = 'In-progress'"
+                + "WHERE r.UserID = ? AND r.Status = 'Active'"
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS "
                 + "FETCH NEXT ? ROWS ONLY";

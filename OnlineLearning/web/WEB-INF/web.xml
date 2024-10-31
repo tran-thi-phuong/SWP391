@@ -145,10 +145,6 @@
         <servlet-name>UpdateLessonStatus</servlet-name>
         <servlet-class>controller.UpdateLessonStatus</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>blogList</servlet-name>
-        <servlet-class>controller.blogList</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>updateRegistration</servlet-name>
         <url-pattern>/updateRegistration</url-pattern>
@@ -289,10 +285,6 @@
     <servlet-mapping>
         <servlet-name>UpdateLessonStatus</servlet-name>
         <url-pattern>/updateLessonStatus</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>blogList</servlet-name>
-        <url-pattern>/blogList</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

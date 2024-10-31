@@ -9,21 +9,22 @@ package model;
  * @author tuant
  */
 public class Lesson {
-    private int lessonID, subjectID, typeID, order;
-    private String title, content, description, status;
+    private int lessonID, subjectID, topicID, order;
+    private String title, content, description, status,mediaLink;
 
     public Lesson() {
     }
 
-    public Lesson(int lessonID, int subjectID, int typeID, int order, String title, String content, String description, String status) {
+    public Lesson(int lessonID, int subjectID, int topicID, int order, String title, String content, String description, String status, String mediaLink) {
         this.lessonID = lessonID;
         this.subjectID = subjectID;
-        this.typeID = typeID;
+        this.topicID = topicID;
         this.order = order;
         this.title = title;
         this.content = content;
         this.description = description;
         this.status = status;
+        this.mediaLink=mediaLink;
     }
 
     public int getLessonID() {
@@ -42,12 +43,12 @@ public class Lesson {
         this.subjectID = subjectID;
     }
 
-    public int getTypeID() {
-        return typeID;
+    public int getTopicID() {
+        return topicID;
     }
 
-    public void setTypeID(int typeID) {
-        this.typeID = typeID;
+    public void setTopicID(int topicID) {
+        this.topicID = topicID;
     }
 
     public int getOrder() {
@@ -90,9 +91,19 @@ public class Lesson {
         this.status = status;
     }
 
+    public String getMediaLink() {
+        return mediaLink;
+    }
+
+    public void setMediaLink(String mediaLink) {
+        this.mediaLink = mediaLink;
+    }
+    
+    
+
     @Override
     public String toString() {
-        return "Lesson{" + "lessonID=" + lessonID + ", subjectID=" + subjectID + ", typeID=" + typeID + ", order=" + order + ", title=" + title + ", content=" + content + ", description=" + description + ", status=" + status + '}';
+        return "Lesson{" + "lessonID=" + lessonID + ", subjectID=" + subjectID + ", topicID=" + topicID + ", order=" + order + ", title=" + title + ", content=" + content + ", description=" + description + ", status=" + status + '}';
     }
     
 }

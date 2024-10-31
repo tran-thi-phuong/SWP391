@@ -4,9 +4,12 @@
  */
 package controller;
 
+//database access
 import dal.PackagePriceDAO;
 import dal.CategoryDAO;
 import dal.SubjectDAO;
+
+//default servlet
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,14 +17,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+//data structure
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+//model
 import model.PackagePrice;
 import model.Subject;
 import model.SubjectCategory;
+
+//sql
 import java.sql.*;
 
 /**
@@ -43,6 +52,7 @@ public class registerCourse extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            //try to get subject by its id
             int id = Integer.parseInt(request.getParameter("id"));
             SubjectDAO subjectDAO = new SubjectDAO();
             Subject currentSub = subjectDAO.getSubjectById(id);
@@ -66,6 +76,7 @@ public class registerCourse extends HttpServlet {
                 double lowestPrice = packagePriceDAO.findLowestPrice(randomSubPack);
                 subjectPriceMap.put(randomSub, lowestPrice);
             }
+            //setup data
             request.setAttribute("categories", categories);
             request.setAttribute("subjectPriceMap", subjectPriceMap);
             request.setAttribute("currentCat", currentCat);

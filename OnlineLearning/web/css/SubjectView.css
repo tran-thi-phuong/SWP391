@@ -1,0 +1,84 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Oct 26, 2024, 7:04:44 PM
+    Author     : sonna
+*/
+body, h1, h2, h3, h4, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set the body background and font */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa; /* Màu nền sáng */
+    color: #343a40; /* Màu chữ tối */
+    line-height: 1.6; /* Khoảng cách giữa các dòng */
+}
+
+/* Style cho tiêu đề chính */
+h1 {
+    font-size: 2.5rem; /* Kích thước chữ lớn */
+    margin-bottom: 20px; /* Khoảng cách phía dưới */
+}
+
+/* Style cho tiêu đề môn học */
+/* SubjectView.css */
+/* Cải thiện phong cách cho tiêu đề chính */
+h2 {
+    font-size: 2rem; /* Kích thước chữ vừa */
+    color: #007bff; /* Màu xanh dương */
+    margin-top: 20px; /* Khoảng cách phía trên */
+    border-bottom: 2px solid #007bff; /* Đường kẻ phía dưới */
+    padding-bottom: 5px; /* Khoảng cách dưới đường kẻ */
+}
+
+/* Cải thiện kiểu cho các khối bài học */
+.lesson-topic {
+    background-color: #e7f1ff; /* Màu nền nhẹ cho bài học */
+    border: 1px solid #007bff; /* Đường viền màu xanh dương */
+    border-radius: 8px; /* Bo tròn góc */
+    padding: 10px; /* Khoảng cách bên trong */
+    margin-bottom: 10px; /* Khoảng cách giữa các topic */
+    cursor: pointer; /* Con trỏ thay đổi khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+.lesson-topic:hover {
+    background-color: #b2d7ff; /* Màu nền khi hover */
+}
+
+/* Cải thiện danh sách bài học */
+.lesson-item {
+    background-color: #ffffff; /* Màu nền cho bài học */
+    border: 1px solid #ccc; /* Đường viền màu xám */
+    border-radius: 5px; /* Bo tròn các góc */
+    padding: 10px; /* Khoảng cách bên trong */
+    margin-bottom: 10px; /* Khoảng cách giữa các bài học */
+    transition: box-shadow 0.3s; /* Hiệu ứng bóng */
+}
+
+.lesson-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng khi hover */
+}
+
+/* Phong cách cho trạng thái hoàn thành */
+.status {
+    font-weight: bold; /* Chữ đậm */
+    color: #28a745; /* Màu xanh lá */
+}
+
+.status-icon {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: green;
+}
+
+.status-icon .bi-check-circle-fill {
+    margin-right: 5px;
+    font-size: 1.2em; /* Tùy chỉnh kích thước biểu tượng */
+}

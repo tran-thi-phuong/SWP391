@@ -8,7 +8,9 @@ package model;
  *
  * @author sonna
  */
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Blog {
     private int blogId;
@@ -16,7 +18,8 @@ public class Blog {
     private String title;
     private String content;
     private Date createAt;
-    private BlogCategory blogCategoryId;
+    private String status;
+    private BlogCategory blogCategoryId; 
 
     public Blog() {
     }
@@ -70,6 +73,14 @@ public class Blog {
         this.createAt = createAt;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public BlogCategory getBlogCategoryId() {
         return blogCategoryId;
     }
@@ -77,6 +88,4 @@ public class Blog {
     public void setBlogCategoryId(BlogCategory blogCategoryId) {
         this.blogCategoryId = blogCategoryId;
     }
-    
-    
 }

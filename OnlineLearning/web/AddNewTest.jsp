@@ -43,6 +43,20 @@
             .form-container button:hover {
                 background-color: #0056b3;
             }
+             .media-container {
+                margin-bottom: 15px;
+            }
+            .media-preview {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+            }
+            .media-preview img,
+            .media-preview video {
+                max-width: 100%;
+                max-height: 100%;
+                margin-right: 10px;
+            }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -59,7 +73,7 @@
                 Back to Quiz List
             </button>
         </div>
-       <c:choose>
+        <c:choose>
             <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
             </c:when>
@@ -78,25 +92,12 @@
                             <strong>Description:</strong>
                             <input type="text" name="description" required/>
                         </p>
-                        <p>
-                            <strong>Media Type:</strong>
-                            <select id="mediaType" name="mediaType" onchange="toggleMediaFields()" required>
-                                <option value="">Select Media Type</option>
-                                <option value="image" ${currentTest.mediaType == 'image' ? 'selected' : ''}>Image</option>
-                                <option value="video" ${currentTest.mediaType == 'video' ? 'selected' : ''}>Video</option>
-                            </select>
-                        </p>
-                        <p>
-                        <div id="mediaURLField" class="form-group" style="display: ${currentTest.mediaURL != '' ? 'block' : 'none'};">
-                            <strong for="mediaFile">Media URL:</strong>
-                            <input type="file" id="mediaFile" name="mediaURL" accept="image/*,video/*" />
-                            <small>(Upload an image or video)</small>
-                        </div>
-                        </p>
-                        <p>
-                            <strong>Media Description:</strong>
-                            <input type="text" name="mediaDescription"/>
-                        </p>
+                        <h2>Media Files</h2>
+                        <div id="mediaList"></div>
+
+                        <button type="button" onclick="addImageMedia()">Add Image</button>
+                        <button type="button" onclick="addVideoMedia()">Add Video</button>
+
                         <p>
                             <strong>Type:</strong>
                             <select name="type" required>
@@ -140,41 +141,64 @@
                 </div>
             </c:otherwise>
         </c:choose>
-            </body>
-            <script>
-                function toggleMediaFields() {
-                    var mediaType = document.getElementById("mediaType").value;
-                    var mediaURLField = document.getElementById("mediaURLField");
-                    var mediaFileInput = document.getElementById("mediaFile");
+    </body>
+    <script>
+        function initializeFileInput() {
+            const mediaType = document.getElementById('mediaType').value;
+            if (mediaType) {
+                setFileInputAccept(mediaType); // Set accept attribute based on current media type
+                document.getElementById('mediaURLField').style.display = 'block'; // Ensure the field is visible
+            } else {
+                document.getElementById('mediaURLField').style.display = 'none';
+            }
+        }
+        function addImageMedia() {
+            const mediaList = document.getElementById("mediaList");
+            const mediaHTML = `
+        <div class="media-container">
+            <input type="text" name="mediaType" value="Image"/>
+            <input type="file" name="mediaFiles" accept="image/*" onchange="previewMedia(this)" required />
+            <input type="text" name="mediaDescription" placeholder="Media Description" required />
+            <div class="media-preview"></div>
+            <button type="button" onclick="removeMedia(this)">Remove</button>
+        </div>`;
+            mediaList.insertAdjacentHTML('beforeend', mediaHTML);
+        }
+        function addVideoMedia() {
+            const mediaList = document.getElementById("mediaList");
+            const mediaHTML = `
+        <div class="media-container">
+            <input type="text" name="mediaType" value="Video"/>
+            <input type="file" name="mediaFiles" accept="video/*" onchange="previewMedia(this)" required />
+            <input type="text" name="mediaDescription" placeholder="Media Description" required />
+            <div class="media-preview"></div>
+            <button type="button" onclick="removeMedia(this)">Remove</button>
+        </div>`;
+            mediaList.insertAdjacentHTML('beforeend', mediaHTML);
+        }
 
-                    if (mediaType === "image") {
-                        mediaURLField.style.display = "block";
-                        mediaFileInput.accept = "image/*"; // Accept only images
-                    } else if (mediaType === "video") {
-                        mediaURLField.style.display = "block";
-                        mediaFileInput.accept = "video/*"; // Accept only videos
-                    } else {
-                        mediaURLField.style.display = "none";
-                        mediaFileInput.accept = ""; // No file accepted
-                    }
+        function removeMedia(button) {
+            const mediaContainer = button.parentElement;
+            mediaContainer.remove();
+        }
+
+        function previewMedia(input) {
+                const mediaPreview = input.nextElementSibling.nextElementSibling;
+                mediaPreview.innerHTML = ''; // Clear previous preview
+                const file = input.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const mediaElement = document.createElement(file.type.startsWith('image/') ? 'img' : 'video');
+                        mediaElement.src = e.target.result;
+                        mediaElement.controls = file.type.startsWith('video/');
+                        mediaPreview.appendChild(mediaElement);
+                    };
+                    reader.readAsDataURL(file);
                 }
-                function initializeFileInput() {
-                    const mediaType = document.getElementById('mediaType').value;
-                    if (mediaType) {
-                        setFileInputAccept(mediaType); // Set accept attribute based on current media type
-                        document.getElementById('mediaURLField').style.display = 'block'; // Ensure the field is visible
-                    } else {
-                        document.getElementById('mediaURLField').style.display = 'none';
-                    }
-                }
-                function setFileInputAccept(mediaType) {
-                    const fileInput = document.getElementById('mediaFile');
-                    if (mediaType === 'image') {
-                        fileInput.accept = 'image/*'; // Accept image files
-                    } else if (mediaType === 'video') {
-                        fileInput.accept = 'video/*'; // Accept video files
-                    }
-                }
-            </script>
-            <%@ include file="Footer.jsp" %>
-        </html>
+            }
+
+    </script>
+    <%@ include file="Footer.jsp" %>
+</html>

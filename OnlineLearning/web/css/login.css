@@ -118,15 +118,15 @@ button, input {
     padding: 12px 20px 20px 20px; 
     position: relative;
     top: -313px;
-    left: 1270px;
+    left: 900px;
     width: 420px;
     height: 340px;
 }
 .banner{
     position: relative;
     top: 113px   ;
-    left: 268px;
-    width: 40%;
+    left: 240px;
+    width: 35%;
 }
 }
 

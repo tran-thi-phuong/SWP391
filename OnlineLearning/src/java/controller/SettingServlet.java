@@ -4,7 +4,10 @@
  */
 package controller;
 
+//database access
 import dal.SettingDAO;
+
+//servlet default
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +16,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+//model
 import model.SystemSetting;
 import model.Users;
 
@@ -36,14 +41,18 @@ public class SettingServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //check user login
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         SystemSetting setting = (SystemSetting) session.getAttribute("setting");
-
+        //get setting
         if (setting == null) {
-            setting = new SystemSetting();
-            setting.setUserID(user.getUserID());
-            settingDAO.addSetting(user.getUserID());
+            setting = settingDAO.getSettingsByUserID(user.getUserID());
+            if (setting == null) {
+                setting = new SystemSetting();
+                setting.setUserID(user.getUserID());
+                settingDAO.addSetting(user.getUserID());
+            }
         }
 
         // Retrieve form data

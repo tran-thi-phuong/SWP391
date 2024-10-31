@@ -42,19 +42,36 @@
         </script>
     </head>
     <body>
+        <c:choose>
+            <c:when test="${empty sessionScope.user}">
+                <c:redirect url="login.jsp"/>
+            </c:when>
+            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
+                <c:redirect url="/Homepage"/>
+            </c:when>
+            <c:otherwise>
 
                 <%@include file="Header.jsp" %>
                 <h1>Subject List</h1>
+
+                <%-- Search and Filter Form --%>
                 <form action="SubjectList" method="GET">
+                    <%-- Search input with value persistence --%>
                     <input type="text" name="search" placeholder="search by name" value="${param.search}">
 
+                    <%-- Category dropdown with dynamic options --%>
                     <select name="category">
                         <option value="">All</option>
                         <c:forEach items="${categories}" var="category">
-                            <option value="${category.subjectCategoryId}" ${param.category == category.subjectCategoryId ? 'selected' : ''}>${category.title}</option>
+                            <%-- Maintain selected category after form submission --%>
+                            <option value="${category.subjectCategoryId}" 
+                                    ${param.category == category.subjectCategoryId ? 'selected' : ''}>
+                                ${category.title}
+                            </option>
                         </c:forEach>
                     </select>
 
+                    <%-- Status filter dropdown --%>
                     <select name="status">
                         <option value="">Tất cả trạng thái</option>
                         <option value="Active">Active</option>
@@ -63,60 +80,77 @@
 
                     <input type="submit" value="Tìm kiếm">
                 </form>
+
+                <%-- Column Visibility Controls 
+                     JavaScript functionality to toggle table columns
+                --%>
                 <div>
-                    <!--        <input type="checkbox" onclick="toggleColumn('col-id')" checked> ID
-                            <input type="checkbox" onclick="toggleColumn('col-name')" checked> Name
-                            <input type="checkbox" onclick="toggleColumn('col-category')" checked> Category-->
+                    <%-- Commented out controls
+                    <input type="checkbox" onclick="toggleColumn('col-id')" checked> ID
+                    <input type="checkbox" onclick="toggleColumn('col-name')" checked> Name
+                    <input type="checkbox" onclick="toggleColumn('col-category')" checked> Category
+                    --%>
                     <input type="checkbox" onclick="toggleColumn('col-lessons')" checked> Number of lesson
                     <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
                     <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
                 </div>
-                     <c:if test="${sessionScope.user.role == 'Admin'}">
+                     <c:if test="${sessionScope.user.role == 'Instructor'}">
                 <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
                      </c:if>
 
+                <%-- Subject List Table --%>
+                <table>
+                    <tr>
+                        <%-- Table headers with corresponding CSS classes for toggle functionality --%>
+                        <th class="col-id">ID</th>
+                        <th class="col-name">Name</th>
+                        <th class="col-category">Category</th>
+                        <th class="col-lessons">Number of lesson</th>
+                        <th class="col-owner">Owner</th>
+                        <th class="col-status">Status</th>
+                        <th>Action</th>
+                    </tr>
+                    <%-- Iterate through subjects and display data --%>
+                    <c:forEach items="${subjects}" var="course">
+                        <tr>
+                            <td class="col-id">${course.subjectID}</td>
+                            <td class="col-name">
+                                <a href="subjectLesson?courseId=${course.subjectID}&courseName=${course.title}">
+                                    ${course.title}
+                                </a>
+                            </td>
+                            <td class="col-category">${course.subjectCategoryId}</td>
+                            <td class="col-lessons">0</td>
+                            <td class="col-owner">${course.userName}</td>
+                            <td class="col-status">${course.status}</td>
+                            <td>
+                                <a href="SubjectDetailOverview?id=${course.subjectID}">Chỉnh sửa</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
 
-        <table>
-            <tr>
-                <th class="col-id">ID</th>
-                <th class="col-name">Name</th>
-                <th class="col-category">Category</th>
-                <th class="col-lessons">Number of lesson</th>
-                <th class="col-owner">Owner</th>
-                <th class="col-status">Status</th>
-                <th>Action</th>
-            </tr>
-            <c:forEach items="${subjects}" var="course">
-                <tr>
-                    <td class="col-id">${course.subjectID}</td>
-                    <td class="col-name"><a href="subjectLesson?courseId=${course.subjectID}&courseName=${course.title}">${course.title}</a></td>
-                    <td class="col-category">${course.subjectCategoryId}</td>
-                    <td class="col-lessons">0</td>
-                    <td class="col-owner">${course.userName}</td>
-                    <td class="col-status">${course.status}</td>
-                    <td>
-                        <a href="editCourse.jsp?id=${course.subjectID}">Chỉnh sửa</a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-
-                <!-- Phân trang -->
+                <%-- Pagination Controls --%>
                 <c:if test="${totalPages > 1}">
                     <div class="pagination">
                         <c:forEach begin="1" end="${totalPages}" var="i">
                             <c:choose>
+                                <%-- Highlight current page --%>
                                 <c:when test="${currentPage eq i}">
                                     <span>${i}</span>
                                 </c:when>
+                                <%-- Links to other pages with search parameters preserved --%>
                                 <c:otherwise>
-                                    <a href="?page=${i}&search=${param.search}&category=${param.category}&status=${param.status}">${i}</a>
+                                    <a href="?page=${i}&search=${param.search}&category=${param.category}&status=${param.status}">
+                                        ${i}
+                                    </a>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
                     </div>
                 </c:if>
-           
+            </c:otherwise>
+        </c:choose>
 
             </body>
             <%@include file="Footer.jsp" %>
