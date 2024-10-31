@@ -156,7 +156,7 @@ public class LessonDAO extends DBContext {
         }
         return false;
     }
-
+    //Get all lesson
     public List<Lesson> getAllLessons() {
         List<Lesson> list = new ArrayList<>();
         String sql = "SELECT * FROM Lessons";
@@ -178,7 +178,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
-
+    //search by ID
     public Lesson getLessonById(int lessonID) {
         Lesson lesson = null;
         String sql = "SELECT * FROM Lessons WHERE LessonID = ?";

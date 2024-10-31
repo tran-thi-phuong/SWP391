@@ -146,7 +146,7 @@ public class QuestionDAO extends DBContext {
 
         return question;
     }
-
+    //delete question
     public boolean deleteQuestionById(int questionId) {
         String sql = "DELETE FROM Questions WHERE QuestionID = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -158,7 +158,7 @@ public class QuestionDAO extends DBContext {
             return false; // Return false in case of an error
         }
     }
-
+    //search and order for question List
     public List<Question> getAllQuestions(int pageNumber, int pageSize, String search, String lessonID, String status, String level, String orderBy, String direction) {
         List<Question> questions = new ArrayList<>();
         int offset = (pageNumber - 1) * pageSize;
@@ -221,7 +221,7 @@ public class QuestionDAO extends DBContext {
         }
         return questions; // Return the list of questions
     }
-
+    //count question for pagination
     public int getTotalQuestionCount(String search, String lessonId, String status, String level) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Questions WHERE 1=1");
 
@@ -266,7 +266,7 @@ public class QuestionDAO extends DBContext {
         }
         return 0; // Return 0 if an error occurs
     }
-
+    //add question
     public int addQuestion(Question question) {
         String sql = "INSERT INTO Questions (LessonID, Status, Content, Level) VALUES (?, ?, ?, ?)";
         int generatedId = -1;

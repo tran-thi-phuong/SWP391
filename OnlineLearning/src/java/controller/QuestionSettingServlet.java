@@ -4,7 +4,10 @@
  */
 package controller;
 
+//database access
 import dal.SettingDAO;
+
+//servlet default
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +16,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+//model
 import model.QuestionSetting;
 import model.Users;
 
@@ -32,9 +37,11 @@ public class QuestionSettingServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    //setup dao
     SettingDAO questionSettingDAO = new SettingDAO();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //check user login or not
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         QuestionSetting questionSetting = (QuestionSetting) session.getAttribute("questionSetting");

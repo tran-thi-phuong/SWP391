@@ -6,7 +6,7 @@ import java.util.List;
 import model.Answer;
 
 public class AnswerDAO extends DBContext {
-
+    //add answer
     public void addAnswer(Answer answer) {
         String sql = "INSERT INTO Answers (QuestionID, Content, Explaination, isCorrect) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -19,7 +19,7 @@ public class AnswerDAO extends DBContext {
             ex.printStackTrace();
         }
     }
-
+    //get by question
     public List<Answer> getAnswersByQuestionId(int questionID) {
         List<Answer> answers = new ArrayList<>();
         String sql = "SELECT * FROM Answers WHERE QuestionID = ?";
@@ -40,7 +40,7 @@ public class AnswerDAO extends DBContext {
         }
         return answers;
     }
-
+    //delete answer
     public void clearAnswersByQuestionId(int questionID) {
         String sql = "DELETE FROM Answers WHERE QuestionID = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

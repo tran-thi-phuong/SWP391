@@ -4,8 +4,11 @@
  */
 package controller;
 
+//for access database
 import dal.QuestionDAO;
 import dal.QuestionMediaDAO;
+
+//servlet default
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,12 +17,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+//for save media file
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
+
+//data structure
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+//model
 import model.Question;
 import model.QuestionMedia;
 
@@ -90,7 +99,7 @@ public class AddQuestion extends HttpServlet {
         String status = request.getParameter("status");
         String level = request.getParameter("level");
         int lessonID = Integer.parseInt(request.getParameter("lessonID"));
-
+        //check content valid
         if (content.trim().isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
             return;

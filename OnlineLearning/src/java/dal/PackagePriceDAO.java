@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author 84336
  */
 public class PackagePriceDAO extends DBContext {
-
+    //get by subject
     public List<PackagePrice> searchBySubjectId(int subjectId) {
         List<PackagePrice> packages = new ArrayList<>();
         String query = "SELECT * FROM Package_Price WHERE subjectId = ?";
@@ -38,7 +38,7 @@ public class PackagePriceDAO extends DBContext {
         }
         return packages;
     }
-
+    //get by package id
     public PackagePrice searchByPackagePriceId(int packagePriceId) {
         PackagePrice packagePrice = null; // Initialize to null
         String query = "SELECT * FROM Package_Price WHERE PackageId = ?";
@@ -63,7 +63,7 @@ public class PackagePriceDAO extends DBContext {
 
         return packagePrice; // Return the single PackagePrice object or null if not found
     }
-
+    //find lowest option
     public double findLowestPrice(List<PackagePrice> packagePrices) {
         double lowestPrice = Double.MAX_VALUE;
         for (PackagePrice packagePrice : packagePrices) {
@@ -78,7 +78,7 @@ public class PackagePriceDAO extends DBContext {
         }
         return lowestPrice == Double.MAX_VALUE ? 0 : lowestPrice;
     }
-
+    //get name of package
     public String getNameByPackageId(int packageId) {
         String name = "";
 
@@ -97,7 +97,7 @@ public class PackagePriceDAO extends DBContext {
         }
         return name;
     }
-
+    //get duration of package
     public int getDurationByPackageId(int packageId) {
         int durationTime = 0;
 
@@ -115,7 +115,7 @@ public class PackagePriceDAO extends DBContext {
         }
         return durationTime;
     }
-
+    //get price 
     public PackagePrice getPriceByPackageId(int packageId) {
         String query = "SELECT Price, Sale_Price FROM Package_Price WHERE PackageID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -132,6 +132,50 @@ public class PackagePriceDAO extends DBContext {
             e.printStackTrace();
         }
         return null;  // Return null if no result is found
+    }
+    public void addPackagePrice(PackagePrice packagePrice) {
+        String query = "INSERT INTO Package_Price (SubjectId, name, duration_time, sale_price, price) VALUES (?, ?, ?, ?, ?)";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, packagePrice.getSubjectId());
+            preparedStatement.setString(2, packagePrice.getName());
+            preparedStatement.setInt(3, packagePrice.getDurationTime());
+            preparedStatement.setDouble(4, packagePrice.getSalePrice());
+            preparedStatement.setDouble(5, packagePrice.getPrice());
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updatePackagePrice(PackagePrice packagePrice) {
+        String query = "UPDATE Package_Price SET SubjectId = ?, name = ?, duration_time = ?, sale_price = ?, price = ? WHERE PackageId = ?";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, packagePrice.getSubjectId());
+            preparedStatement.setString(2, packagePrice.getName());
+            preparedStatement.setInt(3, packagePrice.getDurationTime());
+            preparedStatement.setDouble(4, packagePrice.getSalePrice());
+            preparedStatement.setDouble(5, packagePrice.getPrice());
+            preparedStatement.setInt(6, packagePrice.getPackageId());
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void deletePackagePrice(int packagePriceId) {
+        String query = "DELETE FROM Package_Price WHERE PackageId = ?";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, packagePriceId);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

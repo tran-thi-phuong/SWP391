@@ -4,9 +4,12 @@
  */
 package controller;
 
+//database access
 import dal.QuestionDAO;
 import dal.TestDAO;
 import dal.TestQuestionDAO;
+
+//servlet default
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,15 +18,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+//for save media
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+
+//data structure
 import java.util.List;
+
+//for debugging
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+//model
 import model.Question;
 import model.Test;
 import model.TestQuestion;
@@ -93,15 +103,17 @@ public class EditQuiz extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get action and id of test
         String action = request.getParameter("action");
         String testIdStr = request.getParameter("testId");
 
         System.out.println("Test ID String: " + testIdStr); // Debug log
-
+        //check null id
         if (testIdStr == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Test ID is missing.");
             return;
         }
+        //check attempt of quiz
         int testId = Integer.parseInt(testIdStr);
         int attemptCount = testDAO.countAttemptsByTestID(testId);
 
@@ -114,15 +126,18 @@ public class EditQuiz extends HttpServlet {
         request.setAttribute("testId", testId);
         switch (action) {
             case "edit":
+                //edit Test
                 handleEditTest(request);
                 response.sendRedirect("QuizDetail?id=" + testId);
                 break;
 
             case "updateQuestions":
+                //update Test
                 handleUpdateQuestions(request);
                 request.getRequestDispatcher("QuestionQuiz.jsp").forward(request, response);
                 break;
             case "updateQuestionQuiz":
+                //updateQuestionQuiz
                 handleUpdateQuestionQuiz(request);
                 response.sendRedirect("QuizDetail?id=" + testId);
                 break;
@@ -133,7 +148,7 @@ public class EditQuiz extends HttpServlet {
                 break;
         }
     }
-
+    //Edit Test
     private void handleEditTest(HttpServletRequest request) {
         int testId = Integer.parseInt(request.getParameter("testId"));
         String title = request.getParameter("title");
@@ -166,7 +181,7 @@ public class EditQuiz extends HttpServlet {
 
         testDAO.updateTest(updatedTest); // Update quiz details in the database
     }
-
+    //Update Question
     private void handleUpdateQuestions(HttpServletRequest request) throws ServletException, IOException {
         int testId = Integer.parseInt(request.getParameter("testId"));
         int subjectId = Integer.parseInt(request.getParameter("subjectId")); // Get subjectId from the form
@@ -182,7 +197,7 @@ public class EditQuiz extends HttpServlet {
         request.setAttribute("questionsByTest", questionsByTest);
 
     }
-
+    //Save media
     private String saveMediaFile(Part filePart, String uploadDir) throws IOException {
         if (filePart != null && filePart.getSize() > 0) {
             // Get the file name from the uploaded part
@@ -218,7 +233,7 @@ public class EditQuiz extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+    //for update quiz
     private void handleUpdateQuestionQuiz(HttpServletRequest request) {
         int testId = Integer.parseInt(request.getParameter("testId"));
         String[] selectedQuestions = request.getParameterValues("selectedQuestions");

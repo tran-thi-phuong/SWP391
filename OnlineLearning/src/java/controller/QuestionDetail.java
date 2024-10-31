@@ -79,6 +79,7 @@ public class QuestionDetail extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get the id of question
         String questionIdParam = request.getParameter("id");
         if (questionIdParam != null) {
             try {
@@ -139,12 +140,14 @@ public class QuestionDetail extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    //setup URL for call API
     String API_KEY = "YOUR_API_KEY"; //Replace with your API key
     private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get action and id of question
         String action = request.getParameter("action");
         int questionId = Integer.parseInt(request.getParameter("questionId"));
         switch (action) {
@@ -279,6 +282,7 @@ public class QuestionDetail extends HttpServlet {
                     // Save the existing media back to the database
                     mediaDAO.saveMedia(existingMedia);
                 }
+                //back to detail
                 response.sendRedirect("QuestionDetail?id=" + questionId);
                 break;
 

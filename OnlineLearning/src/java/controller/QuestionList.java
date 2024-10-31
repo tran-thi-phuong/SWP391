@@ -4,9 +4,12 @@
  */
 package controller;
 
+//for Database connect
 import dal.LessonDAO;
 import dal.QuestionDAO;
 import dal.SettingDAO;
+
+//default servlet
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,10 +19,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+
+//for model
 import model.Lesson;
 import model.Question;
 import model.QuestionSetting;
-import model.SystemSetting;
 import model.Users;
 
 /**
@@ -38,6 +42,7 @@ public class QuestionList extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    //initialize DAO
     SettingDAO settingDAO = new SettingDAO();
     QuestionDAO questionDAO = new QuestionDAO();
     LessonDAO lessonDAO = new LessonDAO();
@@ -61,7 +66,7 @@ public class QuestionList extends HttpServlet {
                 session.setAttribute("QuestionSetting", setting);
             }
         }
-
+        //get data from query
         String search = request.getParameter("search");
         String lessonID = request.getParameter("lesson");
         String status = request.getParameter("status");
@@ -84,7 +89,8 @@ public class QuestionList extends HttpServlet {
         if (currentPage == null) {
             currentPage = "1";
         }
-
+        
+        //calculate pagination
         int pageNumber = (currentPage != null) ? Integer.parseInt(currentPage) : 1;
         int pageSize = (setting != null) ? setting.getNumberOfItems() : 10;
 
