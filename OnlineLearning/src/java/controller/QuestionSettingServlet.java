@@ -13,15 +13,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.SystemSetting;
+import model.QuestionSetting;
 import model.Users;
 
 /**
  *
  * @author 84336
  */
-@WebServlet(name = "SettingServlet", urlPatterns = {"/SettingServlet"})
-public class SettingServlet extends HttpServlet {
+@WebServlet(name = "QuestionSettingServlet", urlPatterns = {"/QuestionSettingServlet"})
+public class QuestionSettingServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,59 +32,49 @@ public class SettingServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    SettingDAO settingDAO = new SettingDAO();
-
+    SettingDAO questionSettingDAO = new SettingDAO();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
-        SystemSetting setting = (SystemSetting) session.getAttribute("setting");
+        QuestionSetting questionSetting = (QuestionSetting) session.getAttribute("questionSetting");
 
-        if (setting == null) {
-            setting = settingDAO.getSettingsByUserID(user.getUserID());
-            if (setting == null) {
-                setting = new SystemSetting();
-                setting.setUserID(user.getUserID());
-                settingDAO.addSetting(user.getUserID());
+        // Initialize questionSetting if it doesn't exist
+        if (questionSetting == null) {
+            questionSetting = questionSettingDAO.getQuestionSettingsByUserID(user.getUserID());
+            if (questionSetting == null) {
+                questionSetting = new QuestionSetting();
+                questionSetting.setUserID(user.getUserID());
+                questionSettingDAO.addSetting(user.getUserID());
             }
         }
 
         // Retrieve form data
         String numberOfItemsStr = request.getParameter("numberOfItems");
-        int numberOfItems = (numberOfItemsStr != null && !numberOfItemsStr.isEmpty()) ? Integer.parseInt(numberOfItemsStr) : 10;
+        int numberOfItems = (numberOfItemsStr != null && !numberOfItemsStr.isEmpty())
+                ? Integer.parseInt(numberOfItemsStr) : 10;
 
         // Retrieve checkbox values
-        boolean quizID = request.getParameter("quizID") != null;
-        boolean name = request.getParameter("title") != null;
-        boolean subject = request.getParameter("subject") != null;
-        boolean description = request.getParameter("description") != null; // Added
-        boolean level = request.getParameter("level") != null;
-        boolean numberOfQuestions = request.getParameter("numberOfQuestions") != null;
-        boolean duration = request.getParameter("duration") != null;
-        boolean passRate = request.getParameter("passRate") != null;
-        boolean passCondition = request.getParameter("passCondition") != null;
-        boolean quizType = request.getParameter("quizType") != null;
+        boolean showContent = request.getParameter("showContent") != null;
+        boolean showLessonID = request.getParameter("showLessonID") != null;
+        boolean showStatus = request.getParameter("showStatus") != null;
+        boolean showLevel = request.getParameter("showLevel") != null;
 
-// Retrieve the number of items per page from the request
+        // Update questionSetting object
+        questionSetting.setNumberOfItems(numberOfItems);
+        questionSetting.setShowContent(showContent);
+        questionSetting.setShowLessonID(showLessonID);
+        questionSetting.setShowStatus(showStatus);
+        questionSetting.setShowLevel(showLevel);
 
-// Update settings object
-        setting.setNumberOfItems(numberOfItems);
-        setting.setQuizID(quizID);
-        setting.setTitle(name);
-        setting.setSubject(subject);
-        setting.setDescription(description); // Added
-        setting.setLevel(level);
-        setting.setQuantity(numberOfQuestions);
-        setting.setDuration(duration);
-        setting.setPassCondition(passCondition);
-        setting.setPassRate(passRate);
-        setting.setQuizType(quizType);
-
-        settingDAO.updateSetting(setting);
+        // Save the updated settings
+        questionSettingDAO.updateQuestionSetting(questionSetting);
 
         // Update the session
-        session.setAttribute("setting", setting);
-        response.sendRedirect("QuizList");
+        session.setAttribute("QuestionSetting", questionSetting);
+
+        // Redirect to Question List page
+        response.sendRedirect("QuestionList");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

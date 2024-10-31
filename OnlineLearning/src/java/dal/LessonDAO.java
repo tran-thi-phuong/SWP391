@@ -155,6 +155,54 @@ public class LessonDAO extends DBContext {
         return false;
     }
 
+    public List<Lesson> getAllLessons() {
+        List<Lesson> list = new ArrayList<>();
+        String sql = "SELECT * FROM Lessons";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Lesson lesson = new Lesson();
+                lesson.setLessonID(rs.getInt("LessonID"));
+                lesson.setSubjectID(rs.getInt("SubjectID"));
+                lesson.setTitle(rs.getString("Title"));
+                lesson.setTypeID(rs.getInt("TypeID"));
+                lesson.setContent(rs.getString("Content"));
+                lesson.setOrder(rs.getInt("Order"));
+                lesson.setDescription(rs.getString("Description"));
+                lesson.setStatus(rs.getString("Status"));
+                list.add(lesson);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public Lesson getLessonById(int lessonID) {
+        Lesson lesson = null;
+        String sql = "SELECT * FROM Lessons WHERE LessonID = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, lessonID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setSubjectID(rs.getInt("SubjectID"));
+                    lesson.setTitle(rs.getString("Title"));
+                    lesson.setTypeID(rs.getInt("TypeID"));
+                    lesson.setContent(rs.getString("Content"));
+                    lesson.setOrder(rs.getInt("Order"));
+                    lesson.setDescription(rs.getString("Description"));
+                    lesson.setStatus(rs.getString("Status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lesson;
+    }
+
     public static void main(String[] args) {
         // Initialize database connection (assumed to be managed in DAO class)
         LessonDAO lessonDAO = new LessonDAO();

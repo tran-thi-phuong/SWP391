@@ -271,7 +271,11 @@ CREATE TABLE System_Setting (
     PassCondition BIT DEFAULT 0, 
     Level BIT DEFAULT 0,                   
     Quantity BIT DEFAULT 0,     
-    PassRate BIT DEFAULT 0,                
+    PassRate BIT DEFAULT 0,
+ShowContent BIT NOT NULL DEFAULT 1,
+    ShowLessonID BIT NOT NULL DEFAULT 1,
+    ShowStatus BIT NOT NULL DEFAULT 1,
+    ShowLevel BIT NOT NULL DEFAULT 1,                
     NumberOfItems INT DEFAULT 10,          -- Number of items per page
     Created_At DATETIME DEFAULT GETDATE(),
     Updated_At DATETIME DEFAULT GETDATE(),

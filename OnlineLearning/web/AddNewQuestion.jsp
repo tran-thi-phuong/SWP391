@@ -4,7 +4,7 @@
 <%@ page import="model.QuestionMedia" %>
 <html>
     <head>
-        <title>Edit Question</title>
+        <title>Add New Question</title>
         <style>
             .form-container {
                 max-width: 600px;
@@ -57,86 +57,50 @@
                 max-height: 100%;
                 margin-right: 10px;
             }
-            .media-container img,
-            .media-container video {
-                max-width: 100%;
-                max-height: 100%;
-                margin-right: 10px;
-            }
         </style>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-        <c:set var="questionDAO" value="<%=new dal.QuestionDAO()%>" />
-        <c:set var="answerDAO" value="<%=new dal.AnswerDAO()%>" />
-        <c:set var="mediaDAO" value="<%=new dal.QuestionMediaDAO()%>" />
+        <c:set var="lessonDAO" value="<%=new dal.LessonDAO()%>" />
         <div class="form-container">
-            <h1>Edit Question</h1>
-            <form action="QuestionDetail" method="post" onsubmit="return validateInput()" enctype="multipart/form-data">
-                <input type="hidden" name="questionId" value="${currentQuestion.questionID}"/>
-
+            <h1>Add New Question</h1>
+            <form action="AddQuestion" method="post" onsubmit="return validateInput()" enctype="multipart/form-data">
                 <p>
                     <strong>Content:</strong>
-                    <input type="text" name="content" id="contentInput" value="${currentQuestion.content}" required/>
+                    <input type="text" name="content" id="contentInput" required />
                 </p>
 
                 <p>
                     <strong>Status:</strong>
                     <select name="status" required>
-                        <option value="Active" ${currentQuestion.status == 'Active' ? 'selected' : ''}>Active</option>
-                        <option value="Inactive" ${currentQuestion.status == 'Inactive' ? 'selected' : ''}>Inactive</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
                     </select>
                 </p>
 
                 <p>
                     <strong>Level:</strong>
                     <select name="level" required>
-                        <option value="Easy" ${currentQuestion.level == 'Easy' ? 'selected' : ''}>Easy</option>
-                        <option value="Medium" ${currentQuestion.level == 'Medium' ? 'selected' : ''}>Medium</option>
-                        <option value="Hard" ${currentQuestion.level == 'Hard' ? 'selected' : ''}>Hard</option>
-                        <!-- Add more levels as needed -->
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
                     </select>
                 </p>
 
                 <p>
                     <strong>Lesson:</strong>
                     <select name="lessonID" required id="lessonID">
-                        <option value="">Select a lesson</option>
-                        <c:forEach var="lesson" items="${lessonList}">
-                            <option value="${lesson.lessonID}" <c:if test="${currentQuestion.lessonID == lesson.lessonID}">selected</c:if>>${lesson.title}</option>
+                        <c:forEach var="lesson" items="${lessonDAO.getAllLessons()}">
+                            <option value="${lesson.lessonID}">${lesson.title}</option>
                         </c:forEach>
                     </select>
                 </p>
-                <h2>Current Media Files</h2>
-                <c:forEach var="media" items="${mediaDAO.getMediaByQuestionId(currentQuestion.questionID)}">
-                    <div class="media-container">
-                        <strong>Media:</strong>
-                        <c:choose>
-                            <c:when test="${media.mediaLink.endsWith('.jpg' || media.mediaLink.endsWith('.png'))}">
-                                <img src="${media.mediaLink}" alt="Media Image" />
-                            </c:when>
-                            <c:when test="${media.mediaLink.endsWith('.mp4')}">
-                                <video controls>
-                                    <source src="${media.mediaLink}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </c:when>
-                            <c:otherwise>
-                                <img src="${media.mediaLink}" alt="Media Image" />
-                            </c:otherwise>
-                        </c:choose>
-                        <p><em>${media.description}</em></p>
-                        <input type="text" value="${media.mediaID}" name="current-media"hidden/>
-                        <button type="button" onclick="removeMedia(this)">Remove</button>
-                    </div>
-                    <hr>
-                </c:forEach>
 
                 <h2>Media Files</h2>
                 <div id="mediaList">
                     <div class="media-container">
-                        <input type="file" name="mediaFiles" accept="image/*,video/*" onchange="previewMedia(this)" required/>
-                        <input type="text" name="mediaDescription" placeholder="Media Description" required/>
+                        <input type="file" name="mediaFiles" accept="image/*,video/*" onchange="previewMedia(this)" required />
+                        <input type="text" name="mediaDescription" placeholder="Media Description" required />
                         <div class="media-preview"></div>
                         <button type="button" onclick="removeMedia(this)">Remove</button>
                     </div>
@@ -144,8 +108,8 @@
                 <button type="button" onclick="addMedia()">Add Media</button>
 
                 <div style="text-align: center; margin-top: 20px;">
-                    <button type="submit" name="action" value="save">Save Changes</button>
-                    <button type="button" onclick="window.location.href = 'QuestionDetail?id=${currentQuestion.questionID}'">Cancel</button>
+                    <button type="submit" name="action" value="add">Add Question</button>
+                    <button type="button" onclick="window.location.href = 'QuestionList'">Cancel</button>
                 </div>
             </form>
         </div>
@@ -156,10 +120,9 @@
                 const mediaHTML = `
                     <div class="media-container">
                         <input type="file" name="mediaFiles" accept="image/*,video/*" onchange="previewMedia(this)" required/>
-                         <input type="text" name="mediaDescription" placeholder="Media Description" required/>
-        <div class="media-preview"></div>        
-        <button type="button" onclick="removeMedia(this)">Remove</button>
-                    
+                        <input type="text" name="mediaDescription" placeholder="Media Description" required/>
+                        <div class="media-preview"></div>
+                        <button type="button" onclick="removeMedia(this)">Remove</button>
                     </div>`;
                 mediaList.insertAdjacentHTML('beforeend', mediaHTML);
             }
@@ -185,6 +148,7 @@
                     reader.readAsDataURL(file);
                 }
             }
+
             function validateInput() {
                 const input = document.getElementById('contentInput').value;
                 if (input.trim() === "") {
