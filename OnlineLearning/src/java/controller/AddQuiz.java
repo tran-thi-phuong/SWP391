@@ -4,7 +4,10 @@
  */
 package controller;
 
+//database access
 import dal.TestDAO;
+
+//servlet default
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,11 +16,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+//for saving media
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
+//for debugging
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+//model
 import model.Test;
 
 /**
@@ -37,6 +45,7 @@ public class AddQuiz extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    //Method to save media to an uploadDir custom
     private String saveMediaFile(Part filePart, String uploadDir) throws IOException {
         if (filePart != null && filePart.getSize() > 0) {
             // Get the file name from the uploaded part
@@ -65,6 +74,7 @@ public class AddQuiz extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get data from the form
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String mediaType = request.getParameter("mediaType");
@@ -88,7 +98,7 @@ public class AddQuiz extends HttpServlet {
         newTest.setLevel(level);
         newTest.setQuantity(quantity);
         newTest.setSubjectID(subjectId);
-
+        //Save media
         String mediaURL = "";
         Part mediaFilePart;
         try {

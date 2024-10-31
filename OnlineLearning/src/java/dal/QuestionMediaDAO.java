@@ -8,14 +8,20 @@ package dal;
  *
  * @author 84336
  */
+//for sql
 import java.sql.*;
+
+//database access
 import java.util.ArrayList;
 import java.util.List;
+
+//model
 import model.Question;
 import model.QuestionMedia;
 
 public class QuestionMediaDAO extends DBContext {
 
+    //search media by question id
     public List<QuestionMedia> getMediaByQuestionId(int questionId) {
         List<QuestionMedia> mediaList = new ArrayList<>();
         String sql = "SELECT MediaID, QuestionID, MediaLink, Description FROM QuestionMedia WHERE QuestionID = ?";
@@ -38,7 +44,7 @@ public class QuestionMediaDAO extends DBContext {
 
         return mediaList;
     }
-
+    //search media by its id
     public QuestionMedia getMediaById(int mediaId) {
         QuestionMedia media = null;
         String sql = "SELECT MediaID, QuestionID, MediaLink, Description FROM QuestionMedia WHERE MediaID = ?";
@@ -60,7 +66,7 @@ public class QuestionMediaDAO extends DBContext {
 
         return media;
     }
-
+    //save media
     public void saveMedia(QuestionMedia media) {
         String sql = "INSERT INTO QuestionMedia (QuestionID, MediaLink, Description) VALUES (?, ?, ?)";
 
@@ -74,7 +80,7 @@ public class QuestionMediaDAO extends DBContext {
             ex.printStackTrace();
         }
     }
-
+    //delete media
     public void deleteMedia(int QuestionID) {
         String sql = "DELETE FROM QuestionMedia WHERE QuestionID = ?";
 

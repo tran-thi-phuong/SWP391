@@ -153,7 +153,7 @@ public class LessonDAO extends DBContext {
         }
         return false;
     }
-
+    //Get all lesson
     public List<Lesson> getAllLessons() {
         List<Lesson> list = new ArrayList<>();
         String sql = "SELECT * FROM Lessons";
@@ -163,7 +163,7 @@ public class LessonDAO extends DBContext {
                 lesson.setLessonID(rs.getInt("LessonID"));
                 lesson.setSubjectID(rs.getInt("SubjectID"));
                 lesson.setTitle(rs.getString("Title"));
-                lesson.setTypeID(rs.getInt("TypeID"));
+                lesson.setTopicID(rs.getInt("TypeID"));
                 lesson.setContent(rs.getString("Content"));
                 lesson.setOrder(rs.getInt("Order"));
                 lesson.setDescription(rs.getString("Description"));
@@ -175,7 +175,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
-
+    //search by ID
     public Lesson getLessonById(int lessonID) {
         Lesson lesson = null;
         String sql = "SELECT * FROM Lessons WHERE LessonID = ?";
@@ -188,7 +188,7 @@ public class LessonDAO extends DBContext {
                     lesson.setLessonID(rs.getInt("LessonID"));
                     lesson.setSubjectID(rs.getInt("SubjectID"));
                     lesson.setTitle(rs.getString("Title"));
-                    lesson.setTypeID(rs.getInt("TypeID"));
+                    lesson.setTopicID(rs.getInt("TypeID"));
                     lesson.setContent(rs.getString("Content"));
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
