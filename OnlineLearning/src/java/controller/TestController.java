@@ -4,8 +4,11 @@
  */
 package controller;
 
+//database access
 import dal.SettingDAO;
 import dal.TestDAO;
+
+//default servlet
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,7 +16,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+//data structure
 import java.util.List;
+
+//model
 import model.SystemSetting;
 import model.Test;
 import model.Users;
@@ -39,6 +46,7 @@ public class TestController extends HttpServlet {
 
 protected void processRequest(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
+    //check user login
     HttpSession session = request.getSession();
     Users user = (Users) session.getAttribute("user");
 
@@ -47,7 +55,7 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
         response.sendRedirect("login.jsp");
         return; // Stop further processing
     }
-
+    //get setting
     SystemSetting setting = (SystemSetting) session.getAttribute("setting");
     if (setting == null) {
         // Create a new setting if none exists
@@ -56,7 +64,7 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
             session.setAttribute("setting", setting);
         }
     }
-
+    //handle querry
     String search = request.getParameter("search");
     String currentPage = request.getParameter("page");
     // default is 1

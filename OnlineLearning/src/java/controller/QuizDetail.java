@@ -4,8 +4,11 @@
  */
 package controller;
 
+//database access
 import dal.TestDAO;
 import dal.TestQuestionDAO;
+
+//servlet default
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +16,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+//model
 import model.Test;
 
 /**
@@ -35,7 +40,9 @@ public class QuizDetail extends HttpServlet {
     TestQuestionDAO testQuestionDAO = new TestQuestionDAO();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get id from parameter
         String testIdStr = request.getParameter("id");
+        //Load data
         try {
             int testId = Integer.parseInt(testIdStr);
             Test currentTest = testDAO.getTestById(testId);
@@ -45,7 +52,7 @@ public class QuizDetail extends HttpServlet {
             request.getRequestDispatcher("QuizDetail.jsp").forward(request, response);
         } catch (Exception e) {
             Test currentTest = new Test();
-            int attemptCount = 1;
+            int attemptCount = 1; //to navigate button
             request.setAttribute("attemptCount", attemptCount);
             request.setAttribute("currentTest", currentTest);
             request.getRequestDispatcher("QuizDetail.jsp").forward(request, response);
@@ -142,7 +149,7 @@ public class QuizDetail extends HttpServlet {
 
         // Redirect or forward to the success page or details page after the action
     }
-
+    //edit test
     private void editTest(int testId, HttpServletRequest request, HttpServletResponse response) {
 
         // Get the test details from the database using the TestID

@@ -4,7 +4,10 @@
  */
 package controller;
 
+//database access
 import dal.AnswerDAO;
+
+//default servlet
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,8 +15,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+//data structure
 import java.util.ArrayList;
 import java.util.List;
+
+//for model
 import model.Answer;
 
 /**
@@ -77,22 +84,28 @@ public class EditAnswer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get item from the form submit
         int questionId = Integer.parseInt(request.getParameter("questionId"));
         String[] answerContents = request.getParameterValues("answers.content");
         String[] answerExplanations = request.getParameterValues("answers.explanation");
         String[] correctAnswers = request.getParameterValues("answers.correct");
         List<Answer> answerList = new ArrayList<>();
         Answer a;
+        //add answer to answer list
         for (int i = 0; i < answerContents.length; i++) {
             String content = answerContents[i];
             String explanation = answerExplanations[i];
             String correct = correctAnswers[i];
+            //validate
             if (content != null && explanation != null && correct != null && !content.trim().isEmpty() && !explanation.trim().isEmpty() && !correct.isEmpty()){
                 a = new Answer(questionId, content, explanation, "true".equals(correct));
                 answerList.add(a);
             }
         }
+        //delete old answer
         answerDAO.clearAnswersByQuestionId(questionId);
+        
+        //add new answer
         for (Answer answer : answerList) {
             answerDAO.addAnswer(answer);
         }

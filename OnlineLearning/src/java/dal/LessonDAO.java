@@ -104,22 +104,24 @@ public class LessonDAO extends DBContext {
 
     public Lesson getLessonByLessonIDAndUserID(int lessonID, int userID) {
         Lesson lesson = null;
-        String sql = "SELECT "
-                + "    l.Title, "
-                + "    l.Content, "
-                + "    l.LessonID, "
-                + "    l.Description, "
-                + "    lm.Media_Link, "
-                + "    lu.Status "
-                + "FROM "
-                + "    Lessons l "
-                + "LEFT JOIN "
-                + "    LessonMedia lm ON l.LessonID = lm.LessonID "
-                + "LEFT JOIN "
-                + "    Lesson_User lu ON l.LessonID = lu.LessonID "
-                + "WHERE "
-                + "    lu.UserID = ? "
-                + "AND l.LessonID = ?";
+        String sql = """
+                SELECT 
+                    l.Title, 
+                    l.Content, 
+                    l.LessonID, 
+                    l.Description, 
+                    lm.Media_Link, 
+                    lu.Status 
+                FROM 
+                    Lessons l 
+                LEFT JOIN 
+                    LessonMedia lm ON l.LessonID = lm.LessonID 
+                LEFT JOIN 
+                    Lesson_User lu ON l.LessonID = lu.LessonID 
+                WHERE 
+                    lu.UserID = ? 
+                AND l.LessonID = ?""";
+
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -132,6 +134,7 @@ public class LessonDAO extends DBContext {
                 lesson.setTitle(rs.getString("Title"));
                 lesson.setContent(rs.getString("Content"));
                 lesson.setLessonID(rs.getInt("LessonID"));
+                lesson.setMediaLink(rs.getString("Media_Link"));
                 lesson.setDescription(rs.getString("Description"));
                 lesson.setStatus(rs.getString("Status"));
             }
@@ -152,6 +155,54 @@ public class LessonDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+    //Get all lesson
+    public List<Lesson> getAllLessons() {
+        List<Lesson> list = new ArrayList<>();
+        String sql = "SELECT * FROM Lessons";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Lesson lesson = new Lesson();
+                lesson.setLessonID(rs.getInt("LessonID"));
+                lesson.setSubjectID(rs.getInt("SubjectID"));
+                lesson.setTitle(rs.getString("Title"));
+                lesson.setTopicID(rs.getInt("TopicID"));
+                lesson.setContent(rs.getString("Content"));
+                lesson.setOrder(rs.getInt("Order"));
+                lesson.setDescription(rs.getString("Description"));
+                lesson.setStatus(rs.getString("Status"));
+                list.add(lesson);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    //search by ID
+    public Lesson getLessonById(int lessonID) {
+        Lesson lesson = null;
+        String sql = "SELECT * FROM Lessons WHERE LessonID = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, lessonID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setSubjectID(rs.getInt("SubjectID"));
+                    lesson.setTitle(rs.getString("Title"));
+                    lesson.setTopicID(rs.getInt("TopicID"));
+                    lesson.setContent(rs.getString("Content"));
+                    lesson.setOrder(rs.getInt("Order"));
+                    lesson.setDescription(rs.getString("Description"));
+                    lesson.setStatus(rs.getString("Status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lesson;
     }
 
     public Lesson getLessonByLessonID(int lessonID) {
@@ -231,10 +282,9 @@ public class LessonDAO extends DBContext {
     }
 
     public static void main(String[] args) {
-        // Initialize database connection (assumed to be managed in DAO class)
+        // Tạo một đối tượng DBContext để lấy kết nối
+        // Tạo đối tượng DAO (giả định bạn đã có lớp DAO phù hợp)
         LessonDAO lessonDAO = new LessonDAO();
         System.out.println(lessonDAO.validLessonOrder(1, 1, 1));
-
-
     }
 }

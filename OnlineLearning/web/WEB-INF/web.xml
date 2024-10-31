@@ -172,6 +172,10 @@
         <servlet-name>LessonImage</servlet-name>
         <servlet-class>controller.LessonImage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditBlog</servlet-name>
+        <servlet-class>controller.EditBlog</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>updateRegistration</servlet-name>
         <url-pattern>/updateRegistration</url-pattern>
@@ -340,6 +344,10 @@
     <servlet-mapping>
         <servlet-name>LessonImage</servlet-name>
         <url-pattern>/lessonImage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditBlog</servlet-name>
+        <url-pattern>/EditBlog</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

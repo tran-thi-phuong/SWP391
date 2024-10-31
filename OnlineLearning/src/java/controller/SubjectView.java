@@ -44,7 +44,7 @@ public class SubjectView extends HttpServlet {
             subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId);
         } else {
             // Nếu người dùng đã đăng nhập, lấy danh sách môn học dựa trên userId và subjectId
-            subjects = subjectDAO.getSubjectDetailsByUserIdandSubjectID(userId, subjectId);
+            subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
         }
 
         // Thiết lập thuộc tính subjects để sử dụng trong JSP
