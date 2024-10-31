@@ -51,7 +51,7 @@
             <div class="modal-content">
                 <span class="close" onclick="document.getElementById('QuestionSettingsModal').style.display = 'none'">&times;</span>
                 <h2>Update Settings</h2>
-                <form id="QuestionSettingsForm" class="QuestionSettings-form" method="post" action="QuestionSettingServlet">
+                <form id="QuestionSettingsForm" class="QuestionSettings-form" method="post" action="QuestionSettingServlet" onsubmit="return validateNumberOfItems()">
                     <label for="numberOfItems">Number of Items per Page:</label>
                     <input type="number" id="numberOfItems" name="numberOfItems" 
                            value="${sessionScope.QuestionSetting.numberOfItems != null ? sessionScope.QuestionSetting.numberOfItems : 10}" min="1" required>
@@ -219,6 +219,15 @@
             if (event.target == document.getElementById('QuestionSettingsModal')) {
                 document.getElementById('QuestionSettingsModal').style.display = "none";
             }
+        }
+        function validateNumberOfItems() {
+            const numberOfItems = document.getElementById("numberOfItems").value;
+
+            if (numberOfItems <= 0) {
+                alert("The number of items per page must be greater than 0.");
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
         }
     </script>
 </html>
