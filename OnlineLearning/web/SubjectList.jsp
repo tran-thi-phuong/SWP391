@@ -129,7 +129,7 @@
                             <td class="col-owner">${course.userName}</td>
                             <td class="col-status">${course.status}</td>
                             <td>
-                                <a href="editCourse.jsp?id=${course.subjectID}">Chỉnh sửa</a>
+                                <a href="SubjectDetailOverview?id=${course.subjectID}">Chỉnh sửa</a>
                             </td>
                         </tr>
                     </c:forEach>

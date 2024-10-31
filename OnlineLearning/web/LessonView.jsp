@@ -64,12 +64,12 @@
                 <div class="col-md-4">
                     <h3>Subject List</h3>
                     <c:forEach var="subject" items="${subjects}">
-                        <c:forEach var="lessonType" items="${subject.lessonTypes}">
-                            <div class="lesson-type" onclick="toggleLessons('${lessonType.typeID}')">
-                                <p>${lessonType.name}</p>
+                        <c:forEach var="lessonTopic" items="${subject.lessonTopics}">
+                            <div class="lesson-topic" onclick="toggleLessons('${lessonTopic.topicID}')">
+                                <p>${lessonTopic.name}</p>
                             </div>
-                            <div id="lessons-${lessonType.typeID}" class="lessons-container" style="display: block;">
-                                <c:forEach var="lesson" items="${lessonType.lessons}">
+                            <div id="lessons-${lessonTopic.topicID}" class="lessons-container" style="display: block;">
+                                <c:forEach var="lesson" items="${lessonTopic.lessons}">
                                     <div class="lesson-item">
                                         <p><a href="LessonView?lessonId=${lesson.lessonID}&subjectId=${subject.subjectID}">${lesson.title}</a></p>
                                         <c:if test="${not empty sessionScope.user}">

@@ -133,5 +133,49 @@ public class PackagePriceDAO extends DBContext {
         }
         return null;  // Return null if no result is found
     }
+    public void addPackagePrice(PackagePrice packagePrice) {
+        String query = "INSERT INTO Package_Price (SubjectId, name, duration_time, sale_price, price) VALUES (?, ?, ?, ?, ?)";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, packagePrice.getSubjectId());
+            preparedStatement.setString(2, packagePrice.getName());
+            preparedStatement.setInt(3, packagePrice.getDurationTime());
+            preparedStatement.setDouble(4, packagePrice.getSalePrice());
+            preparedStatement.setDouble(5, packagePrice.getPrice());
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updatePackagePrice(PackagePrice packagePrice) {
+        String query = "UPDATE Package_Price SET SubjectId = ?, name = ?, duration_time = ?, sale_price = ?, price = ? WHERE PackageId = ?";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, packagePrice.getSubjectId());
+            preparedStatement.setString(2, packagePrice.getName());
+            preparedStatement.setInt(3, packagePrice.getDurationTime());
+            preparedStatement.setDouble(4, packagePrice.getSalePrice());
+            preparedStatement.setDouble(5, packagePrice.getPrice());
+            preparedStatement.setInt(6, packagePrice.getPackageId());
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void deletePackagePrice(int packagePriceId) {
+        String query = "DELETE FROM Package_Price WHERE PackageId = ?";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, packagePriceId);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 }

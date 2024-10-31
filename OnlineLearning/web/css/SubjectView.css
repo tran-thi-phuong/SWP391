@@ -26,55 +26,46 @@ h1 {
 }
 
 /* Style cho tiêu đề môn học */
+/* SubjectView.css */
+/* Cải thiện phong cách cho tiêu đề chính */
 h2 {
     font-size: 2rem; /* Kích thước chữ vừa */
     color: #007bff; /* Màu xanh dương */
     margin-top: 20px; /* Khoảng cách phía trên */
+    border-bottom: 2px solid #007bff; /* Đường kẻ phía dưới */
+    padding-bottom: 5px; /* Khoảng cách dưới đường kẻ */
 }
 
-/* Style cho các phần tử thông tin môn học */
-h3, h4 {
-    color: #6c757d; /* Màu xám nhạt */
-}
-
-/* Style cho các đoạn văn */
-p {
-    margin: 5px 0; /* Khoảng cách giữa các đoạn */
-}
-
-/* Style cho các danh sách bài học */
-.lesson-list {
-    padding-left: 20px; /* Khoảng cách bên trái */
-    border-left: 2px solid #007bff; /* Đường kẻ bên trái */
-}
-
-.lesson-type {
-    background-color: #e0f7fa; /* Màu nền cho loại bài học */
-    border: 1px solid #009688; /* Đường viền */
-    border-radius: 8px; /* Bo tròn các góc */
-    padding: 15px; /* Khoảng cách bên trong */
-    margin-bottom: 15px; /* Khoảng cách giữa các loại bài học */
-    cursor: pointer; /* Con trỏ chuột thay đổi khi hover */
+/* Cải thiện kiểu cho các khối bài học */
+.lesson-topic {
+    background-color: #e7f1ff; /* Màu nền nhẹ cho bài học */
+    border: 1px solid #007bff; /* Đường viền màu xanh dương */
+    border-radius: 8px; /* Bo tròn góc */
+    padding: 10px; /* Khoảng cách bên trong */
+    margin-bottom: 10px; /* Khoảng cách giữa các topic */
+    cursor: pointer; /* Con trỏ thay đổi khi hover */
     transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
 }
 
-.lesson-type:hover {
-    background-color: #b2ebf2; /* Màu nền khi hover */
+.lesson-topic:hover {
+    background-color: #b2d7ff; /* Màu nền khi hover */
 }
 
-.lessons-container {
-    display: none; /* Ẩn các bài học theo mặc định */
-    margin-left: 20px; /* Khoảng cách bên trái cho danh sách bài học */
-}
-
+/* Cải thiện danh sách bài học */
 .lesson-item {
-    background-color: #f1f1f1; /* Màu nền cho các bài học */
+    background-color: #ffffff; /* Màu nền cho bài học */
+    border: 1px solid #ccc; /* Đường viền màu xám */
     border-radius: 5px; /* Bo tròn các góc */
     padding: 10px; /* Khoảng cách bên trong */
     margin-bottom: 10px; /* Khoảng cách giữa các bài học */
+    transition: box-shadow 0.3s; /* Hiệu ứng bóng */
 }
 
-/* Style cho các trạng thái */
+.lesson-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng khi hover */
+}
+
+/* Phong cách cho trạng thái hoàn thành */
 .status {
     font-weight: bold; /* Chữ đậm */
     color: #28a745; /* Màu xanh lá */
@@ -91,4 +82,3 @@ p {
     margin-right: 5px;
     font-size: 1.2em; /* Tùy chỉnh kích thước biểu tượng */
 }
-

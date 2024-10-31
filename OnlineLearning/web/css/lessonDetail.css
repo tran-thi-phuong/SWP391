@@ -1,0 +1,139 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Oct 30, 2024, 10:41:27 PM
+    Author     : tuant
+*/
+.row-1{
+    display: flex;
+    padding-left: 90px;
+    padding-top: 20px;
+}
+.row-2{
+    display: flex;
+    padding-left: 90px;
+    padding-top: 20px;
+}
+.row-3{
+    padding-left: 90px;
+    padding-top: 20px;
+}
+#description{
+    width: 770px;
+}
+.topic{
+    width: 250px;
+}
+.topic-div{
+    margin-left: 30px;
+}
+#lesson-name{
+    width: 770px;
+}
+#order{
+    width: 70px;
+}
+.order{
+    margin-left: 30px;
+}
+.status-div{
+    margin-left: 30px;
+}
+.status{
+    width: 150px;
+}
+#content{
+    width: 1050px;
+    height: 300px;
+}
+.btn-save input{
+    width: 100px;
+}
+.btn-save a{
+    width: 100px;
+}
+.btn-save{
+    padding-left: 90px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#editor-container {
+    height: 300px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+}
+
+.ql-editor img,
+.ql-editor iframe {
+    width: 65%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.ql-editor iframe {
+    aspect-ratio: 16/9;
+}
+
+.ql-editor .ql-align-center img,
+.ql-editor .ql-align-center iframe {
+    display: block;
+    margin: 0 auto;
+}
+
+.ql-editor .ql-align-right img,
+.ql-editor .ql-align-right iframe {
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.ql-editor .ql-align-left img,
+.ql-editor .ql-align-left iframe {
+    display: block;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.media-container {
+    margin: 20px 0;
+    display: block;
+    clear: both;
+    width: 100%;
+}
+
+.media-container.align-left {
+    text-align: left;
+}
+
+.media-container.align-center {
+    text-align: center;
+}
+
+.media-container.align-right {
+    text-align: right;
+}
+
+.ql-editor img:hover,
+.ql-editor iframe:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    transition: box-shadow 0.3s ease;
+}
+.html-content{
+    width: 1050px;
+}
+.alert-size{
+    margin-left: 90px;
+    width: 400px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; 
+    font-size: 16px;
+    margin-bottom: 0px;
+    margin-top: 20px;
+    
+}

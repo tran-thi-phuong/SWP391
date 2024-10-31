@@ -104,22 +104,24 @@ public class LessonDAO extends DBContext {
 
     public Lesson getLessonByLessonIDAndUserID(int lessonID, int userID) {
         Lesson lesson = null;
-        String sql = "SELECT "
-                + "    l.Title, "
-                + "    l.Content, "
-                + "    l.LessonID, "
-                + "    l.Description, "
-                + "    lm.Media_Link, "
-                + "    lu.Status "
-                + "FROM "
-                + "    Lessons l "
-                + "LEFT JOIN "
-                + "    LessonMedia lm ON l.LessonID = lm.LessonID "
-                + "LEFT JOIN "
-                + "    Lesson_User lu ON l.LessonID = lu.LessonID "
-                + "WHERE "
-                + "    lu.UserID = ? "
-                + "AND l.LessonID = ?";
+        String sql = """
+                SELECT 
+                    l.Title, 
+                    l.Content, 
+                    l.LessonID, 
+                    l.Description, 
+                    lm.Media_Link, 
+                    lu.Status 
+                FROM 
+                    Lessons l 
+                LEFT JOIN 
+                    LessonMedia lm ON l.LessonID = lm.LessonID 
+                LEFT JOIN 
+                    Lesson_User lu ON l.LessonID = lu.LessonID 
+                WHERE 
+                    lu.UserID = ? 
+                AND l.LessonID = ?""";
+
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -132,6 +134,7 @@ public class LessonDAO extends DBContext {
                 lesson.setTitle(rs.getString("Title"));
                 lesson.setContent(rs.getString("Content"));
                 lesson.setLessonID(rs.getInt("LessonID"));
+                lesson.setMediaLink(rs.getString("Media_Link"));
                 lesson.setDescription(rs.getString("Description"));
                 lesson.setStatus(rs.getString("Status"));
             }
@@ -202,12 +205,86 @@ public class LessonDAO extends DBContext {
         return lesson;
     }
 
-    public static void main(String[] args) {
-        // Initialize database connection (assumed to be managed in DAO class)
-        LessonDAO lessonDAO = new LessonDAO();
+    public Lesson getLessonByLessonID(int lessonID) {
+        Lesson lesson = null;
+        String sql = "select * from Lessons where LessonID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            System.out.println(lessonDAO.getAllLessonTopicBySubjectId(1));
-            System.out.println(lessonDAO.getAllLessons());
-        
+            ps.setInt(1, lessonID);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                lesson = new Lesson();
+                lesson.setTitle(rs.getString("Title"));
+                lesson.setContent(rs.getString("Content"));
+                lesson.setLessonID(rs.getInt("LessonID"));
+                lesson.setDescription(rs.getString("Description"));
+                lesson.setStatus(rs.getString("Status"));
+                lesson.setOrder(rs.getInt("Order"));
+                lesson.setSubjectID(rs.getInt("SubjectID"));
+                lesson.setTopicID(rs.getInt("TopicID"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lesson;
+    }
+
+    public void addLesson(int subjectID, String title, int topicID, String content, int order, String description, String status) {
+        String sql = "INSERT INTO Lessons (SubjectID, Title, TopicID, Content, [Order], Description, Status) "
+                + "VALUES (?,?,?,?,?,?,?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, subjectID);
+            pstmt.setString(2, title);
+            pstmt.setInt(3, topicID);
+            pstmt.setString(4, content);
+            pstmt.setInt(5, order);
+            pstmt.setString(6, description);
+            pstmt.setString(7, status);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateLesson(int lessonID, String title, int topicID, String content, int order, String description, String status) {
+        String sql = "update Lessons set Title = ?, TopicID = ?, Content = ?, [Order] = ?, Description = ?, Status = ? where LessonID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, title);
+            pstmt.setInt(2, topicID);
+            pstmt.setString(3, content);
+            pstmt.setInt(4, order);
+            pstmt.setString(5, description);
+            pstmt.setString(6, status);
+            pstmt.setInt(7, lessonID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public boolean validLessonOrder(int subjectID, int topicID, int order){
+        String sql = "select * from Lessons where SubjectID = ? and TopicID = ? and [Order] = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectID);
+            ps.setInt(2, topicID);
+            ps.setInt(3, order);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return false;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // Tạo một đối tượng DBContext để lấy kết nối
+        // Tạo đối tượng DAO (giả định bạn đã có lớp DAO phù hợp)
+        LessonDAO lessonDAO = new LessonDAO();
+        System.out.println(lessonDAO.validLessonOrder(1, 1, 1));
     }
 }
