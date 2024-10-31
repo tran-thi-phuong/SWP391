@@ -8,14 +8,14 @@
             <label><input type="checkbox" class="section-toggle" data-target=".order-section" checked> Lesson order</label>
         </div>
     </div>
-    <div class="btn btn-success btn-add" onclick="window.location.href = 'lessonDetail.jsp'">Add new lesson</div>
+    <div class="btn btn-success btn-add" onclick="window.location.href = 'lessonDetail?courseID=${requestScope.courseId}&action=add'">Add new lesson</div>
     <div class="card search-card">
         <ul class="list-group">
             <c:forEach items="${lessonList}" var="lesson">
                 <c:if test="${requestScope.selectStatus eq 'all' && requestScope.selectTopic eq 'all'}">
                     <li class="list-group-item">
                         <span class="subject-info">
-                            <a href="#" class="text-primary">${lesson.title}</a>
+                            <a href="lessonDetail?lessonID=${lesson.lessonID}&courseID=${requestScope.courseId}&action=add" class="text-primary">${lesson.title}</a>
                             <span class="lesson-id-section">Lesson ID: ${lesson.lessonID}</span>
                             <span class="order-section">Order: ${lesson.order}</span>
                         </span>
@@ -30,7 +30,7 @@
                 <c:if test="${requestScope.selectStatus eq lesson.status && requestScope.selectTopic eq lesson.topicID.toString()}">
                     <li class="list-group-item">
                         <span class="subject-info">
-                            <a href="#" class="text-primary">${lesson.title}</a>
+                            <a href="lessonDetail?lessonID=${lesson.lessonID}&courseID=${requestScope.courseId}&action=add" class="text-primary">${lesson.title}</a>
                             <span class="lesson-id-section">Lesson ID: ${lesson.lessonID}</span>
                             <span class="order-section">Order: ${lesson.order}</span>
                         </span>
@@ -45,7 +45,7 @@
                 <c:if test="${requestScope.selectStatus eq lesson.status && requestScope.selectTopic eq 'all'}">
                     <li class="list-group-item">
                         <span class="subject-info">
-                            <a href="#" class="text-primary">${lesson.title}</a>
+                            <a href="lessonDetail?lessonID=${lesson.lessonID}&courseID=${requestScope.courseId}&action=update" class="text-primary">${lesson.title}</a>
                             <span class="lesson-id-section">Lesson ID: ${lesson.lessonID}</span>
                             <span class="order-section">Order: ${lesson.order}</span>
                         </span>
@@ -60,7 +60,7 @@
                 <c:if test="${requestScope.selectTopic eq lesson.topicID.toString() && requestScope.selectStatus eq 'all'}">
                     <li class="list-group-item">
                         <span class="subject-info">
-                            <a href="#" class="text-primary">${lesson.title}</a>
+                            <a href="lessonDetail?lessonID=${lesson.lessonID}&courseID=${requestScope.courseId}&action=update" class="text-primary">${lesson.title}</a>
                             <span class="lesson-id-section">Lesson ID: ${lesson.lessonID}</span>
                             <span class="order-section">Order: ${lesson.order}</span>
                         </span>

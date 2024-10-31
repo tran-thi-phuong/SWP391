@@ -2,7 +2,6 @@ drop database OnlineLearning
 -- Tạo cơ sở dữ liệu OnlineLearning
 CREATE DATABASE OnlineLearning;
 GO
-
 -- Sử dụng cơ sở dữ liệu OnlineLearning
 USE OnlineLearning;
 GO
@@ -51,7 +50,7 @@ CREATE TABLE Blogs (
     Content NVARCHAR(MAX) NOT NULL,
     Create_At DATETIME DEFAULT GETDATE(),
     Blog_CategoryID INT,
-	Status NVARCHAR(10) NOT NULL DEFAULT 'Show';
+	Status NVARCHAR(10) NOT NULL DEFAULT 'Show',
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (Blog_CategoryID) REFERENCES Blog_Category(Blog_CategoryID)
 );
@@ -78,15 +77,20 @@ CREATE TABLE Tests (
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
-    MediaType NVARCHAR(10), -- 'image' or 'video'
-    MediaURL NVARCHAR(MAX),  -- URL to the image or video
-    MediaDescription NVARCHAR(MAX), -- Description of the media
     Type NVARCHAR(50),
     Duration INT,
     Pass_Condition DECIMAL(5, 2),
     Level NVARCHAR(50),
     Quantity INT,
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
+);
+GO
+CREATE TABLE TestMedia (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+    Media_Link NVARCHAR(MAX),
+    TestID INT,
+    Description NVARCHAR(50),
+    FOREIGN KEY (TestID) REFERENCES Tests(TestID)
 );
 GO
 CREATE TABLE LessonTopic (

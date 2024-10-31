@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div class="btn btn-success btn-add" onclick="window.location.href = 'lessonDetail.jsp'">Add new lesson</div>
+    <div class="btn btn-success btn-add" onclick="window.location.href = 'lessonDetail?courseID=${requestScope.courseId}&action=add'">Add new lesson</div>
     <c:forEach items="${lessonType}" var="type">
         <div class="lesson-type mb-1">
             <c:if test="${requestScope.selectTopic eq 'all'}">
@@ -37,7 +37,7 @@
                                 <c:if test="${requestScope.selectStatus eq 'all'}">
                                     <li class="list-group-item">
                                         <span class="subject-info">
-                                            <a href="#" class="text-primary">${lesson.title}</a>
+                                            <a href="lessonDetail?lessonID=${lesson.lessonID}&courseID=${requestScope.courseId}&action=update" class="text-primary">${lesson.title}</a>
                                             <span class="lesson-id-section">Lesson ID: ${lesson.lessonID}</span>
                                             <span class="order-section">Order: ${lesson.order}</span>
                                         </span>
@@ -52,7 +52,7 @@
                                 <c:if test="${requestScope.selectStatus eq lesson.status}">
                                     <li class="list-group-item">
                                         <span class="subject-info">
-                                            <a href="#" class="text-primary">${lesson.title}</a>
+                                            <a href="lessonDetail?lessonID=${lesson.lessonID}&courseID=${requestScope.courseId}&action=update" class="text-primary">${lesson.title}</a>
                                             <span class="lesson-id-section">Lesson ID: ${lesson.lessonID}</span>
                                             <span class="order-section">Order: ${lesson.order}</span>
                                         </span>

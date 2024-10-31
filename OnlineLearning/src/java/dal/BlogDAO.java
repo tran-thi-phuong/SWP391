@@ -128,12 +128,13 @@ public class BlogDAO extends DBContext {
 
     public Blog getBlogById(int blogId) {
         Blog blog = null;
-        String sql = "SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle, bm.MediaID, bm.MediaType, bm.MediaLink, bm.Description "
-                + "FROM Blogs b "
-                + "JOIN Users u ON b.UserID = u.UserID "
-                + "JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID "
-                + "LEFT JOIN Blog_Media bm ON b.BlogID = bm.BlogID " // Thêm JOIN để lấy media
-                + "WHERE b.BlogID = ?";
+        String sql = """
+                     SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle
+                                     FROM Blogs b 
+                                     JOIN Users u ON b.UserID = u.UserID 
+                                     LEFT JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID 
+                                     WHERE b.BlogID = ?
+                     """;
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -167,12 +168,13 @@ public class BlogDAO extends DBContext {
 
     public List<Blog> getAllBlogs() {
         List<Blog> list = new ArrayList<>();
-        String sql = "SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle, bm.MediaID, bm.MediaType, bm.MediaLink, bm.Description "
-                + "FROM Blogs b "
-                + "JOIN Users u ON b.UserID = u.UserID "
-                + "JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID "
-                + "LEFT JOIN Blog_Media bm ON b.BlogID = bm.BlogID "
-                + "ORDER BY b.Create_At DESC";
+        String sql =  """
+                      SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle
+                 FROM Blogs b 
+                JOIN Users u ON b.UserID = u.UserID 
+                LEFT JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID 
+                ORDER BY b.Create_At DESC
+                        """;
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -241,26 +243,36 @@ public class BlogDAO extends DBContext {
     }
 
     public static void main(String[] args) {
+        // Tạo một đối tượng DBContext để lấy kết nối
+        // Tạo đối tượng DAO (giả định bạn đã có lớp DAO phù hợp)
         BlogDAO blogDAO = new BlogDAO();
 
-        // Replace with a valid BlogID you want to test
-        int testBlogId = 8; // Change this to the ID of an existing blog in your database
+        // Gọi phương thức getAllBlogs
+        List<Blog> blogs = blogDAO.getAllBlogs();
 
-        System.out.println("------------------------------");
-        System.out.println("Testing getBlogById:");
-
-        Blog blog = blogDAO.getBlogById(testBlogId);
-        if (blog != null) {
-            System.out.println("Blog ID: " + blog.getBlogId());
-            System.out.println("Title: " + blog.getTitle());
-            System.out.println("Content: " + blog.getContent());
-            System.out.println("Created At: " + blog.getCreateAt());
-            System.out.println("Author: " + blog.getUserId().getName() + " (Username: " + blog.getUserId().getUsername() + ")");
-            System.out.println("Category: " + blog.getBlogCategoryId().getTitle());      
+        // Kiểm tra và in ra thông tin các bài viết blog
+        if (blogs.isEmpty()) {
+            System.out.println("No blogs found.");
         } else {
-            System.out.println("No blog found with ID: " + testBlogId);
+            for (Blog blog : blogs) {
+                System.out.println("Blog ID: " + blog.getBlogId());
+                System.out.println("Title: " + blog.getTitle());
+                System.out.println("Content: " + blog.getContent());
+                System.out.println("Created At: " + blog.getCreateAt());
+                System.out.println("Status: " + blog.getStatus());
+                
+                Users user = blog.getUserId();
+                System.out.println("Author ID: " + user.getUserID());
+                System.out.println("Author Username: " + user.getUsername());
+                System.out.println("Author Name: " + user.getName());
+                
+                BlogCategory category = blog.getBlogCategoryId();
+                System.out.println("Category ID: " + category.getBlogCategoryId());
+                System.out.println("Category Title: " + category.getTitle());
+                
+                System.out.println("-------------------------------");
+            }
         }
-        System.out.println("------------------------------");
     }
 
 }

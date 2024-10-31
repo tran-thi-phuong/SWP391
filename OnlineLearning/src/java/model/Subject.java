@@ -13,7 +13,7 @@ public class Subject {
     private String thumbnail;
     private Date updateDate;
     private String userName;
-    private List<LessonTopic> lessonTypes;
+    private List<LessonTopic> lessonTopics;
     private int ownerID;
     private String ownerName;
 
@@ -44,8 +44,8 @@ public class Subject {
         this.updateDate = updateDate;
     }
 
-    public Subject(List<LessonTopic> lessonTypes) {
-        this.lessonTypes = lessonTypes;
+    public Subject(List<LessonTopic> lessonTopics) {
+        this.lessonTopics = lessonTopics;
     }
     
     
@@ -122,12 +122,12 @@ public class Subject {
         this.updateDate = updateDate;
     }
 
-    public List<LessonTopic> getLessonTypes() {
-        return lessonTypes;
+    public List<LessonTopic> getLessonTopics() {
+        return lessonTopics;
     }
 
-    public void setLessonTypes(List<LessonTopic> lessonTypes) {
-        this.lessonTypes = lessonTypes;
+    public void setLessonTopics(List<LessonTopic> lessonTopics) {
+        this.lessonTopics = lessonTopics;
     }
 
     public int getOwnerID() {
