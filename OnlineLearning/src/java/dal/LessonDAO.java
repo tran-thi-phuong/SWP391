@@ -104,22 +104,24 @@ public class LessonDAO extends DBContext {
 
     public Lesson getLessonByLessonIDAndUserID(int lessonID, int userID) {
         Lesson lesson = null;
-        String sql = "SELECT "
-                + "    l.Title, "
-                + "    l.Content, "
-                + "    l.LessonID, "
-                + "    l.Description, "
-                + "    lm.Media_Link, "
-                + "    lu.Status "
-                + "FROM "
-                + "    Lessons l "
-                + "LEFT JOIN "
-                + "    LessonMedia lm ON l.LessonID = lm.LessonID "
-                + "LEFT JOIN "
-                + "    Lesson_User lu ON l.LessonID = lu.LessonID "
-                + "WHERE "
-                + "    lu.UserID = ? "
-                + "AND l.LessonID = ?";
+        String sql = """
+                SELECT 
+                    l.Title, 
+                    l.Content, 
+                    l.LessonID, 
+                    l.Description, 
+                    lm.Media_Link, 
+                    lu.Status 
+                FROM 
+                    Lessons l 
+                LEFT JOIN 
+                    LessonMedia lm ON l.LessonID = lm.LessonID 
+                LEFT JOIN 
+                    Lesson_User lu ON l.LessonID = lu.LessonID 
+                WHERE 
+                    lu.UserID = ? 
+                AND l.LessonID = ?""";
+
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -132,6 +134,7 @@ public class LessonDAO extends DBContext {
                 lesson.setTitle(rs.getString("Title"));
                 lesson.setContent(rs.getString("Content"));
                 lesson.setLessonID(rs.getInt("LessonID"));
+                lesson.setMediaLink(rs.getString("Media_Link"));
                 lesson.setDescription(rs.getString("Description"));
                 lesson.setStatus(rs.getString("Status"));
             }
@@ -163,7 +166,7 @@ public class LessonDAO extends DBContext {
                 lesson.setLessonID(rs.getInt("LessonID"));
                 lesson.setSubjectID(rs.getInt("SubjectID"));
                 lesson.setTitle(rs.getString("Title"));
-                lesson.setTypeID(rs.getInt("TypeID"));
+                lesson.setTopicID(rs.getInt("TopicID"));
                 lesson.setContent(rs.getString("Content"));
                 lesson.setOrder(rs.getInt("Order"));
                 lesson.setDescription(rs.getString("Description"));
@@ -188,7 +191,7 @@ public class LessonDAO extends DBContext {
                     lesson.setLessonID(rs.getInt("LessonID"));
                     lesson.setSubjectID(rs.getInt("SubjectID"));
                     lesson.setTitle(rs.getString("Title"));
-                    lesson.setTypeID(rs.getInt("TypeID"));
+                    lesson.setTopicID(rs.getInt("TopicID"));
                     lesson.setContent(rs.getString("Content"));
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
@@ -203,10 +206,27 @@ public class LessonDAO extends DBContext {
     }
 
     public static void main(String[] args) {
-        // Initialize database connection (assumed to be managed in DAO class)
+        // Tạo một đối tượng DBContext để lấy kết nối
+        // Tạo đối tượng DAO (giả định bạn đã có lớp DAO phù hợp)
         LessonDAO lessonDAO = new LessonDAO();
 
-            System.out.println(lessonDAO.getAllLessonTopicBySubjectId(1));
-        
+        // Thay thế lessonID và userID bằng các giá trị thực tế
+        int lessonID = 1; // Ví dụ ID bài học
+        int userID = 1; // Ví dụ ID người dùng
+
+        // Gọi phương thức getLessonByLessonIDAndUserID
+        Lesson lesson = lessonDAO.getLessonByLessonIDAndUserID(lessonID, userID);
+
+        // Kiểm tra và in ra thông tin bài học
+        if (lesson != null) {
+            System.out.println("Title: " + lesson.getTitle());
+            System.out.println("Content: " + lesson.getContent());
+            System.out.println("Lesson ID: " + lesson.getLessonID());
+            System.out.println("Description: " + lesson.getDescription());
+            System.out.println("Media Link: " + lesson.getMediaLink());
+            System.out.println("Status: " + lesson.getStatus());
+        } else {
+            System.out.println("No lesson found for the given Lesson ID and User ID.");
+        }
     }
 }

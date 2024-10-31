@@ -11,6 +11,7 @@ import java.util.List;
  * @author sonna
  */
 public class LessonTopic {
+
     private int topicID;
     private String name; // Tên chương
     private List<Lesson> lessons;
@@ -24,11 +25,11 @@ public class LessonTopic {
         this.lessons = lessons;
     }
 
-    public int getTypeID() {
+    public int getTopicID() {
         return topicID;
     }
 
-    public void setTypeID(int topicID) {
+    public void setTopicID(int topicID) {
         this.topicID = topicID;
     }
 
@@ -48,6 +49,4 @@ public class LessonTopic {
         this.lessons = lessons;
     }
 
-    
 }
-

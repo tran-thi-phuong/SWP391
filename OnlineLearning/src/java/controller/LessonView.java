@@ -42,7 +42,7 @@ public class LessonView extends HttpServlet {
             subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId);
         } else {
             // Nếu người dùng đã đăng nhập, lấy danh sách môn học dựa trên userId và subjectId
-            subjects = subjectDAO.getSubjectDetailsByUserIdandSubjectID(userId, subjectId);
+            subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
         }
 
         request.setAttribute("subjects", subjects);

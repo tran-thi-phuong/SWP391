@@ -4,11 +4,22 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/PostDetail.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/Lesson.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/EditBlog.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/SubjectDAO.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/BlogDAO.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/Header.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/AddBlog.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/AddBlog.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/LessonView.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/LessonView.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/QuestionDetail.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/Blog.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/blogDetail.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/AddBlog.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/BlogMedia.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/EditBlog.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/SubjectView.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/LessonDAO.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/DBContext.java</file>
         </group>
     </open-files>
 </project-private>
