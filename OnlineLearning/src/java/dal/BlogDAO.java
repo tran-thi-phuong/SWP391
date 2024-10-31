@@ -96,78 +96,33 @@ public class BlogDAO extends DBContext {
         return list;
     }
 
-    public List<BlogMedia> extractMediaLinks(String content) {
-        List<BlogMedia> mediaList = new ArrayList<>();
-
-        // Biểu thức chính quy để tìm link hình ảnh (image)
-        String imageRegex = "(?i)\\bhttps?://[^\\s]+\\.(jpg|jpeg|png|gif|bmp)\\b";
-        Pattern imagePattern = Pattern.compile(imageRegex);
-        Matcher imageMatcher = imagePattern.matcher(content);
-        while (imageMatcher.find()) {
-            BlogMedia media = new BlogMedia();
-            media.setMediaType("image");
-            media.setMediaLink(imageMatcher.group());
-            media.setDescription("Image from content");
-            mediaList.add(media);
-        }
-
-        // Biểu thức chính quy để tìm link video (ví dụ từ YouTube)
-        String videoRegex = "(?i)\\bhttps?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([\\w-]{11})\\b";
-        Pattern videoPattern = Pattern.compile(videoRegex);
-        Matcher videoMatcher = videoPattern.matcher(content);
-        while (videoMatcher.find()) {
-            BlogMedia media = new BlogMedia();
-            media.setMediaType("video");
-            media.setMediaLink(videoMatcher.group());
-            media.setDescription("Video from content");
-            mediaList.add(media);
-        }
-
-        return mediaList;
-    }
-
     public void createBlog(Blog blog) {
         String sql = "INSERT INTO Blogs (Title, Content, UserID, Blog_CategoryID, Create_At) VALUES (?, ?, ?, ?, ?)";
 
-        try {
-            PreparedStatement st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             st.setString(1, blog.getTitle());
             st.setString(2, blog.getContent());
             st.setInt(3, blog.getUserId().getUserID());
             st.setInt(4, blog.getBlogCategoryId().getBlogCategoryId());
             st.setDate(5, new java.sql.Date(System.currentTimeMillis()));
 
-            int affectedRows = st.executeUpdate();
-            if (affectedRows > 0) {
-                // Lấy BlogID vừa được tạo
-                ResultSet generatedKeys = st.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int blogId = generatedKeys.getInt(1);
+            int rowsAffected = st.executeUpdate();
 
-                    // Phân tích nội dung để tìm media
-                    List<BlogMedia> mediaList = extractMediaLinks(blog.getContent());
-                    saveMediaLinks(blogId, mediaList); // Lưu các link media vào DB
+            if (rowsAffected > 0) {
+                System.out.println("Blog successfully added.");
+                // Optionally, retrieve generated keys if needed
+                try (ResultSet rs = st.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int generatedId = rs.getInt(1);
+                        blog.setBlogId(generatedId);
+                        System.out.println("Generated Blog ID: " + generatedId);
+                    }
                 }
+            } else {
+                System.out.println("Failed to add blog.");
             }
         } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
-
-    private void saveMediaLinks(int blogId, List<BlogMedia> mediaList) {
-        String sql = "INSERT INTO BlogMedia (BlogID, MediaType, MediaLink, Description) VALUES (?, ?, ?, ?)";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            for (BlogMedia media : mediaList) {
-                st.setInt(1, blogId);
-                st.setString(2, media.getMediaType());
-                st.setString(3, media.getMediaLink());
-                st.setString(4, media.getDescription());
-                st.addBatch(); // Thêm vào batch
-            }
-            st.executeBatch(); // Thực hiện batch insert
-        } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("Error adding blog: " + e.getMessage());
         }
     }
 
@@ -202,19 +157,7 @@ public class BlogDAO extends DBContext {
                 c.setBlogCategoryId(rs.getInt("Blog_CategoryID"));
                 c.setTitle(rs.getString("CategoryTitle"));
                 blog.setBlogCategoryId(c);
-
-                // Tạo danh sách media
-                List<BlogMedia> mediaList = new ArrayList<>();
-                do {
-                    BlogMedia media = new BlogMedia();
-                    media.setMediaId(rs.getInt("MediaID"));
-                    media.setMediaType(rs.getString("MediaType"));
-                    media.setMediaLink(rs.getString("MediaLink"));
-                    media.setDescription(rs.getString("Description"));
-                    mediaList.add(media);
-                } while (rs.next()); // Lặp qua các hàng để lấy tất cả media
-
-                blog.setMediaLinks(mediaList); // Giả định bạn đã thêm thuộc tính mediaList trong Blog
+           
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -253,19 +196,6 @@ public class BlogDAO extends DBContext {
                 c.setTitle(rs.getString("CategoryTitle"));
                 b.setBlogCategoryId(c);
 
-                // Handle BlogMedia
-                BlogMedia media = new BlogMedia();
-                media.setMediaId(rs.getInt("MediaID"));
-                media.setBlogId(b.getBlogId());
-                media.setMediaType(rs.getString("MediaType"));
-                media.setMediaLink(rs.getString("MediaLink"));
-                media.setDescription(rs.getString("Description"));
-
-                // Check if media exists and add it to the blog's media list
-                if (media.getMediaId() != 0) {
-                    b.addMedia(media);
-                }
-
                 list.add(b);
             }
         } catch (SQLException e) {
@@ -273,62 +203,64 @@ public class BlogDAO extends DBContext {
         }
         return list;
     }
-    
+
     public void updateStatus(String blogId, String newStatus) {
-    String sql = "UPDATE Blogs SET Status = ? WHERE BlogID = ?";
+        String sql = "UPDATE Blogs SET Status = ? WHERE BlogID = ?";
 
-    try {
-        PreparedStatement st = connection.prepareStatement(sql);
-        st.setString(1, newStatus);
-        st.setString(2, blogId);
-        int affectedRows = st.executeUpdate();
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, newStatus);
+            st.setString(2, blogId);
+            int affectedRows = st.executeUpdate();
 
-        if (affectedRows > 0) {
-            System.out.println("Blog status updated successfully.");
-        } else {
-            System.out.println("No blog found with ID: " + blogId);
+            if (affectedRows > 0) {
+                System.out.println("Blog status updated successfully.");
+            } else {
+                System.out.println("No blog found with ID: " + blogId);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
         }
-    } catch (SQLException e) {
-        System.out.println(e);
     }
-}
 
+    public boolean updateBlog(Blog blog) {
+        String sql = "UPDATE Blogs SET Title = ?, Content = ?, Blog_CategoryID = ? WHERE BlogID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, blog.getTitle());
+            st.setString(2, blog.getContent());
+            st.setInt(3, blog.getBlogCategoryId().getBlogCategoryId()); // Assuming the category ID is retrieved from BlogCategory object
+            st.setInt(4, blog.getBlogId());
+
+            int affectedRows = st.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
-    BlogDAO blogDAO = new BlogDAO();
-    
-    // Replace with a valid BlogID you want to test
-    int testBlogId = 8; // Change this to the ID of an existing blog in your database
+        BlogDAO blogDAO = new BlogDAO();
 
-    System.out.println("------------------------------");
-    System.out.println("Testing getBlogById:");
+        // Replace with a valid BlogID you want to test
+        int testBlogId = 8; // Change this to the ID of an existing blog in your database
 
-    Blog blog = blogDAO.getBlogById(testBlogId);
-    if (blog != null) {
-        System.out.println("Blog ID: " + blog.getBlogId());
-        System.out.println("Title: " + blog.getTitle());
-        System.out.println("Content: " + blog.getContent());
-        System.out.println("Created At: " + blog.getCreateAt());
-        System.out.println("Author: " + blog.getUserId().getName() + " (Username: " + blog.getUserId().getUsername() + ")");
-        System.out.println("Category: " + blog.getBlogCategoryId().getTitle());
+        System.out.println("------------------------------");
+        System.out.println("Testing getBlogById:");
 
-        // Print media information
-        List<BlogMedia> mediaList = blog.getMediaLinks(); // Ensure that you have getMediaList() in Blog
-        if (!mediaList.isEmpty()) {
-            System.out.println("Media:");
-            for (BlogMedia media : mediaList) {
-                System.out.println("  Media ID: " + media.getMediaId());
-                System.out.println("  Media Type: " + media.getMediaType());
-                System.out.println("  Media Link: " + media.getMediaLink());
-                System.out.println("  Description: " + media.getDescription());
-            }
+        Blog blog = blogDAO.getBlogById(testBlogId);
+        if (blog != null) {
+            System.out.println("Blog ID: " + blog.getBlogId());
+            System.out.println("Title: " + blog.getTitle());
+            System.out.println("Content: " + blog.getContent());
+            System.out.println("Created At: " + blog.getCreateAt());
+            System.out.println("Author: " + blog.getUserId().getName() + " (Username: " + blog.getUserId().getUsername() + ")");
+            System.out.println("Category: " + blog.getBlogCategoryId().getTitle());      
         } else {
-            System.out.println("No media found for this blog.");
+            System.out.println("No blog found with ID: " + testBlogId);
         }
-    } else {
-        System.out.println("No blog found with ID: " + testBlogId);
+        System.out.println("------------------------------");
     }
-    System.out.println("------------------------------");
-}
 
 }

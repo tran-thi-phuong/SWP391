@@ -3,6 +3,7 @@ package dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import model.QuestionSetting;
 import model.RegistrationSetting;
 import model.SystemSetting;
 
@@ -206,10 +207,11 @@ public class SettingDAO extends DBContext {
             int rowsInserted = preparedStatement.executeUpdate();
             return rowsInserted > 0;
         } catch (SQLException e) {
-            e.printStackTrace(); 
-            return false; 
+            e.printStackTrace();
+            return false;
         }
     }
+
     public boolean updateRegistrationSetting(RegistrationSetting setting) {
         String sql = "UPDATE System_Setting SET NumberOfItems = ?, RegistrationID = ?, CustomerEmail = ?, Subject = ?, "
                 + "campaign = ?, PackageID = ?, Total_Cost = ?, Registration_Time = ?, Valid_From = ?, Valid_To = ?, Status = ?,"
@@ -222,10 +224,10 @@ public class SettingDAO extends DBContext {
             stmt.setBoolean(3, setting.isEmail());
             stmt.setBoolean(4, setting.isSubject());
             stmt.setBoolean(5, setting.isCampaign());
-            stmt.setBoolean(6, setting.isPackageId()); 
+            stmt.setBoolean(6, setting.isPackageId());
             stmt.setBoolean(7, setting.isTotalCost());
             stmt.setBoolean(8, setting.isRegistrationTime());
-            stmt.setBoolean(9, setting.isValidFrom()); 
+            stmt.setBoolean(9, setting.isValidFrom());
             stmt.setBoolean(10, setting.isValidTo());
             stmt.setBoolean(11, setting.isStatus());
             stmt.setBoolean(12, setting.isStaff());
@@ -238,6 +240,50 @@ public class SettingDAO extends DBContext {
         }
         return false;
     }
+
+    public QuestionSetting getQuestionSettingsByUserID(int userID) {
+        QuestionSetting setting = null;
+        String sql = "SELECT * FROM System_Setting WHERE UserID = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    setting = new QuestionSetting();
+                    setting.setUserID(rs.getInt("UserID"));
+                    setting.setNumberOfItems(rs.getInt("NumberOfItems"));
+                    setting.setShowContent(rs.getBoolean("ShowContent"));
+                    setting.setShowLevel(rs.getBoolean("ShowLevel"));
+                    setting.setShowStatus(rs.getBoolean("ShowStatus"));
+                    // Add more settings as needed
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return setting;
+    }
+
+    public boolean updateQuestionSetting(QuestionSetting setting) {
+        String sql = "UPDATE System_Setting SET NumberOfItems = ?, ShowContent = ?, ShowLevel = ?, ShowStatus = ? WHERE UserID = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, setting.getNumberOfItems());
+            stmt.setBoolean(2, setting.isShowContent());
+            stmt.setBoolean(3, setting.isShowLevel());
+            stmt.setBoolean(4, setting.isShowStatus());
+            stmt.setInt(5, setting.getUserID());
+
+            return stmt.executeUpdate() > 0; // Returns true if the update was successful
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false; // Return false if there was an error
+    }
+
     public static void main(String[] args) {
         SettingDAO sDAO = new SettingDAO();
         sDAO.addRegistrationSetting(2);

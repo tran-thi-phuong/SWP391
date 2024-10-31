@@ -114,25 +114,29 @@
         </div>
 
         <%!
-    public String formatContent(String content) {
-        // Thay thế URL hình ảnh thành thẻ <img>
-        content = content.replaceAll("(https?://[\\S]+\\.(jpg|jpeg|png|gif))", "<img src=\"$1\" alt=\"Image\" class=\"img-fluid\">");
+     public String formatContent(String content) {
+         // Replace image URLs with <img> tags
+         content = content.replaceAll("(https?://[\\S]+\\.(jpg|jpeg|png|gif))", "<img src=\"$1\" alt=\"Image\" class=\"img-fluid\">");
 
-        // Thay thế URL video YouTube thành thẻ <iframe>
-        content = content.replaceAll("(https?://www.youtube.com/watch\\?v=([\\w-]+))", "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/$2\" frameborder=\"0\" allowfullscreen></iframe>");
+         // Replace YouTube video URLs with <iframe> tags
+         content = content.replaceAll("(https?://www.youtube.com/watch\\?v=([\\w-]+))", "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/$2\" frameborder=\"0\" allowfullscreen></iframe>");
 
-        // Thay thế URL video Vimeo thành thẻ <iframe>
-        content = content.replaceAll("(https?://vimeo.com/(\\d+))", "<iframe src=\"https://player.vimeo.com/video/$2\" width=\"560\" height=\"315\" frameborder=\"0\" allowfullscreen></iframe>");
+         // Replace Vimeo video URLs with <iframe> tags
+         content = content.replaceAll("(https?://vimeo.com/(\\d+))", "<iframe src=\"https://player.vimeo.com/video/$2\" width=\"560\" height=\"315\" frameborder=\"0\" allowfullscreen></iframe>");
 
-        // Thay thế URL video Dailymotion thành thẻ <iframe>
-        content = content.replaceAll("(https?://www.dailymotion.com/video/([\\w-]+))", "<iframe frameborder=\"0\" width=\"560\" height=\"315\" src=\"https://www.dailymotion.com/embed/video/$2\"></iframe>");
+         // Replace Dailymotion video URLs with <iframe> tags
+         content = content.replaceAll("(https?://www.dailymotion.com/video/([\\w-]+))", "<iframe frameborder=\"0\" width=\"560\" height=\"315\" src=\"https://www.dailymotion.com/embed/video/$2\"></iframe>");
 
-        // Thay thế URL video tự đăng tải (.mp4 hoặc .webm) thành thẻ <video>
-        content = content.replaceAll("(https?://[\\S]+\\.(mp4|webm))", "<video width=\"560\" height=\"315\" controls><source src=\"$1\" type=\"video/$2\">Your browser does not support the video tag.</video>");
+         // Replace local video URLs with <video> tags
+         content = content.replaceAll("(https?://[\\S]+\\.(mp4|webm))", "<video width=\"560\" height=\"315\" controls><source src=\"$1\" type=\"video/$2\">Your browser does not support the video tag.</video>");
 
-        return content;
-    }
-%>
+         // Preserve line breaks
+         content = content.replaceAll("\n", "<br>");
+
+         return content;
+     }
+        %>
+
         <%@include file="Footer.jsp"%>
     </body>
 </html>

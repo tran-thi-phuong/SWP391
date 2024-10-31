@@ -20,10 +20,8 @@ public class Blog {
     private Date createAt;
     private String status;
     private BlogCategory blogCategoryId; 
-    private List<BlogMedia> mediaLinks;
 
     public Blog() {
-        this.mediaLinks = new ArrayList<>(); // Khởi tạo danh sách
     }
 
     public Blog(int blogId, Users userId, String title, String content, Date createAt, BlogCategory blogCategoryId) {
@@ -33,7 +31,6 @@ public class Blog {
         this.content = content;
         this.createAt = createAt;
         this.blogCategoryId = blogCategoryId;
-        this.mediaLinks = new ArrayList<>(); // Khởi tạo danh sách
     }
 
     public int getBlogId() {
@@ -90,17 +87,5 @@ public class Blog {
 
     public void setBlogCategoryId(BlogCategory blogCategoryId) {
         this.blogCategoryId = blogCategoryId;
-    }
-
-    public List<BlogMedia> getMediaLinks() {
-        return mediaLinks;
-    }
-
-    public void setMediaLinks(List<BlogMedia> mediaLinks) {
-        this.mediaLinks = mediaLinks;
-    }
-
-    public void addMedia(BlogMedia media) {
-        this.mediaLinks.add(media); // Thêm phương thức để thêm media
     }
 }

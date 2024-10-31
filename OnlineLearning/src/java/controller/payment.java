@@ -4,9 +4,12 @@
  */
 package controller;
 
+//data access
 import dal.PackagePriceDAO;
 import dal.RegistrationsDAO;
 import dal.UserDAO;
+
+//default sevlet
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,10 +18,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+//randomize
 import java.security.SecureRandom;
+//debug
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+//model
 import model.PackagePrice;
 import model.Users;
 
@@ -29,9 +36,10 @@ import model.Users;
 @WebServlet(name = "payment", urlPatterns = {"/payment"})
 public class payment extends HttpServlet {
 
+    //setup for random
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final SecureRandom RANDOM = new SecureRandom();
-
+    //generate random string
     public static String generateRandomString(int length) {
         StringBuilder result = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
@@ -40,6 +48,7 @@ public class payment extends HttpServlet {
         }
         return result.toString();
     }
+    //setup dao
     RegistrationsDAO registrationsDAO = new RegistrationsDAO();
     UserDAO userDAO = new UserDAO();
 
@@ -84,6 +93,7 @@ public class payment extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get data
         int packageId = Integer.parseInt(request.getParameter("package"));
         String fullname = request.getParameter("full-name");
         String email = request.getParameter("email");
@@ -91,6 +101,7 @@ public class payment extends HttpServlet {
         String gender = request.getParameter("gender");
         int subjectID = Integer.parseInt(request.getParameter("subjectID"));
         PackagePriceDAO PackagePriceDAO = new PackagePriceDAO();
+        //calculate min price
         PackagePrice currentPac = PackagePriceDAO.searchByPackagePriceId(packageId);
         double price = Math.min(currentPac.getSalePrice(), currentPac.getPrice());
         response.setContentType("text/html");
@@ -98,6 +109,7 @@ public class payment extends HttpServlet {
         HttpSession session = request.getSession();
 
         try {
+            //add registration
             Users user = (Users) session.getAttribute("user");
             int userID;
             if (user == null) {
@@ -106,6 +118,7 @@ public class payment extends HttpServlet {
                 userID = user.getUserID();
             }
             registrationsDAO.addRegistration(userID, subjectID, packageId, price);
+            //sample log
             out.println("<html><head><title>Submission Details</title></head><body>");
             out.println("<h1>Form Submission Details</h1>");
             out.println("<p><strong>Package ID:</strong> " + currentPac.getDurationTime() + "days - " + currentPac.getSalePrice() + "$</p>");
@@ -115,6 +128,7 @@ public class payment extends HttpServlet {
             out.println("<p><strong>Gender:</strong> " + gender + "</p>");
             out.println("<p><strong>Status:Submission Successful </strong></p>");
             out.println("</body></html>");
+            //sample log
         } catch (SQLException ex) {
             System.out.println(ex);
             out.println("<p><strong>Status:Submission Failed </strong></p>");

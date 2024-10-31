@@ -18,11 +18,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-align: left;
 }
 .list-group-item{
-    height: 60px;
-}
-.list-group-item{
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    height: auto;
 }
 .lesson-list{
     padding-left: 275px;
@@ -67,8 +66,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     left: 720px;
 }
 .numOfTopic{
+    display: flex;
     position: relative;
     top: 0px;
     left: -240px;
-    width: 200px;
+    width: auto;
+}
+#topicLimit{
+    width: 9%;
+}
+.btn-status{
+    height: 43px;
+}
+.checkBox-lesson{
+    padding-left: 40px;
+    display: flex;
+}
+.section-toggle{
+    margin-left: 20px;
+}
+.subject-info{
+    display: flex;
+    flex-direction: column;
 }

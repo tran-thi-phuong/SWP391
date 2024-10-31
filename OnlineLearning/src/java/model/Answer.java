@@ -22,7 +22,6 @@ public class Answer {
         this.explanation = explanation;
         this.isCorrect = isCorrect;
     }
-
     // Getters and Setters
     public int getAnswerID() {
         return answerID;
@@ -57,6 +56,11 @@ public class Answer {
     }
 
     public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    // Alternative getter for compatibility
+    public boolean getisCorrect() {
         return isCorrect;
     }
 

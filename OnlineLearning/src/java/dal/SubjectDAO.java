@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import model.Lesson;
-import model.LessonType;
+import model.LessonTopic;
 import model.SubjectCategoryCount;
 
 /**
@@ -451,7 +451,7 @@ public class SubjectDAO extends DBContext {
                     }
 
                     // Tạo LessonType và Lesson
-                    LessonType lessonType = new LessonType();
+                    LessonTopic lessonType = new LessonTopic();
                     lessonType.setTypeID(rs.getInt("TypeID"));
                     lessonType.setName(rs.getString("LessonTypeName"));
 
@@ -462,7 +462,7 @@ public class SubjectDAO extends DBContext {
 
                     // Kiểm tra xem LessonType đã tồn tại trong Subject chưa
                     boolean lessonTypeExists = false;
-                    for (LessonType existingLessonType : subject.getLessonTypes()) {
+                    for (LessonTopic existingLessonType : subject.getLessonTypes()) {
                         if (existingLessonType.getTypeID() == lessonType.getTypeID()) {
                             existingLessonType.getLessons().add(lesson);
                             lessonTypeExists = true;
@@ -526,7 +526,7 @@ public class SubjectDAO extends DBContext {
                     }
 
                     // Create LessonType and Lesson
-                    LessonType lessonType = new LessonType();
+                    LessonTopic lessonType = new LessonTopic();
                     lessonType.setTypeID(rs.getInt("TypeID"));
                     lessonType.setName(rs.getString("LessonTypeName"));
 
@@ -536,7 +536,7 @@ public class SubjectDAO extends DBContext {
 
                     // Check if LessonType already exists in the Subject
                     boolean lessonTypeExists = false;
-                    for (LessonType existingLessonType : subject.getLessonTypes()) {
+                    for (LessonTopic existingLessonType : subject.getLessonTypes()) {
                         if (existingLessonType.getTypeID() == lessonType.getTypeID()) {
                             existingLessonType.getLessons().add(lesson);
                             lessonTypeExists = true;
@@ -574,7 +574,7 @@ public class SubjectDAO extends DBContext {
                 System.out.println("Lesson Types:");
 
                 if (subject.getLessonTypes() != null && !subject.getLessonTypes().isEmpty()) {
-                    for (LessonType lessonType : subject.getLessonTypes()) {
+                    for (LessonTopic lessonType : subject.getLessonTypes()) {
                         System.out.println("  Type ID: " + lessonType.getTypeID());
                         System.out.println("  Type Name: " + lessonType.getName());
 
