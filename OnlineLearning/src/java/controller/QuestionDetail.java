@@ -6,6 +6,10 @@ package controller;
 
 //for database access
 import dal.AnswerDAO;
+import dal.PagesDAO;
+import dal.QuestionDAO;
+import dal.QuestionMediaDAO;
+import dal.RolePermissionDAO;
 import dal.LessonDAO;
 import dal.QuestionDAO;
 import dal.QuestionMediaDAO;
@@ -46,6 +50,7 @@ import model.Answer;
 import model.Lesson;
 import model.Question;
 import model.QuestionMedia;
+import model.Users;
 import model.Test;
 
 //to handle json response
@@ -79,6 +84,9 @@ public class QuestionDetail extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         if (!hasPermission(request, response)) {
+            return;
+        }
         //get the id of question
         String questionIdParam = request.getParameter("id");
         if (questionIdParam != null) {
@@ -364,7 +372,33 @@ public class QuestionDetail extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+  private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    Users currentUser = (Users) session.getAttribute("user");
 
+    // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return false;
+    }
+
+    // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+    String userRole = currentUser.getRole();
+    RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+    Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+    // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+    if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+        response.sendRedirect("/Homepage");
+        return false;
+    } else if (pageID == null) {
+        // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+        response.sendRedirect("error.jsp");
+        return false;
+    }
+
+    return true; // Người dùng có quyền truy cập trang này
+}
     private void handleDeleteQuestion(HttpServletRequest request) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }

@@ -4,8 +4,11 @@
  */
 package controller;
 
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 //database access
 import dal.TestDAO;
+import dal.TestMediaDAO;
 
 //servlet default
 import java.io.IOException;
@@ -16,18 +19,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 //for saving media
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 //for debugging
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Users;
+import java.util.stream.Collectors;
+
 
 //model
 import model.Test;
-
+import model.TestMedia;
 /**
  *
  * @author 84336
@@ -71,14 +80,17 @@ public class AddQuiz extends HttpServlet {
         }
         return null; // Return null if no file was uploaded
     }
-
+    TestDAO testDAO = new TestDAO();
+    TestMediaDAO mediaDAO = new TestMediaDAO();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!hasPermission(request, response)) {
+            return; // Exit if the user lacks permission
+        }
+        
         //get data from the form
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        String mediaType = request.getParameter("mediaType");
-        String mediaDescription = request.getParameter("mediaDescription");
         String type = request.getParameter("type");
         int duration = Integer.parseInt(request.getParameter("duration"));
         double passCondition = Double.parseDouble(request.getParameter("passCondition"));
@@ -90,34 +102,40 @@ public class AddQuiz extends HttpServlet {
         Test newTest = new Test();
         newTest.setTitle(title);
         newTest.setDescription(description);
-        newTest.setMediaType(mediaType);
-        newTest.setMediaDescription(mediaDescription);
         newTest.setType(type);
         newTest.setDuration(duration);
         newTest.setPassCondition(passCondition);
         newTest.setLevel(level);
         newTest.setQuantity(quantity);
         newTest.setSubjectID(subjectId);
+        int testID = testDAO.addTest(newTest);
         //Save media
-        String mediaURL = "";
-        Part mediaFilePart;
-        try {
-            mediaFilePart = request.getPart("mediaURL");
+        List<Part> mediaFilesParts = request.getParts().stream()
+                .filter(part -> "mediaFiles".equals(part.getName()))
+                .collect(Collectors.toList());
+        List<String> mediaDescriptions = new ArrayList<>();
+        for (Part mediaFilePart : mediaFilesParts) {
+            String mediaDescription = request.getParameter("mediaDescription");
+            mediaDescriptions.add(mediaDescription);
 
-            if (mediaFilePart != null && mediaFilePart.getSize() > 0) {
-                // Determine the target directory based on media type
-                String uploadDir = mediaType.equals("image") ? "images/" : "videos/";
-                mediaURL = saveMediaFile(mediaFilePart, uploadDir);
+            String uploadDir = "questionmedia/"; // Directory to save media
+
+            // Save the file and get the saved file URL
+            String mediaLink = saveMediaFile(mediaFilePart, uploadDir);
+
+            if (mediaLink != null) {
+                // Create a new QuestionMedia object
+                TestMedia mediaToAdd = new TestMedia();
+                mediaToAdd.setMediaLink(mediaLink);
+                mediaToAdd.setDescription(mediaDescription);
+                mediaToAdd.setTestId(testID); // Set this to the appropriate Question ID
+
+                // Save the media to the database
+                mediaDAO.saveMedia(mediaToAdd);
             }
-        } catch (IOException | ServletException ex) {
-            Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        newTest.setMediaURL(mediaURL);
-        // Use TestDAO to save the new quiz to the database
-        TestDAO testDAO = new TestDAO();
-        int id = testDAO.addTest(newTest);
 
-        response.sendRedirect("QuizDetail?id=" + id);
+        response.sendRedirect("QuizDetail?id=" + testID);
+    }
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -159,4 +177,31 @@ public class AddQuiz extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    Users currentUser = (Users) session.getAttribute("user");
+
+    // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return false;
+    }
+
+    // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+    String userRole = currentUser.getRole();
+    RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+    Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+    // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+    if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+        response.sendRedirect("/Homepage");
+        return false;
+    } else if (pageID == null) {
+        // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+        response.sendRedirect("error.jsp");
+        return false;
+    }
+
+    return true; // Người dùng có quyền truy cập trang này
+}
 }

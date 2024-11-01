@@ -1,11 +1,4 @@
-<c:choose>
-    <c:when test="${empty sessionScope.user}">
-        <c:redirect url="login.jsp"/>
-    </c:when>
-    <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-        <c:redirect url="/Homepage"/>
-    </c:when>
-    <c:otherwise>
+
         <div class="col-md-9 content-container">
     <div class="filter-course-regis">
         <form id="toggleForm" method="post" action="revenueStat">
@@ -64,8 +57,7 @@
     </div>
 
 </div>
-    </c:otherwise>
-</c:choose>
+ 
 
 
 <script>

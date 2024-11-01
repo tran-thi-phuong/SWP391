@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
     <servlet>
         <servlet-name>changePassword</servlet-name>
         <servlet-class>controller.changePassword</servlet-class>
@@ -56,10 +57,6 @@
     <servlet>
         <servlet-name>Homepage</servlet-name>
         <servlet-class>controller.Homepage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>blogList</servlet-name>
-        <servlet-class>controller.blogList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Logout</servlet-name>
@@ -268,10 +265,6 @@
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>blogList</servlet-name>
-        <url-pattern>/blogList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>

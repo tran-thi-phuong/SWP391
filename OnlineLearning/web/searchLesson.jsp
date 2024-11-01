@@ -1,3 +1,43 @@
+<%@ page import="model.Users" %>
+<%@ page import="dal.RolePermissionDAO" %>
+<%@ page import="dal.PagesDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.*" %>
+
+<%
+    Users currentUser = (Users) session.getAttribute("user");
+    
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp"); 
+        return;
+    }
+
+    String userRole = currentUser.getRole();
+
+    String pageUrl = request.getRequestURL().toString();
+    
+    RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+    PagesDAO pagesDAO = new PagesDAO();
+
+    Integer pageID = pagesDAO.getPageIDFromUrl(pageUrl);
+
+    if (pageID != null) {
+        
+        boolean hasPermission = rolePermissionDAO.hasPermission(userRole, pageID);
+
+        if (!hasPermission) {
+           
+            response.sendRedirect("login.jsp");
+            return;
+        }
+    } else {
+       
+        response.sendRedirect("error.jsp?message=Page not found");
+        return;
+    }
+
+   
+%>
 <div class="lesson-list">
     <div class="numOfTopic">
         <label for="topicLimit">Number of topics:</label>

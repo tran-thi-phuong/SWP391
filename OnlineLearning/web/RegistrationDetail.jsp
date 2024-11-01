@@ -15,14 +15,6 @@
     <body>
 
         <%@ include file="Header.jsp" %>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
                 <div class="container mt-5">
                     <h1 class="text-center">Registration Detail</h1>
 
@@ -95,6 +87,7 @@
                                             <c:if test="${registration.status == 'Processing'}">
                                                 <option value="Processing" selected>Processing</option>
                                                 <option value="Active">Active</option>
+                                                <option value="Cancel">Cancel</option>
                                             </c:if>
                                             <c:if test="${registration.status == 'Active'}">
                                                 <option value="Active" selected>Active</option>
@@ -110,12 +103,6 @@
                                         <textarea class="form-control" id="note" name="note" rows="3">${registration.note}</textarea>
                                     </div>
 
-                                    <!-- New File Upload Section -->
-                                    <div class="mb-3">
-                                        <label for="picture" class="form-label"><strong>Upload Picture:</strong></label>
-                                        <input type="file" class="form-control" id="picture" name="picture" accept="image/*">
-                                    </div>
-
                                     <button type="submit" class="btn btn-success">Save Changes</button>
                                 </form>
                             </div>
@@ -126,8 +113,7 @@
                         <a href="listRegistration" class="btn btn-primary">Back to Registration List</a>
                     </div>
                 </div>
-            </c:otherwise>
-        </c:choose>
+          
         <%@ include file="Footer.jsp" %>
     </body>
 </html>

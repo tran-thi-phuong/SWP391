@@ -14,8 +14,17 @@ public class findAccount extends HttpServlet {
     // Handles POST requests
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Retrieve the email parameter from the request
-        String email = request.getParameter("email");
+        // Retrieve the email parameter from the request and trim whitespace
+        String email = request.getParameter("email") != null ? request.getParameter("email").trim() : "";
+
+        // Check if the email input is empty
+        if (email.isEmpty()) {
+            // Set an error message for empty input
+            request.setAttribute("errorMessage", "Email field cannot be empty.");
+            // Forward the request to findAccount.jsp
+            request.getRequestDispatcher("/findAccount.jsp").forward(request, response);
+            return;
+        }
 
         // Instantiate the UserDAO to interact with the database
         UserDAO userDAO = new UserDAO();
@@ -33,7 +42,7 @@ public class findAccount extends HttpServlet {
             request.setAttribute("username", user.getUsername());
             // Check if the user has an avatar, otherwise set a default avatar image
             request.setAttribute("avatarUrl", (user.getAvatar() != null && !user.getAvatar().isEmpty())
-                ? "" + user.getAvatar()
+                ? user.getAvatar()
                 : "images/default-avatar.jpg");
 
             // Forward the request to recoverAccount.jsp

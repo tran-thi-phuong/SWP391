@@ -1,11 +1,4 @@
-<c:choose>
-    <c:when test="${empty sessionScope.user}">
-        <c:redirect url="login.jsp"/>
-    </c:when>
-    <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-        <c:redirect url="/Homepage"/>
-    </c:when>
-    <c:otherwise>
+
         <div class="col-md-9 content-container">
             <div class="filter-course">
                 <form id="toggleForm" method="post" action="courseStat">
@@ -61,8 +54,7 @@
                 </div> 
             </div>
         </div>
-    </c:otherwise>
-</c:choose>
+
 
 <script>
     var colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',

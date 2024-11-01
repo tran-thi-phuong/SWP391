@@ -9,7 +9,10 @@ import model.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,13 +40,34 @@ public class CampaignsDAO extends DBContext {
                 campaign.setDescription(rs.getString("Description"));
                 campaign.setStartDate(rs.getDate("StartDate"));
                 campaign.setEndDate(rs.getDate("EndDate"));
-                campaign.setImage(rs.getString("Image"));
                 campaign.setStatus(rs.getString("Status"));
 
                 list.put(campaign.getCampaignId(), campaign);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Campaigns> getAllCampaign() {
+        List<Campaigns> list = new ArrayList<>();
+        try {
+            String sql = "Select * from Campaigns";
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                Campaigns cam = new Campaigns();
+                cam.setCampaignId(rs.getInt("CampaignID"));
+                cam.setCampaignName(rs.getString("CampaignName"));
+                cam.setDescription(rs.getString("Description"));
+                cam.setStartDate(rs.getDate("StartDate"));
+                cam.setStartDate(rs.getDate("EndDate"));
+                cam.setStatus(rs.getString("Status"));
+                list.add(cam);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         return list;
     }
@@ -100,7 +124,6 @@ public class CampaignsDAO extends DBContext {
                 campaign.setDescription(rs.getString("Description"));
                 campaign.setStartDate(rs.getDate("StartDate"));
                 campaign.setEndDate(rs.getDate("EndDate"));
-                campaign.setImage(rs.getString("Image"));
                 campaign.setStatus(rs.getString("Status"));
             }
         } catch (Exception e) {
@@ -131,17 +154,29 @@ public class CampaignsDAO extends DBContext {
         }
     }
 
-    public void addCampaign(Campaign campaign) throws SQLException {
-        String sql = "INSERT INTO campaigns (CampaignName, Description, StartDate, EndDate, Image, Status) VALUES (?, ?, ?, ?, ?, ?)";
-        try (
-                PreparedStatement stmt = connection.prepareStatement(sql)) {
+    public int addCampaign(Campaigns campaign) throws SQLException {
+        String sql = "INSERT INTO Campaigns (CampaignName, Description, StartDate, EndDate, Status) VALUES (?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, campaign.getCampaignName());
             stmt.setString(2, campaign.getDescription());
             stmt.setDate(3, (Date) campaign.getStartDate());
             stmt.setDate(4, (Date) campaign.getEndDate());
-            stmt.setString(5, campaign.getImage());
-            stmt.setString(6, campaign.getStatus());
-            stmt.executeUpdate();
+            stmt.setString(5, campaign.getStatus());
+
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating campaign failed, no rows affected.");
+            }
+
+            // Retrieve the generated campaign ID
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Return the ID of the newly added campaign
+                } else {
+                    throw new SQLException("Creating campaign failed, no ID obtained.");
+                }
+            }
         }
     }
 }

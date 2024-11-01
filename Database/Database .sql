@@ -77,15 +77,20 @@ CREATE TABLE Tests (
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
-    MediaType NVARCHAR(10), -- 'image' or 'video'
-    MediaURL NVARCHAR(MAX),  -- URL to the image or video
-    MediaDescription NVARCHAR(MAX), -- Description of the media
     Type NVARCHAR(50),
     Duration INT,
     Pass_Condition DECIMAL(5, 2),
     Level NVARCHAR(50),
     Quantity INT,
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
+);
+GO
+CREATE TABLE TestMedia (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+    Media_Link NVARCHAR(MAX),
+    TestID INT,
+    Description NVARCHAR(50),
+    FOREIGN KEY (TestID) REFERENCES Tests(TestID)
 );
 GO
 CREATE TABLE LessonTopic (
@@ -164,7 +169,7 @@ GO
 CREATE TABLE Questions (
     QuestionID INT PRIMARY KEY IDENTITY(1,1),
     LessonID INT,
-Status NVARCHAR(50) NOT NULL,
+	Status NVARCHAR(50) NOT NULL,
     Content NVARCHAR(MAX) NOT NULL,
     Level NVARCHAR(50),
     FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
@@ -263,6 +268,17 @@ CREATE TABLE System_Setting (
     Level BIT DEFAULT 0,                   
     Quantity BIT DEFAULT 0,     
     PassRate BIT DEFAULT 0,
+	RegistrationID BIT DEFAULT 0,
+	CustomerEmail BIT DEFAULT 0,
+	PackageID BIT DEFAULT 0,
+	Total_Cost BIT DEFAULT 0,
+	Registration_Time BIT DEFAULT 0,
+	Valid_From BIT DEFAULT 0,
+	Valid_To BIT DEFAULT 0,
+	Status BIT DEFAULT 0,
+	Staff BIT DEFAULT 0,
+	Note BIT DEFAULT 0,
+	campaign BIT DEFAULT 0,
 ShowContent BIT NOT NULL DEFAULT 1,
     ShowLessonID BIT NOT NULL DEFAULT 1,
     ShowStatus BIT NOT NULL DEFAULT 1,
@@ -279,8 +295,7 @@ CREATE TABLE Campaigns (
     Description NVARCHAR(MAX),
     StartDate DATE,
     EndDate DATE,
-    Image NVARCHAR(255),
-	Status nvarchar(20) not null	
+    	Status nvarchar(20) not null	
 );
 GO
 CREATE TABLE Campaign_Subject (
@@ -291,6 +306,29 @@ CREATE TABLE Campaign_Subject (
     FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );
+CREATE TABLE CampaignMedia (
+    MediaID INT PRIMARY KEY IDENTITY(1,1),
+    CampaignID INT NOT NULL,
+    MediaLink NVARCHAR(MAX) NOT NULL,
+    Description NVARCHAR(255),
+    FOREIGN KEY (CampaignID) REFERENCES Campaigns(CampaignID)
+);
+GO
+CREATE TABLE Pages (
+    PageID INT PRIMARY KEY IDENTITY(1,1),
+    PageName NVARCHAR(100) NOT NULL,
+    PageUrl NVARCHAR(255) NOT NULL,
+    Status NVARCHAR(10) NOT NULL,
+    Update_At DATETIME DEFAULT GETDATE()
+);
+CREATE TABLE Role_Permission (
+    RolePermissionID INT PRIMARY KEY IDENTITY(1,1),
+    Role NVARCHAR(50) NOT NULL,  
+    PageID INT NOT NULL,
+    Update_At DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (PageID) REFERENCES Pages(PageID)
+);
+
 CREATE TABLE Lesson_User (
     LessonID INT,
     UserID INT,

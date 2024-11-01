@@ -42,18 +42,15 @@
         </script>
     </head>
     <body>
-        <%-- Authentication and Authorization Check --%>
         <c:choose>
-            <%-- Redirect to login if user is not logged in --%>
             <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
             </c:when>
-            <%-- Redirect to homepage if user is not Admin or Instructor --%>
             <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
                 <c:redirect url="/Homepage"/>
             </c:when>
             <c:otherwise>
-                <%-- Include header for authenticated users --%>
+
                 <%@include file="Header.jsp" %>
                 <h1>Subject List</h1>
 
@@ -97,11 +94,9 @@
                     <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
                     <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
                 </div>
-
-                <%-- Add New Subject Button (Only visible to Instructors and Admins) --%>
-                <c:if test="${sessionScope.user.role == 'Instructor' || sessionScope.user.role == 'Admin'}">
-                    <a href="newSubject" class="btn btn-success"><span>Add New Subject</span></a>
-                </c:if>
+                     <c:if test="${sessionScope.user.role == 'Instructor'}">
+                <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
+                     </c:if>
 
                 <%-- Subject List Table --%>
                 <table>
@@ -156,7 +151,7 @@
                 </c:if>
             </c:otherwise>
         </c:choose>
-    </body>
 
-    <%@include file="Footer.jsp" %>
-</html>
+            </body>
+            <%@include file="Footer.jsp" %>
+        </html>

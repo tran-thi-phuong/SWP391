@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -13,15 +14,10 @@
         <title>Create Registration</title>
     </head>
     <%@include file="Header.jsp" %>
-   <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
+ 
+            
                 <div class="container2">
+                    <br>
                     <h2>Create New Registration</h2>
                     <form action="addRegistrationBySale" method="post">
                         <div class="form-group">
@@ -67,8 +63,7 @@
                         </div>
                     </form>
                 </div>
-            </c:otherwise>
-        </c:choose>
+            
         <script>
             const emailInput = document.getElementById('email');
             const emailError = document.getElementById('emailError');

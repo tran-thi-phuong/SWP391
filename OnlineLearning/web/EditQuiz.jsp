@@ -70,37 +70,60 @@
             #mediaURLField {
                 display: none;
             }
+              .media-container {
+                margin-bottom: 15px;
+            }
+            .media-preview {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+            }
+            .media-preview img,
+            .media-preview video {
+                max-width: 100%;
+                max-height: 100%;
+                margin-right: 10px;
+            }
+                .media-container img,
+            .media-container video {
+                max-width: 100%;
+                height: auto;
+            }
+            
         </style>
         <script>
-            function toggleMediaFields() {
-                var mediaType = document.getElementById("mediaType").value;
-                var mediaURLField = document.getElementById("mediaURLField");
-                var mediaFileInput = document.getElementById("mediaFile");
+            function addMedia() {
+                const mediaList = document.getElementById("mediaList");
+                const mediaHTML = `
+                    <div class="media-container">
+                        <input type="file" name="mediaFiles" accept="image/*,video/*" onchange="previewMedia(this)" required/>
+                         <input type="text" name="mediaDescription" placeholder="Media Description" required/>
+        <div class="media-preview"></div>        
+        <button type="button" onclick="removeMedia(this)">Remove</button>
+                    
+                    </div>`;
+                mediaList.insertAdjacentHTML('beforeend', mediaHTML);
+            }
 
-                if (mediaType === "image") {
-                    mediaURLField.style.display = "block";
-                    mediaFileInput.accept = "image/*"; // Accept only images
-                } else if (mediaType === "video") {
-                    mediaURLField.style.display = "block";
-                    mediaFileInput.accept = "video/*"; // Accept only videos
-                } else {
-                    mediaURLField.style.display = "none";
-                    mediaFileInput.accept = ""; // No file accepted
-                }
+            function removeMedia(button) {
+                const mediaContainer = button.parentElement;
+                mediaContainer.remove();
             }
-            function initializeFileInput() {
-                const mediaType = document.getElementById('mediaType').value;
-                if (mediaType) {
-                    setFileInputAccept(mediaType); // Set accept attribute based on current media type
-                    document.getElementById('mediaURLField').style.display = 'block'; // Ensure the field is visible
-                }
-            }
-            function setFileInputAccept(mediaType) {
-                const fileInput = document.getElementById('mediaFile');
-                if (mediaType === 'image') {
-                    fileInput.accept = 'image/*'; // Accept image files
-                } else if (mediaType === 'video') {
-                    fileInput.accept = 'video/*'; // Accept video files
+
+            function previewMedia(input) {
+                const mediaPreview = input.nextElementSibling.nextElementSibling;
+                mediaPreview.innerHTML = ''; // Clear previous preview
+                const file = input.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const mediaElement = document.createElement(file.type.startsWith('image/') ? 'img' : 'video');
+                        mediaElement.src = e.target.result;
+                        mediaElement.controls = file.type.startsWith('video/');
+                        mediaPreview.appendChild(mediaElement);
+                    };
+                    reader.readAsDataURL(file);
                 }
             }
             function validateForm() {
@@ -128,17 +151,31 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">  
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet">
+        <style>
+             .media-container {
+                margin-bottom: 15px;
+            }
+            .media-preview {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+            }
+            .media-preview img,
+            .media-preview video {
+                max-width: 100%;
+                max-height: 100%;
+                margin-right: 10px;
+            }
+                .media-container img,
+            .media-container video {
+                max-width: 100%;
+                height: auto;
+            
+            }
+        </style>
     </head>
     <%@include file="Header.jsp" %>
     <body onload="initializeFileInput()">
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
         <div style="text-align: center; margin-bottom: 20px;">
             <a href="QuizDetail?id=${currentTest.testID}" style="text-decoration: none;">
                 <button type="button" style="padding: 10px 20px; background-color: #6c757d; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
@@ -161,30 +198,40 @@
                     <label for="description">Description:</label>
                     <input type="text" id="description" name="description" value="${currentTest.description}" required/>
                 </div>
-
-                <div class="form-group">
-                    <label for="mediaType">Media Type:</label>
-                    <select id="mediaType" name="mediaType" onchange="toggleMediaFields()" required>
-                        <option value="">Select Media Type</option>
-                        <option value="image" ${currentTest.mediaType == 'image' ? 'selected' : ''}>Image</option>
-                        <option value="video" ${currentTest.mediaType == 'video' ? 'selected' : ''}>Video</option>
-                    </select>
+                 <h2>Current Media Files</h2>
+                <c:forEach var="media" items="${mediaList}">
+                    <div class="media-container">
+                        <strong>Media:</strong>
+                        <c:choose>
+                            <c:when test="${media.mediaLink.endsWith('.jpg' || media.mediaLink.endsWith('.png'))}">
+                                <img src="${media.mediaLink}" alt="Media Image" />
+                            </c:when>
+                            <c:when test="${media.mediaLink.endsWith('.mp4')}">
+                                <video controls>
+                                    <source src="${media.mediaLink}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${media.mediaLink}" alt="Media Image" />
+                            </c:otherwise>
+                        </c:choose>
+                        <p><em>${media.description}</em></p>
+                        <input type="text" value="${media.mediaId}" name="current-media"hidden/>
+                        <button type="button" onclick="removeMedia(this)">Remove</button>
+                    </div>
+                    <hr>
+                </c:forEach>
+                    <h2>Media Files</h2>
+                <div id="mediaList">
+                    <div class="media-container">
+                        <input type="file" name="mediaFiles" accept="image/*,video/*" onchange="previewMedia(this)" required/>
+                        <input type="text" name="mediaDescription" placeholder="Media Description" required/>
+                        <div class="media-preview"></div>
+                        <button type="button" onclick="removeMedia(this)">Remove</button>
+                    </div>
                 </div>
-
-                <div id="mediaURLField" class="form-group" style="display: ${currentTest.mediaURL != '' ? 'block' : 'none'};">
-                    <label for="mediaFile">Media URL:</label>
-                    <input type="file" id="mediaFile" name="mediaURL" accept="image/*,video/*" />
-                    <small>(Upload an image or video)</small>
-                </div>
-                <div id="currentMediaDisplay" style="display: ${currentTest.mediaURL != '' ? 'block' : 'none'};">
-                    <h4>Current Media:</h4>
-                    <img id="currentImage" src="${currentTest.mediaType == 'image' ? currentTest.mediaURL : ''}" alt="Current Image" style="max-width: 200px; display: ${currentTest.mediaType == 'image' ? 'block' : 'none'};" />
-                    <video id="currentVideo" src="${currentTest.mediaType == 'video' ? currentTest.mediaURL : ''}" controls style="max-width: 200px; display: ${currentTest.mediaType == 'video' ? 'block' : 'none'};"></video>
-                </div>
-                <div class="form-group">
-                    <label for="mediaDescription">Media Description:</label>
-                    <input type="text" id="mediaDescription" name="mediaDescription" value="${currentTest.mediaDescription}" />
-                </div>
+                <button type="button" onclick="addMedia()">Add Media</button>
 
                 <div class="form-group">
                     <label for="type">Type:</label>
@@ -242,8 +289,6 @@
             </form>
 
         </div>
-            </c:otherwise>
-        </c:choose>
     </body>
     <%@include file="Footer.jsp" %>
 </html>

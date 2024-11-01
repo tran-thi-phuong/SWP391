@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="model.Users" %>
 
 <!DOCTYPE html>
 <html>
@@ -17,20 +16,12 @@
     </head>
     <%@include file="Header.jsp" %>
     <body class="regist">
-       <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
                 
                 <div class="container2 mt-5">
                     <h1>List of Registrations</h1>
                     <br>
                     <br>
-                    <c:if test="${user.role == 'Marketing'}">
+                    <c:if test="${sessionScope.user.role == 'Marketing'}">
                         <div style="display: flex; justify-content: flex-end; padding: 10px;">
                             <form action="addRegistrationBySale" method="get">
                                 <button type="submit" id="add" style="background-color: #90EE90; color: black;
@@ -106,6 +97,7 @@
                                    value="${sessionScope.setting.numberOfItems != null ? sessionScope.setting.numberOfItems : 20}">
 
                             <h5 style="color: #FF0000">Show/Hide Columns:</h5>
+                            <div class="checkbox">
                             <label><input type="checkbox" name="RegistrationID" onchange="toggleColumn(0)" 
                                           ${sessionScope.setting.registrationId != null ? (sessionScope.setting.registrationId ? 'checked' : '') : 'checked'}> ID</label>
                             <label><input type="checkbox" name="email" onchange="toggleColumn(1)" 
@@ -118,7 +110,7 @@
                                           ${sessionScope.setting.campaign != null ? (sessionScope.setting.campaign ? 'checked' : '') : 'checked'}> Campaign</label>
                             <label><input type="checkbox" name="package" onchange="toggleColumn(5)" 
                                           ${sessionScope.setting.packageId != null ? (sessionScope.setting.packageId ? 'checked' : '') : 'checked'}> Package</label>
-                            <label><input type="checkbox" name="totalCost" onchange="toggleColumn(6)" 
+                                          <br><label><input type="checkbox" name="totalCost" onchange="toggleColumn(6)" 
                                           ${sessionScope.setting.totalCost != null ? (sessionScope.setting.totalCost ? 'checked' : '') : 'checked'}> Total Cost</label>
                             <label><input type="checkbox" name="validFrom" onchange="toggleColumn(7)" 
                                           ${sessionScope.setting.validFrom != null ? (sessionScope.setting.validFrom ? 'checked' : '') : 'checked'}> Valid From</label>
@@ -130,8 +122,8 @@
                                           ${sessionScope.setting.staff != null ? (sessionScope.setting.staff ? 'checked' : '') : 'checked'}> Last Updated By</label>
                             <label><input type="checkbox" name="note" onchange="toggleColumn(11)" 
                                           ${sessionScope.setting.note != null ? (sessionScope.setting.note ? 'checked' : '') : 'checked'}> Note</label>
-
-                            <button type="submit" onclick="saveSettings()">Save</button>
+                            </div>
+                            <button type="submit" onclick="saveSettings()">Apply</button>
                         </form>
                     </div>
 
@@ -204,10 +196,7 @@
                         </ul>
                     </nav>
                 </div>
-            </c:otherwise>
-        </c:choose>
-
-                <script>
+               <script>
                     function submitForm() {
                         const searchForm = document.getElementById('searchForm');
                         const settingsForm = document.getElementById('settingsForm');

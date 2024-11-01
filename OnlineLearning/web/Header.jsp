@@ -81,11 +81,17 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><a class="dropdown-item"><strong>${sessionScope.user.username}</strong></a></li>
-                        <li><a class="dropdown-item" href="myRegistration">My Registration</a></li>
-                        <li><a class="dropdown-item" href="myCourse">My Courses</a></li>
+
+                        <!-- Check if the user role is Customer -->
+                        <c:if test="${sessionScope.user.role == 'Customer'}">
+                            <li><a class="dropdown-item" href="myRegistration">My Registration</a></li>
+                            <li><a class="dropdown-item" href="myCourse">My Courses</a></li>
+                            </c:if>
+
                         <li><a class="dropdown-item" href="profile.jsp">Profile</a></li>
                         <li><a class="dropdown-item" href="Logout">Logout</a></li>
                     </ul>
+
                 </div>
             </c:if>
     </div>
