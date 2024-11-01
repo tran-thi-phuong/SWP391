@@ -19,70 +19,72 @@ import model.Users;
 
 public class LessonView extends HttpServlet {
 
-    private LessonDAO lessonDAO = new LessonDAO(); // Initialize your DAO
+    private LessonDAO lessonDAO = new LessonDAO(); // Initialize DAO
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         String lessonIdParam = request.getParameter("lessonId");
-        String subjectIdd = request.getParameter("subjectId");
+        String subjectIdParam = request.getParameter("subjectId");
         
         int userId = (user != null) ? user.getUserID() : -1;
         int lessonId = (lessonIdParam != null && !lessonIdParam.isEmpty()) ? Integer.parseInt(lessonIdParam) : -1;
-        int subjectId = (subjectIdd != null && !subjectIdd.isEmpty()) ? Integer.parseInt(subjectIdd) : -1; 
+        int subjectId = (subjectIdParam != null && !subjectIdParam.isEmpty()) ? Integer.parseInt(subjectIdParam) : -1;
+
         // Retrieve lesson details
         Lesson lesson = lessonDAO.getLessonByLessonIDAndUserID(lessonId, userId);
         request.setAttribute("lesson", lesson);
         request.setAttribute("subjectId", subjectId);
+
         SubjectDAO subjectDAO = new SubjectDAO();
         List<Subject> subjects;
 
-        // Nếu người dùng chưa đăng nhập, lấy danh sách môn học chỉ dựa trên subjectId
+        // If the user is not logged in, retrieve subjects based only on subjectId
         if (user == null) {
             subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId);
         } else {
-            // Nếu người dùng đã đăng nhập, lấy danh sách môn học dựa trên userId và subjectId
+            // If the user is logged in, retrieve subjects based on userId and subjectId
             subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
         }
 
         request.setAttribute("subjects", subjects);
 
-        // Forward to JSP
+        // Forward to LessonView.jsp
         request.getRequestDispatcher("LessonView.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String subjectId = request.getParameter("subjectId");
-        // Lấy lessonID từ request
+
+        // Retrieve lessonID from the request
         String lessonIDParam = request.getParameter("lessonID");
         if (lessonIDParam == null || lessonIDParam.isEmpty()) {
-            response.sendRedirect("error.jsp"); // Hoặc trang thông báo lỗi khác nếu lessonID không hợp lệ
+            response.sendRedirect("error.jsp"); // Redirect to error page if lessonID is invalid
             return;
         }
 
-        int lessonID = Integer.parseInt(lessonIDParam); // Chuyển đổi lessonID thành số nguyên
+        int lessonID = Integer.parseInt(lessonIDParam); // Convert lessonID to an integer
 
-        // Lấy userID từ session
+        // Retrieve userID from the session
         Users user = (Users) session.getAttribute("user");
-        int userID = (user != null) ? user.getUserID() : -1; // Kiểm tra xem user có tồn tại không
+        int userID = (user != null) ? user.getUserID() : -1; // Check if user exists
 
-        // Kiểm tra nếu userID không hợp lệ
+        // Check if userID is invalid
         if (userID == -1) {
-            response.sendRedirect("error.jsp"); // Hoặc trang thông báo lỗi khác nếu không có user
+            response.sendRedirect("error.jsp"); // Redirect to error page if user is not logged in
             return;
         }
 
         boolean isUpdated = lessonDAO.updateLessonStatusToCompleted(lessonID, userID);
 
-        // Kiểm tra xem việc cập nhật có thành công không
+        // Check if the update was successful
         if (isUpdated) {
-            // Nếu cập nhật thành công, chuyển hướng đến LessonView với lessonID và subjectId
+            // If update was successful, redirect to LessonView with lessonID and subjectId
             response.sendRedirect("LessonView?lessonId=" + lessonID + "&subjectId=" + subjectId);
         } else {
-            // Nếu cập nhật không thành công, chuyển hướng đến trang lỗi hoặc thông báo
-            response.sendRedirect("error.jsp"); // Hoặc trang thông báo lỗi khác
+            // If update failed, redirect to error page or display an error message
+            response.sendRedirect("error.jsp"); // Redirect to error page
         }
     }
-
 }

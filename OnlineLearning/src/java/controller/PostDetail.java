@@ -19,7 +19,7 @@ public class PostDetail extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        blogDAO = new BlogDAO(); // Khởi tạo DAO
+        blogDAO = new BlogDAO(); // Initialize DAO
     }
 
     @Override
@@ -28,7 +28,7 @@ public class PostDetail extends HttpServlet {
         List<Blog> blogs = blogDAO.getAllBlogs();
         request.setAttribute("blogs", blogs);
 
-        // Chuyển hướng tới JSP
+        // Forward to JSP
         request.getRequestDispatcher("PostDetail.jsp").forward(request, response);
     }
 
@@ -37,13 +37,13 @@ public class PostDetail extends HttpServlet {
         String blogId = request.getParameter("blogId");
         String currentStatus = request.getParameter("currentStatus");
 
-        // Xác định trạng thái mới
+        // Determine the new status
         String newStatus = currentStatus.equals("Show") ? "Hide" : "Show";
 
-        // Gọi hàm cập nhật trạng thái
+        // Call the function to update status
         blogDAO.updateStatus(blogId, newStatus);
 
-        // Gửi phản hồi về trạng thái mới
+        // Send the new status as a response
         response.getWriter().write(newStatus); 
     }
 
