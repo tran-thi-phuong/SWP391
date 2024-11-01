@@ -44,25 +44,27 @@
                 </nav>
             </div>
         </div>
+        <!--if user input search bar, then include this jsp-->
         <c:if test="${not empty requestScope.searchValue}">
             <%@include file="searchLesson.jsp" %>
         </c:if>
+        <!--if user does not input search bar, then include this jsp-->
         <c:if test="${empty requestScope.searchValue}">
             <%@include file="notSearchLesson.jsp" %>
         </c:if>
 
 
 
-                <script>
-                    function toggleContent(id) {
-                        const content = document.getElementById(id);
-                        if (content.classList.contains('show')) {
-                            content.classList.remove('show');
-                        } else {
-                            content.classList.add('show');
-                        }
-                    }
-                </script>
-            
+        <script>
+            // func for drodown list lesson
+            function toggleContent(id) {
+                const content = document.getElementById(id);
+                if (content.classList.contains('show')) {
+                    content.classList.remove('show');
+                } else {
+                    content.classList.add('show');
+                }
+            }
+        </script>
     </body>
 </html>

@@ -120,13 +120,13 @@
     document.addEventListener("DOMContentLoaded", function () {
         setInitialVisibility();
     });
-
+    // func for displaying item after change the number of topic
     function setInitialVisibility() {
         document.querySelectorAll('.list-group-item').forEach((item) => {
             item.style.display = '';
         });
     }
-
+    //func for displaying when the number of topic is changed
     function changeTopicLimit() {
         var limit = document.getElementById('topicLimit').value;
         if (limit === '' || limit.toLowerCase() === 'all') {
@@ -142,6 +142,7 @@
             });
         }
     }
+    // func for configuring displayed information 
     document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
             document.querySelectorAll(this.dataset.target).forEach(function (target) {

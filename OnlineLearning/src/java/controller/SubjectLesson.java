@@ -95,12 +95,15 @@ public class SubjectLesson extends HttpServlet {
         String status = request.getParameter("select-status");
         String topic = request.getParameter("select-topic");
         LessonDAO l = new LessonDAO();
+        // get all topic
         List<SubjectTopic> lessonType = l.getAllLessonTopicBySubjectId(Integer.parseInt(courseId));
         List<Lesson> lessonList;
         if(searchValue != null && !searchValue.trim().isEmpty()){
             request.setAttribute("searchValue", searchValue);
+            // get all lesson of subject
            lessonList = l.searchLesson(Integer.parseInt(courseId), searchValue);
         }else{
+            // get all lesson of subject
            lessonList = l.getAllLessonBySubjectId(Integer.parseInt(courseId)); 
         }
         request.setAttribute("lessonType", lessonType);

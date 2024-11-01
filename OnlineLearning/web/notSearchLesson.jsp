@@ -74,12 +74,13 @@
     </c:forEach>
 </div>
 <script>
+    // func for displaying topics after changing number of topic
     function setInitialVisibility() {
         document.querySelectorAll('.lesson-type').forEach((item) => {
             item.style.display = '';
         });
     }
-
+    // //func when the number of topic is changed
     function changeTopicLimit() {
         const limitInput = document.getElementById('topicLimit');
         const limit = limitInput.value ? parseInt(limitInput.value) : 'all';
@@ -94,8 +95,8 @@
             });
         }
     }
-
     setInitialVisibility();
+    // configuring displayed information
     document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
             document.querySelectorAll(this.dataset.target).forEach(function (target) {
