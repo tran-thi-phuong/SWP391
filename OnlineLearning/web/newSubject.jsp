@@ -71,30 +71,18 @@
     </head>
     <body>
         <h1>Add New Subject</h1>
-
-        <%-- Access Control Block --%>
-        <c:choose>
-            <%-- Check if user is logged in --%>
+         <c:choose>
             <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
             </c:when>
-
-            <%-- Check if user has admin privileges --%>
-            <c:when test="${sessionScope.user.role != 'Admin'}">
+            <c:when test="${sessionScope.user.role != 'Instructor'}">
                 <c:redirect url="/Homepage"/>
             </c:when>
-
-            <%-- Main form content for authorized users --%>
             <c:otherwise>
-                <%-- 
-                    Form Configuration:
-                    - POST method for secure data transmission
-                    - enctype for handling file uploads
-                    - Required fields for data validation 
-                --%>
-                <form action="newSubject" method="POST" enctype="multipart/form-data">
-                    <%-- Navigation back to subject list --%>
-                    <a href="SubjectList" class="back-button">Back to subject list</a>
+
+
+        <form action="newSubject" method="POST" enctype="multipart/form-data">
+            <a href="SubjectList" class="back-button">Back to subject list</a>
 
                     <%-- Course Name Input --%>
                     <label for="courseName">Course Name:</label>
@@ -135,11 +123,11 @@
                     <label for="description">Description:</label>
                     <textarea id="description" name="description" rows="4" required></textarea>
 
-                    <%-- Form Submission Button --%>
-                    <button type="submit">Add Course</button>
-
-                </form>
+            <button type="submit">Add Course</button>
+            
+        </form>
             </c:otherwise>
-        </c:choose>
+         </c:choose>
+
     </body>
 </html>

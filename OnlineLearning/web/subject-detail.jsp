@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -11,14 +12,7 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
+        
                 <div class="container">
                     <header>
                         <h1><c:out value="${subject.title}" /></h1>
@@ -62,7 +56,6 @@
                         <a href="index.jsp" class="btn-back">Back to course list</a>
                     </footer>
                 </div>
-            </c:otherwise>
-        </c:choose>
+          
             </body>
         </html>

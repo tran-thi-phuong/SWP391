@@ -1,12 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:choose>
-    <c:when test="${empty sessionScope.user}">
-        <c:redirect url="login.jsp"/>
-    </c:when>
-    <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-        <c:redirect url="/Homepage"/>
-    </c:when>
-    <c:otherwise>
+
         <div class="col-md-9 content-container">
             <div class="checkBox">
                 <label><input type="checkbox" class="section-toggle" data-target=".registration-section" checked>Registration</label>
@@ -72,8 +64,6 @@
             </c:if>
 
         </div>
-    </c:otherwise>
-</c:choose>
 
 
 <script>

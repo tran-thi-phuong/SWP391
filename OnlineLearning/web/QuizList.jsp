@@ -44,14 +44,6 @@
     </style>
     <%@include file="Header.jsp" %>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
 
                 <c:set var="subjectDAO" value="<%=new dal.SubjectDAO()%>" />
                 <c:set var="testDAO" value="<%=new dal.TestDAO()%>"/>
@@ -230,8 +222,7 @@
                 </div>
 
 
-            </c:otherwise>
-        </c:choose>
+            
     </body>
     <%@include file="Footer.jsp" %>
     <script>

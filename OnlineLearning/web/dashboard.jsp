@@ -23,14 +23,6 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Marketing'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
                 <%@include file="Header.jsp" %>
                 <div class="container-fluid">
                     <div class="row">
@@ -57,7 +49,6 @@
                     </div>
                 </div>
                 <%@include file="Footer.jsp" %>
-            </c:otherwise>
-        </c:choose>
+            
             </body>
         </html>

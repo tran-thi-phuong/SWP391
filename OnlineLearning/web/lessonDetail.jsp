@@ -78,17 +78,18 @@
             </div>
             <div class="btn-save">
                 <button type="button" class="btn btn-dark" onclick="submitContent()">Submit</button>
+                <c:if test="${requestScope.action eq 'update'}">
+                    <a href="deleteLesson?lessonID=${lesson.lessonID}&courseID=${requestScope.courseID}&courseName=${requestScope.courseName}" class="btn btn-danger">Delete</a>
+                </c:if>
                 <a class="btn btn-dark" href="subjectLesson?courseId=${requestScope.courseID}&courseName=${requestScope.courseName}">Back</a>
             </div>
         </form>
         <script>
+            // define basePath for accessing resourses
             const contextPath = window.location.pathname.split('/')[1];
             const basePath = window.location.protocol + '//' + window.location.host + '/' + contextPath;
 
-            // Giả sử content được truyền từ server thông qua biến JSP
-            // Thay thế dòng này bằng cách lấy content từ server của bạn
-            const initialContent = '${content}'; // Đây là cách lấy giá trị từ JSP
-
+            // define toolbar for editor
             var toolbarOptions = [
                 ['bold', 'italic', 'underline'],
                 [{'list': 'ordered'}, {'list': 'bullet'}],
@@ -96,38 +97,32 @@
                 [{'header': [1, 2, 3, 4, 5, 6, false]}],
                 ['link', 'image', 'video']
             ];
-
+            // initialize a quill editor using quilljs library
             var quill = new Quill('#editor-container', {
                 theme: 'snow',
                 modules: {
                     toolbar: toolbarOptions
                 }
             });
-
-            // Hàm để xử lý và set nội dung ban đầu
-
-
-            // Hàm decode HTML entities
-
-
+            // allow user select image from local device
             quill.getModule('toolbar').addHandler('image', () => {
                 selectLocalImage();
             });
-
+            // handle images from clipboard
             quill.clipboard.addMatcher('IMG', function (node, delta) {
                 const Delta = Quill.import('delta');
                 return new Delta().insert({
                     image: node.src
                 });
             });
-
+            // handle video from clipboard
             quill.clipboard.addMatcher('IFRAME', function (node, delta) {
                 const Delta = Quill.import('delta');
                 return new Delta().insert({
                     video: node.src
                 });
             });
-
+            // handling when the text in editor is changed
             quill.on('text-change', function (delta, oldDelta, source) {
                 if (source === 'user') {
                     const contents = quill.getContents();
@@ -160,7 +155,7 @@
                     });
                 }
             });
-
+            //func for inserting image into editor
             function selectLocalImage() {
                 const input = document.createElement('input');
                 input.setAttribute('type', 'file');
@@ -174,7 +169,7 @@
                     }
                 };
             }
-
+            // func for saving image when image is inserted
             function uploadImage(file) {
                 const formData = new FormData();
                 formData.append('file', file);
@@ -199,7 +194,7 @@
                             console.error('Error:', error);
                         });
             }
-
+            //replace image url by url after saving the image to server
             function processImagePaths(content) {
                 const div = document.createElement('div');
                 div.innerHTML = content;
@@ -215,7 +210,7 @@
 
                 return div.innerHTML;
             }
-
+            //func for submitting content in editor
             function submitContent() {
                 let content = quill.root.innerHTML;
                 content = processImagePaths(content);

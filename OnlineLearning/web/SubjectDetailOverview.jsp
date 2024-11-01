@@ -140,6 +140,6 @@
                     </div>
                 </form>
             </div>
-
+        </div>
             <%@include file="Footer.jsp" %>
 

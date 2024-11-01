@@ -4,7 +4,9 @@
  */
 package controller;
 
+import dal.PagesDAO;
 import dal.RegistrationsDAO;
+import dal.RolePermissionDAO;
 import model.Registrations;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -20,13 +22,11 @@ public class myRegistration extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
-
-        if (user == null) {
-            response.sendRedirect("login.jsp");
+        if (!hasPermission(request, response)) {
             return;
         }
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
         int userId = user.getUserID();
 
         String searchQuery = request.getParameter("searchQuery");
@@ -136,5 +136,33 @@ public class myRegistration extends HttpServlet {
         request.setAttribute("currentPage", page);
 
         request.getRequestDispatcher("myRegistration.jsp").forward(request, response);
+    }
+
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+
+        // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+        String userRole = currentUser.getRole();
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+        // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true; // Người dùng có quyền truy cập trang này
     }
 }

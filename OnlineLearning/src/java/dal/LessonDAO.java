@@ -17,7 +17,7 @@ import model.SubjectTopic;
  * @author tuant
  */
 public class LessonDAO extends DBContext {
-
+    // get all topic of the subject by id
     public List<SubjectTopic> getAllLessonTopicBySubjectId(int subjectID) {
         List<SubjectTopic> list = new ArrayList<>();
         String sql = "select lt.Name, ls.TopicID, ls.SubjectID, ls.[Order] from Subject_LessonTopic ls join LessonTopic lt "
@@ -39,7 +39,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
-
+    // get all lesson of subject by id
     public List<Lesson> getAllLessonBySubjectId(int subjectID) {
         List<Lesson> list = new ArrayList<>();
         String sql = "select * from Lessons where SubjectID = ? order by TopicID, [Order]";
@@ -64,7 +64,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
-
+    // func for searching lesson by name
     public List<Lesson> searchLesson(int subjectID, String searchValue) {
         List<Lesson> list = new ArrayList<>();
         String sql = "select * from Lessons where SubjectID = ? and Title like ?";
@@ -156,6 +156,7 @@ public class LessonDAO extends DBContext {
         }
         return false;
     }
+
     //Get all lesson
     public List<Lesson> getAllLessons() {
         List<Lesson> list = new ArrayList<>();
@@ -178,6 +179,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
+
     //search by ID
     public Lesson getLessonById(int lessonID) {
         Lesson lesson = null;
@@ -204,7 +206,7 @@ public class LessonDAO extends DBContext {
 
         return lesson;
     }
-
+    // get lesson information by id
     public Lesson getLessonByLessonID(int lessonID) {
         Lesson lesson = null;
         String sql = "select * from Lessons where LessonID = ?";
@@ -230,7 +232,7 @@ public class LessonDAO extends DBContext {
         }
         return lesson;
     }
-
+    // func for adding a new lesson
     public void addLesson(int subjectID, String title, int topicID, String content, int order, String description, String status) {
         String sql = "INSERT INTO Lessons (SubjectID, Title, TopicID, Content, [Order], Description, Status) "
                 + "VALUES (?,?,?,?,?,?,?)";
@@ -248,6 +250,7 @@ public class LessonDAO extends DBContext {
             e.printStackTrace();
         }
     }
+    // func for updating lesson by id
     public void updateLesson(int lessonID, String title, int topicID, String content, int order, String description, String status) {
         String sql = "update Lessons set Title = ?, TopicID = ?, Content = ?, [Order] = ?, Description = ?, Status = ? where LessonID = ?";
 
@@ -264,6 +267,7 @@ public class LessonDAO extends DBContext {
             e.printStackTrace();
         }
     }
+    // check if a lesson with the order is existed or not
     public boolean validLessonOrder(int subjectID, int topicID, int order){
         String sql = "select * from Lessons where SubjectID = ? and TopicID = ? and [Order] = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -280,11 +284,90 @@ public class LessonDAO extends DBContext {
         }
         return true;
     }
-
-    public static void main(String[] args) {
-        // Tạo một đối tượng DBContext để lấy kết nối
-        // Tạo đối tượng DAO (giả định bạn đã có lớp DAO phù hợp)
-        LessonDAO lessonDAO = new LessonDAO();
-        System.out.println(lessonDAO.validLessonOrder(1, 1, 1));
+    // func for deleting a lesson
+    public void deleteLesson(int lessonID){
+        String sql = "delete Lessons where LessonID = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, lessonID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    public boolean addLessonTopic(SubjectTopic topic) {
+        String insertLessonTopicSQL = "INSERT INTO LessonTopic (Name) VALUES (?)";
+        String selectLastInsertedTopicIDSQL = "SELECT MAX(TopicID) AS TopicID FROM LessonTopic";
+        String insertSubjectLessonTopicSQL = "INSERT INTO Subject_LessonTopic (TopicID, SubjectID, [Order]) VALUES (?, ?, ?)";
+
+        try (PreparedStatement ps1 = connection.prepareStatement(insertLessonTopicSQL)) {
+            // Thêm vào bảng LessonTopic
+            ps1.setString(1, topic.getTopicName());
+            ps1.executeUpdate();
+
+            // Lấy TopicID vừa được thêm
+            try (PreparedStatement ps2 = connection.prepareStatement(selectLastInsertedTopicIDSQL); ResultSet rs = ps2.executeQuery()) {
+                if (rs.next()) {
+                    int generatedTopicID = rs.getInt("TopicID");
+                    topic.setTopicID(generatedTopicID);
+
+                    // Thêm vào bảng Subject_LessonTopic với TopicID mới
+                    try (PreparedStatement ps3 = connection.prepareStatement(insertSubjectLessonTopicSQL)) {
+                        ps3.setInt(1, topic.getTopicID());
+                        ps3.setInt(2, topic.getSubjectID());
+                        ps3.setInt(3, topic.getOrder());
+                        ps3.executeUpdate();
+                    }
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteLessonTopic(int topicID, int subjectID) {
+        String deleteSubjectLessonTopicSQL = "DELETE FROM Subject_LessonTopic WHERE TopicID = ? AND SubjectID = ?";
+        String deleteLessonTopicSQL = "DELETE FROM LessonTopic WHERE TopicID = ? AND NOT EXISTS (SELECT 1 FROM Subject_LessonTopic WHERE TopicID = ?)";
+
+        try (PreparedStatement ps1 = connection.prepareStatement(deleteSubjectLessonTopicSQL)) {
+            ps1.setInt(1, topicID);
+            ps1.setInt(2, subjectID);
+            ps1.executeUpdate();
+
+            try (PreparedStatement ps2 = connection.prepareStatement(deleteLessonTopicSQL)) {
+                ps2.setInt(1, topicID);
+                ps2.setInt(2, topicID);
+                ps2.executeUpdate();
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateLessonTopic(SubjectTopic topic) {
+        String updateLessonTopicSQL = "UPDATE LessonTopic SET Name = ? WHERE TopicID = ?";
+        String updateSubjectLessonTopicSQL = "UPDATE Subject_LessonTopic SET [Order] = ? WHERE TopicID = ? AND SubjectID = ?";
+
+        try (PreparedStatement ps1 = connection.prepareStatement(updateLessonTopicSQL)) {
+            ps1.setString(1, topic.getTopicName());
+            ps1.setInt(2, topic.getTopicID());
+            ps1.executeUpdate();
+
+            try (PreparedStatement ps2 = connection.prepareStatement(updateSubjectLessonTopicSQL)) {
+                ps2.setInt(1, topic.getOrder());
+                ps2.setInt(2, topic.getTopicID());
+                ps2.setInt(3, topic.getSubjectID());
+                ps2.executeUpdate();
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -40,8 +40,8 @@ public class resetPassword extends HttpServlet {
         HttpSession session = request.getSession();
         String token = (String) session.getAttribute("resetToken");
         // Retrieve the new password and confirmation password from the request
-        String newPassword = request.getParameter("newPassword");
-        String confirmPassword = request.getParameter("confirmPassword");
+        String newPassword = request.getParameter("newPassword") != null ? request.getParameter("newPassword").trim() : "";
+        String confirmPassword = request.getParameter("confirmPassword")!= null ? request.getParameter("confirmPassword").trim() : "";
 
         // Check if any of the parameters are null or empty
         if (token == null || token.isEmpty() || newPassword == null || newPassword.isEmpty() || confirmPassword == null || confirmPassword.isEmpty()) {

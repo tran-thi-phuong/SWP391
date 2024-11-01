@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.Test" %> 
+
 <html>
     <head>
         <title>Quiz Details</title>
@@ -79,6 +80,7 @@
                 text-decoration: none;
                 cursor: pointer;
             }
+            
         </style>
         <meta charset="UTF-8">
         <title>Test List</title>
@@ -88,17 +90,23 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">  
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet">
+        <style>
+            .media-preview {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+            }
+            .media-preview img,
+            .media-preview video {
+                max-width: 100%;
+                max-height: 100%;
+                margin-right: 10px;
+            }
+        </style>
     </head>
     <%@include file="Header.jsp" %>
     <body>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Admin' && sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
+
         <div style="text-align: center; margin-bottom: 20px;">
             <button onclick="window.location.href = 'QuizList'" style="padding: 10px 20px; border: none; border-radius: 5px; background-color: #28a745; color: white; cursor: pointer;">
                 Back to Quiz List
@@ -121,33 +129,31 @@
                     <strong>Description:</strong>
                     <input type="text" value="${currentTest != null ? currentTest.description : ''}" readonly/>
                 </p>
-                <p>
-                    <strong>Media Type:</strong>
-                    <input type="text" value="${currentTest != null ? currentTest.mediaType : ''}" readonly/>
-                </p>
-                <c:if test="${not empty currentTest.mediaURL}">
-                    <p class="media-container">
+               <h2>Media Files</h2>
+                <c:forEach var="media" items="${mediaList}">
+                    <div class="media-container">
                         <strong>Media:</strong>
                         <c:choose>
-                            <c:when test="${currentTest.mediaType == 'image'}">
-                                <img src="${currentTest.mediaURL}" alt="Media Image"/>
+                            <c:when test="${media.mediaLink.endsWith('.jpg' || media.mediaLink.endsWith('.png'))}">
+                                <img src="${media.mediaLink}" alt="Media Image" />
                             </c:when>
-                            <c:when test="${currentTest.mediaType == 'video'}">
+                            <c:when test="${media.mediaLink.endsWith('.mp4')}">
                                 <video controls>
-                                    <source src="${currentTest.mediaURL}" type="video/mp4">
+                                    <source src="${media.mediaLink}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </c:when>
                             <c:otherwise>
-                                <span>No media available</span>
+                                <img src="${media.mediaLink}" alt="Media Image" />
                             </c:otherwise>
                         </c:choose>
-                        <span><br>${currentTest.mediaDescription}</span>
-                    </p>
-                </c:if>
+                        <p><em>${media.description}</em></p>
+                    </div>
+                </c:forEach>
+                
                 <p>
                     <strong>Type:</strong>
-                    <input type="number" value="${currentTest != null ? currentTest.type : ''}" readonly/> minutes
+                    <input type="text" value="${currentTest != null ? currentTest.type : ''}" readonly/>
                 </p>
                 <p>
                     <strong>Duration:</strong>
@@ -182,12 +188,12 @@
                 </p>
                 <button type="button" onclick="showQuestionList()">View Question List</button>
                 <c:if test="${sessionScope.user.role == 'Instructor'}">
-                <button type="submit" name="action" value="edit" 
-                        ${attemptCount > 0 ? 'disabled' : ''}>Edit</button>
-                <button type="submit" name="action" value="delete" 
-                        ${attemptCount > 0 ? 'disabled' : ''}
-                        onclick="return confirmDelete()">Delete</button>
-                        </c:if>
+                    <button type="submit" name="action" value="edit" 
+                            ${attemptCount > 0 ? 'disabled' : ''}>Edit</button>
+                    <button type="submit" name="action" value="delete" 
+                            ${attemptCount > 0 ? 'disabled' : ''}
+                            onclick="return confirmDelete()">Delete</button>
+                </c:if>
             </form>
             <div id="questionModal" class="modal">
                 <div class="modal-content">
@@ -201,8 +207,7 @@
                 </div>
             </div>
         </div>
-            </c:otherwise>
-        </c:choose>
+
     </body>
     <%@include file="Footer.jsp" %>
     <script>

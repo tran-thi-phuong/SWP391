@@ -1,0 +1,60 @@
+body.page-detail {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.containers {
+    max-width: 800px; /* Set a max width for better readability */
+    margin: auto; /* Center the container */
+}
+
+h1 {
+    text-align: center; /* Center the heading */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+.card {
+    border-radius: 10px; /* Round the corners of the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.card-header {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* Text color for header */
+    font-weight: bold; /* Bold header text */
+}
+
+.card-title {
+    font-size: 1.5rem; /* Increase the size of the card title */
+    margin-bottom: 10px; /* Space below the title */
+}
+
+.card-text {
+    font-size: 1.1rem; /* Slightly larger text */
+}
+
+.alert {
+    margin-top: 20px; /* Space above the alert */
+    border-radius: 5px; /* Round the corners of the alert */
+}
+
+.btn-primarys {
+    background-color: #007bff; /* Bootstrap primary color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Round corners */
+    padding: 10px 20px; /* Padding for button */
+    font-size: 1rem; /* Font size for button */
+}
+
+.btn-primarys:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.btn-primarys:focus {
+    outline: none; /* Remove outline */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5); /* Focus outline */
+}
+.btn3{
+    display: flex;
+     justify-content: space-between; /* Space between buttons */
+    margin: 20px; /* Space above the button container */
+}

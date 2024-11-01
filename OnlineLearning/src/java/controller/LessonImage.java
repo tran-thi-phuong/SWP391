@@ -11,18 +11,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
 import org.json.JSONObject;
-
+// limit max size of upload image
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,
     maxFileSize = 1024 * 1024 * 10,
     maxRequestSize = 1024 * 1024 * 15
 )
+// class for saving image when image is inserted into editor
 public class LessonImage extends HttpServlet {
     private static final String UPLOAD_DIR = "images";
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
+        // define data return type 
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         JSONObject jsonResponse = new JSONObject();
@@ -30,7 +31,7 @@ public class LessonImage extends HttpServlet {
         try {
             Part filePart = request.getPart("file");
             String fileName = getUniqueFileName(filePart.getSubmittedFileName());
-            
+            // get the application root path
             String applicationPath = request.getServletContext().getRealPath("");
             String uploadPath = applicationPath + File.separator + UPLOAD_DIR;
             
@@ -38,12 +39,12 @@ public class LessonImage extends HttpServlet {
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
-            
+            //savr image
             String filePath = uploadPath + File.separator + fileName;
             filePart.write(filePath);
             
             jsonResponse.put("success", true);
-            jsonResponse.put("filename", fileName); // Trả về tên file thay vì URL đầy đủ
+            jsonResponse.put("filename", fileName);
             
         } catch (Exception e) {
             jsonResponse.put("success", false);
@@ -52,7 +53,7 @@ public class LessonImage extends HttpServlet {
         
         out.print(jsonResponse.toString());
     }
-    
+    // generate an unique name for image
     private String getUniqueFileName(String originalFileName) {
         String extension = "";
         int i = originalFileName.lastIndexOf('.');

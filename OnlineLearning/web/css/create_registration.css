@@ -3,6 +3,7 @@ h2 {
     margin-bottom: 20px;
     color: Navy;
     text-align: center;
+
 }
 
 .create .container2 {
@@ -12,10 +13,13 @@ h2 {
     border: 1px solid #ccc;
     border-radius: 10px;
     background-color: #FFE5B4;
+        margin-left: 150px;
 }
 
 .form-group {
     margin-bottom: 15px;
+        margin-left: 250px;
+        margin-right: 200px;
 }
 
 .form-group label {
@@ -31,8 +35,8 @@ h2 {
 
 .button-group {
     display: flex;
-    justify-content: flex-start; /* Có thể thay đổi thành center hoặc space-between tùy yêu cầu */
-    gap: 10px; /* Khoảng cách giữa các nút */
+    justify-content: flex-start; 
+    gap: 10px; 
 }
 
 .button-group button {

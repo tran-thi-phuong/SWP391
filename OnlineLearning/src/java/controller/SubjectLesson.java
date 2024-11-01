@@ -6,14 +6,18 @@
 package controller;
 
 import dal.LessonDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Lesson;
+import model.Users;
 import model.SubjectTopic;
 
 /**
@@ -57,6 +61,10 @@ public class SubjectLesson extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+         if (!hasPermission(request, response)) {
+            return;
+        }
+     
         String courseId = request.getParameter("courseId");
         String courseName = request.getParameter("courseName");
         LessonDAO l = new LessonDAO();
@@ -87,12 +95,15 @@ public class SubjectLesson extends HttpServlet {
         String status = request.getParameter("select-status");
         String topic = request.getParameter("select-topic");
         LessonDAO l = new LessonDAO();
+        // get all topic
         List<SubjectTopic> lessonType = l.getAllLessonTopicBySubjectId(Integer.parseInt(courseId));
         List<Lesson> lessonList;
         if(searchValue != null && !searchValue.trim().isEmpty()){
             request.setAttribute("searchValue", searchValue);
+            // get all lesson of subject
            lessonList = l.searchLesson(Integer.parseInt(courseId), searchValue);
         }else{
+            // get all lesson of subject
            lessonList = l.getAllLessonBySubjectId(Integer.parseInt(courseId)); 
         }
         request.setAttribute("lessonType", lessonType);
@@ -112,5 +123,31 @@ public class SubjectLesson extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    Users currentUser = (Users) session.getAttribute("user");
 
+    // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return false;
+    }
+
+    // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+    String userRole = currentUser.getRole();
+    RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+    Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+    // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+    if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+        response.sendRedirect("/Homepage");
+        return false;
+    } else if (pageID == null) {
+        // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+        response.sendRedirect("error.jsp");
+        return false;
+    }
+
+    return true; // Người dùng có quyền truy cập trang này
+}
 }

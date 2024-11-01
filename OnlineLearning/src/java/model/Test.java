@@ -10,15 +10,12 @@ public class Test {
     private double passCondition;
     private String level;
     private int quantity;
-    private String mediaType;           // New field for media type (image/video)
-    private String mediaURL;            // New field for media URL
-    private String mediaDescription;     // New field for media description
 
     public Test() {
     }
 
     
-    public Test(int testID, int subjectID, String title, String description, String type, String level, String mediaType, String mediaURL, int duration, double passCondition, String mediaDescription, int quantity) {
+    public Test(int testID, int subjectID, String title, String description, String type, String level, int duration, double passCondition, int quantity) {
         this.testID = testID;
         this.subjectID = subjectID;
         this.title = title;
@@ -28,9 +25,6 @@ public class Test {
         this.passCondition = passCondition;
         this.level = level;
         this.quantity = quantity;
-        this.mediaType = mediaType;
-        this.mediaURL = mediaURL;
-        this.mediaDescription = mediaDescription;
     }
 
     
@@ -108,33 +102,10 @@ public class Test {
         this.quantity = quantity;
     }
 
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public String getMediaURL() {
-        return mediaURL;
-    }
-
-    public void setMediaURL(String mediaURL) {
-        this.mediaURL = mediaURL;
-    }
-
-    public String getMediaDescription() {
-        return mediaDescription;
-    }
-
-    public void setMediaDescription(String mediaDescription) {
-        this.mediaDescription = mediaDescription;
-    }
 
     @Override
     public String toString() {
-        return "Test{" + "testID=" + testID + ", subjectID=" + subjectID + ", title=" + title + ", description=" + description + ", type=" + type + ", duration=" + duration + ", passCondition=" + passCondition + ", level=" + level + ", quantity=" + quantity + ", mediaType=" + mediaType + ", mediaURL=" + mediaURL + ", mediaDescription=" + mediaDescription + '}';
+        return "Test{" + "testID=" + testID + ", subjectID=" + subjectID + ", title=" + title + ", description=" + description + ", type=" + type + ", duration=" + duration + ", passCondition=" + passCondition + ", level=" + level + ", quantity=" + quantity + '}';
     }
     
 }

@@ -4,8 +4,11 @@
  */
 package controller;
 
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 //database access
 import dal.TestDAO;
+import dal.TestMediaDAO;
 import dal.TestQuestionDAO;
 
 //servlet default
@@ -16,9 +19,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Users;
+import java.util.List;
 
 //model
 import model.Test;
+import model.TestMedia;
 
 /**
  *
@@ -38,8 +45,13 @@ public class QuizDetail extends HttpServlet {
      */
     TestDAO testDAO = new TestDAO();
     TestQuestionDAO testQuestionDAO = new TestQuestionDAO();
+    TestMediaDAO mediaDAO = new TestMediaDAO();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         if (!hasPermission(request, response)) {
+            return;
+        }
         //get id from parameter
         String testIdStr = request.getParameter("id");
         //Load data
@@ -47,8 +59,10 @@ public class QuizDetail extends HttpServlet {
             int testId = Integer.parseInt(testIdStr);
             Test currentTest = testDAO.getTestById(testId);
             int attemptCount = testDAO.countAttemptsByTestID(currentTest.getTestID());
+            List<TestMedia> mediaList = mediaDAO.getMediaByTestId(testId);
             request.setAttribute("attemptCount", attemptCount);
             request.setAttribute("currentTest", currentTest);
+            request.setAttribute("mediaList", mediaList);
             request.getRequestDispatcher("QuizDetail.jsp").forward(request, response);
         } catch (Exception e) {
             Test currentTest = new Test();
@@ -111,11 +125,13 @@ public class QuizDetail extends HttpServlet {
             case "edit":
                 // Perform edit operation
                 Test currentTest = testDAO.getTestById(testId);
+                List<TestMedia> mediaList = mediaDAO.getMediaByTestId(testId);
 
                 // Check if the test exists
                 if (currentTest != null) {
                     // Set the current test information as request attributes
                     request.setAttribute("currentTest", currentTest);
+                    request.setAttribute("mediaList", mediaList);
 
                     // Forward to the editQuiz JSP
                     try {
@@ -137,7 +153,7 @@ public class QuizDetail extends HttpServlet {
                 }
                 testQuestionDAO.clearQuestionsByTestId(testId);
                 testDAO.deleteTest(testId);
-                response.sendRedirect("QuizDetail?id="+testId);
+                response.sendRedirect("QuizDetail?id=" + testId);
                 break;
 
             default:
@@ -149,16 +165,19 @@ public class QuizDetail extends HttpServlet {
 
         // Redirect or forward to the success page or details page after the action
     }
+
     //edit test
     private void editTest(int testId, HttpServletRequest request, HttpServletResponse response) {
 
         // Get the test details from the database using the TestID
         Test currentTest = testDAO.getTestById(testId);
+        List<TestMedia> mediaList = mediaDAO.getMediaByTestId(testId);
 
         // Check if the test exists
         if (currentTest != null) {
             // Set the current test information as request attributes
             request.setAttribute("currentTest", currentTest);
+            request.setAttribute("mediaList", mediaList);
 
             // Forward to the editQuiz JSP
             try {
@@ -179,5 +198,31 @@ public class QuizDetail extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+  private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    Users currentUser = (Users) session.getAttribute("user");
 
+    // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return false;
+    }
+
+    // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+    String userRole = currentUser.getRole();
+    RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+    Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+    // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+    if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+        response.sendRedirect("/Homepage");
+        return false;
+    } else if (pageID == null) {
+        // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+        response.sendRedirect("error.jsp");
+        return false;
+    }
+
+    return true; // Người dùng có quyền truy cập trang này
+}
 }

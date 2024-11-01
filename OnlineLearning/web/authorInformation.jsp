@@ -6,6 +6,15 @@
 
 <%@ page import="model.Users" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    // Kiểm tra nếu người dùng chưa đăng nhập, chuyển hướng đến login.jsp
+    Users currentUser = (Users) session.getAttribute("user");
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,6 +34,7 @@
     <body>
         <%@include file="Header.jsp"%>
         <p></p>
+        
         <% 
             Users author = (Users) request.getAttribute("author");
             if (author != null) {
@@ -39,6 +49,7 @@
         <p>Tác giả không tồn tại!</p>
         <% } %>
         <%@include file="Footer.jsp"%>
+          
     </body>
 </html>
 
