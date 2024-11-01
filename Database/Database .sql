@@ -108,14 +108,6 @@ CREATE TABLE Lessons (
 	FOREIGN KEY (TopicID) REFERENCES LessonTopic(TopicID)
 );
 GO
-CREATE TABLE LessonMedia (
-    MediaID INT PRIMARY KEY IDENTITY(1,1),
-	Media_Link NVARCHAR(MAX),
-	LessonID INT,
-    Description NVARCHAR(50),
-	FOREIGN KEY (LessonID) REFERENCES Lessons(LessonID)
-);
-GO
 CREATE TABLE Subject_LessonTopic (
     TopicID INT,
     SubjectID INT,
