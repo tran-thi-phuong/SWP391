@@ -8,6 +8,8 @@ package controller;
  *
  * @author sonna
  */
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 import dal.SubjectDAO;
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +28,7 @@ public class SubjectView extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
 
@@ -53,4 +56,6 @@ public class SubjectView extends HttpServlet {
         // Chuyển tiếp yêu cầu đến trang SubjectView.jsp
         request.getRequestDispatcher("SubjectView.jsp").forward(request, response);
     }
+
+    
 }

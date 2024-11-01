@@ -5,10 +5,11 @@
 package controller;
 
 import dal.BlogDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 import model.Users;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,15 +19,11 @@ import model.Blog;
 import model.BlogCategory;
 
 public class AddBlog extends HttpServlet {
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!hasPermission(request, response)) return;
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
-
-        // Nếu người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
 
         // Thêm thông tin người dùng vào request để sử dụng trong JSP
         request.setAttribute("user", user);
@@ -35,6 +32,7 @@ public class AddBlog extends HttpServlet {
         request.getRequestDispatcher("AddBlog.jsp").forward(request, response);
     }
     
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession();
     Users user = (Users) session.getAttribute("user");
@@ -65,4 +63,26 @@ public class AddBlog extends HttpServlet {
 }
 
 
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }

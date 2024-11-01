@@ -141,27 +141,11 @@ public class UpdateCampaign extends HttpServlet {
         }
     }
 
-//    private String saveMediaFile(Part filePart, String uploadDir) throws IOException {
-//        if (filePart != null && filePart.getSize() > 0) {
-//            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-//            String relativeUploadDir = "campaignMedia/";
-//            String uploadPath = getServletContext().getRealPath("/") + File.separator + relativeUploadDir;
-//            File uploadDirectory = new File(uploadPath);
-//            if (!uploadDirectory.exists()) {
-//                uploadDirectory.mkdirs();
-//            }
-//            File file = new File(uploadDirectory, fileName);
-//            filePart.write(file.getAbsolutePath());
-//            return relativeUploadDir + fileName;
-//        }
-//        return null;
-//    }
     private String saveMediaFile(Part filePart, String uploadDir) throws IOException {
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             String relativeUploadDir = "campaignMedia/";
-            String projectRoot = System.getProperty("user.dir");
-            String uploadPath = projectRoot + File.separator + "uploads" + File.separator + relativeUploadDir;
+            String uploadPath = getServletContext().getRealPath("/") + File.separator + relativeUploadDir;
             File uploadDirectory = new File(uploadPath);
             if (!uploadDirectory.exists()) {
                 uploadDirectory.mkdirs();
@@ -172,6 +156,7 @@ public class UpdateCampaign extends HttpServlet {
         }
         return null;
     }
+    
 
     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();

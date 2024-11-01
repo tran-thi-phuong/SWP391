@@ -47,6 +47,10 @@ public class SubjectList extends HttpServlet {
     /**
      * Handles GET requests for subject listing
      * Processes search queries, category filters, and pagination
+     * @param request
+     * @param response
+     * @throws jakarta.servlet.ServletException
+     * @throws java.io.IOException
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

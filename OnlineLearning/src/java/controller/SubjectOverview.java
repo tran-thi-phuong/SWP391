@@ -6,6 +6,8 @@ package controller;
 
 import dal.CategoryDAO;
 import dal.PackagePriceDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 import dal.SubjectDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -14,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
@@ -22,6 +25,7 @@ import java.util.List;
 import model.PackagePrice;
 import model.Subject;
 import model.SubjectCategory;
+import model.Users;
 
 /**
  *
@@ -36,6 +40,9 @@ public class SubjectOverview extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!hasPermission(request, response)) {
+            return;
+        }
         String subjectId = request.getParameter("id");
         request.getSession().setAttribute("subjectID", subjectId);
         SubjectDAO sDAO = new SubjectDAO();
@@ -79,5 +86,27 @@ public class SubjectOverview extends HttpServlet {
             request.getRequestDispatcher("/SubjectDetailOverview.jsp").forward(request, response);
         }
     }
-}
 
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
+}

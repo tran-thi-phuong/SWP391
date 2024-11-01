@@ -5,6 +5,8 @@
 package controller;
 
 import dal.LessonDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 import dal.SubjectDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Lesson;
 import model.SubjectTopic;
+import model.Users;
 
 /**
  *
@@ -61,6 +64,7 @@ public class LessonDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         if (!hasPermission(request, response)) return;
         LessonDAO l = new LessonDAO();
         SubjectDAO s = new SubjectDAO();
         String action = request.getParameter("action");
@@ -136,5 +140,26 @@ public class LessonDetail extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
 
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }

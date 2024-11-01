@@ -6,6 +6,8 @@ package controller;
 
 import model.Lesson;
 import dal.LessonDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 import dal.SubjectDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -21,7 +23,9 @@ public class LessonView extends HttpServlet {
 
     private LessonDAO lessonDAO = new LessonDAO(); // Initialize your DAO
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         if (!hasPermission(request, response)) return;
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         String lessonIdParam = request.getParameter("lessonId");
@@ -51,6 +55,7 @@ public class LessonView extends HttpServlet {
         request.getRequestDispatcher("LessonView.jsp").forward(request, response);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String subjectId = request.getParameter("subjectId");
@@ -84,5 +89,26 @@ public class LessonView extends HttpServlet {
             response.sendRedirect("error.jsp"); // Hoặc trang thông báo lỗi khác
         }
     }
+private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
 
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }

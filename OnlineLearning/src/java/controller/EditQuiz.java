@@ -92,9 +92,7 @@ public class EditQuiz extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         if (!hasPermission(request, response)) {
-            return;
-        }
+        
     }
 
     /**
@@ -113,6 +111,9 @@ public class EditQuiz extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         if (!hasPermission(request, response)) {
+            return;
+        }
         //get action and id of test
         String action = request.getParameter("action");
         String testIdStr = request.getParameter("testId");

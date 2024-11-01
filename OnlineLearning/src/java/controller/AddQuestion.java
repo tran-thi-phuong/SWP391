@@ -5,8 +5,10 @@
 package controller;
 
 //for access database
+import dal.PagesDAO;
 import dal.QuestionDAO;
 import dal.QuestionMediaDAO;
+import dal.RolePermissionDAO;
 
 //servlet default
 import java.io.IOException;
@@ -17,6 +19,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 //for save media file
 import jakarta.servlet.http.Part;
@@ -31,6 +34,7 @@ import java.util.stream.Collectors;
 //model
 import model.Question;
 import model.QuestionMedia;
+import model.Users;
 
 /**
  *
@@ -94,6 +98,7 @@ public class AddQuestion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!hasPermission(request, response)) return;
         // To save a question after editing it
         String content = request.getParameter("content");
         String status = request.getParameter("status");
@@ -176,5 +181,26 @@ public class AddQuestion extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+ private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
 
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect("/Homepage");
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }
