@@ -32,28 +32,28 @@ public class SubjectView extends HttpServlet {
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
 
-        // Khởi tạo userId
+        // Initialize userId
         int userId = (user != null) ? user.getUserID() : -1;
         String subjectIdParam = request.getParameter("subjectId");
 
-        // Phân tích subjectId từ tham số yêu cầu
+        // Parse subjectId from request parameter
         int subjectId = (subjectIdParam != null && !subjectIdParam.isEmpty()) ? Integer.parseInt(subjectIdParam) : -1;
 
         SubjectDAO subjectDAO = new SubjectDAO();
         List<Subject> subjects;
 
-        // Nếu người dùng chưa đăng nhập, lấy danh sách môn học chỉ dựa trên subjectId
+        // If the user is not logged in, retrieve the subject list based on subjectId only
         if (user == null) {
             subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId);
         } else {
-            // Nếu người dùng đã đăng nhập, lấy danh sách môn học dựa trên userId và subjectId
+            // If the user is logged in, retrieve the subject list based on userId and subjectId
             subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
         }
 
-        // Thiết lập thuộc tính subjects để sử dụng trong JSP
+        // Set the subjects attribute for use in the JSP
         request.setAttribute("subjects", subjects);
 
-        // Chuyển tiếp yêu cầu đến trang SubjectView.jsp
+        // Forward the request to SubjectView.jsp
         request.getRequestDispatcher("SubjectView.jsp").forward(request, response);
     }
 
