@@ -142,7 +142,8 @@ public class RolePermission extends HttpServlet {
 
         // Redirect to homepage if user does not have permission
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-            response.sendRedirect("/Homepage");
+           response.sendRedirect(request.getContextPath() + "/Homepage");
+
             return false;
         } else if (pageID == null) {
             // Redirect to error page if page ID is not found

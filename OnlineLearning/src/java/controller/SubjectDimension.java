@@ -112,7 +112,8 @@ public class SubjectDimension extends HttpServlet {
         String userRole = currentUser.getRole();
 
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-            response.sendRedirect("/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+
             return false;
         } else if (pageID == null) {
             response.sendRedirect("error.jsp");

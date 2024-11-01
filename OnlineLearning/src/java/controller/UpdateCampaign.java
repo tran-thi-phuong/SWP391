@@ -172,7 +172,8 @@ public class UpdateCampaign extends HttpServlet {
         Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
 
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-            response.sendRedirect("/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+
             return false;
         } else if (pageID == null) {
             response.sendRedirect("error.jsp");
