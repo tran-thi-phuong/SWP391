@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/FU%20Learning/SWP391/OnlineLearning/web/UserListAu.jsp</file>
+            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/controller/LessonImage.java</file>
+            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/web/lessonDetail.jsp</file>
+            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/controller/DeleteLesson.java</file>
+            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/controller/LessonDetail.java</file>
+            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/controller/Login.java</file>
+            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/web/WEB-INF/web.xml</file>
+            <file>file:/D:/HOCTAP/FA24/SWP391/SWP391/OnlineLearning/src/java/dal/LessonDAO.java</file>
         </group>
     </open-files>
 </project-private>
