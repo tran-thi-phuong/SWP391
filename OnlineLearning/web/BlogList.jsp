@@ -18,15 +18,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Blog List</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">  
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet">
         <link href="BlogList.css" rel="stylesheet">
-        <style>
-
-        </style>
     </head>
     <body>
         <%@include file="Header.jsp"%>
@@ -41,8 +38,8 @@
                     <div class="search-bar">
                         <h4>Search </h4>
                         <form action="blogList" method="get">
-                            <input type="text" name="search" class="form-control" placeholder="Enter word to search">
-                            <button type="submit" class="btn btn-primary mt-2">Save</button>
+                            <input type="text" name="title" class="form-control" placeholder="Enter word to search" value="${param.title}">
+                            <button type="submit" class="btn btn-primary mt-2">Search</button>
                         </form>
                     </div>
 
@@ -50,8 +47,10 @@
                         <h4>Category</h4>
                         <ul class="list-group">
                             <c:forEach var="category" items="${categories}">
-                                <li class="list-group-item">
-                                    <a href="BlogList?categoryId=${category.blogCategoryId}">${category.title}</a>
+                                <li class="list-group-item ${param.categoryID == category.blogCategoryId ? 'active' : ''}">
+                                    <a href="blogList?categoryID=${category.blogCategoryId}&title=${param.title}">
+                                        ${category.title}
+                                    </a>
                                 </li>
                             </c:forEach>
                         </ul>
@@ -73,19 +72,19 @@
                         <ul class="pagination">
                             <c:if test="${currentPage > 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="blogs?page=${currentPage - 1}" aria-label="Previous">
+                                    <a class="page-link" href="blogList?page=${currentPage - 1}&title=${param.title}&categoryID=${param.categoryID}" aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
                             </c:if>
                             <c:forEach var="i" begin="1" end="${totalPages}">
                                 <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="blogList?page=${i}">${i}</a>
+                                    <a class="page-link" href="blogList?page=${i}&title=${param.title}&categoryID=${param.categoryID}">${i}</a>
                                 </li>
                             </c:forEach>
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="blogList?page=${currentPage + 1}" aria-label="Next">
+                                    <a class="page-link" href="blogList?page=${currentPage + 1}&title=${param.title}&categoryID=${param.categoryID}" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>

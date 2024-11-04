@@ -47,10 +47,10 @@ public class sliderList extends HttpServlet {
         SliderDAO sliderDAO = new SliderDAO();
 
         // Update the status based on the action
-        if ("show".equals(action)) {
-            sliderDAO.updateSliderStatus(sliderId, "shown");
-        } else if ("hide".equals(action)) {
-            sliderDAO.updateSliderStatus(sliderId, "hidden");
+        if ("Show".equals(action)) {
+            sliderDAO.updateSliderStatus(sliderId, "Show");
+        } else if ("Hide".equals(action)) {
+            sliderDAO.updateSliderStatus(sliderId, "Hide");
         }
 
         // Redirect back to the slider list after the status update

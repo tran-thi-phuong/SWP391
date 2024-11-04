@@ -22,9 +22,9 @@ public class myCourse extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!hasPermission(request, response)) {
-            return;
-        }
+//        if (!hasPermission(request, response)) {
+//            return;
+//        }
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         int userId = user.getUserID();

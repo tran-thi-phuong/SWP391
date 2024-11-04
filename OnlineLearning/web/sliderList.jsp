@@ -43,8 +43,8 @@
 
                         <select name="status">
                             <option value="All" <c:if test="${statusFilter == null || statusFilter == 'All'}">selected</c:if>>All</option>
-                            <option value="shown" <c:if test="${statusFilter == 'shown'}">selected</c:if>>Show</option>
-                            <option value="hidden" <c:if test="${statusFilter == 'hidden'}">selected</c:if>>Hide</option>
+                            <option value="Show" <c:if test="${statusFilter == 'Show'}">selected</c:if>>Show</option>
+                            <option value="Hide" <c:if test="${statusFilter == 'Hide'}">selected</c:if>>Hide</option>
                             </select>
 
                             <button type="submit">Filter</button>
@@ -82,11 +82,11 @@
                                     <form action="sliderList" method="post">
                                         <input type="hidden" name="sliderID" value="${s.sliderID}">
                                         <c:choose>
-                                            <c:when test="${s.status eq 'hidden'}">
-                                                <button type="submit" name="action" value="show" class="btn btn-success">Show</button>
+                                            <c:when test="${s.status eq 'Hide'}">
+                                                <button type="submit" name="action" value="Show" class="btn btn-success">Show</button>
                                             </c:when>
                                             <c:otherwise>
-                                                <button type="submit" name="action" value="hide" class="btn btn-danger">Hide</button>
+                                                <button type="submit" name="action" value="Hide" class="btn btn-danger">Hide</button>
                                             </c:otherwise>
                                         </c:choose>
                                     </form>

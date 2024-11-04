@@ -15,27 +15,44 @@ import model.Blog;
 import model.BlogCategory;
 
 public class blogList extends HttpServlet {
-    
-    private static final int PAGE_SIZE = 8; 
+
+    private static final int PAGE_SIZE = 8;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BlogDAO blogDAO = new BlogDAO();
-        
+
         int page = 1;
         String pageStr = request.getParameter("page");
         if (pageStr != null && !pageStr.isEmpty()) {
             try {
                 page = Integer.parseInt(pageStr);
             } catch (NumberFormatException e) {
-                page = 1; 
+                page = 1;
             }
         }
-        
-        List<Blog> blogs = blogDAO.getBlogsByPage(page, PAGE_SIZE);
+
+        String title = request.getParameter("title");
+        String categoryIdStr = request.getParameter("categoryID");
+        Integer categoryID = null;
+
+        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+            try {
+                categoryID = Integer.parseInt(categoryIdStr);
+            } catch (NumberFormatException e) {
+                categoryID = null;
+            }
+        }
+
+        // Lấy blog dựa trên title và categoryID, bao gồm cả phân trang
+        List<Blog> blogs = blogDAO.getBlogsByPage(title, categoryID, page, PAGE_SIZE);
+
+        // Lấy danh sách tất cả các danh mục
         List<BlogCategory> categories = blogDAO.getAllCategories();
-        
-        int totalBlogs = blogDAO.getTotalBlogs();
+
+        // Tính tổng số blog dựa trên bộ lọc
+        int totalBlogs = blogDAO.getTotalBlogs(title, categoryID);
         int totalPages = (int) Math.ceil((double) totalBlogs / PAGE_SIZE);
 
         // Đặt các thuộc tính cho JSP
@@ -43,13 +60,15 @@ public class blogList extends HttpServlet {
         request.setAttribute("categories", categories);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        
+        request.setAttribute("searchTitle", title);        // Để giữ giá trị tìm kiếm khi phân trang
+        request.setAttribute("filterCategory", categoryID);
+
         request.getRequestDispatcher("BlogList.jsp").forward(request, response);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response); 
+        doGet(request, response);
     }
 }

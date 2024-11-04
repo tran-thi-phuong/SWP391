@@ -41,13 +41,13 @@
                     </form>
 
                     <form action="myRegistration" method="get" style="display: inline-flex; gap: 10px;">
-                        <input type="hidden" name="status" value="In-progress" />
-                        <button type="submit">In-progress</button>
+                        <input type="hidden" name="status" value="Active" />
+                        <button type="submit">Active</button>
                     </form>
 
                     <form action="myRegistration" method="get" style="display: inline-flex; gap: 10px;">
-                        <input type="hidden" name="status" value="Finish" />
-                        <button type="submit">Finish</button>
+                        <input type="hidden" name="status" value="In-active" />
+                        <button type="submit">In-active</button>
                     </form>
 
                     <form action="myRegistration" method="get" style="display: inline-flex; gap: 10px;">

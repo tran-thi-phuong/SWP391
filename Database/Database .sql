@@ -159,6 +159,7 @@ CREATE TABLE Sliders (
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
     Image NVARCHAR(255),
+	Status NVARCHAR(10) NOT NULL DEFAULT 'Show',
     Content NVARCHAR(MAX),
     FOREIGN KEY (BlogID) REFERENCES Blogs(BlogID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
@@ -279,7 +280,7 @@ CREATE TABLE System_Setting (
 	Staff BIT DEFAULT 0,
 	Note BIT DEFAULT 0,
 	campaign BIT DEFAULT 0,
-ShowContent BIT NOT NULL DEFAULT 1,
+	ShowContent BIT NOT NULL DEFAULT 1,
     ShowLessonID BIT NOT NULL DEFAULT 1,
     ShowStatus BIT NOT NULL DEFAULT 1,
     ShowLevel BIT NOT NULL DEFAULT 1,                
@@ -339,14 +340,11 @@ CREATE TABLE Lesson_User (
 );
 GO
 
-CREATE TABLE Blog_Media (
-    MediaID INT PRIMARY KEY IDENTITY(1,1),
-    BlogID INT NOT NULL,
-    MediaType NVARCHAR(10), -- 'image' hoặc 'video'
-    MediaLink NVARCHAR(MAX), -- Đường dẫn đến ảnh hoặc video
-    Description NVARCHAR(255),
-    FOREIGN KEY (BlogID) REFERENCES Blogs(BlogId) ON DELETE CASCADE
-);
-GO
+
+
+
+
+
+
 
 

@@ -29,14 +29,14 @@
             <div class="slider">
                 <!-- Radio buttons for navigation -->
                 <c:forEach var="slider" items="${sliders}" varStatus="status">
-                    <c:if test="${slider.status == 'shown'}">
+                    <c:if test="${slider.status == 'Show'}">
                         <input type="radio" name="slider" id="slide${status.index + 1}" <c:if test="${status.index == 0}">checked</c:if>>
                     </c:if>
                 </c:forEach>
 
                 <div class="slides">
                     <c:forEach var="slider" items="${sliders}" varStatus="status">
-                        <c:if test="${slider.status == 'shown'}">
+                        <c:if test="${slider.status == 'Show'}">
                             <div class="slide">
                                 <img src="${slider.image}" alt="${slider.title}">
                             </div>
@@ -46,7 +46,7 @@
 
                 <div class="radio-controls">
                     <c:forEach var="slider" items="${sliders}" varStatus="status">
-                        <c:if test="${slider.status == 'shown'}">
+                        <c:if test="${slider.status == 'Show'}">
                             <label for="slide${status.index + 1}"></label>
                         </c:if>
                     </c:forEach>
