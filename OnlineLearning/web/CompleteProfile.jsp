@@ -92,6 +92,10 @@
                         </button>
                     </div>
                 </form>
+                <div class="text-center mt-3">
+                    <a href="login.jsp" class="btn btn-link">Back to Login</a>
+                </div>
+
             </div>
         </div>
         <br>

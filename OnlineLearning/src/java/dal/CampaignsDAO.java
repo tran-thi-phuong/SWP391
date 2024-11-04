@@ -28,6 +28,7 @@ public class CampaignsDAO extends DBContext {
         this.throwError = throwError;
     }
 
+    // Method to get all campaign by map
     public Map<Integer, Campaigns> getAllCampaigns() {
         Map<Integer, Campaigns> list = new HashMap<>();
         String sql = "SELECT * FROM Campaigns"; // Sửa SQL cho đúng tên bảng
@@ -51,6 +52,17 @@ public class CampaignsDAO extends DBContext {
         return list;
     }
 
+    /**
+     * 
+     * @param currentPage
+     * @param pageSize
+     * @param campaignName
+     * @param validFrom
+     * @param validTo
+     * @param status
+     * @return 
+     */
+    // Method to paging and filter campaign list
     public List<Campaigns> getCampaignsesByPage(int currentPage, int pageSize, String campaignName, Date validFrom, Date validTo, String status) {
         List<Campaigns> campaigns = new ArrayList<>();
         int offset = (currentPage - 1) * pageSize;
@@ -102,6 +114,16 @@ public class CampaignsDAO extends DBContext {
         }
         return campaigns;
     }
+    
+    /**
+     * 
+     * @param campaignName
+     * @param validFrom
+     * @param validTo
+     * @param status
+     * @return 
+     */
+    // Method to count campaign after filter
 
     public int getTotalCampaign(String campaignName, Date validFrom, Date validTo, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Campaigns WHERE 1=1");
@@ -145,7 +167,7 @@ public class CampaignsDAO extends DBContext {
         }
         return 0; // Return 0 if an error occurs
     }
-
+// Method to get all campaign by list
     public List<Campaigns> getAllCampaign() {
         List<Campaigns> list = new ArrayList<>();
         try {
@@ -167,7 +189,7 @@ public class CampaignsDAO extends DBContext {
         }
         return list;
     }
-
+// Method to stop a campaign
     public boolean stopCampaign(int campaignId) {
         String sql = "UPDATE Campaigns SET EndDate = GETDATE(), Status = 'End' WHERE CampaignID = ?";
 
@@ -183,6 +205,7 @@ public class CampaignsDAO extends DBContext {
         }
     }
 
+    // Method to start an campaign
     public boolean startCampaign(int campaignId) {
         if (throwError) {
             throw new RuntimeException("Simulated database error");
