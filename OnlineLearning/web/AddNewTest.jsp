@@ -113,7 +113,7 @@
                         </p>
                         <p>
                             <strong>Pass Condition:</strong>
-                            <input type="text" name="passCondition" required/> %
+                            <input type="number" name="passCondition" required/> %
                         </p>
                         <strong for="level">Level:</strong>
                         <select id="level" name="level" required>
