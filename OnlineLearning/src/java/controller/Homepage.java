@@ -21,22 +21,29 @@ public class Homepage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Create an instance of SliderDAO to interact with the database
         SliderDAO sliderDAO = new SliderDAO();
+        
+        // Retrieve all sliders from the database
         List<Slider> sliders = sliderDAO.getAllSliders();
+        
+        // Retrieve the latest 5 blogs from the database
         List<Blog> latestBlogs = sliderDAO.getLatestBlogs(5);
 
-        // Đẩy danh sách blog mới nhất sang trang homepage.jsp
+        // Set the lists of latest blogs and sliders as request attributes for use in the JSP
         request.setAttribute("latestBlogs", latestBlogs);
         request.setAttribute("sliders", sliders);
         
         try {
-        List<Subject> topSubjects = sliderDAO.getTopSubjects(5);
-        request.setAttribute("topSubjects", topSubjects);
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
+            // Retrieve the top 5 subjects from the database
+            List<Subject> topSubjects = sliderDAO.getTopSubjects(5);
+            // Set the list of top subjects as a request attribute
+            request.setAttribute("topSubjects", topSubjects);
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle SQL exceptions
+        }
 
-        // Điều hướng đến trang homepage.jsp
+        // Forward the request to the homepage.jsp for rendering
         request.getRequestDispatcher("Homepage.jsp").forward(request, response);
     }
 }
