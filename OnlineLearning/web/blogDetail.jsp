@@ -50,32 +50,8 @@
         <%@include file="Header.jsp"%>
         <div class="container">
             <div class="row">
-                <!-- Sidebar: Search + Categories -->
-                <div class="col-md-3 sidebar">
-                    <!-- Thanh tìm kiếm -->
-                    <div class="search-bar mb-4">
-                        <h4>Tìm kiếm</h4>
-                        <form action="BlogList" method="get">
-                            <input type="text" name="search" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
-                            <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
-                        </form>
-                    </div>
-
-                    <!-- Danh mục -->
-                    <div class="categories">
-                        <h4>Danh mục</h4>
-                        <ul class="list-group">
-                            <c:forEach var="category" items="${categories}">
-                                <li class="list-group-item">
-                                    <a href="BlogList?categoryId=${category.blogCategoryId}">${category.title}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </div>
-                </div>
-
                 <!-- Blog Detail (Content Center) -->
-                <div class="col-md-6 blog-detail-container">
+                <div class="col-md-8 blog-detail-container">
                     <%
                         Blog blog = (Blog) request.getAttribute("blog");
                         if (blog != null) {
@@ -99,7 +75,7 @@
                     <% } %>
                 </div>
 
-                <div class="col-md-3 latest-new">
+                <div class="col-md-4 latest-new">
                     <h4>Bài viết mới nhất</h4>
                     <c:forEach var="latestBlog" items="${latestBlogs}">
                         <div class="latest-blog-item mb-3">

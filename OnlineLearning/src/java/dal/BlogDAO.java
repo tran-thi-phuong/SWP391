@@ -22,21 +22,48 @@ import java.util.regex.*;
 
 public class BlogDAO extends DBContext {
 
-    public List<Blog> getBlogsByPage(int page, int pageSize) {
+    public List<Blog> getBlogsByPage(String title, Integer categoryID, int page, int pageSize) {
         List<Blog> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle "
+
+        // Xây dựng câu lệnh SQL với điều kiện lọc
+        StringBuilder sql = new StringBuilder("SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle "
                 + "FROM Blogs b "
                 + "JOIN Users u ON b.UserID = u.UserID "
                 + "JOIN Blog_Category bc ON b.Blog_CategoryID = bc.Blog_CategoryID "
-                + "WHERE b.Status!='Hide'"
-                + "ORDER BY b.Create_At DESC "
-                + "OFFSET ? ROWS "
-                + "FETCH NEXT ? ROWS ONLY";
+                + "WHERE b.Status != 'Hide'");
+
+        // Thêm điều kiện tìm kiếm theo tiêu đề nếu có
+        if (title != null && !title.trim().isEmpty()) {
+            sql.append(" AND b.Title LIKE ?");
+        }
+
+        // Thêm điều kiện lọc theo danh mục nếu có
+        if (categoryID != null) {
+            sql.append(" AND b.Blog_CategoryID = ?");
+        }
+
+        sql.append(" ORDER BY b.Create_At DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
         try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, offset);
-            st.setInt(2, pageSize);
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Thiết lập giá trị cho tiêu đề nếu có
+            if (title != null && !title.trim().isEmpty()) {
+                st.setString(paramIndex++, "%" + title + "%");
+            }
+
+            // Thiết lập giá trị cho danh mục nếu có
+            if (categoryID != null) {
+                st.setInt(paramIndex++, categoryID);
+            }
+
+            // Thiết lập phân trang
+            st.setInt(paramIndex++, offset);
+            st.setInt(paramIndex, pageSize);
+
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Blog b = new Blog();
@@ -64,10 +91,33 @@ public class BlogDAO extends DBContext {
         return list;
     }
 
-    public int getTotalBlogs() {
-        String sql = "SELECT COUNT(*) FROM Blogs where Status!='Hide'";
+    public int getTotalBlogs(String title, Integer categoryID) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Blogs WHERE Status != 'Hide'");
+
+        // Thêm điều kiện tìm kiếm tiêu đề nếu có
+        if (title != null && !title.trim().isEmpty()) {
+            sql.append(" AND Title LIKE ?");
+        }
+
+        // Thêm điều kiện lọc theo danh mục nếu có
+        if (categoryID != null) {
+            sql.append(" AND Blog_CategoryID = ?");
+        }
+
         try {
-            PreparedStatement st = connection.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Thiết lập giá trị cho tiêu đề nếu có
+            if (title != null && !title.trim().isEmpty()) {
+                st.setString(paramIndex++, "%" + title + "%");
+            }
+
+            // Thiết lập giá trị cho danh mục nếu có
+            if (categoryID != null) {
+                st.setInt(paramIndex, categoryID);
+            }
+
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
@@ -158,7 +208,7 @@ public class BlogDAO extends DBContext {
                 c.setBlogCategoryId(rs.getInt("Blog_CategoryID"));
                 c.setTitle(rs.getString("CategoryTitle"));
                 blog.setBlogCategoryId(c);
-           
+
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -168,7 +218,7 @@ public class BlogDAO extends DBContext {
 
     public List<Blog> getAllBlogs() {
         List<Blog> list = new ArrayList<>();
-        String sql =  """
+        String sql = """
                       SELECT b.*, u.Username, u.Name, bc.Title as CategoryTitle
                  FROM Blogs b 
                 JOIN Users u ON b.UserID = u.UserID 
@@ -260,16 +310,16 @@ public class BlogDAO extends DBContext {
                 System.out.println("Content: " + blog.getContent());
                 System.out.println("Created At: " + blog.getCreateAt());
                 System.out.println("Status: " + blog.getStatus());
-                
+
                 Users user = blog.getUserId();
                 System.out.println("Author ID: " + user.getUserID());
                 System.out.println("Author Username: " + user.getUsername());
                 System.out.println("Author Name: " + user.getName());
-                
+
                 BlogCategory category = blog.getBlogCategoryId();
                 System.out.println("Category ID: " + category.getBlogCategoryId());
                 System.out.println("Category Title: " + category.getTitle());
-                
+
                 System.out.println("-------------------------------");
             }
         }

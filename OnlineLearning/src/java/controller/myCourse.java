@@ -4,116 +4,132 @@
  */
 package controller;
 
-import dal.PagesDAO;
-import dal.RegistrationsDAO;
-import dal.RolePermissionDAO;
-import model.Registrations;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.List;
-import model.Users;
+import dal.PagesDAO; // Importing PagesDAO to access page information
+import dal.RegistrationsDAO; // Importing RegistrationsDAO to manage course registrations
+import dal.RolePermissionDAO; // Importing RolePermissionDAO to handle user permissions
+import model.Registrations; // Importing the Registrations model class
+import jakarta.servlet.ServletException; // Importing ServletException for handling servlet errors
+import jakarta.servlet.http.HttpServlet; // Importing HttpServlet for creating HTTP servlets
+import jakarta.servlet.http.HttpServletRequest; // Importing HttpServletRequest to handle requests
+import jakarta.servlet.http.HttpServletResponse; // Importing HttpServletResponse to handle responses
+import jakarta.servlet.http.HttpSession; // Importing HttpSession to manage user sessions
+import java.io.IOException; // Importing IOException for input/output errors
+import java.util.List; // Importing List for using collections of Registrations objects
+import model.Users; // Importing the Users model class
 
 public class myCourse extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!hasPermission(request, response)) {
-            return;
-        }
+        // Uncomment to enable permission checking
+//        if (!hasPermission(request, response)) {
+//            return;
+//        }
+        
+        // Get the current session and the logged-in user
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
-        int userId = user.getUserID();
+        int userId = user.getUserID(); // Retrieve the user ID from the session
 
+        // Retrieve search query and pagination parameters from the request
         String searchQuery = request.getParameter("searchQuery");
         String pageStr = request.getParameter("page");
         String pageSizeStr = request.getParameter("pageSize");
 
+        // Maintain search query across requests
         if (searchQuery == null) {
             searchQuery = (String) session.getAttribute("searchQuery");
         }
+        // Maintain page size across requests
         if (pageSizeStr == null) {
             pageSizeStr = (String) session.getAttribute("pageSizeStr");
         }
 
-        // Lưu các giá trị hiện tại vào session cho các request tiếp theo
+        // Store the current values in session for future requests
         session.setAttribute("searchQuery", searchQuery);
         session.setAttribute("pageSizeStr", pageSizeStr);
-        int PAGE_SIZE = 5;
+
+        int PAGE_SIZE = 5; // Default page size
         if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
             try {
-                PAGE_SIZE = Integer.parseInt(pageSizeStr);
+                PAGE_SIZE = Integer.parseInt(pageSizeStr); // Parse the page size if provided
             } catch (NumberFormatException e) {
-                PAGE_SIZE = 5;
+                PAGE_SIZE = 5; // Reset to default if parsing fails
             }
         }
 
-        // Xác định trang hiện tại
+        // Determine the current page
         int page = 1;
         if (pageStr != null && !pageStr.isEmpty()) {
             try {
-                page = Integer.parseInt(pageStr);
+                page = Integer.parseInt(pageStr); // Parse the current page number
             } catch (NumberFormatException e) {
-                page = 1;
+                page = 1; // Reset to page 1 if parsing fails
             }
         }
 
+        // Initialize RegistrationsDAO to access course data
         RegistrationsDAO course = new RegistrationsDAO();
         List<Registrations> courseList;
         int totalCourse;
 
+        // Search for courses if a search query is provided
         if (searchQuery != null && !searchQuery.isEmpty()) {
             courseList = course.searchCourseByUserId(userId, searchQuery, page, PAGE_SIZE);
-            totalCourse = course.getTotalSearchResultsCourseByUserId(userId, searchQuery);
+            totalCourse = course.getTotalSearchResultsCourseByUserId(userId, searchQuery); // Get total results based on search
         } else {
+            // Retrieve courses for the user without search
             courseList = course.getCourseByUserId(userId, page, PAGE_SIZE);
-            totalCourse = course.getTotalCourseByUserId(userId);
+            totalCourse = course.getTotalCourseByUserId(userId); // Get total courses for the user
         }
-        int totalPages = (int) Math.ceil((double) totalCourse / PAGE_SIZE);
-        request.setAttribute("courseList", courseList);
-        request.setAttribute("searchQuery", searchQuery);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("pageSize", PAGE_SIZE);
-        request.setAttribute("totalPages", totalPages);
 
-        // Chuyển tiếp request tới trang JSP
+        // Calculate total pages for pagination
+        int totalPages = (int) Math.ceil((double) totalCourse / PAGE_SIZE);
+        
+        // Set attributes for the JSP
+        request.setAttribute("courseList", courseList); // List of courses
+        request.setAttribute("searchQuery", searchQuery); // Current search query
+        request.setAttribute("currentPage", page); // Current page number
+        request.setAttribute("pageSize", PAGE_SIZE); // Current page size
+        request.setAttribute("totalPages", totalPages); // Total number of pages
+
+        // Forward the request to the myCourse.jsp page
         request.getRequestDispatcher("myCourse.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Currently, no POST logic implemented; can delegate to doGet if needed
     }
-     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    // Method to check user permissions for accessing the servlet
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
 
-        // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang đăng nhập
+        // Check if user is logged in; if not, redirect to login page
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
-            return false;
+            return false; // User is not logged in
         }
 
-        // Lấy quyền của người dùng và kiểm tra quyền truy cập với trang hiện tại
+        // Retrieve user role and check permissions
         String userRole = currentUser.getRole();
         RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
         Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
 
-        // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
+        // If user is logged in but lacks permission, redirect to home page
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-           response.sendRedirect(request.getContextPath() + "/Homepage");
-
-            return false;
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+            return false; // User lacks permission
         } else if (pageID == null) {
-            // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
+            // If no page found in permission system, redirect to error page
             response.sendRedirect("error.jsp");
-            return false;
+            return false; // No page found
         }
 
-        return true; // Người dùng có quyền truy cập trang này
+        return true; // User has access to this page
     }
 }

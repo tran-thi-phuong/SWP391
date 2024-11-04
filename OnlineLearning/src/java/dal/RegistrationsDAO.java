@@ -376,28 +376,30 @@ public class RegistrationsDAO extends DBContext {
         String sql;
 
         if ("All".equals(status)) {
-            sql = "SELECT r.RegistrationID, "
-                    + "       u.UserID, "
-                    + "       s.SubjectID, "
-                    + "       s.Title AS SubjectName, "
-                    + "       pp.PackageID, "
-                    + "       pp.Name AS PackageName, "
-                    + "       r.Registration_Time, "
-                    + "       r.Total_Cost, "
-                    + "       r.Status, "
-                    + "       r.Valid_From, "
-                    + "       r.Valid_To, "
-                    + "       staff.UserID AS StaffID, "
-                    + "       staff.Name AS StaffName, "
-                    + "       r.Note "
-                    + "FROM Registrations r "
-                    + "JOIN Users u ON r.UserID = u.UserID "
-                    + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                    + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                    + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                    + "WHERE r.UserID = ? AND r.Status != 'Cancelled' "
-                    + "ORDER BY r.Registration_Time DESC "
-                    + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
+            sql = """
+                  SELECT r.RegistrationID,
+                         u.UserID, 
+                         s.SubjectID, 
+                        s.Title AS SubjectName, 
+                         pp.PackageID, "
+                         pp.Name AS PackageName, 
+                         r.Registration_Time, 
+                         r.Total_Cost, 
+                          r.Status, 
+                          r.Valid_From, 
+                         r.Valid_To, 
+                          staff.UserID AS StaffID, 
+                          staff.Name AS StaffName, 
+                          r.Note 
+                    FROM Registrations r 
+                    JOIN Users u ON r.UserID = u.UserID 
+                    JOIN Subjects s ON r.SubjectID = s.SubjectID 
+                    JOIN Package_Price pp ON r.PackageID = pp.PackageID 
+                    LEFT JOIN Users staff ON r.StaffID = staff.UserID 
+                    WHERE r.UserID = ? AND r.Status != 'Cancelled' 
+                    ORDER BY r.Registration_Time DESC 
+                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                  """; // Thêm phân trang
         } else {
             sql = "SELECT r.RegistrationID, "
                     + "       u.UserID, "
@@ -578,7 +580,7 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? "
+                + "WHERE r.UserID = ? AND  r.Status != 'Cancelled' "
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS "
                 + "FETCH NEXT ? ROWS ONLY";
