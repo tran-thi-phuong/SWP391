@@ -1,7 +1,6 @@
 package dal;
 
 import java.sql.Timestamp;
-import model.SubjectCategoryCount;
 import java.util.ArrayList;
 import java.util.List;
 import model.Registrations;
@@ -66,19 +65,21 @@ public class RegistrationsDAO extends DBContext {
         return registrations;
     }
 
-    public int getTotalRegistrationsCount(String email, String subjectId, String campaignId, Date registrationTimeFrom, Date validTo, String status) {
+    public int getTotalRegistrationsCount(String email, String title, String campaignId, Date registrationTimeFrom, Date validTo, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
                 + "JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
+                + "JOIN Subjects s ON cs.SubjectID = s.SubjectID "
                 + "JOIN Campaigns c ON cs.CampaignID = c.CampaignID WHERE 1=1");
 
         // Build query conditions based on provided parameters
         if (email != null && !email.isEmpty()) {
             sql.append(" AND u.Email LIKE ?");
         }
-        if (subjectId != null && !subjectId.isEmpty()) {
-            sql.append(" AND cs.SubjectID = ?");
+        if (title != null && !title.isEmpty()) {
+            sql.append(" AND s.Title LIKE ?"); 
         }
+
         if (campaignId != null && !campaignId.isEmpty()) {
             sql.append(" AND c.CampaignID = ?");
         }
@@ -86,7 +87,7 @@ public class RegistrationsDAO extends DBContext {
             sql.append(" AND r.Registration_Time >= ?");
         }
         if (validTo != null) {
-            sql.append(" AND r.Valid_To <= ?");
+            sql.append(" OR r.Valid_To <= ?");
         }
         if (status != null && !status.isEmpty()) {
             sql.append(" AND r.Status LIKE ?");
@@ -98,8 +99,8 @@ public class RegistrationsDAO extends DBContext {
             if (email != null && !email.isEmpty()) {
                 stmt.setString(paramIndex++, "%" + email + "%");
             }
-            if (subjectId != null && !subjectId.isEmpty()) {
-                stmt.setInt(paramIndex++, Integer.parseInt(subjectId));
+            if (title != null && !title.isEmpty()) {
+                stmt.setString(paramIndex++, "%" + title + "%");
             }
             if (campaignId != null && !campaignId.isEmpty()) {
                 stmt.setInt(paramIndex++, Integer.parseInt(campaignId));
@@ -173,8 +174,20 @@ public class RegistrationsDAO extends DBContext {
         return registrations;
     }
 
+    /**
+     *
+     * @param currentPage
+     * @param pageSize
+     * @param email
+     * @param title
+     * @param campaignId
+     * @param registrationTime
+     * @param validTo
+     * @param status
+     * @return
+     */
     public List<Registrations> getAllRegistration(int currentPage, int pageSize, String email,
-            String subjectId, String campaignId,
+            String title, String campaignId,
             Date registrationTime, Date validTo,
             String status) {
         List<Registrations> registrations = new ArrayList<>();
@@ -199,10 +212,11 @@ public class RegistrationsDAO extends DBContext {
             sql.append(" AND u.Email LIKE ?");
             params.add("%" + email + "%");
         }
-        if (subjectId != null && !subjectId.isEmpty()) {
-            sql.append(" AND r.SubjectID = ?");
-            params.add(Integer.valueOf(subjectId));
+        if (title != null && !title.isEmpty()) {
+            sql.append(" AND s.Title LIKE ?");
+            params.add("%" + title + "%");
         }
+
         if (campaignId != null && !campaignId.isEmpty()) {
             sql.append(" AND c.CampaignID = ?");
             params.add(Integer.valueOf(campaignId));
@@ -212,7 +226,7 @@ public class RegistrationsDAO extends DBContext {
             params.add(new Timestamp(registrationTime.getTime()));
         }
         if (validTo != null) {
-            sql.append(" AND r.Valid_To <= ?");
+            sql.append(" OR r.Valid_To <= ?");
             params.add(new Timestamp(validTo.getTime()));
         }
         if (status != null && !status.isEmpty()) {
@@ -232,8 +246,6 @@ public class RegistrationsDAO extends DBContext {
             }
             stmt.setInt(paramIndex++, offset);
             stmt.setInt(paramIndex, pageSize);
-
-            System.out.println("Executing SQL: " + stmt.toString());  // Debug print
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -493,28 +505,28 @@ public class RegistrationsDAO extends DBContext {
         List<Registrations> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
         String sql = "SELECT r.RegistrationID, "
-        + "       u.UserID, "
-        + "       s.SubjectID, "
-        + "       s.Title AS SubjectName, "
-        + "       pp.PackageID, "
-        + "       pp.Name AS PackageName, "
-        + "       r.Registration_Time, "
-        + "       r.Total_Cost, "
-        + "       r.Status, "
-        + "       r.Valid_From, "
-        + "       r.Valid_To, "
-        + "       staff.UserID AS StaffID, "
-        + "       staff.Name AS StaffName, "
-        + "       r.Note "
-        + "FROM Registrations r "
-        + "JOIN Users u ON r.UserID = u.UserID "
-        + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-        + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-        + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-        + "WHERE r.UserID = ? "
-        + "ORDER BY r.Registration_Time DESC "
-        + "OFFSET ? ROWS "
-        + "FETCH NEXT ? ROWS ONLY";
+                + "       u.UserID, "
+                + "       s.SubjectID, "
+                + "       s.Title AS SubjectName, "
+                + "       pp.PackageID, "
+                + "       pp.Name AS PackageName, "
+                + "       r.Registration_Time, "
+                + "       r.Total_Cost, "
+                + "       r.Status, "
+                + "       r.Valid_From, "
+                + "       r.Valid_To, "
+                + "       staff.UserID AS StaffID, "
+                + "       staff.Name AS StaffName, "
+                + "       r.Note "
+                + "FROM Registrations r "
+                + "JOIN Users u ON r.UserID = u.UserID "
+                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
+                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
+                + "WHERE r.UserID = ? "
+                + "ORDER BY r.Registration_Time DESC "
+                + "OFFSET ? ROWS "
+                + "FETCH NEXT ? ROWS ONLY";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, offset);
@@ -540,32 +552,6 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-    
-    public static void main(String[] args) {
-        int userId = 3; // Replace with a valid user ID
-        int page = 1;
-        int pageSize = 15;
-
-        // Assuming DBContext provides the connection inside RegistrationsDAO
-        RegistrationsDAO registrationDAO = new RegistrationsDAO();
-        List<Registrations> registrations = registrationDAO.getRegistrationsByUserId(userId, page, pageSize);
-
-        // Print the results
-        for (Registrations reg : registrations) {
-            System.out.println("Registration ID: " + reg.getRegistrationId());
-            System.out.println("Subject Name: " + reg.getSubjectName());
-            System.out.println("Package ID: " + reg.getPackageId());
-            System.out.println("Total Cost: " + reg.getTotalCost());
-            System.out.println("Registration Time: " + reg.getRegistrationTime());
-            System.out.println("Status: " + reg.getStatus());
-            System.out.println("Valid From: " + reg.getValidFrom());
-            System.out.println("Valid To: " + reg.getValidTo());
-            System.out.println("Staff Name: " + reg.getStaffName());
-            System.out.println("Note: " + reg.getNote());
-            System.out.println("-------------------------------");
-        }
-    }
-
 
     public int getTotalRegistrationsByUserId(int userId) {
         String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status != 'Cancelled'";
@@ -792,6 +778,7 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
+
     public int getTotalRegistrationByStatus(String status, Date startDate, Date endDate) {
         String sql = "select count(*) from Registrations where Status = '" + status + "' and Registration_Time BETWEEN '" + startDate + "' AND '" + endDate + "'";
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -805,7 +792,7 @@ public class RegistrationsDAO extends DBContext {
     }
 
     public boolean updateRegistration(Registrations registration) {
-        
+
         if (registration.getValidFrom().after(registration.getValidTo())) {
             return false; // Invalid date range
         }
@@ -948,4 +935,46 @@ public class RegistrationsDAO extends DBContext {
         return validFrom;
     }
 
+    public static void main(String[] args) throws ParseException {
+
+        // Create an instance of the class containing the `getAllRegistration` method
+        RegistrationsDAO registrationService = new RegistrationsDAO();
+
+        // Test parameters
+        int currentPage = 1;
+        int pageSize = 1;
+        String email = "john@example.com"; // Change this to test with specific emails
+        String title = "h"; // Change to the title you want to filter by
+        String campaignId = "1"; // Replace with an actual campaign ID
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date registrationTime = null;
+        Date validTo = null;
+
+        registrationTime = dateFormat.parse("2024-11-03");
+        validTo = dateFormat.parse("2025-02-01");
+
+        String status = "Active"; // Change as needed
+
+        // Call the method and print the results
+        List<Registrations> registrations = registrationService.getAllRegistration(
+                currentPage, pageSize, email, title, campaignId, registrationTime, validTo, status);
+
+        // Print the results
+        for (Registrations registration : registrations) {
+            System.out.println("Registration ID: " + registration.getRegistrationId());
+            System.out.println("User ID: " + registration.getUserId());
+            System.out.println("Registration Time: " + registration.getRegistrationTime());
+            System.out.println("Subject ID: " + registration.getSubjectId());
+            System.out.println("Package ID: " + registration.getPackageId());
+            System.out.println("Total Cost: " + registration.getTotalCost());
+            System.out.println("Status: " + registration.getStatus());
+            System.out.println("Valid From: " + registration.getValidFrom());
+            System.out.println("Valid To: " + registration.getValidTo());
+            System.out.println("Staff ID: " + registration.getStaffId());
+            System.out.println("Note: " + registration.getNote());
+            System.out.println("Campaign Name: " + registration.getCampaignName());
+            System.out.println("------");
+        }
+
+    }
 }

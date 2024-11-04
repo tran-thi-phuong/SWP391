@@ -4,12 +4,13 @@
  */
 package dal;
 
-import java.sql.Date;
+import java.util.Date;
 import model.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,101 @@ public class CampaignsDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public List<Campaigns> getCampaignsesByPage(int currentPage, int pageSize, String campaignName, Date validFrom, Date validTo, String status) {
+        List<Campaigns> campaigns = new ArrayList<>();
+        int offset = (currentPage - 1) * pageSize;
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM Campaigns WHERE 1=1");
+
+        List<Object> params = new ArrayList<>();
+        if (campaignName != null && !campaignName.isEmpty()) {
+            sql.append(" AND CampaignName LIKE ?");
+            params.add("%" + campaignName + "%");
+        }
+        if (validFrom != null) {
+            sql.append(" AND StartDate >= ?");
+            params.add(new Timestamp(validFrom.getTime()));
+        }
+        if (validTo != null) {
+            sql.append(" OR EndDate <= ?");
+            params.add(new Timestamp(validTo.getTime()));
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND Status LIKE ?");
+            params.add("%" + status + "%");
+        }
+
+        sql.append(" ORDER BY CampaignID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            for (Object param : params) {
+                stmt.setObject(paramIndex++, param);
+            }
+            stmt.setInt(paramIndex++, offset);
+            stmt.setInt(paramIndex, pageSize);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Campaigns c = new Campaigns();
+                    c.setCampaignId(rs.getInt("CampaignID"));
+                    c.setCampaignName(rs.getString("CampaignName"));
+                    c.setDescription(rs.getString("Description")); // Fixed typo here
+                    c.setStartDate(rs.getDate("StartDate"));
+                    c.setEndDate(rs.getDate("EndDate"));
+                    c.setStatus(rs.getString("Status"));
+                    campaigns.add(c);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return campaigns;
+    }
+
+    public int getTotalCampaign(String campaignName, Date validFrom, Date validTo, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Campaigns WHERE 1=1");
+
+        if (campaignName != null && !campaignName.isEmpty()) {
+            sql.append(" AND CampaignName LIKE ?");
+        }
+        if (validFrom != null) {
+            sql.append(" AND StartDate >= ?");
+        }
+        if (validTo != null) {
+            sql.append(" AND EndDate <= ?"); // Fixed typo: changed "EndDae" to "EndDate"
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND Status LIKE ?");
+        }
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (campaignName != null && !campaignName.isEmpty()) {
+                stmt.setString(paramIndex++, "%" + campaignName + "%");
+            }
+            if (validFrom != null) {
+                stmt.setTimestamp(paramIndex++, new Timestamp(validFrom.getTime()));
+            }
+            if (validTo != null) {
+                stmt.setTimestamp(paramIndex++, new Timestamp(validTo.getTime()));
+            }
+            if (status != null && !status.isEmpty()) {
+                stmt.setString(paramIndex++, "%" + status + "%");
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0; // Return 0 if an error occurs
     }
 
     public List<Campaigns> getAllCampaign() {
@@ -156,12 +252,12 @@ public class CampaignsDAO extends DBContext {
 
     public int addCampaign(Campaigns campaign) throws SQLException {
         String sql = "INSERT INTO Campaigns (CampaignName, Description, StartDate, EndDate, Status) VALUES (?, ?, ?, ?, ?)";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, campaign.getCampaignName());
             stmt.setString(2, campaign.getDescription());
-            stmt.setDate(3, (Date) campaign.getStartDate());
-            stmt.setDate(4, (Date) campaign.getEndDate());
+            stmt.setDate(3, (java.sql.Date) (Date) campaign.getStartDate());
+            stmt.setDate(4, (java.sql.Date) (Date) campaign.getEndDate());
             stmt.setString(5, campaign.getStatus());
 
             int affectedRows = stmt.executeUpdate();
@@ -179,4 +275,5 @@ public class CampaignsDAO extends DBContext {
             }
         }
     }
+ 
 }
