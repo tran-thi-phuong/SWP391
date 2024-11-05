@@ -149,7 +149,7 @@ public class QuestionDetail extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     //setup URL for call API
-    String API_KEY = "YOUR_API_KEY"; //Replace with your API key
+    String API_KEY = "AIzaSyCvgaTStpraY_PXbu4Fu-LDlfDv9hUyj_U"; //Replace with your API key
     private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
 
     @Override

@@ -73,14 +73,6 @@
                 Back to Quiz List
             </button>
         </div>
-        <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
                 <div class="form-container">
                     <h1>Add New Quiz</h1>
                     <form action="AddQuiz" method="post" enctype="multipart/form-data">
@@ -139,8 +131,6 @@
                         <button type="submit">Add Quiz</button>
                     </form>
                 </div>
-            </c:otherwise>
-        </c:choose>
     </body>
     <script>
         function initializeFileInput() {

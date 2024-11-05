@@ -32,6 +32,11 @@
                             <a class="nav-link active" href="QuizList">Quiz List</a>
                         </c:if>
                     </li>
+                    <li class="nav-item">
+                        <c:if test="${sessionScope.user.role=='Instructor'}">
+                            <a class="nav-link active" href="QuestionList">Question List</a>
+                        </c:if>
+                    </li>
 
                     <li class="nav-item">
                         <c:if test="${sessionScope.user.role=='Marketing'}">

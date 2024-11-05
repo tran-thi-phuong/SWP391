@@ -89,3 +89,14 @@ button {
 td > form {
     display: inline;
 }
+
+.pagination .page-item .page-link {
+    color: #007bff;
+    padding: 10px 15px; /* Add padding for better clickability */
+    margin: 0 5px; /* Space between pagination items */
+    border-radius: 5px; /* Rounded corners */
+}
+.pagination .page-item .page-link:hover {
+    background-color: #f1f1f1; /* Light background on hover */
+    text-decoration: none; /* Remove underline on hover */
+}
