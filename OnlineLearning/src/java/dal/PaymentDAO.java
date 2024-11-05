@@ -100,10 +100,5 @@ public class PaymentDAO extends DBContext {
         }
         return 0;
     }
-    public static void main(String[] args){
-        PaymentDAO p = new PaymentDAO();
-        LocalDate endDateLocal = LocalDate.now();
-        LocalDate startDateLocal = endDateLocal.minus(3, ChronoUnit.DAYS);
 
-    }
 }

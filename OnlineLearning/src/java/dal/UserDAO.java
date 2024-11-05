@@ -191,6 +191,7 @@ public class UserDAO extends DBContext {
         }
         return username;
     }
+    // Create Token for an account
 
     public boolean updateResetToken(String email, String token) {
     String sql = "UPDATE Users SET Token = ? WHERE Email = ?";

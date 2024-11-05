@@ -283,9 +283,4 @@ public class SettingDAO extends DBContext {
 
         return false; // Return false if there was an error
     }
-
-    public static void main(String[] args) {
-        SettingDAO sDAO = new SettingDAO();
-        sDAO.addRegistrationSetting(2);
-    }
 }

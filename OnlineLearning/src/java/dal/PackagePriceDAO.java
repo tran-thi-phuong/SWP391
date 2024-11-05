@@ -17,7 +17,7 @@ public class PackagePriceDAO extends DBContext {
     //get by subject
     public List<PackagePrice> searchBySubjectId(int subjectId) {
         List<PackagePrice> packages = new ArrayList<>();
-        String query = "SELECT * FROM Package_Price WHERE subjectId = ?";
+        String query = "SELECT * FROM Package_Price WHERE SubjectID = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, subjectId);
@@ -41,7 +41,7 @@ public class PackagePriceDAO extends DBContext {
     //get by package id
     public PackagePrice searchByPackagePriceId(int packagePriceId) {
         PackagePrice packagePrice = null; // Initialize to null
-        String query = "SELECT * FROM Package_Price WHERE PackageId = ?";
+        String query = "SELECT * FROM Package_Price WHERE PackageID = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -134,7 +134,7 @@ public class PackagePriceDAO extends DBContext {
         return null;  // Return null if no result is found
     }
     public void addPackagePrice(PackagePrice packagePrice) {
-        String query = "INSERT INTO Package_Price (SubjectId, name, duration_time, sale_price, price) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Package_Price (SubjectID, Name, Duration_Time, Sale_Price, Price) VALUES (?, ?, ?, ?, ?)";
         
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -150,7 +150,7 @@ public class PackagePriceDAO extends DBContext {
     }
 
     public void updatePackagePrice(PackagePrice packagePrice) {
-        String query = "UPDATE Package_Price SET SubjectId = ?, name = ?, duration_time = ?, sale_price = ?, price = ? WHERE PackageId = ?";
+        String query = "UPDATE Package_Price SET SubjectID = ?, Name = ?, Duration_time = ?, Sale_price = ?, Price = ? WHERE PackageID = ?";
         
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -167,7 +167,7 @@ public class PackagePriceDAO extends DBContext {
     }
 
     public void deletePackagePrice(int packagePriceId) {
-        String query = "DELETE FROM Package_Price WHERE PackageId = ?";
+        String query = "DELETE FROM Package_Price WHERE PackageID = ?";
         
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
