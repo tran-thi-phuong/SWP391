@@ -97,18 +97,19 @@ public class RegistrationStat extends HttpServlet {
         if (!hasPermission(request, response)) {
             return;
         }
+        // set time range 7 days for the first time go to registration statistic
         LocalDate endDateLocal = LocalDate.now();
         LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
         Date endDate = Date.valueOf(endDateLocal);
         Date startDate = Date.valueOf(startDateLocal);
         RegistrationsDAO r = new RegistrationsDAO();
-        int successRegistration = r.getTotalRegistrationByStatus("Active", startDate, endDate);
-        int submittedRegistration = r.getTotalRegistrationByStatus("Processing", startDate, endDate);
-        int cancelledRegistration = r.getTotalRegistrationByStatus("Inactive", startDate, endDate);
-        int newRegistration = r.getNewRegistrationByTime(startDate, endDate);
-        int totalRegistration = r.getTotalRegistrations();
+        int successRegistration = r.getTotalRegistrationByStatus("Active", startDate, endDate); //get registration by status and time range
+        int submittedRegistration = r.getTotalRegistrationByStatus("Processing", startDate, endDate); //get registration by status and time range
+        int cancelledRegistration = r.getTotalRegistrationByStatus("Inactive", startDate, endDate); //get registration by status and time range
+        int newRegistration = r.getNewRegistrationByTime(startDate, endDate); 
+        int totalRegistration = r.getTotalRegistrations(); // get total registration
         List<SubjectCategoryCount> registrationAllocation = r.getRegistrationAllocation();
-        List<SubjectCategoryCount> bestSeller = r.getBestSeller(5);
+        List<SubjectCategoryCount> bestSeller = r.getBestSeller(5); // get top 5 best seller
         request.setAttribute("successRegistration", successRegistration);
         request.setAttribute("submittedRegistration", submittedRegistration);
         request.setAttribute("cancelledRegistration", cancelledRegistration);
@@ -117,7 +118,7 @@ public class RegistrationStat extends HttpServlet {
         request.setAttribute("newRegistration", newRegistration);
         request.setAttribute("totalRegistration", totalRegistration);
         request.setAttribute("action", "registrationStat");
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response); //forward request to dashboard.jsp
     }
 
     /**
@@ -128,6 +129,7 @@ public class RegistrationStat extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    // method for searching 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -72,6 +72,7 @@
         </div>
     
 <script>
+    // func to configure displayed information
     document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
             var target = document.querySelector(this.dataset.target);
@@ -83,6 +84,7 @@
         });
     });
     toggleCustomDateRange();
+    // func to configure displayed date time picker
     function toggleCustomDateRange() {
         const dateRangeSection = document.getElementById("customDateRange");
         const selectElement = document.getElementById("dateSelect");
@@ -93,6 +95,7 @@
             dateRangeSection.style.display = "none";
         }
     }
+    // use flatpickr library for the date picker
     flatpickr("#timeRange", {
         mode: "range",
         dateFormat: "Y-m-d",

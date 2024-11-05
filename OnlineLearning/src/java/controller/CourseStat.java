@@ -35,6 +35,7 @@ public class CourseStat extends HttpServlet {
          if (!hasPermission(request, response)) {
             return;
         }
+         // set time range 7 days for the first time go to registration statistic
         LocalDate endDateLocal = LocalDate.now();
         LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
         Date endDate = Date.valueOf(endDateLocal);
@@ -49,7 +50,7 @@ public class CourseStat extends HttpServlet {
         request.setAttribute("totalCourse", totalCourse);
         request.setAttribute("subjectAllocation", subjectAllocation);
         request.setAttribute("action", "courseStat");
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response); //forward request to dashboard.jsp
     }
 
     /**
@@ -60,6 +61,7 @@ public class CourseStat extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    // method for searching 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

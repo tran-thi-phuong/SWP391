@@ -31,17 +31,12 @@ public class Login extends HttpServlet {
         if (session != null && session.getAttribute("user") != null) {
             Users user = (Users) session.getAttribute("user");
             String role = user.getRole().toLowerCase();
-            
+            // check user's role and redirect to his/her default page
             switch (role) {
                 case "admin":
-                    
-                    response.sendRedirect("dashboard.jsp");
-                    break;
                 case "marketing":
-                    response.sendRedirect("dashboard.jsp");
-                    break;
-                case "Instructor":
-                    response.sendRedirect("dashboard.jsp");
+                
+                    response.sendRedirect("courseStat");
                     break;
                 case "customer":
                     response.sendRedirect("Homepage");
@@ -71,25 +66,23 @@ public class Login extends HttpServlet {
             List<Campaigns> campaigns = cam.getAllCampaign();
             if (user.getStatus().toLowerCase().equals("active")) {
                 HttpSession session = request.getSession();
-                session.setAttribute("user", user);
+                session.setAttribute("user", user); // set user to session
+                // check user's role and redirect to his/her default page
                 switch (user.getRole().toLowerCase()) {
                 case "admin":
-                    session.setAttribute("campaigns", campaigns);
-                    response.sendRedirect("courseStat");
-                    break;
                 case "marketing":
-                    session.setAttribute("campaigns", campaigns);
+                
+                    session.setAttribute("campaigns", campaigns); //set campaign list to session
                     response.sendRedirect("courseStat");
                     break;
-                
-                case "austomer":
+                case "customer":
                     response.sendRedirect("Homepage");
                     break;
                 default:
                     response.sendRedirect("Homepage");
                     break;
             }
-            } else {
+            } else { //if her or his account has not activated forward to verify page
                 Users u1 = uDAO.getUserByInfo("Email", username);
                 Users u2 = uDAO.getUserByInfo("Username", username);
                 if (u1 != null) {

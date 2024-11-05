@@ -55,8 +55,9 @@
             </div>
         </div>
 
-
+<!--use chartjs library for drawing pir chart-->
 <script>
+    // define colors 
     var colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
         '#FF6384', '#C9CBCF', '#7CFC00', '#008080', '#FF69B4', '#CD5C5C',
         '#40E0D0', '#8A2BE2', '#32CD32', '#FFD700', '#48D1CC', '#FF4500',
@@ -64,18 +65,18 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         Chart.register(ChartDataLabels);
-
+        // declare context
         var ctx = document.getElementById('subjectChart').getContext('2d');
         var chart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: [
+                labels: [ // pass label data
                     <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
                         '${category.category}'${!status.last ? ',' : ''}
                         </c:forEach>
                 ],
                 datasets: [{
-                        data: [
+                        data: [ // pass data for distribution
                             <c:forEach items="${requestScope.subjectAllocation}" var="category" varStatus="status">
                     ${category.count}${!status.last ? ',' : ''}
                         </c:forEach>
@@ -86,18 +87,18 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
+                    legend: { // legend of chart
                         display: true,
                         position: 'right'
                     },
-                    title: {
+                    title: { // title
                         display: true,
                         text: 'Subject Distribution By Category',
                         font: {
                             size: 20
                         }
                     },
-                    datalabels: {
+                    datalabels: { //format label
                         color: '#fff',
                         font: {
                             weight: 'bold',
@@ -114,6 +115,7 @@
                 }
             }
         });
+        // func to configure displayed information
         document.querySelectorAll('.section-toggle').forEach(function (checkbox) {
             checkbox.addEventListener('change', function () {
                 var target = document.querySelector(this.dataset.target);
@@ -126,6 +128,7 @@
         });
     });
     toggleCustomDateRange();
+    // func to configure displayed date time picker
     function toggleCustomDateRange() {
         const dateRangeSection = document.getElementById("customDateRange");
         const selectElement = document.getElementById("dateSelect");
@@ -136,6 +139,7 @@
             dateRangeSection.style.display = "none";
         }
     }
+    // use flatpickr library for the date picker
     flatpickr("#timeRange", {
         mode: "range",
         dateFormat: "Y-m-d",

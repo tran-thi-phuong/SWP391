@@ -16,16 +16,16 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
-import javax.mail.Session;
 import model.Users;
 
 /**
  *
  * @author tuant
  */
+//annotaion for image upload
 @MultipartConfig
 public class UpdateProfile extends HttpServlet {
-    private static final String UPLOAD_DIR = "images";
+    private static final String UPLOAD_DIR = "images"; // defalt path to save images
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,22 +35,22 @@ public class UpdateProfile extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String gender = request.getParameter("gender");
-        Part filePart = request.getPart("avatar"); 
+        Part filePart = request.getPart("avatar"); // get image file part
         String fileName = null;
         String filePath = null;
         HttpSession session = request.getSession();
         UserDAO uDAO = new UserDAO();
         Users u1 = (Users) session.getAttribute("user");
         if (filePart != null && filePart.getSize() > 0) {
-            fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+            fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // get file name
+            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR; //define save path
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
-                uploadDir.mkdir();
+                uploadDir.mkdir(); // create folder for saving
             }
             File file = new File(uploadDir, fileName);
-            filePart.write(file.getAbsolutePath());
-            filePath = UPLOAD_DIR + "/" + fileName;
+            filePart.write(file.getAbsolutePath()); // save the image
+            filePath = UPLOAD_DIR + "/" + fileName; // new file path
         }
         if (phone != null && phone.isEmpty()) {
             phone = null;
@@ -66,19 +66,20 @@ public class UpdateProfile extends HttpServlet {
             }
         
         try {
-            Users usernameCheck = uDAO.getUserByInfo("Username", username);
-            Users phoneCheck = uDAO.getUserByInfo("Phone", phone);
-            if (usernameCheck != null && !u1.getUsername().equals(username)) {
+            Users usernameCheck = uDAO.getUserByInfo("Username", username); // check if username is existed or not
+            Users phoneCheck = uDAO.getUserByInfo("Phone", phone); // check if username is existed or not
+            if (usernameCheck != null && !u1.getUsername().equals(username)) { // forward an error if existed
                 request.setAttribute("invalidUsername", true);
                 request.getRequestDispatcher("profile.jsp").forward(request, response);
             } else if (phone != null && !phone.equals(u1.getPhone())) {
 
                 if (phoneCheck != null) {
-                    request.setAttribute("invalidPhone", true);
+                    request.setAttribute("invalidPhone", true); // display error if phone is existed
                     request.getRequestDispatcher("profile.jsp").forward(request, response);
                     return;
                 }
             }
+            // update in db and session
             uDAO.updateProfile(name, username, phone, address, gender, u1.getUserID(), filePath);
             Users u2 = uDAO.getUserByInfo("Email", u1.getEmail());
             session.setAttribute("user", u2);
