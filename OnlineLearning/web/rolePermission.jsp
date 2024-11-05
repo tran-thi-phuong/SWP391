@@ -51,7 +51,7 @@
 
         <form class="update-role-form" action="RolePermission" method="post">
             <input type="hidden" name="action" value="updateMultiple">
-            <button type="submit" class="btn btn-2">Save Changes</button>
+            <button type="submit" class="btn btn-2 btn-success">Save Changes</button>
             <table class="table table-bordered">
                 <thead>
                     <tr> 
