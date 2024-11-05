@@ -184,31 +184,6 @@ public class SliderDAO extends DBContext {
         return sliders;
     }
 
-    private static void printSliders(List<Slider> sliders) {
-        if (sliders.isEmpty()) {
-            System.out.println("Không tìm thấy sliders nào.");
-        } else {
-            for (Slider slider : sliders) {
-                System.out.println("Slider ID: " + slider.getSliderID());
-                System.out.println("Title: " + slider.getTitle());
-                System.out.println("Image: " + slider.getImage());
-                System.out.println("Content: " + slider.getContent());
-                System.out.println("Status: " + slider.getStatus());
-                System.out.println("---------------------------");
-            }
-        }
-    }
-
     public static void main(String[] args) {
-        SliderDAO sliderDAO = new SliderDAO();
-        System.out.println("Test 1: Hiển thị tất cả sliders");
-        List<Slider> result1 = sliderDAO.searchAndFilterSliders(null, "All");
-        printSliders(result1);
-
-        // Test 2: Tìm kiếm theo từ khóa "Promo" trong title hoặc backlink, không lọc trạng thái
-        System.out.println("\nTest 2: Tìm kiếm từ khóa 'Java'");
-        List<Slider> result2 = sliderDAO.searchAndFilterSliders("Java", "All");
-        printSliders(result2);
-
     }
 }

@@ -46,8 +46,6 @@
         <div style="padding: 0 15px; display: inline-block;">
             <form id="toggleForm">
                 <label><input type="checkbox" class="section-toggle" data-target=".subjectName" checked> Subject</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".package" checked> Package</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".totalCost" checked> Cost</label>
                 <label><input type="checkbox" class="section-toggle" data-target=".validFrom" checked> Valid From</label>
                 <label><input type="checkbox" class="section-toggle" data-target=".validTo" checked> Valid To</label>
                 <label><input type="checkbox" class="section-toggle" data-target=".staffName" checked> Teacher</label>
@@ -96,8 +94,6 @@
                                 ${course.subjectName}
                             </a>
                             </p>
-                            <p class="registration-card-text package"><strong>Package:</strong> ${course.packageId}</p>
-                            <p class="registration-card-text totalCost"><strong>Cost:</strong> ${course.totalCost}</p>
                             <p class="registration-card-text validFrom"><strong>Valid From:</strong> ${course.validFrom}</p>
                             <p class="registration-card-text validTo"><strong>Valid To:</strong> ${course.validTo}</p>
                             <p class="registration-card-text staffName"><strong>Teacher:</strong> ${course.staffName}</p>
