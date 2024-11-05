@@ -7,8 +7,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import model.*;
 
 public class updateRegistration extends HttpServlet { // Class names should start with an uppercase letter
@@ -16,10 +25,15 @@ public class updateRegistration extends HttpServlet { // Class names should star
     private static final long serialVersionUID = 1L;
     private final RegistrationsDAO registrationsDAO = new RegistrationsDAO();
     private final PackagePriceDAO packageDAO = new PackagePriceDAO();
+    private static final int TOKEN_LENGTH = 8; // Length of the generated token
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // Characters for random string generation
+    private static final SecureRandom RANDOM = new SecureRandom(); // Secure random generator for creating tokens
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         if (!hasPermission(request, response)) return;
+        if (!hasPermission(request, response)) {
+            return;
+        }
         // Retrieve registration ID from request
         String registrationID = request.getParameter("registrationId");
 
@@ -85,6 +99,12 @@ public class updateRegistration extends HttpServlet { // Class names should star
         String currentStatus = currentRegistration.getStatus();
         Date validFrom = (Date) currentRegistration.getValidFrom(); // Get the existing validFrom value
         Date validTo = null;
+        String customerEmail = request.getParameter("customerEmail");
+        if (customerEmail == null || customerEmail.isEmpty()) {
+            request.setAttribute("error", "Customer email is missing.");
+            request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
+            return;
+        }
 
         // Set validity dates based on status change
         if ("Processing".equals(currentStatus) && "Active".equals(newStatus)) {
@@ -94,6 +114,9 @@ public class updateRegistration extends HttpServlet { // Class names should star
 
             int durationDays = packageDAO.getDurationByPackageId(packageId);
             validTo = Date.valueOf(currentDate.plusDays(durationDays)); // Set validTo to current date + duration
+
+            // Send email notification if the status changes from Processing to Active
+            sendEmail(customerEmail, request);
         } else if ("Active".equals(currentStatus) && "Inactive".equals(newStatus)) {
             // Do not change validFrom
             validTo = Date.valueOf(LocalDate.now()); // Set validTo to current date
@@ -125,6 +148,77 @@ public class updateRegistration extends HttpServlet { // Class names should star
             request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
         }
     }
+
+    // Method to send an email to the user
+    private void sendEmail(String recipientEmail, HttpServletRequest request) {
+        UserDAO usersDAO = new UserDAO(); // Tạo một đối tượng UsersDAO
+        String token = generateToken(); // Tạo một mã token ngẫu nhiên
+
+        // Cập nhật token cho tài khoản dựa trên email
+        boolean isTokenUpdated = usersDAO.updateResetToken(recipientEmail, token);
+        if (!isTokenUpdated) {
+            // Xử lý khi không thể cập nhật token
+            System.err.println("Failed to update reset token for email: " + recipientEmail);
+            return; // Thoát khỏi hàm nếu cập nhật thất bại
+        }
+        String subject = "Complete Your Profile"; // Email subject
+
+        // Create the reset link for completing the profile
+        String resetLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                + request.getContextPath() + "/CompleteProfile?token=" + token;
+
+        // Email message body
+        String messageBody = """
+                             Dear Customer,
+                             
+                             Thank you for registering for our course. Your register has been approved by our system.
+                             Since you have not registered an account with our system, we have created an account for you with the email you provided.
+                             Your account has been created successfully.
+                             Your temporary password is: 12345678
+                             
+                             Please complete your profile by clicking the link below:
+                             """
+                + resetLink + "\n\n"
+                + "Thank you!";
+
+        // SMTP email setup
+        final String username = "phuongtthe186681@fpt.edu.vn"; // Email sender
+        final String password = "mslazpojvjimeuzt"; // Email password
+        Properties props = new Properties(); // Email properties
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        // Create a session with authentication
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password); // Authenticate with SMTP server
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session); // Create a new email message
+            message.setFrom(new InternetAddress(username)); // Set sender's email
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail)); // Set recipient's email
+            message.setSubject(subject); // Set email subject
+            message.setText(messageBody); // Set email body
+            Transport.send(message); // Send the email
+        } catch (MessagingException e) {
+            e.printStackTrace(); // Log email sending error
+        }
+    }
+
+    // Generate a random token for account verification
+    private String generateToken() {
+        StringBuilder token = new StringBuilder(TOKEN_LENGTH);
+        for (int i = 0; i < TOKEN_LENGTH; i++) {
+            token.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length()))); // Generate token characters
+        }
+        return token.toString(); // Return generated token
+    }
+
     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
@@ -138,8 +232,7 @@ public class updateRegistration extends HttpServlet { // Class names should star
         String userRole = currentUser.getRole();
 
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-          response.sendRedirect(request.getContextPath() + "/Homepage");
-
+            response.sendRedirect(request.getContextPath() + "/Homepage");
             return false;
         } else if (pageID == null) {
             response.sendRedirect("error.jsp");

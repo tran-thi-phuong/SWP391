@@ -57,7 +57,7 @@
                             </div>
                             <div class="col">
                                 <input type="text" class="form-control" id="subjectSearch"  name="subject" 
-                                       placeholder="Search by Subject" value="${param.subjectID != null ? param.subjectID : ''}"  oninput="submitForm()"/>
+                                       placeholder="Search by Subject" value="${param.subjectID != null ? param.subjectID : ''}"/>
                             </div>
                             <div class="col">
                                 <div class="input-group">

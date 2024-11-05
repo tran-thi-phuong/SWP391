@@ -121,7 +121,6 @@ public class SliderDAO extends DBContext {
                 slider.setImage(rs.getString("Image"));
                 slider.setContent(rs.getString("Content"));
                 slider.setStatus(rs.getString("Status"));
-                slider.setBacklink(rs.getString("Backlink"));
                 sliders.add(slider);
             }
         } catch (SQLException e) {
@@ -147,7 +146,8 @@ public class SliderDAO extends DBContext {
         String sql = "SELECT * FROM Sliders WHERE 1=1";
 
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            sql += " AND (title LIKE ? OR backlink LIKE ?)";
+            sql += " AND title LIKE ?"; // Chỉ tìm kiếm theo title
+            // Bỏ phần tìm kiếm backlink
         }
 
         if (statusFilter != null && !statusFilter.equals("All")) {
@@ -158,7 +158,6 @@ public class SliderDAO extends DBContext {
             int paramIndex = 1;
 
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-                ps.setString(paramIndex++, "%" + searchQuery + "%");
                 ps.setString(paramIndex++, "%" + searchQuery + "%");
             }
 
@@ -185,29 +184,31 @@ public class SliderDAO extends DBContext {
         return sliders;
     }
 
+    private static void printSliders(List<Slider> sliders) {
+        if (sliders.isEmpty()) {
+            System.out.println("Không tìm thấy sliders nào.");
+        } else {
+            for (Slider slider : sliders) {
+                System.out.println("Slider ID: " + slider.getSliderID());
+                System.out.println("Title: " + slider.getTitle());
+                System.out.println("Image: " + slider.getImage());
+                System.out.println("Content: " + slider.getContent());
+                System.out.println("Status: " + slider.getStatus());
+                System.out.println("---------------------------");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         SliderDAO sliderDAO = new SliderDAO();
+        System.out.println("Test 1: Hiển thị tất cả sliders");
+        List<Slider> result1 = sliderDAO.searchAndFilterSliders(null, "All");
+        printSliders(result1);
 
-        // Test tự động tạo sliders
-        try {
-            sliderDAO.autoCreateSliders();
-            System.out.println("Sliders đã được tạo thành công.");
-        } catch (SQLException e) {
-            System.out.println("Error while auto-creating sliders: " + e.getMessage());
-        }
+        // Test 2: Tìm kiếm theo từ khóa "Promo" trong title hoặc backlink, không lọc trạng thái
+        System.out.println("\nTest 2: Tìm kiếm từ khóa 'Java'");
+        List<Slider> result2 = sliderDAO.searchAndFilterSliders("Java", "All");
+        printSliders(result2);
 
-        List<Slider> allSliders = sliderDAO.getAllSliders();
-
-        // In thông tin các sliders
-        System.out.println("All Sliders:");
-        for (Slider slider : allSliders) {
-            System.out.println("------------------------------");
-            System.out.println("Slider ID: " + slider.getSliderID());
-            System.out.println("Title: " + slider.getTitle());
-            System.out.println("Image: " + slider.getImage());
-            System.out.println("Content: " + slider.getContent());
-            System.out.println("Status: " + slider.getStatus());
-        }
-        System.out.println("------------------------------");
     }
 }

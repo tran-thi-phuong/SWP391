@@ -3,12 +3,13 @@ package controller;
 import dal.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Users;
-
+@WebServlet(name = "CompleteProfile", urlPatterns = {"/CompleteProfile"})
 public class CompleteProfile extends HttpServlet {
 
     @Override
@@ -28,6 +29,7 @@ public class CompleteProfile extends HttpServlet {
         // Store the token in the session
         HttpSession session = request.getSession();
         session.setAttribute("resetToken", token);
+                
 
         // Forward the request to CompleteProfile.jsp
         request.getRequestDispatcher("/CompleteProfile.jsp").forward(request, response);
