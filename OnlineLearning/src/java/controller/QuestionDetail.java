@@ -251,7 +251,7 @@ public class QuestionDetail extends HttpServlet {
                 }
                 //Get all part of new media to a part
                 List<Part> mediaFiless = request.getParts().stream()
-                        .filter(part -> "mediaFiles".equals(part.getName()))
+                        .filter(part -> "mediaFiles".equals(part.getName()) && part.getSize()>0)
                         .collect(Collectors.toList());
                 //delete current media first
                 mediaDAO.deleteMedia(questionId);
