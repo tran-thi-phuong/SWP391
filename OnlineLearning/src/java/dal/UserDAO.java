@@ -49,7 +49,7 @@ public class UserDAO extends DBContext {
 
     public Users getUser(String username, String password) {
         Users user = null;
-        String sql = "SELECT * FROM Users WHERE (Username = ? OR Email = ?) AND Password = ?";
+        String sql = "SELECT * FROM Users WHERE ( Username = ? OR  Email = ?) AND  Password = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, username);
             st.setString(2, username);

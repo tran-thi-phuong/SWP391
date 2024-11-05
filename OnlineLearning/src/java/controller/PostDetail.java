@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.util.List;
 import model.Blog;
 import dal.BlogDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
+import jakarta.servlet.http.HttpSession;
+import model.Users;
 
 public class PostDetail extends HttpServlet {
 
@@ -25,6 +29,7 @@ public class PostDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         if (!hasPermission(request, response)) return;
         List<Blog> blogs = blogDAO.getAllBlogs();
         request.setAttribute("blogs", blogs);
 
@@ -46,5 +51,27 @@ public class PostDetail extends HttpServlet {
         // Send the new status as a response
         response.getWriter().write(newStatus); 
     }
+private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
 
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+           response.sendRedirect(request.getContextPath() + "/Homepage");
+
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -19,6 +19,7 @@ public class updateRegistration extends HttpServlet { // Class names should star
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         if (!hasPermission(request, response)) return;
         // Retrieve registration ID from request
         String registrationID = request.getParameter("registrationId");
 
@@ -124,5 +125,27 @@ public class updateRegistration extends HttpServlet { // Class names should star
             request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
         }
     }
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
 
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+          response.sendRedirect(request.getContextPath() + "/Homepage");
+
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }

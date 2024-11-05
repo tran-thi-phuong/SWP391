@@ -7,6 +7,8 @@ package controller;
 import dal.CategoryDAO;
 import dal.LessonDAO;
 import dal.PackagePriceDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 import dal.SubjectDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -15,6 +17,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
@@ -24,6 +27,7 @@ import model.PackagePrice;
 import model.Subject;
 import model.SubjectCategory;
 import model.SubjectTopic;
+import model.Users;
 
 /**
  *
@@ -35,6 +39,7 @@ public class SubjectDimension extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+           if (!hasPermission(request, response)) return;
         String subjectId = request.getParameter("id");
         request.getSession().setAttribute("subjectID", subjectId);
         LessonDAO lDAO = new LessonDAO();
@@ -45,6 +50,7 @@ public class SubjectDimension extends HttpServlet {
         request.getRequestDispatcher("/SubjectDetailDimension.jsp").forward(request, response);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Lấy dữ liệu từ request
         String action = request.getParameter("action");
@@ -93,5 +99,27 @@ public class SubjectDimension extends HttpServlet {
         int topicId = Integer.parseInt(request.getParameter("id"));
         lessonDAO.deleteLessonTopic(topicId, Integer.parseInt(subjectId)); // Gọi delete với cả topicId và subjectId
     }
-    
+     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }

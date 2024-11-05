@@ -40,6 +40,10 @@ public class NewSubject extends HttpServlet {
      * Handles GET requests
      * Displays the form for creating a new subject
      * Loads all available categories for the dropdown menu
+     * @param request
+     * @param response
+     * @throws jakarta.servlet.ServletException
+     * @throws java.io.IOException
      **/
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -51,7 +55,7 @@ public class NewSubject extends HttpServlet {
             List<SubjectCategory> categories = categoryDAO.getAllCategories();
             request.setAttribute("categories", categories);
             request.getRequestDispatcher("newSubject.jsp").forward(request, response);
-        } catch (Exception ex) {
+        } catch (ServletException | IOException ex) {
             throw new ServletException(ex);
         }
     }
@@ -108,7 +112,8 @@ public class NewSubject extends HttpServlet {
 
         // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-            response.sendRedirect("/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+
             return false;
         } else if (pageID == null) {
             // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi

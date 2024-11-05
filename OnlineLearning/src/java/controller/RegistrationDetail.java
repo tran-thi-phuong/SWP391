@@ -94,7 +94,8 @@ public class RegistrationDetail extends HttpServlet {
 
     // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
     if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-        response.sendRedirect("/Homepage");
+        response.sendRedirect(request.getContextPath() + "/Homepage");
+
         return false;
     } else if (pageID == null) {
         // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi

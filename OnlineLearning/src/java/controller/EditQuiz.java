@@ -92,9 +92,7 @@ public class EditQuiz extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         if (!hasPermission(request, response)) {
-            return;
-        }
+        
     }
 
     /**
@@ -113,6 +111,9 @@ public class EditQuiz extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         if (!hasPermission(request, response)) {
+            return;
+        }
         //get action and id of test
         String action = request.getParameter("action");
         String testIdStr = request.getParameter("testId");
@@ -325,11 +326,12 @@ public class EditQuiz extends HttpServlet {
 
         // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-            response.sendRedirect("/Homepage");
+           response.sendRedirect(request.getContextPath() + "/Homepage");
+
             return false;
         } else if (pageID == null) {
             // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi
-            response.sendRedirect("error.jspF");
+            response.sendRedirect("error.jsp");
             return false;
         }
 

@@ -47,6 +47,10 @@ public class SubjectList extends HttpServlet {
     /**
      * Handles GET requests for subject listing
      * Processes search queries, category filters, and pagination
+     * @param request
+     * @param response
+     * @throws jakarta.servlet.ServletException
+     * @throws java.io.IOException
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -165,7 +169,8 @@ public class SubjectList extends HttpServlet {
 
         // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-            response.sendRedirect("/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+
             return false;
         } else if (pageID == null) {
             // Nếu không tìm thấy trang trong hệ thống phân quyền, chuyển đến trang lỗi

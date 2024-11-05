@@ -77,7 +77,7 @@
             <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
             </c:when>
-            <c:when test="${sessionScope.user.role != 'Instructor'}">
+            <c:when test="${sessionScope.user.role != 'Admin'}">
                 <c:redirect url="/Homepage"/>
             </c:when>
             <c:otherwise>
@@ -113,7 +113,7 @@
                         </p>
                         <p>
                             <strong>Pass Condition:</strong>
-                            <input type="text" name="passCondition" required/> %
+                            <input type="number" name="passCondition" required/> %
                         </p>
                         <strong for="level">Level:</strong>
                         <select id="level" name="level" required>

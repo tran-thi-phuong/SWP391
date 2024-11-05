@@ -6,7 +6,9 @@ package controller;
 
 //for Database connect
 import dal.LessonDAO;
+import dal.PagesDAO;
 import dal.QuestionDAO;
+import dal.RolePermissionDAO;
 import dal.SettingDAO;
 
 //default servlet
@@ -49,14 +51,9 @@ public class QuestionList extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+           if (!hasPermission(request, response)) return;
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
-
-        // Check if user is null, if so, redirect to login.jsp
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return; // Stop further processing
-        }
 
         QuestionSetting setting = (QuestionSetting) session.getAttribute("QuestionSetting");
         if (setting == null) {
@@ -149,5 +146,27 @@ public class QuestionList extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
 
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+           response.sendRedirect(request.getContextPath() + "/Homepage");
+
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
 }

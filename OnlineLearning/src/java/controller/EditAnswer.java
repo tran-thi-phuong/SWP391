@@ -6,6 +6,8 @@ package controller;
 
 //database access
 import dal.AnswerDAO;
+import dal.PagesDAO;
+import dal.RolePermissionDAO;
 
 //default servlet
 import java.io.IOException;
@@ -15,6 +17,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 //data structure
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import java.util.List;
 
 //for model
 import model.Answer;
+import model.Users;
 
 /**
  *
@@ -84,6 +88,7 @@ public class EditAnswer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         if (!hasPermission(request, response)) return;
         //get item from the form submit
         int questionId = Integer.parseInt(request.getParameter("questionId"));
         String[] answerContents = request.getParameterValues("answers.content");
@@ -112,6 +117,29 @@ public class EditAnswer extends HttpServlet {
         response.sendRedirect("QuestionDetail?id=" + questionId);
     }
 
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+        String userRole = currentUser.getRole();
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
+    }
     /**
      * Returns a short description of the servlet.
      *

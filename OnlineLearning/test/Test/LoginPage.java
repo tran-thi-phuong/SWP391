@@ -1,67 +1,63 @@
-    package Test;
+package Test;
 
-    import org.junit.After;
-    import org.junit.Before;
-    import org.junit.Test;
-    import org.openqa.selenium.By;
-    import org.openqa.selenium.WebDriver;
-    import org.openqa.selenium.WebElement;
-    import org.openqa.selenium.chrome.ChromeDriver;
-    import static org.junit.Assert.assertTrue;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.edge.EdgeDriver;
 
-    public class LoginPage {
-        private WebDriver driver;
+public class LoginPage {
 
-        @Before
-        public void setUp() {
-            // Set the path to your ChromeDriver
-            System.setProperty("webdriver.edge.driver", "D:/HOCTAP/FA24/SWT301/edgedriver_win64/msedgedriver.exe");
-            driver = new EdgeDriver();
-            driver.get("http://localhost:8080/OnlineLearning/login.jsp"); // Update with your actual login page URL
-        }
+    private WebDriver driver;
 
-        @Test
-        public void testValidLogin() {
-            // Locate username and password fields
-            WebElement usernameField = driver.findElement(By.name("username"));
-            WebElement passwordField = driver.findElement(By.name("password"));
-            WebElement loginButton = driver.findElement(By.cssSelector(".ud-btn"));
+    @Before
+    public void setUp() {
+        // Set the path to your ChromeDriver
+        System.setProperty("webdriver.edge.driver", "D:/HOCTAP/FA24/SWT301/edgedriver_win64/msedgedriver.exe");
+        driver = new EdgeDriver();
+        driver.get("http://localhost:8080/OnlineLearning/login.jsp"); // Update with your actual login page URL
+    }
 
-            // Input valid credentials
-            usernameField.sendKeys("tuan");
-            passwordField.sendKeys("123123");
+    @Test
+    public void testValidLogin() {
+        // Locate username and password fields
+        WebElement usernameField = driver.findElement(By.name("username"));
+        WebElement passwordField = driver.findElement(By.name("password"));
+        WebElement loginButton = driver.findElement(By.cssSelector(".ud-btn"));
 
-            // Submit the form
-            loginButton.click();
+        // Input valid credentials
+        usernameField.sendKeys("tuan");
+        passwordField.sendKeys("123123");
 
-            // Verify successful login by checking if redirected or a certain element is present
-            assertTrue( driver.getCurrentUrl().contains("Homepage"));
-        }
+        // Submit the form
+        loginButton.click();
 
-    //    @Test
-    //    public void testInvalidLogin() {
-    //        // Locate username and password fields
-    //        WebElement usernameField = driver.findElement(By.name("username"));
-    //        WebElement passwordField = driver.findElement(By.name("password"));
-    //        WebElement loginButton = driver.findElement(By.cssSelector(".ud-btn"));
-    //
-    //        // Input invalid credentials
-    //        usernameField.sendKeys("invalidUsername");
-    //        passwordField.sendKeys("invalidPassword");
-    //
-    //        // Submit the form
-    //        loginButton.click();
-    //
-    //        // Verify error message is displayed
-    //        WebElement errorAlert = driver.findElement(By.className("alert-danger"));
-    //        assertTrue("Error message should be displayed", errorAlert.isDisplayed());
-    //    }
+        // Verify successful login by checking if redirected or a certain element is present
+        assertTrue(driver.getCurrentUrl().contains("courseStat"));
+    }
 
-        @After
-        public void tearDown() {
-            if (driver != null) {
-                driver.quit();
-            }
+    @Test
+    public void testInvalidLogin() {
+
+        WebElement usernameField = driver.findElement(By.name("username"));
+        WebElement passwordField = driver.findElement(By.name("password"));
+        WebElement loginButton = driver.findElement(By.cssSelector(".ud-btn"));
+
+        usernameField.sendKeys("invalidUsername");
+        passwordField.sendKeys("invalidPassword");
+
+        loginButton.click();
+
+        WebElement errorAlert = driver.findElement(By.className("alert-danger"));
+        assertTrue(errorAlert.isDisplayed());
+    }
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
         }
     }
+}
