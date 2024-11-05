@@ -17,6 +17,12 @@ import java.util.List;
  */
 public class CampaignMediaDAO extends DBContext {
 
+    /**
+     * 
+     * @param media
+     * @return 
+     */
+    // Method to add media of an capaign
     public boolean addCampaignMedia(CampaignMedia media) {
         String sql = "INSERT INTO CampaignMedia (CampaignID, MediaLink, Description) VALUES (?, ?, ?)";
 
@@ -33,6 +39,7 @@ public class CampaignMediaDAO extends DBContext {
         }
     }
 
+    // Method to get media for campaign
 public List<CampaignMedia> getCampaignMediaByCampaignID(int campaignId) {
     List<CampaignMedia> mediaList = new ArrayList<>();
     String sql = "SELECT * FROM CampaignMedia WHERE CampaignID = ?";
@@ -60,6 +67,7 @@ public List<CampaignMedia> getCampaignMediaByCampaignID(int campaignId) {
     return mediaList;
 }
 
+//Method to remove media of campaign
     public boolean removeCampaignMedia(int campaignID) {
         String sql = "DELETE FROM CampaignMedia WHERE CampaignID = ?";
         try (

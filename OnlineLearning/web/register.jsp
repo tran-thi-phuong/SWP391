@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="login-btn">
-                        <button type="submit" class="ud-btn ud-btn-large ud-btn-brand ud-heading-md">
+                        <button type="submit" class="ud-btn ud-btn-large ud-btn-brand ud-heading-md" name="sign-up-btn">
                             <span class="ud-btn-label">Sign up</span>
                         </button>
                     </div>

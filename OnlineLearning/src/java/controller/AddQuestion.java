@@ -118,7 +118,7 @@ public class AddQuestion extends HttpServlet {
 
 // Collect new media files and their descriptions
         List<Part> mediaFilesParts = request.getParts().stream()
-                .filter(part -> "mediaFiles".equals(part.getName()))
+                .filter(part -> "mediaFiles".equals(part.getName()) && part.getSize()>0)
                 .collect(Collectors.toList());
 
         List<String> mediaDescriptions = new ArrayList<>();

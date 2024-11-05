@@ -112,7 +112,7 @@ public class SubjectLesson extends HttpServlet {
         request.setAttribute("courseId", courseId);
         request.setAttribute("selectStatus", status);
         request.setAttribute("selectTopic", topic);
-        request.getRequestDispatcher("subjectLesson.jsp").forward(request, response);
+        request.getRequestDispatcher("subjectLesson.jsp").forward(request, response); // forward request to subject lesson page
     }
 
     /** 

@@ -71,9 +71,5 @@ public class VerificationDAO extends DBContext{
             System.out.println(e.getMessage());
         }
     }
-    public static void main(String[] args) {
-        VerificationDAO veri = new VerificationDAO();
-        veri.activeUser(22);
-        System.out.println(veri.checkCode(1, "203123"));
-    }
+
 }

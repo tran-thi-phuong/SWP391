@@ -193,10 +193,15 @@ public class AddRegistrationBySale extends HttpServlet {
                 + request.getContextPath() + "/CompleteProfile?token=" + token;
 
         // Email message body
-        String messageBody = "Dear Customer,\n\n"
-                + "Thank you for registering for our course. Since you have not registered an account with our system, we have created an account for you with the email you provided.\n"
-                + "Your account has been created successfully.\nYour temporary password is: 12345678\n\n"
-                + "Please complete your profile by clicking the link below:\n"
+        String messageBody = """
+                             Dear Customer,
+                             
+                             Thank you for registering for our course. Since you have not registered an account with our system, we have created an account for you with the email you provided.
+                             Your account has been created successfully.
+                             Your temporary password is: 12345678
+                             
+                             Please complete your profile by clicking the link below:
+                             """
                 + resetLink + "\n\n"
                 + "Thank you!";
 

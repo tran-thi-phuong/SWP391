@@ -18,6 +18,7 @@ import java.util.Date;
  */
 public class UserDAO extends DBContext {
 
+    // Method to get user by username
     public Users getUserByUsername(String username) {
         Users user = null;
         try {
@@ -47,6 +48,7 @@ public class UserDAO extends DBContext {
         return user;
     }
 
+    // Method to login
     public Users getUser(String username, String password) {
         Users user = null;
         String sql = "SELECT * FROM Users WHERE ( Username = ? OR  Email = ?) AND  Password = ?";
@@ -79,6 +81,7 @@ public class UserDAO extends DBContext {
         return user;
     }
 
+    // Method to update password
     public boolean updateUserPassword(Users user) {
         String sql = "UPDATE Users SET Password = ? WHERE Username = ?";
         try {
@@ -106,7 +109,7 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
-
+ // Method to update status of user
     public boolean updateUserStatus(Users user) {
         String sql = "UPDATE Users SET Status = ? WHERE Username = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -118,7 +121,7 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
-
+// Method to get user by email
     public Users getUserByEmail(String email) {
         Users user = null;
         String sql = "SELECT * FROM Users WHERE Email = ?";
@@ -188,18 +191,22 @@ public class UserDAO extends DBContext {
         }
         return username;
     }
+    // Create Token for an account
 
-    public void updateResetToken(String email, String token) {
-        String sql = "UPDATE Users SET Token = ? WHERE Email = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, token);
-            ps.setString(2, email);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public boolean updateResetToken(String email, String token) {
+    String sql = "UPDATE Users SET Token = ? WHERE Email = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, token);
+        ps.setString(2, email);
+        int rowsUpdated = ps.executeUpdate();
+        return rowsUpdated > 0; // Trả về true nếu cập nhật thành công (hơn 0 hàng bị ảnh hưởng)
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false; // Trả về false nếu có lỗi
     }
+}
 
+    //Method to get user by token
     public Users getUserByToken(String token) {
         Users user = null;
         String sql = "SELECT * FROM Users WHERE Token = ?";
@@ -227,6 +234,7 @@ public class UserDAO extends DBContext {
         }
         return user;
     }
+    // Method to register account for customer
 
     public int register(String fullname, String username, String email, String password, String phone, String address, String gender, String role, String status) {
         int userId = -1;
@@ -281,6 +289,7 @@ public class UserDAO extends DBContext {
         return userId;
     }
 
+    // Method to get user information
     public Users getUserByInfo(String info, String content) {
         Users user = null;
         String sql = "SELECT * FROM Users WHERE " + info + " = ?";
@@ -309,7 +318,7 @@ public class UserDAO extends DBContext {
         }
         return user; // Return the user object or null if not found
     }
-
+// Method to update password by token
     public void updatePassword(String token, String newPassword) {
         String sql = "UPDATE Users SET Password = ? WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -320,7 +329,7 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
     }
-
+// Method to clear token
     public void clearResetToken(String token) {
         String sql = "UPDATE Users SET Token = NULL WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -330,6 +339,7 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
     }
+ //Method to update profile
 
     public void updateProfile(String name, String username, String phone, String address, String gender, int userID, String avatar) {
         try {
@@ -366,6 +376,8 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
+    
+    //Method complete profile
 
 public boolean completeProfile(String fullname, String username, String password, String phone, String address, String gender, String token) {
     String sql = "UPDATE Users SET Name = ?, Username = ?, Password = ?, Phone = ?, Address = ?, Gender = ?, Status = 'Active' WHERE Token = ?";
@@ -389,8 +401,7 @@ public boolean completeProfile(String fullname, String username, String password
     return false; // Return false if update failed
 }
 
-
-
+// Method to get user by email
     public Integer getUserIdByEmail(String email) throws SQLException {
         String query = "SELECT UserID FROM Users WHERE Email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -402,6 +413,7 @@ public boolean completeProfile(String fullname, String username, String password
         }
         return null; // Return null if email not found
     }
+   // Method to add an rondom account by email
 
     public int addUser(String email, String password, String gender, String phone, String username) throws SQLException {
         String sql = "INSERT INTO Users (Email, Password, Gender, Phone, Status, Role, Username) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -486,12 +498,4 @@ public boolean completeProfile(String fullname, String username, String password
         return 0;
     }
     
-    public static void main(String[] args){
-        UserDAO u = new UserDAO();
-        LocalDate endDateLocal = LocalDate.now();
-        LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
-        java.sql.Date endDate = java.sql.Date.valueOf(endDateLocal);
-        java.sql.Date startDate = java.sql.Date.valueOf(startDateLocal);
-        System.out.println(u.getUserByUsername("tuan"));
-    }
 }

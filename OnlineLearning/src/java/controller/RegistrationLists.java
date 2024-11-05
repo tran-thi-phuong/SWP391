@@ -77,7 +77,7 @@ public class RegistrationLists extends HttpServlet {
         }
 
         // Fetch registrations with pagination and filtering
-        List<Registrations> registrations = registrationsDAO.getAllRegistration(
+        List<Registrations> registrations = registrationsDAO.filterRegistration(
                 currentPage, // Pass currentPage instead of pageSize twice
                 pageSize,
                 email,

@@ -16,6 +16,7 @@ import model.SubjectCategoryCount;
 
 public class RegistrationsDAO extends DBContext {
 
+    // Method to count total registration
     public int getTotalRegistrations() {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Registrations";
@@ -29,6 +30,7 @@ public class RegistrationsDAO extends DBContext {
         return total;
     }
 
+    // Method to get all registration
     public List<Registrations> getAllRegistrations() {
         List<Registrations> registrations = new ArrayList<>();
         String sql = "SELECT r.RegistrationID, u.Email, r.Registration_Time, s.Title AS Subject, "
@@ -65,6 +67,17 @@ public class RegistrationsDAO extends DBContext {
         return registrations;
     }
 
+    /**
+     * 
+     * @param email
+     * @param title
+     * @param campaignId
+     * @param registrationTimeFrom
+     * @param validTo
+     * @param status
+     * @return 
+     */
+    // Method to count registration after filter
     public int getTotalRegistrationsCount(String email, String title, String campaignId, Date registrationTimeFrom, Date validTo, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
@@ -127,6 +140,14 @@ public class RegistrationsDAO extends DBContext {
         }
         return 0; // Return 0 if an error occurs
     }
+    
+    /**
+     * 
+     * @param currentPage
+     * @param pageSize
+     * @return 
+     */
+    //Method to paging list
 
     public List<Registrations> getRegistrationsByPage(int currentPage, int pageSize) {
         List<Registrations> registrations = new ArrayList<>();
@@ -186,7 +207,8 @@ public class RegistrationsDAO extends DBContext {
      * @param status
      * @return
      */
-    public List<Registrations> getAllRegistration(int currentPage, int pageSize, String email,
+    // Method to filter and search
+    public List<Registrations> filterRegistration(int currentPage, int pageSize, String email,
             String title, String campaignId,
             Date registrationTime, Date validTo,
             String status) {
@@ -270,7 +292,12 @@ public class RegistrationsDAO extends DBContext {
         }
         return registrations;
     }
-
+/**
+ * 
+ * @param id
+ * @return 
+ */
+    //Method to get registration by id
     public Registrations getRegistrationById(int id) {
         Registrations registration = null;
         String sql = "SELECT r.*, c.CampaignName "
@@ -307,7 +334,15 @@ public class RegistrationsDAO extends DBContext {
         return registration;
     }
 
-    //Add a registration
+    //Mthod to add a registration
+    /**
+     * 
+     * @param userId
+     * @param subjectId
+     * @param packageId
+     * @param totalCost
+     * @throws SQLException 
+     */
     public void addRegistration(int userId, int subjectId, int packageId, double totalCost) throws SQLException {
         String sql = "INSERT INTO Registrations (UserID, SubjectID, PackageID, Total_Cost, Registration_Time, Status) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -322,13 +357,19 @@ public class RegistrationsDAO extends DBContext {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            // Handle SQL exception
-            e.printStackTrace();
-            throw e; // Re-throw exception after logging
+                        throw e; 
         }
     }
 
-//myRegistration DAO
+//Method for customer she their register
+    /**
+     * 
+     * @param userId
+     * @param status
+     * @param page
+     * @param pageSize
+     * @return 
+     */
     public List<Registrations> getRegistrationsByUserIdAndStatus(int userId, String status, int page, int pageSize) {
         List<Registrations> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
@@ -414,7 +455,13 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-
+/**
+ * 
+ * @param userId
+ * @param status
+ * @return 
+ */
+    // Method to count register of customer
     public int getTotalRegistrationsByUserIdAndStatus(int userId, String status) {
         String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND status = ? AND Status != 'Cancelled'";
         try {
@@ -430,7 +477,15 @@ public class RegistrationsDAO extends DBContext {
         }
         return 0;
     }
-
+/**
+ * 
+ * @param userId
+ * @param searchQuery
+ * @param page
+ * @param pageSize
+ * @return 
+ */
+    // Method to search registration by user id
     public List<Registrations> searchRegistrationsByUserId(int userId, String searchQuery, int page, int pageSize) {
         List<Registrations> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
@@ -636,7 +691,14 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-
+/**
+ * 
+ * @param userId
+ * @param searchQuery
+ * @param page
+ * @param pageSize
+ * @return 
+ */
     public List<Registrations> searchCourseByUserId(int userId, String searchQuery, int page, int pageSize) {
         List<Registrations> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
@@ -690,6 +752,12 @@ public class RegistrationsDAO extends DBContext {
         return list;
     }
 
+    /**
+     * 
+     * @param userId
+     * @param searchQuery
+     * @return 
+     */
     public int getTotalSearchResultsCourseByUserId(int userId, String searchQuery) {
         String sql = "SELECT COUNT(*) FROM Registrations r "
                 + "JOIN Subjects s ON r.subjectId = s.subjectId "
@@ -709,6 +777,11 @@ public class RegistrationsDAO extends DBContext {
         return 0;
     }
 
+    /**
+     * 
+     * @param userId
+     * @return 
+     */
     public int getTotalCourseByUserId(int userId) {
         String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status = 'In-progress'";
         try {
@@ -723,8 +796,12 @@ public class RegistrationsDAO extends DBContext {
         }
         return 0;
     }
+    
 //end myCourseDAO
-
+/**
+ * 
+ * @return 
+ */
     public List<SubjectCategoryCount> getRegistrationAllocation() {
         List<SubjectCategoryCount> list = new ArrayList<>();
         try {
@@ -748,7 +825,12 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-
+/**
+ * 
+ * @param startDate
+ * @param endDate
+ * @return 
+ */
     public int getNewRegistrationByTime(java.util.Date startDate, java.util.Date endDate) {
         String sql = "SELECT COUNT(*) FROM Registrations WHERE Registration_Time BETWEEN ? AND ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -764,7 +846,11 @@ public class RegistrationsDAO extends DBContext {
         }
         return 0;
     }
-
+/**
+ * 
+ * @param n
+ * @return 
+ */
     public List<SubjectCategoryCount> getBestSeller(int n) {
         List<SubjectCategoryCount> list = new ArrayList<>();
         String sql = "SELECT top " + n + "count(r.SubjectID) as Amount, s.Title FROM Registrations r join Subjects s on r.SubjectID = s.SubjectID group by s.Title order by Amount desc";
@@ -780,7 +866,13 @@ public class RegistrationsDAO extends DBContext {
         }
         return list;
     }
-
+/**
+ * 
+ * @param status
+ * @param startDate
+ * @param endDate
+ * @return 
+ */
     public int getTotalRegistrationByStatus(String status, Date startDate, Date endDate) {
         String sql = "select count(*) from Registrations where Status = '" + status + "' and Registration_Time BETWEEN '" + startDate + "' AND '" + endDate + "'";
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -792,7 +884,12 @@ public class RegistrationsDAO extends DBContext {
         }
         return 0;
     }
-
+/**
+ * 
+ * @param registration
+ * @return 
+ */
+    // Method to update a opject registration
     public boolean updateRegistration(Registrations registration) {
 
         if (registration.getValidFrom().after(registration.getValidTo())) {
@@ -815,6 +912,20 @@ public class RegistrationsDAO extends DBContext {
         return false;
     }
 
+    /**
+     * 
+     * @param userId
+     * @param subjectId
+     * @param packageId
+     * @param totalCost
+     * @param registrationTime
+     * @param validFrom
+     * @param validTo
+     * @param staffId
+     * @param note
+     * @throws SQLException 
+     */
+    // Method to create new a registration
     public void addNewRegistration(int userId, int subjectId, int packageId, double totalCost,
             Date registrationTime, Date validFrom, Date validTo,
             int staffId, String note) throws SQLException {
@@ -847,7 +958,12 @@ public class RegistrationsDAO extends DBContext {
             throw new SQLException("Error adding registration: " + e.getMessage(), e);
         }
     }
-
+/**
+ * 
+ * @param registrationId
+ * @return 
+ */
+    // Method to get customer email by registration id
     public String getCustomerEmailByRegistrationId(String registrationId) {
         String email = null;
         String sql = "SELECT u.email FROM Registrations r "
@@ -866,7 +982,12 @@ public class RegistrationsDAO extends DBContext {
         }
         return email;
     }
-
+/**
+ * 
+ * @param registrationId
+ * @return 
+ */
+    // Method to get package id by registration id
     public int getPackageIdByRegistrationId(int registrationId) {
         int packageId = -1; // Default value if not found
         String sql = "SELECT PackageID FROM Registrations WHERE RegistrationID = ?";
@@ -887,16 +1008,12 @@ public class RegistrationsDAO extends DBContext {
         return packageId; // Return the package ID or -1 if not found
     }
 
-    private static Date parseDate(String dateStr) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            return new Date(dateFormat.parse(dateStr).getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
+/**
+ * 
+ * @param registrationId
+ * @return 
+ */    
+    // Method to get status of registration
     public String getStatusByRegistrationId(int registrationId) {
         String status = null;
         String sql = "SELECT Status FROM Registrations WHERE RegistrationID = ?";
@@ -915,6 +1032,13 @@ public class RegistrationsDAO extends DBContext {
         }
         return status;
     }
+    
+    /**
+     * 
+     * @param registrationId
+     * @return 
+     */
+    // Method to get time register
 
     public Date getValidFromByRegistrationId(String registrationId) {
         Date validFrom = null;
@@ -937,46 +1061,4 @@ public class RegistrationsDAO extends DBContext {
         return validFrom;
     }
 
-    public static void main(String[] args) throws ParseException {
-
-        // Create an instance of the class containing the `getAllRegistration` method
-        RegistrationsDAO registrationService = new RegistrationsDAO();
-
-        // Test parameters
-        int currentPage = 1;
-        int pageSize = 1;
-        String email = "john@example.com"; // Change this to test with specific emails
-        String title = "h"; // Change to the title you want to filter by
-        String campaignId = "1"; // Replace with an actual campaign ID
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date registrationTime = null;
-        Date validTo = null;
-
-        registrationTime = dateFormat.parse("2024-11-03");
-        validTo = dateFormat.parse("2025-02-01");
-
-        String status = "Active"; // Change as needed
-
-        // Call the method and print the results
-        List<Registrations> registrations = registrationService.getAllRegistration(
-                currentPage, pageSize, email, title, campaignId, registrationTime, validTo, status);
-
-        // Print the results
-        for (Registrations registration : registrations) {
-            System.out.println("Registration ID: " + registration.getRegistrationId());
-            System.out.println("User ID: " + registration.getUserId());
-            System.out.println("Registration Time: " + registration.getRegistrationTime());
-            System.out.println("Subject ID: " + registration.getSubjectId());
-            System.out.println("Package ID: " + registration.getPackageId());
-            System.out.println("Total Cost: " + registration.getTotalCost());
-            System.out.println("Status: " + registration.getStatus());
-            System.out.println("Valid From: " + registration.getValidFrom());
-            System.out.println("Valid To: " + registration.getValidTo());
-            System.out.println("Staff ID: " + registration.getStaffId());
-            System.out.println("Note: " + registration.getNote());
-            System.out.println("Campaign Name: " + registration.getCampaignName());
-            System.out.println("------");
-        }
-
-    }
 }

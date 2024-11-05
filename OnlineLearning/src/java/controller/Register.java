@@ -4,11 +4,9 @@
  */
 package controller;
 
-import java.sql.SQLException;
 import dal.UserDAO;
 import dal.VerificationDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -37,7 +35,8 @@ public class Register extends HttpServlet {
 
             switch (role) {
                 case "admin":
-                    response.sendRedirect("dashboard.jsp");
+                case "marketing":
+                    response.sendRedirect("courseStat");
                     break;
                 case "customer":
                     response.sendRedirect("Homepage.jsp");
@@ -75,12 +74,12 @@ public class Register extends HttpServlet {
         }
         UserDAO uDAO = new UserDAO();
 
-        try {
-            Users emailCheck = uDAO.getUserByInfo("Email", email);
+        try { // check if username, email or phone number is existed or not
+            Users emailCheck = uDAO.getUserByInfo("Email", email); 
             Users usernameCheck = uDAO.getUserByInfo("Username", username);
             Users phoneCheck = uDAO.getUserByInfo("Phone", phone);
 
-            if (!password.equals(re_password)) {
+            if (!password.equals(re_password)) { // check if passwords are match or not
                 request.setAttribute("passNotMatch", true);
                 request.getRequestDispatcher("register.jsp").forward(request, response);
             } else if (emailCheck != null) {
@@ -92,12 +91,12 @@ public class Register extends HttpServlet {
             } else if (phoneCheck != null && phone != null) {
                 request.setAttribute("invalidPhone", true);
                 request.getRequestDispatcher("register.jsp").forward(request, response);
-            } else {
+            } else { //redirect to verify page
                 VerificationDAO veri = new VerificationDAO();
                 int userId = uDAO.register(fullname, username, email, password, phone, address, gender, "Customer", "Inactive");
                 String code = GenerateCode.generateRandomCode();
-                SendEmail.sendCode(email, code);
-                veri.generateCode(userId, code);
+                SendEmail.sendCode(email, code); // send code to email
+                veri.generateCode(userId, code); // save code and user id to db
                 request.setAttribute("email", email);
                 request.setAttribute("userId", userId);
                 request.getRequestDispatcher("verify.jsp").forward(request, response);
