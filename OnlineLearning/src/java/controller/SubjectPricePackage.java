@@ -30,9 +30,9 @@ public class SubjectPricePackage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!hasPermission(request, response)) {
-            return;
-        }
+//        if (!hasPermission(request, response)) {
+//            return;
+//        }
         String subjectId = request.getParameter("id");
         request.getSession().setAttribute("subjectID", subjectId);
         PackagePriceDAO pDAO = new PackagePriceDAO();

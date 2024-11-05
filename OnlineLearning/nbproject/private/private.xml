@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/myRegistration.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/myRegistration.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/myCourse.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/SliderDAO.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/Slider.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/sliderList.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/sliderList.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/myCourse.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/Homepage.java</file>
         </group>
     </open-files>
 </project-private>

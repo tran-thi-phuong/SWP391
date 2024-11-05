@@ -55,9 +55,9 @@ public class SubjectList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         if (!hasPermission(request, response)) {
-            return;
-        }
+//         if (!hasPermission(request, response)) {
+//            return;
+//        }
         try {
             // Get pagination parameters and search/filter criteria
             int page = getPageNumber(request);

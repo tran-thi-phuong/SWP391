@@ -29,7 +29,7 @@ public class PostDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         if (!hasPermission(request, response)) return;
+//         if (!hasPermission(request, response)) return;
         List<Blog> blogs = blogDAO.getAllBlogs();
         request.setAttribute("blogs", blogs);
 
