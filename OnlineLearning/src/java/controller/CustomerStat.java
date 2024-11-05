@@ -97,6 +97,7 @@ public class CustomerStat extends HttpServlet {
         }
         
         UserDAO u = new UserDAO();
+        // set time range 7 days for the first time go to registration statistic
         LocalDate endDateLocal = LocalDate.now();
         LocalDate startDateLocal = endDateLocal.minus(7, ChronoUnit.DAYS);
         java.sql.Date endDate = java.sql.Date.valueOf(endDateLocal);
@@ -110,7 +111,7 @@ public class CustomerStat extends HttpServlet {
         request.setAttribute("newCustomer", newCustomer);
         request.setAttribute("totalCustomer", totalCustomer);
         request.setAttribute("action", "customerStat");
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response); //forward request to dashboard.jsp
     }
 
     /**

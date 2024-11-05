@@ -9,12 +9,12 @@ GO
 -- Tạo bảng Users
 CREATE TABLE Users(
     UserID INT PRIMARY KEY IDENTITY(1,1),
-    Username NVARCHAR(50) UNIQUE,
-    Password NVARCHAR(255) NOT NULL,
+    Username NVARCHAR(50) COLLATE SQL_Latin1_General_CP1_CS_AS UNIQUE,
+    Password NVARCHAR(255) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
     Name NVARCHAR(100),
 	Gender NVARCHAR(10),
     Phone NVARCHAR(15),
-    Email NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
 	Address NVARCHAR(255),
 	Avatar NVARCHAR(255),
     Role NVARCHAR(20) Not Null, 
