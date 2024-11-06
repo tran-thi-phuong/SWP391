@@ -113,7 +113,7 @@ public class LessonDAO extends DBContext {
                     lm.Media_Link, 
                     lu.Status 
                 FROM 
-                    Lessons l 
+                    Lessons l
                 LEFT JOIN 
                     LessonMedia lm ON l.LessonID = lm.LessonID 
                 LEFT JOIN 

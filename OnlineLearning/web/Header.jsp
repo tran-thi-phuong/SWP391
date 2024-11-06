@@ -56,7 +56,7 @@
 
                     <li class="nav-item">
                         <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
-                             <a class="nav-link" href="blogList">News</a>
+                             <a class="nav-link" href="BlogList">News</a>
                         </c:if>
                         <c:if test="${sessionScope.user.role=='Admin' || sessionScope.user.role=='Marketing' || sessionScope.user.role=='Instructor'}">
                              <a class="nav-link" href="PostDetail">News</a>

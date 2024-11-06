@@ -58,7 +58,7 @@ body {
 .slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover; 
+    object-fit: fill; 
 }
 
 input[type="radio"] {
@@ -105,6 +105,7 @@ input[type="radio"] {
 .radio-controls input:checked + label {
     background: rgba(0, 0, 0, 0.8);
 }
+
 /*---------------------------------------
     Subjects
 -----------------------------------------*/
@@ -171,6 +172,29 @@ input[type="radio"] {
 
 #subjects a:hover {
     color: var(--primary-color);
+}
+
+/* Border chung cho toàn bộ khu vực chứa Blog */
+.col-md-3 .container {
+    border: 3px solid #333; /* Đặt border dày hơn (3px) */
+    border-radius: 12px; /* Góc tròn cho border */
+    padding: 15px; /* Khoảng cách giữa border và nội dung */
+}
+
+/* Các liên kết trong danh sách blog */
+ul.list-unstyled li a {
+    color: #000;
+    text-decoration: none;
+}
+
+ul.list-unstyled li a:hover {
+    color: #007bff;
+}
+
+.card-img-top {
+    width: 295px;    /* Set fixed width */
+    height: 200px;   /* Set fixed height */
+    object-fit: cover;  /* Ensure the image covers the area without distorting */
 }
 /*---------------------------------------
     Latest Blogs              
