@@ -15,9 +15,6 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
         <link href="css/myRegistration.css" rel="stylesheet"> 
-        <!-- Include JavaScript files for interactivity -->
-        <script src="js/myRegistration.js"></script>
-        <script src="js/registrationPopup.js"></script>
         <title>My Registration</title>
     </head>
     <body>
@@ -38,8 +35,8 @@
         <div style="padding: 0 15px; display: inline-block;">
             <!-- Buttons to filter registrations by status -->
             <form action="myRegistration" method="get" style="display: inline-flex; gap: 10px;">
-                <input type="hidden" name="status" value="Submitted" />
-                <button type="submit">Submitted</button>
+                <input type="hidden" name="status" value="Processing" />
+                <button type="submit">Processing</button>
             </form>
 
             <form action="myRegistration" method="get" style="display: inline-flex; gap: 10px;">
@@ -55,20 +52,6 @@
             <form action="myRegistration" method="get" style="display: inline-flex; gap: 10px;">
                 <input type="hidden" name="status" value="All" />
                 <button type="submit">All</button>
-            </form>
-        </div>
-
-        <div style="padding: 0 15px; display: inline-block;">
-            <!-- Checkbox options to toggle visibility of columns in the registration list -->
-            <form id="toggleForm">
-                <label><input type="checkbox" class="section-toggle" data-target=".subjectName" checked> Subject</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".package" checked> Package</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".registrationTime" checked> Registration Time</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".totalCost" checked> Cost</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".validFrom" checked> Valid From</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".validTo" checked> Valid To</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".status" checked> Status</label>
-                <label><input type="checkbox" class="section-toggle" data-target=".staffName" checked> Teacher</label>
             </form>
         </div>
 
@@ -107,7 +90,7 @@
                 <c:forEach var="registration" items="${registrationList}"> <!-- Loop through each registration -->
                     <div class="registration-card">
                         <div>
-                            <p class="registration-card-text"><img src="${registration.subjectName}" alt="${registration.subjectName}"></p>
+                            <p class="registration-card-text"><img class="card-img-top" src="images/${registration.thumbnail}" alt="${registration.subjectName}"></p>
                             <p class="registration-card-title subjectName"><a href="SubjectView?subjectId=${registration.subjectId}">${registration.subjectName}</a></p>
                             <p class="registration-card-text package"><strong>Package:</strong> ${registration.packageId}</p>
                             <p class="registration-card-text registrationTime"><strong>Registration Time:</strong> ${registration.registrationTime}</p>
@@ -118,7 +101,7 @@
                             <p class="registration-card-text staffName"><strong>Teacher:</strong> ${registration.staffName}</p>
                         </div>
                         <div class="registration-card-footer">
-                            <c:if test="${registration.status == 'Submitted'}"> <!-- Show cancel button only for submitted registrations -->
+                            <c:if test="${registration.status == 'Processing'}"> <!-- Show cancel button only for submitted registrations -->
                                 <form action="myRegistration" method="post" style="display: inline;">
                                     <input type="hidden" name="registrationId" value="${registration.registrationId}" />
                                     <input type="hidden" name="action" value="cancel" />
