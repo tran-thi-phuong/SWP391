@@ -66,14 +66,17 @@
                     </div>
                     <div class="form-group input-box2">
                         <input type="password" class="form-control" placeholder="Password" name="password" 
-                               value="${param.password}" required pattern=".{6,16}" 
-                               title="Password must be between 6 and 16 characters.">
+                               value="${param.password}" required 
+                               pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$" 
+                               title="Password must start with an uppercase letter, be 8-16 characters long, and contain at least one special character.">
                     </div>
                     <div class="form-group input-box2">
                         <input type="password" class="form-control" placeholder="Confirm Password" name="repassword" 
-                               value="${param.repassword}" required pattern=".{6,16}" 
-                               title="Password must be between 6 and 16 characters.">
+                               value="${param.repassword}" required 
+                               pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$" 
+                               title="Password must start with an uppercase letter, be 8-16 characters long, and contain at least one special character.">
                     </div>
+
                     <div class="form-group input-box2">
                         <input type="tel" class="form-control" pattern="[0]{1}[1-9]{1}[0-9]{8}" name="phone" 
                                placeholder="Phone number (Optional)" value="${param.phone}" 

@@ -67,6 +67,12 @@
                 <a href="AddCampaign" class="btn btn-primary">New</a>
             </div>
 
+            <!-- Manage Campaign Subject Button -->
+            <div class="mb-3">
+                <a href="ManageCampaignSubject" class="btn btn-secondary">Manage Campaign Subject</a>
+            </div>
+
+
             <!-- Campaign Table -->
             <table class="table table-striped">
                 <thead class="table-header">
@@ -91,13 +97,13 @@
                             <td>${campaign.status}</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${campaign.status == 'Active'}">
+                                    <c:when test="${campaign.status == 'Running'}">
                                         <form action="stopCampaign" method="post" style="display:inline;">
                                             <input type="hidden" name="campaignId" value="${campaign.campaignId}">
                                             <button type="submit" class="btn btn-danger">Stop</button>
                                         </form>
                                     </c:when>
-                                    <c:when test="${campaign.status == 'Not Start'}">
+                                    <c:when test="${campaign.status == 'Incoming'}">
                                         <form action="startCampaign" method="post" style="display:inline;">
                                             <input type="hidden" name="campaignId" value="${campaign.campaignId}">
                                             <button type="submit" class="btn btn-success">Start</button>

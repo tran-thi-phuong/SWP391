@@ -1,0 +1,111 @@
+/* General body styling */
+.campaign-subject-body {
+   
+    background-color: #FFC0CB;
+    padding: 10px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+/* Title Styling */
+.campaign-subject-title {
+    text-align: center;
+    color: black;
+    font-size: 24px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+/* Table Styling */
+.campaign-subject-table {
+    width: 1000px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 2px solid #DF73FF;
+}
+
+/* Table Header Styling */
+.campaign-subject-table th {
+        background-color: 	#50C878	;
+    color: black;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Campaign Name Cell */
+.campaign-name-column {
+    width: 40%;
+}
+
+/* Select Subject Cell */
+.select-subject-column {
+    width: 40%;
+}
+
+/* Discount Cell */
+.discount-column {
+    width: 20%;
+}
+
+/* Table Row Styling */
+.campaign-row {
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+.subject-row {
+    background-color: #f1f1f1;
+}
+
+/* Empty cell (for spacing) */
+.empty-cell {
+    width: 10%;
+ 
+}
+
+/* Subject Cell Styling */
+.subject-cell {
+    padding: 10px;
+}
+
+/* Discount Textbox Styling */
+.discount-cell input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Checkbox Styling */
+.subject-cell input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Campaign Name (on the row with colspan) */
+.campaign-name {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Style for the Save button */
+.btn-save {
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text */
+    font-size: 16px; /* Larger font size */
+    padding: 10px 20px; /* Padding for a better look */
+    border: none; /* Remove the default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Show a pointer on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
+}
+
+.btn-save:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift the button slightly on hover */
+}
+
+.btn-save:active {
+    background-color: #004085; /* Even darker blue when the button is clicked */
+    transform: translateY(0); /* Button returns to its original position */
+}

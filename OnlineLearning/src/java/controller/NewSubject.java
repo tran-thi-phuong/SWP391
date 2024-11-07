@@ -88,7 +88,7 @@ public class NewSubject extends HttpServlet {
         boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath);
         if (isAdded) {
             // Redirect to success page or list of courses if add is successful
-            response.sendRedirect("SubjectList.jsp");
+            response.sendRedirect("SubjectList");
         } else {
             // Handle failure to add course
             request.setAttribute("errorMessage", "Failed to add the course.");

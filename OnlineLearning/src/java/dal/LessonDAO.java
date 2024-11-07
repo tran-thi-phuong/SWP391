@@ -64,6 +64,30 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
+     public List<Lesson> getLessonBySubjectId(int subjectID) {
+        List<Lesson> list = new ArrayList<>();
+        String sql = "select * from Lessons where SubjectID = ? ";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Lesson lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setSubjectID(rs.getInt("SubjectID"));
+                    lesson.setTitle(rs.getString("Title"));
+                    lesson.setTopicID(rs.getInt("TopicID"));
+                    lesson.setContent(rs.getString("Content"));
+                    lesson.setOrder(rs.getInt("Order"));
+                    lesson.setDescription(rs.getString("Description"));
+                    lesson.setStatus(rs.getString("Status"));
+                    list.add(lesson);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     // func for searching lesson by name
     public List<Lesson> searchLesson(int subjectID, String searchValue) {
         List<Lesson> list = new ArrayList<>();

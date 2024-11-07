@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -25,6 +26,9 @@ public class updateRegistration extends HttpServlet { // Class names should star
     private static final long serialVersionUID = 1L;
     private final RegistrationsDAO registrationsDAO = new RegistrationsDAO();
     private final PackagePriceDAO packageDAO = new PackagePriceDAO();
+    private final Customer_SubjectDAO csDAO = new Customer_SubjectDAO();
+    private final LessonDAO lessonDAO = new LessonDAO();
+    private final Lesson_UserDAO lesson_User = new Lesson_UserDAO();
     private static final int TOKEN_LENGTH = 8; // Length of the generated token
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // Characters for random string generation
     private static final SecureRandom RANDOM = new SecureRandom(); // Secure random generator for creating tokens
@@ -94,54 +98,80 @@ public class updateRegistration extends HttpServlet { // Class names should star
         String newStatus = request.getParameter("status");
         String note = request.getParameter("note");
 
-        // Retrieve the current status of the registration using the integer ID
+        // Retrieve the current registration record
         Registrations currentRegistration = registrationsDAO.getRegistrationById(registrationId);
+        if (currentRegistration == null) {
+            request.setAttribute("error", "Registration not found.");
+            request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
+            return;
+        }
+
         String currentStatus = currentRegistration.getStatus();
-        Date validFrom = (Date) currentRegistration.getValidFrom(); // Get the existing validFrom value
-        Date validTo = null;
+        int subjectID = currentRegistration.getSubjectId();
+        int userID = currentRegistration.getUserId();
+        Date validFrom = (Date) currentRegistration.getValidFrom();
+        Date validTo = (Date) currentRegistration.getValidTo();
         String customerEmail = request.getParameter("customerEmail");
+
         if (customerEmail == null || customerEmail.isEmpty()) {
             request.setAttribute("error", "Customer email is missing.");
             request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
             return;
         }
 
-        // Set validity dates based on status change
+        // Determine new validFrom and validTo based on status changes
         if ("Processing".equals(currentStatus) && "Active".equals(newStatus)) {
             int packageId = registrationsDAO.getPackageIdByRegistrationId(registrationId);
             LocalDate currentDate = LocalDate.now();
-            validFrom = Date.valueOf(currentDate); // Set validFrom to current date
+            validFrom = Date.valueOf(currentDate);
 
             int durationDays = packageDAO.getDurationByPackageId(packageId);
-            validTo = Date.valueOf(currentDate.plusDays(durationDays)); // Set validTo to current date + duration
+            validTo = Date.valueOf(currentDate.plusDays(durationDays));
+            csDAO.addCustomerSubject(subjectID, userID);
+            List<Lesson> lessons = lessonDAO.getLessonBySubjectId(subjectID);
+            if (lessons == null || lessons.isEmpty()) {
+                request.setAttribute("error", "No lessons found for the subject.");
+                request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
+                return;
+            }
 
-            // Send email notification if the status changes from Processing to Active
-            sendEmail(customerEmail, request);
+            boolean allLessonsAdded = true;
+            for (Lesson lesson : lessons) {
+                boolean lessonAdded = lesson_User.addLesson(lesson.getLessonID(), userID);
+                if (!lessonAdded) {
+                    allLessonsAdded = false;
+                    request.setAttribute("error", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userID);
+                    request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
+                    return;
+                }
+            }
+            // Check if all lessons were added successfully
+            if (allLessonsAdded) {
+                sendEmail(customerEmail, request); // Notify customer on status update
+            } else {
+                request.setAttribute("error", "Failed to add all lessons for the customer.");
+                request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
+                return;
+            }
+
         } else if ("Active".equals(currentStatus) && "Inactive".equals(newStatus)) {
-            // Do not change validFrom
-            validTo = Date.valueOf(LocalDate.now()); // Set validTo to current date
-        } else {
-            // If the status is not changing from Processing to Active or Active to Inactive, keep validFrom and validTo as they are.
-            validTo = (Date) currentRegistration.getValidTo(); // Keep the existing validTo if not updating
+            validTo = Date.valueOf(LocalDate.now()); // Set validTo to current date if status is changed to Inactive
         }
 
-        // Create and populate the Registrations object
+        // Prepare the updated registration record
         Registrations registrationToUpdate = new Registrations();
-        registrationToUpdate.setRegistrationId(registrationId); // Set RegistrationID
+        registrationToUpdate.setRegistrationId(registrationId);
         registrationToUpdate.setStatus(newStatus);
-        registrationToUpdate.setValidFrom(validFrom); // Set validFrom (will retain its value if not changed)
+        registrationToUpdate.setValidFrom(validFrom);
         registrationToUpdate.setValidTo(validTo);
-        registrationToUpdate.setNote(note); // Set the note
-        registrationToUpdate.setStaffId(staffId); // Set the staff ID
+        registrationToUpdate.setNote(note);
+        registrationToUpdate.setStaffId(staffId);
 
-        // Update the registration in the database
+        // Attempt to update the registration
         boolean isUpdated = registrationsDAO.updateRegistration(registrationToUpdate);
 
-        // Handle update result
         if (isUpdated) {
-            // Store success message in session
-            request.getSession().setAttribute("success", "Registration updated successfully!");
-            // Redirect to registration list page
+            session.setAttribute("success", "Registration updated successfully!");
             response.sendRedirect(request.getContextPath() + "/listRegistration");
         } else {
             request.setAttribute("error", "Failed to update registration.");
@@ -149,7 +179,7 @@ public class updateRegistration extends HttpServlet { // Class names should star
         }
     }
 
-    // Method to send an email to the user
+// Method to send an email to the user
     private void sendEmail(String recipientEmail, HttpServletRequest request) {
         UserDAO usersDAO = new UserDAO(); // Tạo một đối tượng UsersDAO
         String token = generateToken(); // Tạo một mã token ngẫu nhiên

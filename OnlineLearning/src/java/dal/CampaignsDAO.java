@@ -211,7 +211,7 @@ public class CampaignsDAO extends DBContext {
             throw new RuntimeException("Simulated database error");
         }
 
-        String sql = "UPDATE Campaigns SET StartDate = GETDATE(), Status = 'Processing' WHERE CampaignID = ?";
+        String sql = "UPDATE Campaigns SET StartDate = GETDATE(), Status = 'Running' WHERE CampaignID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, campaignId);
@@ -298,5 +298,33 @@ public class CampaignsDAO extends DBContext {
             }
         }
     }
- 
+
+    public List<Campaigns> getOngoingCampaigns() {
+        List<Campaigns> campaigns = new ArrayList<>();
+        String sql = "SELECT * FROM Campaigns WHERE status IN ('Running')";
+        
+        try (
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Campaigns campaign = new Campaigns();
+                campaign.setCampaignId(rs.getInt("CampaignID"));
+                campaign.setCampaignName(rs.getString("CampaignName"));
+                campaign.setDescription(rs.getString("Description"));
+                campaign.setStartDate(rs.getDate("StartDate"));
+                campaign.setEndDate(rs.getDate("EndDate"));
+                campaign.setStatus(rs.getString("Status"));
+
+                campaigns.add(campaign);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Xử lý lỗi nếu cần
+        }
+        
+        return campaigns;
+    }
 }
+
+

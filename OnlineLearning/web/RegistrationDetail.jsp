@@ -11,6 +11,7 @@
         <link href="css/Header_Footer.css" rel="stylesheet">
         <link rel="stylesheet" href="css/registration_detail.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl7/4hb7ue/h4j5NYU/5X3QU5XhzX4JK2xyTg9Brqx" crossorigin="anonymous"></script>
     </head>
     <body>
 
@@ -25,8 +26,8 @@
                 </div>
             </c:if>
             <% 
-        String errorMessage = (String) request.getAttribute("errorMessage");
-        if (errorMessage != null) { 
+                String errorMessage = (String) request.getAttribute("errorMessage");
+                if (errorMessage != null) { 
             %>
             <div class="error" style="color: red">
                 <%= errorMessage %>
@@ -45,12 +46,14 @@
                                 <label for="registrationId" class="form-label"><strong>Registration ID:</strong></label>
                                 <input type="text" class="form-control" id="registrationId" value="${registration.registrationId}" readonly>
                             </div>
-                           
-                            <input type="hidden" name="customerEmail" value="${customerEmail}"> <!-- Add this hidden input -->
-                            <!-- Rest of your form fields -->
+
+                            <input type="hidden" name="customerEmail" value="${customerEmail}">
                             <div class="mb-3">
                                 <label for="email" class="form-label"><strong>Email:</strong></label>
-                                <input type="text" class="form-control" id="email" value="${customerEmail}" readonly>
+                                <a href="#" id="userEmail" class="form-control" style="cursor: pointer;" data-userid="${registration.userId}"
+                                   data-bs-toggle="modal" data-bs-target="#userDetailModal">
+                                    ${customerEmail}
+                                </a>
                             </div>
                             <div class="mb-3">
                                 <label for="registrationTime" class="form-label"><strong>Registration Time:</strong></label>
@@ -90,7 +93,6 @@
                                     <c:if test="${registration.status == 'Processing'}">
                                         <option value="Processing" selected>Processing</option>
                                         <option value="Active">Active</option>
-                                       
                                     </c:if>
                                     <c:if test="${registration.status == 'Active'}">
                                         <option value="Active" selected>Active</option>
@@ -116,6 +118,44 @@
                 <a href="listRegistration" class="btn btn-primary">Back to Registration List</a>
             </div>
         </div>
+
+        <div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userDetailModalLabel">User Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Full Name:</strong> <span id="modalUserName">${userDetails.name}</span></p>
+                        <p><strong>Phone:</strong> <span id="modalUserPhone">${userDetails.phone}</span></p>
+                        <p><strong>Email:</strong> <span id="modalUserEmail">${userDetails.email}</span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#userEmail').on('click', function () {
+                    const userId = $(this).data('userid');
+                    // Sử dụng AJAX để lấy thông tin người dùng từ server
+                    $.ajax({
+                        url: 'getUserDetails', // URL của servlet để lấy thông tin người dùng
+                        method: 'GET',
+                        data: { userId: userId },
+                        success: function(data) {
+                            $('#modalUserName').text(data.name);
+                            $('#modalUserPhone').text(data.phone);
+                            $('#modalUserEmail').text(data.email);
+                        }
+                    });
+                });
+            });
+        </script>
 
         <%@ include file="Footer.jsp" %>
     </body>

@@ -55,6 +55,28 @@ public class SubjectDAO extends DBContext {
         return subjects;
     }
 
+    // Method to get subjects with status "Active"
+    public List<Subject> getActiveSubjects() {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT SubjectID, Title, Status FROM Subjects WHERE Status = 'Active'"; // Include Status in SELECT statement
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Subject subject = new Subject();
+                subject.setSubjectID(rs.getInt("SubjectID"));
+                subject.setTitle(rs.getString("Title"));
+                subject.setStatus(rs.getString("Status")); // Fetch Status from ResultSet
+                subjects.add(subject);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions if needed
+        }
+
+        return subjects;
+    }
+
     public List<Subject> getAllSubjects() {
         List<Subject> subjects = new ArrayList<>();
         String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID"; // Select all subjects
@@ -365,6 +387,7 @@ public class SubjectDAO extends DBContext {
         }
         return list;
     }
+
     public boolean updateSubject(String courseName, String category, String status, String description, String subjectID, String thumbnailPath) {
         String query = "UPDATE Subjects SET Title = ?, Description = ?, Subject_CategoryID = ?, Status = ?, Update_Date = GETDATE(), Thumbnail = ? WHERE SubjectID = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -382,6 +405,7 @@ public class SubjectDAO extends DBContext {
         }
         return false;
     }
+
     public boolean addSubject(String courseName, String category, String status, String description, String thumbnailPath) {
         boolean isAdded = false;
         String sql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) VALUES (?, ?, ?, ?, ?, GETDATE(),?)";
@@ -551,5 +575,5 @@ public class SubjectDAO extends DBContext {
 
         return subjects;
     }
-    
+
 }
