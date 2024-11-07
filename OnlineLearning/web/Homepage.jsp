@@ -25,9 +25,8 @@
     </head>
     <body>
         <%@include file="Header.jsp" %> <!-- Include the header of the page -->
-
+        <<p></p>
         <div class="slider-container"> <!-- Slider section for displaying images -->
-            <h2 class="slider-title">Hot</h2>
             <div class="slider">
                 <!-- Radio buttons for navigation -->
                 <c:forEach var="slider" items="${sliders}" varStatus="status">
@@ -40,7 +39,7 @@
                     <c:forEach var="slider" items="${sliders}" varStatus="status">
                         <c:if test="${slider.status == 'Show'}">
                             <div class="slide">
-                                <img src="${slider.image}" alt="${slider.title}"> <!-- Display slider images -->
+                                <img src="images/${slider.image}" alt="${slider.title}"> <!-- Display slider images -->
                             </div>
                         </c:if>
                     </c:forEach>
@@ -56,58 +55,49 @@
             </div>
         </div>
 
-        <section id="latest-blogs"> <!-- Latest Blogs section -->
-            <h2 class="text-center mt-5 mb-4">Latest Blogs</h2>
-            <div class="container">
-                <div class="row">
-                    <c:forEach var="blog" items="${latestBlogs}">
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img class="card-img-top" src="image/default-thumbnail.jpg" alt="${blog.title}"> <!-- Default thumbnail for blogs -->
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="blogDetail?blogId=${blog.blogId}"> <!-- Link to the blog detail page -->
-                                            ${blog.title}
-                                        </a>
-                                    </h5>
-                                    <p class="card-text">
-                                        ${fn:substring(blog.content, 0, 100)}... <!-- Display a snippet of the blog content -->
-                                    </p>
-                                    <p class="text-muted">Created at: ${blog.createAt}</p> <!-- Display blog creation date -->
+        <section id="content-section" class="container mt-5">
+            <div class="row">
+                <!-- Top Subjects Section: Left side (3/4 width) -->
+                <div class="col-md-9">
+                    <h2 class="text-center mb-4">Top Subjects</h2>
+                    <div class="row p-3"> <!-- Thêm border cho toàn bộ khu vực chứa Subjects -->
+                        <c:forEach var="subject" items="${topSubjects}">
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img class="card-img-top" src="images/${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a href="SubjectView?subjectId=${subject.subjectID}">
+                                                ${subject.title}
+                                            </a>
+                                        </h5>
+                                        <p class="card-text">
+                                            ${subject.ownerName}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </c:forEach>
+                        </c:forEach>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Latest Blogs Section: Right side (1/4 width) -->
+                <div class="col-md-3">
+                    <h2 class="text-center mb-4">Latest Blogs</h2>
+                    <div class="container border p-3"> <!-- Thêm border cho toàn bộ khu vực chứa Blogs -->
+                        <ul class="list-unstyled">
+                            <c:forEach var="blog" items="${latestBlogs}">
+                                <li class="mb-3">
+                                    <a href="blogDetail?blogId=${blog.blogId}" class="ms-2" style="color: orange;">
+                                        ${blog.title}
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </div>
         </section>
 
-        <section id="subjects"> <!-- Top Subjects section -->
-            <h2 class="text-center mt-5 mb-4">Top Subjects</h2>
-            <div class="container">
-                <div class="row">
-                    <c:forEach var="subject" items="${topSubjects}">
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img class="card-img-top" src="images/${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="SubjectView?subjectId=${subject.subjectID}"> <!-- Link to the subject view page -->
-                                            ${subject.title}
-                                        </a>
-                                    </h5>
-                                    <p class="card-text">
-                                        ${fn:substring(subject.description, 0, 100)}... <!-- Display a snippet of the subject description -->
-                                    </p>
-                                    <p class="text-muted">Updated on: ${subject.updateDate}</p> <!-- Display subject update date -->
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
-        </section>
-        
         <%@include file="Footer.jsp" %> <!-- Include the footer of the page -->
     </body>
 </html>

@@ -25,11 +25,12 @@ public class Registrations {
     private String campaignName;
     private String subjectName; 
     private String staffName;
+    private String thumbnail;
 
     public Registrations() {
     }
 
-    public Registrations(int registrationId, int userId, int subjectId, int packageId, double totalCost, Date registrationTime, Date validFrom, Date validTo, String status, int staffId, String note, String campaignName) {
+    public Registrations(int registrationId, int userId, int subjectId, int packageId, double totalCost, Date registrationTime, Date validFrom, Date validTo, String status, int staffId, String note, String campaignName, String thumbnail) {
         this.registrationId = registrationId;
         this.userId = userId;
         this.subjectId = subjectId;
@@ -42,6 +43,7 @@ public class Registrations {
         this.staffId = staffId;
         this.note = note;
         this.campaignName = campaignName;
+        this.thumbnail = thumbnail;
     }
 
     public String getCampaignName() {
@@ -157,6 +159,14 @@ public class Registrations {
 
     public void setStaffName(String staffName) {
         this.staffName = staffName;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
     
     
