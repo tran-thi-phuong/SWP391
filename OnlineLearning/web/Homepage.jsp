@@ -89,7 +89,7 @@
                     <c:forEach var="subject" items="${topSubjects}">
                         <div class="col-md-4 mb-4">
                             <div class="card">
-                                <img class="card-img-top" src="${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
+                                <img class="card-img-top" src="images/${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
                                 <div class="card-body">
                                     <h5 class="card-title">
                                         <a href="SubjectView?subjectId=${subject.subjectID}"> <!-- Link to the subject view page -->

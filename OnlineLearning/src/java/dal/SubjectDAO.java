@@ -507,7 +507,7 @@ public class SubjectDAO extends DBContext {
         }
         return false;
     }
-    public boolean addSubject(String courseName, String category, String status, String description, String thumbnailPath) {
+    public boolean addSubject(String courseName, String category, String status, String description, String thumbnailPath, String ownerId) {
         boolean isAdded = false;
         String sql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) VALUES (?, ?, ?, ?, ?, GETDATE(),?)";
 
@@ -517,7 +517,7 @@ public class SubjectDAO extends DBContext {
             ps.setInt(3, Integer.parseInt(category));
             ps.setString(4, status);
             ps.setString(5, thumbnailPath);
-            ps.setInt(6, 1);
+            ps.setInt(6, Integer.parseInt(ownerId));
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {

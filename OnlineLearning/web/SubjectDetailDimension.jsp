@@ -72,7 +72,7 @@
         <%@include file="Header.jsp" %>
 
         <div class="container mt-4">
-            <h2 class="mb-4">Subject Details</h2>
+            <h2 class="mb-4">Course Details</h2>
 
             <c:if test="${not empty errorMessage}">
                 <div class="alert alert-danger">${errorMessage}</div>
@@ -88,13 +88,13 @@
 
 
             <div class="tab-content">
-                <h3 class="mb-4">Subject Dimensions</h3>
+                <h3 class="mb-4">Course Topics</h3>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Dimension</th>
+                                <th>Topic</th>
                                 <th>Order</th>
                                 <th>Action</th>
                             </tr>
@@ -119,14 +119,14 @@
                     </table>
                 </div>
                 <button class="btn btn-success add-new-btn" onclick="showAddDimensionModal()">
-                    <i class="bi bi-plus-circle"></i> Add New Dimension
+                    <i class="bi bi-plus-circle"></i> Add New Topic
                 </button>
                 <!-- Modal for Adding New Dimension -->
                 <div class="modal fade" id="addDimensionModal" tabindex="-1" role="dialog" aria-labelledby="addDimensionModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="addDimensionModalLabel">Add New Dimension</h5>
+                                <h5 class="modal-title" id="addDimensionModalLabel">Add New Topic</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -134,7 +134,7 @@
                             <div class="modal-body">
                                 <form id="addDimensionForm">
                                     <div class="form-group">
-                                        <label for="dimensionName">Dimension Name</label>
+                                        <label for="dimensionName">Topic Name</label>
                                         <input type="text" class="form-control" id="dimensionName" required>
                                     </div>
                                     <div class="form-group">
@@ -145,7 +145,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="addDimension()">Add Dimension</button>
+                                <button type="button" class="btn btn-primary" onclick="addDimension()">Add Topic</button>
                             </div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editDimensionModalLabel">Edit Dimension</h5>
+                                <h5 class="modal-title" id="editDimensionModalLabel">Edit Topic</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -165,7 +165,7 @@
                                 <form id="editDimensionForm">
                                     <input type="hidden" id="editDimensionId">
                                     <div class="form-group">
-                                        <label for="editDimensionName">Dimension Name</label>
+                                        <label for="editDimensionName">Topic Name</label>
                                         <input type="text" class="form-control" id="editDimensionName" required>
                                     </div>
                                     <div class="form-group">
@@ -176,7 +176,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="updateDimension()">Update Dimension</button>
+                                <button type="button" class="btn btn-primary" onclick="updateDimension()">Update Topic</button>
                             </div>
                         </div>
                     </div>

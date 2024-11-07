@@ -17,6 +17,7 @@ import model.SubjectTopic;
  * @author tuant
  */
 public class LessonDAO extends DBContext {
+
     // get all topic of the subject by id
     public List<SubjectTopic> getAllLessonTopicBySubjectId(int subjectID) {
         List<SubjectTopic> list = new ArrayList<>();
@@ -39,6 +40,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
+
     // get all lesson of subject by id
     public List<Lesson> getAllLessonBySubjectId(int subjectID) {
         List<Lesson> list = new ArrayList<>();
@@ -64,6 +66,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
+
     // func for searching lesson by name
     public List<Lesson> searchLesson(int subjectID, String searchValue) {
         List<Lesson> list = new ArrayList<>();
@@ -121,7 +124,6 @@ public class LessonDAO extends DBContext {
                 WHERE 
                     lu.UserID = ? 
                 AND l.LessonID = ?""";
-
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -206,6 +208,7 @@ public class LessonDAO extends DBContext {
 
         return lesson;
     }
+
     // get lesson information by id
     public Lesson getLessonByLessonID(int lessonID) {
         Lesson lesson = null;
@@ -232,6 +235,7 @@ public class LessonDAO extends DBContext {
         }
         return lesson;
     }
+
     // func for adding a new lesson
     public void addLesson(int subjectID, String title, int topicID, String content, int order, String description, String status) {
         String sql = "INSERT INTO Lessons (SubjectID, Title, TopicID, Content, [Order], Description, Status) "
@@ -250,6 +254,7 @@ public class LessonDAO extends DBContext {
             e.printStackTrace();
         }
     }
+
     // func for updating lesson by id
     public void updateLesson(int lessonID, String title, int topicID, String content, int order, String description, String status) {
         String sql = "update Lessons set Title = ?, TopicID = ?, Content = ?, [Order] = ?, Description = ?, Status = ? where LessonID = ?";
@@ -267,8 +272,9 @@ public class LessonDAO extends DBContext {
             e.printStackTrace();
         }
     }
+
     // check if a lesson with the order is existed or not
-    public boolean validLessonOrder(int subjectID, int topicID, int order){
+    public boolean validLessonOrder(int subjectID, int topicID, int order) {
         String sql = "select * from Lessons where SubjectID = ? and TopicID = ? and [Order] = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, subjectID);
@@ -278,14 +284,15 @@ public class LessonDAO extends DBContext {
             if (rs.next()) {
                 return false;
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return true;
     }
+
     // func for deleting a lesson
-    public void deleteLesson(int lessonID){
+    public void deleteLesson(int lessonID) {
         String sql = "delete Lessons where LessonID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, lessonID);
@@ -368,6 +375,22 @@ public class LessonDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public int countLessonsBySubjectId(int subjectID) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) AS Total FROM Lessons WHERE SubjectID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("Total");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
 }

@@ -73,7 +73,7 @@ public class SubjectPricePackage extends HttpServlet {
         packagePrice.setSubjectId(Integer.parseInt(subjectId));
         packagePrice.setName(request.getParameter("packageName"));
         packagePrice.setDurationTime(Integer.parseInt(request.getParameter("durationTime")));
-        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("salePrice")));
+        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("price")));
         packagePrice.setPrice(Double.parseDouble(request.getParameter("price")));
 
         packagePriceDAO.addPackagePrice(packagePrice);
@@ -85,7 +85,7 @@ public class SubjectPricePackage extends HttpServlet {
         packagePrice.setSubjectId(Integer.parseInt(subjectId));
         packagePrice.setName(request.getParameter("name"));
         packagePrice.setDurationTime(Integer.parseInt(request.getParameter("durationTime")));
-        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("salePrice")));
+        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("price")));
         packagePrice.setPrice(Double.parseDouble(request.getParameter("price")));
 
         packagePriceDAO.updatePackagePrice(packagePrice);
