@@ -79,7 +79,7 @@
             <div class="btn-save">
                 <button type="button" class="btn btn-dark" onclick="submitContent()">Submit</button>
                 <c:if test="${requestScope.action eq 'update'}">
-                    <a href="deleteLesson?lessonID=${lesson.lessonID}&courseID=${requestScope.courseID}&courseName=${requestScope.courseName}" class="btn btn-danger">Delete</a>
+                    <button type="button" onclick="doDelete(${lesson.lessonID}, '${requestScope.courseID}', '${requestScope.courseName}')" class="btn btn-danger">Delete</button>
                 </c:if>
                 <a class="btn btn-dark" href="subjectLesson?courseId=${requestScope.courseID}&courseName=${requestScope.courseName}">Back</a>
             </div>
@@ -217,6 +217,14 @@
                 document.getElementById('content').value = content;
                 document.forms[0].submit();
             }
+            function doDelete(lessonID, courseID, courseName) {
+    // Confirm the deletion action
+    if (confirm("Are you sure you want to delete this lesson?")) {
+        // Redirect to the delete URL if confirmed
+        window.location.href = `deleteLesson?lessonID=${lesson.lessonID}&courseID=${courseID}&courseName=${requestScope.courseName}`;
+    }
+}
+
         </script>
     </body>
 </html>

@@ -667,12 +667,14 @@ public class RegistrationsDAO extends DBContext {
                 + "       r.Valid_To, "
                 + "       staff.UserID AS StaffID, "
                 + "       staff.Name AS StaffName, "
-                + "       r.Note "
+                + "       r.Note ,"
+                + "       COALESCE(cs.Progress, 0) AS Progress "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
+                + "LEFT JOIN Customer_Subject cs ON r.SubjectID = cs.SubjectID AND r.UserID = cs.UserID " 
                 + "WHERE r.UserID = ? AND r.Status = 'Active'"
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS "
@@ -696,6 +698,7 @@ public class RegistrationsDAO extends DBContext {
                 reg.setSubjectName(rs.getString("SubjectName"));
                 reg.setThumbnail(rs.getString("Thumbnail"));
                 reg.setStaffName(rs.getString("StaffName"));
+                reg.setProgress(rs.getDouble("Progress"));
                 list.add(reg);
             }
         } catch (SQLException e) {
@@ -728,12 +731,14 @@ public class RegistrationsDAO extends DBContext {
                 + "       r.Valid_To, "
                 + "       staff.UserID AS StaffID, "
                 + "       staff.Name AS StaffName, "
-                + "       r.Note "
+                + "       r.Note ,"
+                + "       COALESCE(cs.Progress, 0) AS Progress "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID  "
+                + "LEFT JOIN Customer_Subject cs ON r.SubjectID = cs.SubjectID AND r.UserID = cs.UserID " 
                 + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)AND r.Status = 'Active' "
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
@@ -758,6 +763,7 @@ public class RegistrationsDAO extends DBContext {
                 reg.setSubjectName(rs.getString("SubjectName"));
                 reg.setThumbnail(rs.getString("Thumbnail"));
                 reg.setStaffName(rs.getString("StaffName"));
+                reg.setProgress(rs.getDouble("Progress"));
                 list.add(reg);
             }
         } catch (SQLException e) {
@@ -775,7 +781,7 @@ public class RegistrationsDAO extends DBContext {
     public int getTotalSearchResultsCourseByUserId(int userId, String searchQuery) {
         String sql = "SELECT COUNT(*) FROM Registrations r "
                 + "JOIN Subjects s ON r.subjectId = s.subjectId "
-                + "WHERE r.userId = ? AND (s.subjectName LIKE ? OR r.status LIKE ?) AND r.Status = 'In-progress'";
+                + "WHERE r.userId = ? AND (s.subjectName LIKE ? OR r.status LIKE ?) AND r.Status = 'Active'";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userId);
@@ -797,7 +803,7 @@ public class RegistrationsDAO extends DBContext {
      * @return 
      */
     public int getTotalCourseByUserId(int userId) {
-        String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status = 'In-progress'";
+        String sql = "SELECT COUNT(*) FROM Registrations WHERE userId = ? AND Status = 'Active'";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userId);
@@ -1074,5 +1080,29 @@ public class RegistrationsDAO extends DBContext {
 
         return validFrom;
     }
+    /**
+     * 
+     * @param userId
+     * @param subjectId
+     * @param packageId
+     * @return
+     * @throws SQLException 
+     */
+    //Method to check exist registration
+public boolean hasExistingRegistration(int userId, int subjectId, int packageId) throws SQLException {
+    String query = "SELECT COUNT(*) FROM Registrations WHERE UserID = ? AND SubjectID = ? AND PackageID = ? AND Status IN ('processing', 'Active', 'Inactive')";
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setInt(1, userId);
+        stmt.setInt(2, subjectId);
+        stmt.setInt(3, packageId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // True if any matching record is found
+            }
+        }
+    }
+    return false;
+}
 
 }

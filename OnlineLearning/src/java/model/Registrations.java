@@ -26,11 +26,12 @@ public class Registrations {
     private String subjectName; 
     private String staffName;
     private String thumbnail;
+    private double progress;
 
     public Registrations() {
     }
 
-    public Registrations(int registrationId, int userId, int subjectId, int packageId, double totalCost, Date registrationTime, Date validFrom, Date validTo, String status, int staffId, String note, String campaignName, String thumbnail) {
+    public Registrations(int registrationId, int userId, int subjectId, int packageId, double totalCost, Date registrationTime, Date validFrom, Date validTo, String status, int staffId, String note, String campaignName, String thumbnail, double progress) {
         this.registrationId = registrationId;
         this.userId = userId;
         this.subjectId = subjectId;
@@ -44,6 +45,7 @@ public class Registrations {
         this.note = note;
         this.campaignName = campaignName;
         this.thumbnail = thumbnail;
+        this.progress=progress;
     }
 
     public String getCampaignName() {
@@ -168,7 +170,15 @@ public class Registrations {
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
-    
+
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
+
     
 
 }

@@ -100,7 +100,8 @@
                                     <c:when test="${campaign.status == 'Running'}">
                                         <form action="stopCampaign" method="post" style="display:inline;">
                                             <input type="hidden" name="campaignId" value="${campaign.campaignId}">
-                                            <button type="submit" class="btn btn-danger">Stop</button>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to stop this campaign?');">Stop</button>
+
                                         </form>
                                     </c:when>
                                     <c:when test="${campaign.status == 'Incoming'}">

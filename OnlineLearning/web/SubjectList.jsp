@@ -110,12 +110,12 @@
 
                     <%-- Status filter dropdown --%>
                     <select name="status">
-                        <option value="">Tất cả trạng thái</option>
+                        <option value="">All Status</option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
 
-                    <input type="submit" value="Tìm kiếm">
+                    <input type="submit" value="Search">
                 </form>
 
                 <%-- Column Visibility Controls 
@@ -161,7 +161,7 @@
                             <td class="col-owner">${course.userName}</td>
                             <td class="col-status">${course.status}</td>
                             <td>
-                                <a href="SubjectDetailOverview?id=${course.subjectID}">Chỉnh sửa</a>
+                                <a href="SubjectDetailOverview?id=${course.subjectID}">Edit</a>
                             </td>
                         </tr>
                     </c:forEach>
