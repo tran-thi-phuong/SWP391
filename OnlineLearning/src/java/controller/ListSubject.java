@@ -72,21 +72,21 @@ public class ListSubject extends HttpServlet {
         // If search keyword exists
         if (query != null && !query.trim().isEmpty()) {
             return new SubjectListResult(
-                    subjectDAO.searchSubjects(query, offset, recordsPerPage),
-                    subjectDAO.getTotalSearchSubjects(query)
+                    subjectDAO.searchActiveSubjects(query, offset, recordsPerPage),
+                    subjectDAO.getTotalActiveSearchSubjects(query)
             );
         } // If filtering by category
         else if (categoryId != null && !categoryId.trim().isEmpty()) {
             int catId = Integer.parseInt(categoryId);
             return new SubjectListResult(
-                    subjectDAO.getSubjectsByCategory(catId, offset, recordsPerPage),
-                    subjectDAO.getTotalSubjectsByCategory(catId)
+                    subjectDAO.getActiveSubjectsByCategory(catId, offset, recordsPerPage),
+                    subjectDAO.getTotalActiveSubjectsByCategory(catId)
             );
         } // Get all subjects if no conditions
         else {
             return new SubjectListResult(
-                    subjectDAO.getAllSubjects(offset, recordsPerPage),
-                    subjectDAO.getTotalSubjects()
+                    subjectDAO.getAllActiveSubjects(offset, recordsPerPage),
+                    subjectDAO.getTotalActiveSubjects()
             );
         }
     }

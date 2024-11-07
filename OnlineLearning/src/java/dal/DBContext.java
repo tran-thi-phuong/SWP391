@@ -27,7 +27,11 @@ public class DBContext {
         //where StudentDBContext is located in dal package, 
         try {
             String user = "sa";
-            String pass = "12345678";
+<<<<<<< HEAD
+            String pass = "khoa";
+=======
+            String pass = "hoanganh";
+>>>>>>> bbb536aa6a5b2653e0dd13645db1d4d25ccbd2a7
             String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=OnlineLearning";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);

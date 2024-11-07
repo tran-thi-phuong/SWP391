@@ -30,9 +30,9 @@ public class SubjectPricePackage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!hasPermission(request, response)) {
-            return;
-        }
+//        if (!hasPermission(request, response)) {
+//            return;
+//        }
         String subjectId = request.getParameter("id");
         request.getSession().setAttribute("subjectID", subjectId);
         PackagePriceDAO pDAO = new PackagePriceDAO();
@@ -73,7 +73,7 @@ public class SubjectPricePackage extends HttpServlet {
         packagePrice.setSubjectId(Integer.parseInt(subjectId));
         packagePrice.setName(request.getParameter("packageName"));
         packagePrice.setDurationTime(Integer.parseInt(request.getParameter("durationTime")));
-        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("salePrice")));
+        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("price")));
         packagePrice.setPrice(Double.parseDouble(request.getParameter("price")));
 
         packagePriceDAO.addPackagePrice(packagePrice);
@@ -85,7 +85,7 @@ public class SubjectPricePackage extends HttpServlet {
         packagePrice.setSubjectId(Integer.parseInt(subjectId));
         packagePrice.setName(request.getParameter("name"));
         packagePrice.setDurationTime(Integer.parseInt(request.getParameter("durationTime")));
-        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("salePrice")));
+        packagePrice.setSalePrice(Double.parseDouble(request.getParameter("price")));
         packagePrice.setPrice(Double.parseDouble(request.getParameter("price")));
 
         packagePriceDAO.updatePackagePrice(packagePrice);

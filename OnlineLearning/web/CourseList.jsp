@@ -12,7 +12,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">  
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
-        <link rel="stylesheet" href="css/style.css">
+        <link href="css/style.css" rel="stylesheet" >
     </head>
     <body>
         <%@include file="Header.jsp" %>
@@ -22,27 +22,29 @@
             <div class="content">
                 <!-- Left sidebar containing search and categories -->
                 <aside class="sidebar">
-                    <!-- Search section -->
+                    <!-- Search form -->
                     <section class="search">
                         <h2>Search Course</h2>
-                        <!-- Search form that sends GET request to CourseList servlet -->
-                        <form action="CourseList" method="get">  
-                            <input type="text" name="query" placeholder="Search course...">
+                        <form action="CourseList" method="get">
+                            <input type="text" name="query" value="${query}" placeholder="Search course...">
+                            <c:if test="${not empty categoryId}">
+                                <input type="hidden" name="category" value="${categoryId}">
+                            </c:if>
                             <button type="submit">Search</button>
                         </form>
                     </section>
 
-                    <!-- Subject categories section -->
+                    <!-- Categories section -->
                     <section class="categories">
                         <h2>Course Category</h2>
                         <ul>
-                            <!-- Link to show all subjects -->
                             <li>
-                                <a href="?category=${category.subjectCategoryId}">All</a>
+                                <a href="CourseList">All</a>
                             </li>
                             <c:forEach items="${categories}" var="category">
                                 <li>
-                                    <a href="?category=${category.subjectCategoryId}">${category.title}</a>
+                                    <a href="CourseList?category=${category.subjectCategoryId}&query=${query}"
+                                       class="${category.subjectCategoryId eq categoryId ? 'active' : ''}">${category.title}</a>
                                 </li>
                             </c:forEach>
                         </ul>
@@ -74,25 +76,25 @@
 
             <!-- Footer containing pagination -->
             <footer>
+                <!-- Pagination section -->
                 <div class="pagination">
                     <c:if test="${currentPage > 1}">
-                        <a href="?page=${currentPage - 1}" class="arrow">&laquo;</a>
+                        <a href="?page=${currentPage - 1}&query=${query}&category=${categoryId}" class="arrow">&laquo;</a>
                     </c:if>
 
-                    <%-- Display page numbers --%>
                     <c:forEach begin="1" end="${totalPages}" var="i">
                         <c:choose>
                             <c:when test="${currentPage eq i}">
                                 <span class="active">${i}</span>
                             </c:when>
                             <c:otherwise>
-                                <a href="?page=${i}">${i}</a>
+                                <a href="?page=${i}&query=${query}&category=${categoryId}">${i}</a>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
 
                     <c:if test="${currentPage < totalPages}">
-                        <a href="?page=${currentPage + 1}" class="arrow">&raquo;</a>
+                        <a href="?page=${currentPage + 1}&query=${query}&category=${categoryId}" class="arrow">&raquo;</a>
                     </c:if>
                 </div>
             </footer>

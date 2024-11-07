@@ -40,11 +40,12 @@ public class SliderDAO extends DBContext {
 
     public List<Subject> getTopSubjects(int n) throws SQLException {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT TOP " + n + " s.* "
+        String sql = "SELECT TOP " + n + " s.*,u.userName AS ownerName "
                 + "FROM Subjects s "
                 + "JOIN (SELECT SubjectID, COUNT(*) as RegistrationCount "
                 + "      FROM Registrations "
                 + "      GROUP BY SubjectID) r ON s.SubjectID = r.SubjectID "
+                + "JOIN Users u ON s.ownerID = u.userID "
                 + "ORDER BY r.RegistrationCount DESC";
 
         try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
@@ -52,6 +53,7 @@ public class SliderDAO extends DBContext {
                 Subject subject = new Subject();
                 subject.setSubjectID(rs.getInt("SubjectID"));
                 subject.setTitle(rs.getString("Title"));
+                subject.setOwnerName(rs.getString("ownerName"));
                 subject.setDescription(rs.getString("Description"));
                 subject.setThumbnail(rs.getString("Thumbnail"));
                 subject.setUpdateDate(rs.getTimestamp("Update_Date"));

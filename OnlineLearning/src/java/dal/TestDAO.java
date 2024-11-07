@@ -282,7 +282,7 @@ public class TestDAO extends DBContext {
 
     public double calculatePassRate(int testID) {
         double passRate = 0.0;
-        String passConditionSql = "SELECT PassCondition FROM Tests WHERE TestID = ?";
+        String passConditionSql = "SELECT Pass_Condition FROM Tests WHERE TestID = ?";
         String totalAttemptsSql = "SELECT COUNT(*) FROM User_Attempt WHERE TestID = ?";
         String passedAttemptsSql = "SELECT COUNT(*) FROM User_Attempt WHERE TestID = ? AND Mark > ?";
 
@@ -293,7 +293,7 @@ public class TestDAO extends DBContext {
                 pstmt.setInt(1, testID);
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
-                    passCondition = rs.getDouble("PassCondition");
+                    passCondition = rs.getDouble("Pass_Condition");
                 }
             }
 

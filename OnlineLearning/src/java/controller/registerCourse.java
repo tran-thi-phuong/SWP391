@@ -66,7 +66,7 @@ public class registerCourse extends HttpServlet {
             List<SubjectCategory> categories = categoryDAO.getAllCategories();
             // Get 3 random Subjects and their lowestPrice
             List<Subject> randomSubs = getRandomItems(subjectDAO.getAllSubjects(), 3);
-            if (randomSubs.isEmpty()) {
+            if (randomSubs ==null ||randomSubs.isEmpty()) {
                 randomSubs = subjectDAO.getAllSubjects();
             }
 

@@ -67,7 +67,7 @@
             <form action="AddQuestion" method="post" onsubmit="return validateInput()" enctype="multipart/form-data">
                 <p>
                     <strong>Content:</strong>
-                    <input type="text" name="content" id="contentInput" required />
+                    <textarea style="width: 100%; height: 150px;" name="content" required pattern="\S.*"></textarea>
                 </p>
 
                 <p>

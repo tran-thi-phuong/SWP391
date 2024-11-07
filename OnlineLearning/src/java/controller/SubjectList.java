@@ -22,6 +22,11 @@ import jakarta.servlet.http.HttpSession;
 import model.Subject;
 import model.SubjectCategory;
 import model.Users;
+import model.Lesson;
+import dal.LessonDAO;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Admin
@@ -33,6 +38,7 @@ public class SubjectList extends HttpServlet {
     private SubjectDAO subjectDAO;
     private CategoryDAO categoryDAO;
     private UserDAO userDAO;
+    private LessonDAO lessonDAO;
 
     /**
      * Initializes the servlet and creates necessary DAO instances
@@ -42,11 +48,13 @@ public class SubjectList extends HttpServlet {
         super.init();
         subjectDAO = new SubjectDAO();
         categoryDAO = new CategoryDAO();
+        lessonDAO = new LessonDAO();
     }
 
     /**
-     * Handles GET requests for subject listing
-     * Processes search queries, category filters, and pagination
+     * Handles GET requests for subject listing Processes search queries,
+     * category filters, and pagination
+     *
      * @param request
      * @param response
      * @throws jakarta.servlet.ServletException
@@ -55,25 +63,32 @@ public class SubjectList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         if (!hasPermission(request, response)) {
-            return;
-        }
+//         if (!hasPermission(request, response)) {
+//            return;
+//        }
         try {
             // Get pagination parameters and search/filter criteria
             int page = getPageNumber(request);
             int recordsPerPage = 6;  // Number of subjects displayed per page
             String query = request.getParameter("search");
             String categoryId = request.getParameter("category");
-
+            String status = request.getParameter("status");
             // Fetch subjects based on search criteria and pagination
-            SubjectListResult subjectResult = getSubjects(query, categoryId, page, recordsPerPage);
-            
+            SubjectListResult subjectResult = getSubjects(query, categoryId,status, page, recordsPerPage);
+
             // Get all categories for the filter dropdown
             List<SubjectCategory> categories = categoryDAO.getAllCategories();
-            
+
+            Map<Integer, Integer> lessonCounts = new HashMap<>();
+            for (Subject subject : subjectResult.subjects) {
+                int lessonCount = lessonDAO.countLessonsBySubjectId(subject.getSubjectID());
+                lessonCounts.put(subject.getSubjectID(), lessonCount);
+            }
+            request.setAttribute("lessonCounts", lessonCounts);
+
             // Set attributes for JSP rendering
             setRequestAttributes(request, subjectResult, categories, page, recordsPerPage, query, categoryId);
-            
+
             // Forward to the JSP view
             request.getRequestDispatcher("SubjectList.jsp").forward(request, response);
         } catch (SQLException ex) {
@@ -86,42 +101,39 @@ public class SubjectList extends HttpServlet {
         return (pageParam != null) ? Integer.parseInt(pageParam) : 1;
     }
 
-    private SubjectListResult getSubjects(String query, String categoryId, int page, int recordsPerPage) throws SQLException {
+    private SubjectListResult getSubjects(String query, String categoryId, String status, int page, int recordsPerPage) throws SQLException {
         int offset = (page - 1) * recordsPerPage;
-        
-        // Handle search query if present
-        if (query != null && !query.trim().isEmpty()) {
-            return new SubjectListResult(
-                    subjectDAO.searchSubjects(query, offset, recordsPerPage),
-                    subjectDAO.getTotalSearchSubjects(query)
-            );
-        } 
-        // Handle category filter if present
-        else if (categoryId != null && !categoryId.trim().isEmpty()) {
-            int catId = Integer.parseInt(categoryId);
-            return new SubjectListResult(
-                    subjectDAO.getSubjectsByCategory(catId, offset, recordsPerPage),
-                    subjectDAO.getTotalSubjectsByCategory(catId)
-            );
-        } 
-        // Return all subjects if no filters are applied
-        else {
-            return new SubjectListResult(
-                    subjectDAO.getAllSubjects(offset, recordsPerPage),
-                    subjectDAO.getTotalSubjects()
-            );
+
+        // Chuẩn bị các tiêu chí tìm kiếm
+        List<Subject> subjects;
+        int totalRecords;
+
+        // Xây dựng điều kiện tìm kiếm linh hoạt
+        if ((query != null && !query.trim().isEmpty())
+                || (categoryId != null && !categoryId.trim().isEmpty())
+                || (status != null && !status.trim().isEmpty())) {
+
+            // Lấy kết quả dựa trên các điều kiện
+            subjects = subjectDAO.searchSubjectsWithFilters(query, categoryId, status, offset, recordsPerPage);
+            totalRecords = subjectDAO.getTotalSubjectsWithFilters(query, categoryId, status);
+        } else {
+            // Nếu không có điều kiện nào, trả về tất cả các môn học
+            subjects = subjectDAO.getAllSubjects(offset, recordsPerPage);
+            totalRecords = subjectDAO.getTotalSubjects();
         }
+
+        return new SubjectListResult(subjects, totalRecords);
     }
 
     /**
-     * Sets request attributes for JSP rendering
-     * Includes pagination information, search criteria, and subject data
+     * Sets request attributes for JSP rendering Includes pagination
+     * information, search criteria, and subject data
      */
     private void setRequestAttributes(HttpServletRequest request, SubjectListResult subjectResult,
             List<SubjectCategory> categories, int currentPage, int recordsPerPage, String query, String categoryId) {
         // Calculate total pages for pagination
         int totalPages = (int) Math.ceil(subjectResult.totalRecords * 1.0 / recordsPerPage);
-        
+
         // Set attributes for JSP
         request.setAttribute("subjects", subjectResult.subjects);
         request.setAttribute("categories", categories);
@@ -133,10 +145,11 @@ public class SubjectList extends HttpServlet {
     }
 
     /**
-     * Inner class to hold subject list results
-     * Contains both the list of subjects and the total record count
+     * Inner class to hold subject list results Contains both the list of
+     * subjects and the total record count
      */
     private static class SubjectListResult {
+
         List<Subject> subjects;
         int totalRecords;
 
@@ -152,7 +165,8 @@ public class SubjectList extends HttpServlet {
             return subjects;
         }
     }
-     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
 
@@ -181,4 +195,3 @@ public class SubjectList extends HttpServlet {
         return true; // Người dùng có quyền truy cập trang này
     }
 }
-

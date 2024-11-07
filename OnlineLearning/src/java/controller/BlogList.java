@@ -18,11 +18,11 @@ import model.BlogCategory;
 
 /**
  *
- * @author Admin
+ * @author sonna
  */
-@WebServlet( urlPatterns={"/blogList"})
-public class blogList extends HttpServlet {
-   
+@WebServlet(name = "BlogList", urlPatterns = {"/BlogList"})
+public class BlogList extends HttpServlet {
+
     private static final int PAGE_SIZE = 8; // Defining the number of blogs to display per page
 
     @Override
@@ -48,7 +48,7 @@ public class blogList extends HttpServlet {
         // Parse the categoryID if present
         if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
             try {
-                categoryID = Integer.parseInt(categoryIdStr); // Convert categoryID to Integer
+                categoryID = Integer.valueOf(categoryIdStr); // Convert categoryID to Integer
             } catch (NumberFormatException e) {
                 categoryID = null; // If parsing fails, set categoryID to null
             }

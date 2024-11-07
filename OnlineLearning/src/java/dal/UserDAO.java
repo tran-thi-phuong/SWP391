@@ -83,6 +83,34 @@ public class UserDAO extends DBContext {
         return user;
     }
 
+    public List<Users> getInstructors() {
+        List<Users> instructors = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE Role = 'Instructor'";
+
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Users user = new Users();
+                user.setUserID(rs.getInt("UserID"));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+                user.setName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setPhone(rs.getString("Phone"));
+                user.setEmail(rs.getString("Email"));
+                user.setAddress(rs.getString("Address"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+                user.setToken(rs.getString("Token"));
+                instructors.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exceptions appropriately
+        }
+
+        return instructors;
+    }
+
     // Method to update password
     public boolean updateUserPassword(Users user) {
         String sql = "UPDATE Users SET Password = ? WHERE Username = ?";

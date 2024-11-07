@@ -10,7 +10,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- S?a l?i link logo, không c?n l?p l?i -->
+        <!-- S?a l?i link logo, khï¿½ng c?n l?p l?i -->
         <a class="navbar-brand" href="Homepage">
             Learning
         </a>
@@ -41,11 +41,14 @@
                     </c:if>
                 </li>
 
-                <li class="nav-item">
-                    <c:if test="${sessionScope.user.role == 'Instructor'}">
-                        <a class="nav-link active" href="QuizList">Quiz List</a>
-                    </c:if>
-                </li>
+                    <li class="nav-item">
+                        <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
+                             <a class="nav-link" href="BlogList">News</a>
+                        </c:if>
+                        <c:if test="${sessionScope.user.role=='Admin' || sessionScope.user.role=='Marketing' || sessionScope.user.role=='Instructor'}">
+                             <a class="nav-link" href="PostDetail">News</a>
+                        </c:if>
+                    </li>
 
                 <li class="nav-item">
                     <c:if test="${sessionScope.user.role == 'Instructor'}">
@@ -90,7 +93,7 @@
             </ul>
         </div>
 
-        <!-- Ki?m tra n?u ng??i dùng ch?a ??ng nh?p -->
+        <!-- Ki?m tra n?u ng??i dï¿½ng ch?a ??ng nh?p -->
         <c:if test="${empty sessionScope.user}">
             <div class="">
                 <button type="button" class="btn btn-danger" onclick="window.location.href = 'login.jsp'">Login</button>
@@ -98,7 +101,7 @@
             </div>
         </c:if>
 
-        <!-- N?u ng??i dùng ?ã ??ng nh?p -->
+        <!-- N?u ng??i dï¿½ng ?ï¿½ ??ng nh?p -->
         <c:if test="${not empty sessionScope.user}">
             <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -107,7 +110,7 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item"><strong>${sessionScope.user.username}</strong></a></li>
 
-                    <!-- N?u là khách hàng -->
+                    <!-- N?u lï¿½ khï¿½ch hï¿½ng -->
                     <c:if test="${sessionScope.user.role == 'Customer'}">
                         <li><a class="dropdown-item" href="myRegistration">My Registration</a></li>
                         <li><a class="dropdown-item" href="myCourse">My Courses</a></li>
@@ -121,6 +124,6 @@
     </div>
 </nav>
 
-<!-- Thêm các script Bootstrap -->
+<!-- Thï¿½m cï¿½c script Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>

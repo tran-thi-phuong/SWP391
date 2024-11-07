@@ -170,7 +170,7 @@ public class QuestionDAO extends DBContext {
         if (search != null && !search.isEmpty()) {
             sql.append(" AND Content LIKE ?");
         }
-        if (lessonID != null) {
+        if (lessonID != null && !lessonID.isEmpty()) {
             sql.append(" AND LessonID = ?");
         }
         if (status != null && !status.isEmpty()) {
@@ -191,7 +191,7 @@ public class QuestionDAO extends DBContext {
             if (search != null && !search.isEmpty()) {
                 stmt.setString(paramIndex++, "%" + search + "%"); // Use LIKE for searching
             }
-            if (lessonID != null) {
+            if (lessonID != null && !lessonID.isEmpty()) {
                 stmt.setString(paramIndex++, lessonID); // Set lesson ID
             }
             if (status != null && !status.isEmpty()) {
