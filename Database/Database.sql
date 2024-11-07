@@ -158,6 +158,7 @@ CREATE TABLE Sliders (
     BlogID INT,
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
+	Backlink NVARCHAR(255) NOT NULL,
     Image NVARCHAR(255),
 	Status NVARCHAR(10) NOT NULL DEFAULT 'Show',
     Content NVARCHAR(MAX),
@@ -339,6 +340,110 @@ CREATE TABLE Lesson_User (
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 GO
+
+CREATE TRIGGER trg_UpdateProgress
+ON Lesson_User
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    -- Khai báo các biến cần thiết
+    DECLARE @UserID INT, @LessonID INT, @SubjectID INT, @TotalLessons INT, @CompletedLessons INT;
+
+    -- Xử lý cho bảng INSERTED (dữ liệu mới được thêm vào)
+    IF EXISTS (SELECT * FROM INSERTED)
+    BEGIN
+        -- Duyệt qua tất cả các dòng trong INSERTED
+        DECLARE inserted_cursor CURSOR FOR
+        SELECT UserID, LessonID
+        FROM INSERTED;
+        
+        OPEN inserted_cursor;
+        FETCH NEXT FROM inserted_cursor INTO @UserID, @LessonID;
+        
+        -- Duyệt qua các dòng trong INSERTED
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Lấy SubjectID từ bảng Lessons dựa trên LessonID
+            SELECT @SubjectID = SubjectID
+            FROM Lessons
+            WHERE LessonID = @LessonID;
+            
+            -- Tính tổng số bài học của Subject (chỉ lấy bài học thuộc môn học này)
+            SELECT @TotalLessons = COUNT(*) 
+            FROM Lessons
+            WHERE SubjectID = @SubjectID;
+            
+            -- Tính số bài học đã hoàn thành cho người dùng trong môn học này
+            SELECT @CompletedLessons = COUNT(*)
+            FROM Lesson_User LU
+            INNER JOIN Lessons L ON LU.LessonID = L.LessonID
+            WHERE LU.UserID = @UserID
+              AND LU.Status = 'Completed'
+              AND L.SubjectID = @SubjectID; -- Chỉ tính bài học thuộc môn học này
+            
+            -- Cập nhật tiến độ trong bảng Customer_Subject
+            UPDATE Customer_Subject
+            SET Progress = CASE 
+                             WHEN @TotalLessons > 0 THEN (CAST(@CompletedLessons AS DECIMAL) / CAST(@TotalLessons AS DECIMAL)) * 100
+                             ELSE 0
+                           END
+            WHERE UserID = @UserID AND SubjectID = @SubjectID;
+
+            FETCH NEXT FROM inserted_cursor INTO @UserID, @LessonID;
+        END
+
+        CLOSE inserted_cursor;
+        DEALLOCATE inserted_cursor;
+    END
+
+    -- Xử lý cho bảng DELETED (dữ liệu bị xóa)
+    IF EXISTS (SELECT * FROM DELETED)
+    BEGIN
+        -- Duyệt qua tất cả các dòng trong DELETED
+        DECLARE deleted_cursor CURSOR FOR
+        SELECT UserID, LessonID
+        FROM DELETED;
+        
+        OPEN deleted_cursor;
+        FETCH NEXT FROM deleted_cursor INTO @UserID, @LessonID;
+        
+        -- Duyệt qua các dòng trong DELETED
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Lấy SubjectID từ bảng Lessons dựa trên LessonID
+            SELECT @SubjectID = SubjectID
+            FROM Lessons
+            WHERE LessonID = @LessonID;
+            
+            -- Tính tổng số bài học của Subject (chỉ lấy bài học thuộc môn học này)
+            SELECT @TotalLessons = COUNT(*) 
+            FROM Lessons
+            WHERE SubjectID = @SubjectID;
+            
+            -- Tính số bài học đã hoàn thành cho người dùng trong môn học này
+            SELECT @CompletedLessons = COUNT(*)
+            FROM Lesson_User LU
+            INNER JOIN Lessons L ON LU.LessonID = L.LessonID
+            WHERE LU.UserID = @UserID
+              AND LU.Status = 'Completed'
+              AND L.SubjectID = @SubjectID; -- Chỉ tính bài học thuộc môn học này
+            
+            -- Cập nhật tiến độ trong bảng Customer_Subject
+            UPDATE Customer_Subject
+            SET Progress = CASE 
+                             WHEN @TotalLessons > 0 THEN (CAST(@CompletedLessons AS DECIMAL) / CAST(@TotalLessons AS DECIMAL)) * 100
+                             ELSE 0
+                           END
+            WHERE UserID = @UserID AND SubjectID = @SubjectID;
+
+            FETCH NEXT FROM deleted_cursor INTO @UserID, @LessonID;
+        END
+
+        CLOSE deleted_cursor;
+        DEALLOCATE deleted_cursor;
+    END
+END;
+
 
 
 

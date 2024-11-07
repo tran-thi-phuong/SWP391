@@ -39,7 +39,12 @@
                     <c:forEach var="slider" items="${sliders}" varStatus="status">
                         <c:if test="${slider.status == 'Show'}">
                             <div class="slide">
-                                <img src="images/${slider.image}" alt="${slider.title}"> <!-- Display slider images -->
+                                    <c:if test="${not empty slider.backlink}">
+                                        <!-- If backlink is not empty, wrap the image with the <a> tag -->
+                                        <a href="${slider.backlink}" target="_blank">
+                                            <img src="${slider.image}" alt="${slider.title}"> <!-- Display slider images -->
+                                        </a>
+                                    </c:if>
                             </div>
                         </c:if>
                     </c:forEach>
@@ -64,7 +69,7 @@
                         <c:forEach var="subject" items="${topSubjects}">
                             <div class="col-md-4 mb-4">
                                 <div class="card">
-                                    <img class="card-img-top" src="images/${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
+                                    <img class="card-img-top" src="${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <a href="SubjectView?subjectId=${subject.subjectID}">

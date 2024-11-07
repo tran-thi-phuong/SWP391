@@ -140,7 +140,7 @@ public class LessonDetail extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
         if (currentUser == null) {

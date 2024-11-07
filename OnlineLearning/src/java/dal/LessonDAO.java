@@ -135,13 +135,10 @@ public class LessonDAO extends DBContext {
                     l.Title, 
                     l.Content, 
                     l.LessonID, 
-                    l.Description, 
-                    lm.Media_Link, 
+                    l.Description,  
                     lu.Status 
                 FROM 
-                    Lessons l
-                LEFT JOIN 
-                    LessonMedia lm ON l.LessonID = lm.LessonID 
+                    Lessons l 
                 LEFT JOIN 
                     Lesson_User lu ON l.LessonID = lu.LessonID 
                 WHERE 
@@ -159,7 +156,6 @@ public class LessonDAO extends DBContext {
                 lesson.setTitle(rs.getString("Title"));
                 lesson.setContent(rs.getString("Content"));
                 lesson.setLessonID(rs.getInt("LessonID"));
-                lesson.setMediaLink(rs.getString("Media_Link"));
                 lesson.setDescription(rs.getString("Description"));
                 lesson.setStatus(rs.getString("Status"));
             }

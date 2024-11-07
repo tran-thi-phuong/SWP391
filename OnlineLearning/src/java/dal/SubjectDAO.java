@@ -17,6 +17,7 @@ import java.util.Map;
 import model.Lesson;
 import model.LessonTopic;
 import model.SubjectCategoryCount;
+import model.SubjectTopic;
 
 /**
  *
@@ -72,6 +73,37 @@ public class SubjectDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exceptions if needed
+        }
+
+        return subjects;
+    }
+    
+    public List<Subject> getAllActiveSubjects(int offset, int limit) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID where s.Status = 'Active' ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // Set the offset and limit parameters
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Subject subject = new Subject();
+                    subject.setSubjectID(rs.getInt("SubjectID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
+                    subject.setTitle(rs.getString("Title"));
+                    subject.setDescription(rs.getString("Description"));
+                    subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
+                    subject.setStatus(rs.getString("Status"));
+                    subject.setThumbnail(rs.getString("Thumbnail"));
+                    subject.setUpdateDate(rs.getDate("Update_Date"));
+                    subject.setUserName(rs.getString("Username"));
+                    subjects.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getAllSubjects: " + e.getMessage());
         }
 
         return subjects;
@@ -524,151 +556,131 @@ public class SubjectDAO extends DBContext {
     }
 
     public List<Subject> getSubjectDetailsByUserIdAndSubjectID(int userId, int subjectId) {
-        List<Subject> subjects = new ArrayList<>();
-        String sql = """
-      SELECT DISTINCT s.SubjectID, staff.username, staff.UserID AS OwnerID, staff.Name AS OwnerName, 
-             s.Title AS SubjectTitle, lt.TopicID, lt.Name AS LessonTopicName,
-             l.LessonID, l.Title AS LessonTitle, l.[Order] AS LessonOrder, 
-             lu.Status AS UserLessonStatus  -- Thêm trạng thái ở đây
-      FROM Subjects s 
-      JOIN Registrations r ON s.SubjectID = r.SubjectID 
-      JOIN Lessons l ON l.SubjectID = s.SubjectID 
-      JOIN LessonTopic lt ON lt.TopicID = l.TopicID
-      JOIN Users staff ON s.OwnerID = staff.UserID
-      LEFT JOIN Lesson_User lu ON l.LessonID = lu.LessonID AND lu.UserID = ? -- Thêm JOIN với Lesson_User để lấy trạng thái
-      WHERE r.UserID = ?
-      AND s.SubjectID = ?
-      ORDER BY s.SubjectID, lt.TopicID, l.[Order], l.LessonID
-      """;
+    List<Subject> subjects = new ArrayList<>();
+    String sql = """
+        SELECT s.SubjectID, s.Title AS SubjectTitle, 
+               l.LessonID, l.Title AS LessonTitle, l.[Order] AS LessonOrder,
+               lt.TopicID, lt.Name AS TopicName,
+               lu.Status AS LessonStatus 
+        FROM Lessons l
+        JOIN Lesson_User lu ON l.LessonID = lu.LessonID
+        JOIN Subjects s ON l.SubjectID = s.SubjectID
+        JOIN LessonTopic lt ON l.TopicID = lt.TopicID
+        WHERE l.SubjectID = ? AND lu.UserID = ? 
+                 AND l.Status != 'Inactive'
+        ORDER BY lt.TopicID, l.[Order]
+        """;
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId); // Đặt userId cho điều kiện của bảng Registrations
-            ps.setInt(2, userId); // Đặt userId cho điều kiện của bảng Lesson_User
-            ps.setInt(3, subjectId); // Đặt subjectId cho điều kiện của bảng Subjects
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        // Set parameters dynamically instead of hardcoding them
+        ps.setInt(1, subjectId);
+        ps.setInt(2, userId);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    // Kiểm tra xem môn học đã tồn tại trong danh sách hay chưa
-                    Subject subject = null;
-                    for (Subject existingSubject : subjects) {
-                        if (existingSubject.getSubjectID() == rs.getInt("SubjectID")) {
-                            subject = existingSubject;
-                            break;
-                        }
-                    }
+        try (ResultSet rs = ps.executeQuery()) {
+            Subject currentSubject = null;
+            LessonTopic currentTopic = null;
 
-                    // Nếu môn học chưa tồn tại, tạo mới
-                    if (subject == null) {
-                        subject = new Subject();
-                        subject.setSubjectID(rs.getInt("SubjectID"));
-                        subject.setOwnerName(rs.getString("OwnerName"));
-                        subject.setUserName(rs.getString("username"));
-                        subject.setTitle(rs.getString("SubjectTitle"));
-                        subject.setLessonTopics(new ArrayList<>());
-                        subjects.add(subject);
-                    }
-
-                    // Tạo LessonTopic và Lesson
-                    LessonTopic lessonTopic = new LessonTopic();
-                    lessonTopic.setTopicID(rs.getInt("TopicID")); // Sử dụng TopicID thay vì TypeID
-                    lessonTopic.setName(rs.getString("LessonTopicName"));
-
-                    Lesson lesson = new Lesson();
-                    lesson.setLessonID(rs.getInt("LessonID"));
-                    lesson.setTitle(rs.getString("LessonTitle"));
-                    lesson.setOrder(rs.getInt("LessonOrder")); // Nếu có trường Order trong lớp Lesson
-                    lesson.setStatus(rs.getString("UserLessonStatus")); // Lấy trạng thái từ ResultSet
-
-                    // Kiểm tra xem LessonTopic đã tồn tại trong Subject chưa
-                    boolean lessonTopicExists = false;
-                    for (LessonTopic existingLessonTopic : subject.getLessonTopics()) {
-                        if (existingLessonTopic.getTopicID() == lessonTopic.getTopicID()) {
-                            existingLessonTopic.getLessons().add(lesson);
-                            lessonTopicExists = true;
-                            break;
-                        }
-                    }
-
-                    // Nếu LessonTopic chưa tồn tại, thêm vào
-                    if (!lessonTopicExists) {
-                        List<Lesson> lessons = new ArrayList<>();
-                        lessons.add(lesson);
-                        lessonTopic.setLessons(lessons);
-                        subject.getLessonTopics().add(lessonTopic);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error in getSubjectDetailsByUserIdandSubjectID: " + e.getMessage());
-        }
-        return subjects;
-    }
-
-    public List<Subject> getSubjectDetailsBySubjectID(int subjectID) {
-        List<Subject> subjects = new ArrayList<>();
-        String sql = """
-             SELECT s.SubjectID, staff.username, staff.UserID AS OwnerID, staff.Name AS OwnerName, s.Title AS SubjectTitle, 
-                   lt.TopicID, lt.Name AS LessonTopicName, 
-                   l.LessonID, l.Title AS LessonTitle
-             FROM Subjects s 
-             JOIN Registrations r ON s.SubjectID = r.SubjectID 
-             JOIN Lessons l ON l.SubjectID = s.SubjectID 
-             JOIN LessonTopic lt ON lt.TopicID = l.TopicID
-             JOIN Users staff ON s.OwnerID = staff.UserID
-             WHERE s.SubjectID = ?
-             ORDER BY lt.TopicID, l.LessonID
-             """;
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, subjectID);
-            ResultSet rs = pstmt.executeQuery();
-
-            Subject subject = null;
             while (rs.next()) {
-                if (subject == null) {
-                    // Lấy thông tin chủ đề
-                    subject = new Subject();
-                    subject.setSubjectID(rs.getInt("SubjectID"));
-                    subject.setTitle(rs.getString("SubjectTitle"));
-                    subject.setOwnerName(rs.getString("OwnerName"));
-                    subject.setLessonTopics(new ArrayList<>()); // Khởi tạo danh sách LessonTopics
-                    subjects.add(subject);
+                int subjectID = rs.getInt("SubjectID");
+                if (currentSubject == null || currentSubject.getSubjectID() != subjectID) {
+                    currentSubject = new Subject();
+                    currentSubject.setSubjectID(subjectID);
+                    currentSubject.setTitle(rs.getString("SubjectTitle"));
+                    currentSubject.setLessonTopics(new ArrayList<>());
+                    subjects.add(currentSubject);
                 }
 
-                // Lấy thông tin LessonTopic
                 int topicID = rs.getInt("TopicID");
-                LessonTopic lessonTopic = null;
-
-                // Kiểm tra xem LessonTopic đã tồn tại chưa
-                for (LessonTopic existingTopic : subject.getLessonTopics()) {
-                    if (existingTopic.getTopicID() == topicID) {
-                        lessonTopic = existingTopic;
-                        break;
-                    }
+                if (currentTopic == null || currentTopic.getTopicID() != topicID) {
+                    currentTopic = new LessonTopic();
+                    currentTopic.setTopicID(topicID);
+                    currentTopic.setName(rs.getString("TopicName"));
+                    currentTopic.setLessons(new ArrayList<>());
+                    currentSubject.getLessonTopics().add(currentTopic);
                 }
 
-                // Nếu LessonTopic chưa tồn tại, tạo mới
-                if (lessonTopic == null) {
-                    lessonTopic = new LessonTopic();
-                    lessonTopic.setTopicID(topicID);
-                    lessonTopic.setName(rs.getString("LessonTopicName"));
-                    lessonTopic.setLessons(new ArrayList<>()); // Khởi tạo danh sách Lessons
-                    subject.getLessonTopics().add(lessonTopic);
-                }
-
-                // Tạo và thêm Lesson vào LessonTopic
+                // Create lesson and add it to the topic
                 Lesson lesson = new Lesson();
                 lesson.setLessonID(rs.getInt("LessonID"));
                 lesson.setTitle(rs.getString("LessonTitle"));
-                lesson.setStatus(""); // Nếu bạn không cần status, có thể bỏ qua hoặc để trống
-                lessonTopic.getLessons().add(lesson);
+                lesson.setOrder(rs.getInt("LessonOrder"));
+                lesson.setStatus(rs.getString("LessonStatus"));
+                currentTopic.getLessons().add(lesson);
             }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý ngoại lệ nếu cần
         }
-
-        return subjects;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return subjects;
+}
+
+
+
+
+   public List<Subject> getSubjectDetailsBySubjectID(int subjectID) {
+    List<Subject> subjects = new ArrayList<>();
+    String sql = """
+        SELECT s.SubjectID, staff.username, staff.UserID AS OwnerID, staff.Name AS OwnerName, s.Title AS SubjectTitle, 
+               lt.TopicID, lt.Name AS LessonTopicName, 
+               l.LessonID, l.Title AS LessonTitle
+        FROM Subjects s 
+        JOIN Lessons l ON l.SubjectID = s.SubjectID 
+        JOIN LessonTopic lt ON lt.TopicID = l.TopicID
+        JOIN Users staff ON s.OwnerID = staff.UserID
+        WHERE s.SubjectID = ? AND l.status != 'Inactive'
+        ORDER BY lt.TopicID, l.LessonID
+        """;
+
+    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        pstmt.setInt(1, subjectID);
+        ResultSet rs = pstmt.executeQuery();
+
+        Subject subject = null;
+        while (rs.next()) {
+            if (subject == null) {
+                // Initialize the subject object only once
+                subject = new Subject();
+                subject.setSubjectID(rs.getInt("SubjectID"));
+                subject.setTitle(rs.getString("SubjectTitle"));
+                subject.setOwnerName(rs.getString("OwnerName"));
+                subject.setLessonTopics(new ArrayList<>()); // Initialize lesson topics list
+                subjects.add(subject);
+            }
+
+            // Get LessonTopic information
+            int topicID = rs.getInt("TopicID");
+            LessonTopic lessonTopic = null;
+
+            // Check if the LessonTopic already exists in the subject's list
+            for (LessonTopic existingTopic : subject.getLessonTopics()) {
+                if (existingTopic.getTopicID() == topicID) {
+                    lessonTopic = existingTopic;
+                    break;
+                }
+            }
+
+            // If the LessonTopic doesn't exist, create a new one
+            if (lessonTopic == null) {
+                lessonTopic = new LessonTopic();
+                lessonTopic.setTopicID(topicID);
+                lessonTopic.setName(rs.getString("LessonTopicName"));
+                lessonTopic.setLessons(new ArrayList<>()); // Initialize lessons list
+                subject.getLessonTopics().add(lessonTopic);
+            }
+
+            // Create and add Lesson to the LessonTopic
+            Lesson lesson = new Lesson();
+            lesson.setLessonID(rs.getInt("LessonID"));
+            lesson.setTitle(rs.getString("LessonTitle"));
+            lessonTopic.getLessons().add(lesson);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Handle the exception appropriately
+    }
+
+    return subjects;
+}
+
 
     public List<Subject> searchSubjectsWithFilters(String query, String categoryId, String status, int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
@@ -760,6 +772,33 @@ public class SubjectDAO extends DBContext {
         }
 
         return 0;
+    }
+    
+    public static void main(String[] args) {
+   
+            int userId = 1;    // Example userId
+            int subjectId = 1; // Example subjectId
+            
+            // Create an instance of the class containing the method (e.g., SubjectDAO)
+            SubjectDAO subjectDAO = new SubjectDAO();
+            
+            // Call the method to get subject details
+            List<Subject> subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
+            
+            // Print out the subjects to check if data is retrieved
+            for (Subject subject : subjects) {
+                System.out.println("Subject ID: " + subject.getSubjectID());
+                System.out.println("Subject Title: " + subject.getTitle());
+                for (LessonTopic topic : subject.getLessonTopics()) {
+                    System.out.println("  Topic ID: " + topic.getTopicID());
+                    System.out.println("  Topic Name: " + topic.getName());
+                    for (Lesson lesson : topic.getLessons()) {
+                        System.out.println("    Lesson ID: " + lesson.getLessonID());
+                        System.out.println("    Lesson Title: " + lesson.getTitle());
+                        System.out.println("    Lesson Order: " + lesson.getOrder());
+                    }
+                }
+            }
     }
 
 }

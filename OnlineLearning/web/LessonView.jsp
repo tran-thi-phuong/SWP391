@@ -46,13 +46,6 @@
                             <p><strong>Description:</strong> ${lesson.description}</p>
                             <p><strong>Content:</strong> ${lesson.content}</p>
 
-                            <%-- If a media link is available, display a video player --%>
-                            <c:if test="${lesson.mediaLink != null}">
-                                <video controls width="600">
-                                    <source src="${lesson.mediaLink}">
-                                </video>
-                            </c:if>
-
                             <%-- Check lesson status to determine if "Mark as Completed" button should be shown --%>
                             <c:choose>
                                 <c:when test="${lesson.status == 'Completed'}">
@@ -76,7 +69,6 @@
 
                 <%-- Sidebar displaying the list of subjects and their lessons --%>
                 <div class="col-md-4">
-                    <h3>Subject List</h3>
                     <%-- Loop through each subject to display its lesson topics and lessons --%>
                     <c:forEach var="subject" items="${subjects}">
                         <c:forEach var="lessonTopic" items="${subject.lessonTopics}">

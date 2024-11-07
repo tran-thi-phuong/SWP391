@@ -97,7 +97,7 @@
 
             <%-- Display message if there are no subjects for the user --%>
             <c:if test="${empty subjects}">
-                <p>No subjects available for this user.</p>
+                <p>Subject will be updated soon.</p>
             </c:if>
         </div>
 
