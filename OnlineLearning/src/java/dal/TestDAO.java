@@ -371,10 +371,4 @@ public class TestDAO extends DBContext {
             ex.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        TestDAO d = new TestDAO();
-        Test test = new Test(0, 1, "a", "a", "A", "a", 1, 0, 0);
-        int a = d.addTest(test);
-        System.out.println(a);
-    }
 }

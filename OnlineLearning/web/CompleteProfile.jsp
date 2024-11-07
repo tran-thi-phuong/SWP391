@@ -13,6 +13,14 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet">
         <link rel="stylesheet" href="css/completeProfile.css">
+
+        <script>
+            function preventSpace(event) {
+                if (event.key === " ") {
+                    event.preventDefault();
+                }
+            }
+        </script>
     </head>
     <body>
         <%@include file="Header.jsp" %>
@@ -44,13 +52,13 @@
                     <div class="form-group input-box1">
                         <input type="text" class="form-control" placeholder="Fullname" name="name" 
                                value="${param.name}" required pattern="[a-zA-ZÀ-ỹ ]{4,30}"
-                               title="Full name must be between 4 and 30 characters,
-                               and not contain special characters or numbers.">
+                               title="Full name must be between 4 and 30 characters, and not contain special characters or numbers.">
                     </div>
                     <div class="form-group input-box2">
                         <input type="text" class="form-control" placeholder="Username" name="username" 
                                value="${param.username}" required pattern="[A-Za-z0-9]{3,16}" 
-                               title="Username must be between 3 and 16 characters and not contain special characters.">
+                               title="Username must be between 3 and 16 characters and not contain special characters."
+                               onkeydown="preventSpace(event)">
                     </div>
                     <div class="form-group input-box2">
                         <input type="password" class="form-control" placeholder="Password" name="password" 
@@ -65,7 +73,7 @@
                     <div class="form-group input-box2">
                         <input type="tel" class="form-control" pattern="[0]{1}[1-9]{1}[0-9]{8}" name="phone" 
                                placeholder="Phone number (Optional)" value="${param.phone}" 
-                               title="">
+                               onkeydown="preventSpace(event)">
                     </div>
                     <div class="form-group input-box2">
                         <input type="text" class="form-control" placeholder="Address (Optional)" name="address" 

@@ -177,19 +177,19 @@
                                 <div class="form-field">
                                     <label>Gender:</label>
                                     <label>
-                                        <input type="radio" name="gender" value="male" ${sessionScope.user.gender == 'male' ? 'checked' : ''} disabled>
+                                        <input type="radio" name="gender" value="Male" ${sessionScope.user.gender == 'Male' ? 'checked' : ''} disabled>
                                         Male
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="female" ${sessionScope.user.gender == 'female' ? 'checked' : ''} disabled>
+                                        <input type="radio" name="gender" value="Female" ${sessionScope.user.gender == 'Female' ? 'checked' : ''} disabled>
                                         Female
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="other" ${sessionScope.user.gender == 'other' ? 'checked' : ''} disabled>
+                                        <input type="radio" name="gender" value="Other" ${sessionScope.user.gender == 'Other' ? 'checked' : ''} disabled>
                                         Other
                                     </label>
                                 </div>
-                                <button type="button" disabled>Register</button>
+                                <button type="submit">Register</button>
                             </c:when>
                             <c:otherwise>
                                 <!-- User is not logged in, form is editable -->
@@ -208,15 +208,15 @@
                                 <div class="form-field">
                                     <label>Gender:</label>
                                     <label>
-                                        <input type="radio" name="gender" value="male" required>
+                                        <input type="radio" name="gender" value="Male" required>
                                         Male
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="female" required>
+                                        <input type="radio" name="gender" value="Female" required>
                                         Female
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="other" required>
+                                        <input type="radio" name="gender" value="Other" required>
                                         Other
                                     </label>
                                 </div>

@@ -23,10 +23,10 @@ public class myRegistration extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Uncomment the permission check if needed
-        // if (!hasPermission(request, response)) {
-        //     return;
-        // }
+        //the permission check
+         if (!hasPermission(request, response)) {
+             return;
+         }
 
         // Get the session and the logged-in user
         HttpSession session = request.getSession();

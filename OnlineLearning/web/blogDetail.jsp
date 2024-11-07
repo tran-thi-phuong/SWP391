@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="col-md-4 latest-new">
-                    <h4>Bài viết mới nhất</h4>
+                    <h4>Latest news</h4>
                     <c:forEach var="latestBlog" items="${latestBlogs}">
                         <div class="latest-blog-item mb-3">
                             <a href="blogDetail?blogId=${latestBlog.blogId}">

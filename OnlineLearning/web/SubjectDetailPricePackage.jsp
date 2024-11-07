@@ -72,7 +72,7 @@
         <%@include file="Header.jsp" %>
 
         <div class="container mt-4">
-            <h2 class="mb-4">Subject Details</h2>
+            <h2 class="mb-4">Course Details</h2>
 
             <c:if test="${not empty errorMessage}">
                 <div class="alert alert-danger">${errorMessage}</div>
@@ -87,7 +87,7 @@
             </div>
 
             <div class="tab-content">
-                <h3 class="mb-4">Subject Price Packages</h3>
+                <h3 class="mb-4">Course Price Packages</h3>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -149,10 +149,6 @@
                                         <label for="price">List Price</label>
                                         <input type="number" class="form-control" id="price" required>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="salePrice">Sale Price</label>
-                                        <input type="number" class="form-control" id="salePrice" required>
-                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -189,10 +185,6 @@
                                         <label for="editPrice">List Price</label>
                                         <input type="number" class="form-control" id="editPrice" required>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="editSalePrice">Sale Price</label>
-                                        <input type="number" class="form-control" id="editSalePrice" required>
-                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -219,13 +211,11 @@
                                         const name = row.find('td:nth-child(2)').text();
                                         const durationTime = row.find('td:nth-child(3)').text();
                                         const price = row.find('td:nth-child(4)').text();
-                                        const salePrice = row.find('td:nth-child(5)').text();
 
                                         $('#editPackageId').val(packageId);
                                         $('#editPackageName').val(name);
                                         $('#editDurationTime').val(durationTime);
                                         $('#editPrice').val(price);
-                                        $('#editSalePrice').val(salePrice);
                                         $('#editPackageModal').modal('show');
                                     }
 
@@ -234,15 +224,13 @@
                                         const name = $('#packageName').val();
                                         const durationTime = $('#durationTime').val();
                                         const price = $('#price').val();
-                                        const salePrice = $('#salePrice').val();
 
                                         $.post('SubjectDetailPricePackage', {
                                             action: 'add',
                                             subjectId: subjectId,
                                             packageName: name,
                                             durationTime: durationTime,
-                                            price: price,
-                                            salePrice: salePrice
+                                            price: price
                                         }, function () {
                                             location.reload(); // Làm mới trang sau khi thêm
                                         }).fail(function () {
@@ -256,7 +244,6 @@
                                         const name = $('#editPackageName').val();
                                         const durationTime = $('#editDurationTime').val();
                                         const price = $('#editPrice').val();
-                                        const salePrice = $('#editSalePrice').val();
 
                                         $.post('SubjectDetailPricePackage', {
                                             action: 'update',
@@ -264,8 +251,7 @@
                                             subjectId: subjectId,
                                             name: name,
                                             durationTime: durationTime,
-                                            price: price,
-                                            salePrice: salePrice
+                                            price: price
                                         }, function () {
                                             location.reload(); // Làm mới trang sau khi cập nhật
                                         }).fail(function () {

@@ -176,10 +176,6 @@
         <servlet-name>DeleteLesson</servlet-name>
         <servlet-class>controller.DeleteLesson</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>blogList</servlet-name>
-        <servlet-class>controller.blogList</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>updateRegistration</servlet-name>
         <url-pattern>/updateRegistration</url-pattern>
@@ -352,10 +348,6 @@
     <servlet-mapping>
         <servlet-name>PostDetail</servlet-name>
         <url-pattern>/PostDetail</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>blogList</servlet-name>
-        <url-pattern>/blogList</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

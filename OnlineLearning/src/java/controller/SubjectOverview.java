@@ -40,9 +40,9 @@ public class SubjectOverview extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!hasPermission(request, response)) {
-            return;
-        }
+//        if (!hasPermission(request, response)) {
+//            return;
+//        }
         String subjectId = request.getParameter("id");
         request.getSession().setAttribute("subjectID", subjectId);
         SubjectDAO sDAO = new SubjectDAO();
@@ -64,19 +64,21 @@ public class SubjectOverview extends HttpServlet {
         String status = request.getParameter("status");
         String description = request.getParameter("description");
         Part filePart = request.getPart("thumbnail");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         String uploadPath = getServletContext().getRealPath("/") + "images" + File.separator;
+        String filePath = null;
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
-        // Create uploads directory if it doesn't exist
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+            // Create uploads directory if it doesn't exist
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            // Save the uploaded file
+            filePart.write(uploadPath + fileName);
+            filePath = fileName;
         }
-
-        // Save the uploaded file
-        filePart.write(uploadPath + fileName);
-        String filePath = fileName;
-
         try {
             SubjectDAO sDAO = new SubjectDAO();
             sDAO.updateSubject(subjectName, category, status, description, subjectId, filePath);
@@ -100,7 +102,7 @@ public class SubjectOverview extends HttpServlet {
         String userRole = currentUser.getRole();
 
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-           response.sendRedirect(request.getContextPath() + "/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
 
             return false;
         } else if (pageID == null) {

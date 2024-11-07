@@ -13,21 +13,66 @@
         <title>Course List</title>
         <style>
             table {
-                border-collapse: collapse;
                 width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
             }
+
             th, td {
-                border: 1px solid black;
-                padding: 8px;
+                padding: 12px;
                 text-align: left;
+                vertical-align: middle;
             }
+
             th {
-                background-color: #f2f2f2;
+                background-color: #f8f9fa; /* Light grey for the header */
+                color: #495057; /* Dark text color */
+                font-weight: bold;
+                border-top: 2px solid #dee2e6; /* Top border */
+                border-bottom: 2px solid #dee2e6; /* Bottom border */
             }
-            .hidden {
-                display: none;
+
+            td {
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            /* Hover effect for table rows */
+            tr:hover {
+                background-color: #f1f3f5; /* Light grey on hover */
+            }
+
+            /* Align text in the action column */
+            td a {
+                color: #0d6efd; /* Bootstrap primary color */
+                text-decoration: none;
+            }
+
+            /* Button style for "Add New Course" */
+            .btn-success {
+                margin: 10px 0;
+            }
+
+            /* Pagination style */
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .pagination span, .pagination a {
+                padding: 8px 12px;
+                margin: 0 2px;
+                border: 1px solid #dee2e6;
+                color: #0d6efd; /* Bootstrap primary color */
+                text-decoration: none;
+            }
+
+            .pagination span {
+                background-color: #0d6efd;
+                color: white;
             }
         </style>
+
         <script>
             function toggleColumn(columnClass) {
                 var elements = document.getElementsByClassName(columnClass);
@@ -52,7 +97,7 @@
             <c:otherwise>
 
                 <%@include file="Header.jsp" %>
-                <h1>Subject List</h1>
+                <h1>Course List</h1>
 
                 <%-- Search and Filter Form --%>
                 <form action="SubjectList" method="GET">
@@ -94,9 +139,9 @@
                     <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
                     <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
                 </div>
-                     <c:if test="${sessionScope.user.role == 'Instructor'}">
-                <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
-                     </c:if>
+                <c:if test="${sessionScope.user.role == 'Admin'}">
+                    <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
+                </c:if>
 
                 <%-- Subject List Table --%>
                 <table>
@@ -120,7 +165,7 @@
                                 </a>
                             </td>
                             <td class="col-category">${course.subjectCategoryId}</td>
-                            <td class="col-lessons">0</td>
+                            <td class="col-lessons">${lessonCounts[course.subjectID]}</td>
                             <td class="col-owner">${course.userName}</td>
                             <td class="col-status">${course.status}</td>
                             <td>
@@ -152,6 +197,6 @@
             </c:otherwise>
         </c:choose>
 
-            </body>
-            <%@include file="Footer.jsp" %>
-        </html>
+    </body>
+    <%@include file="Footer.jsp" %>
+</html>
