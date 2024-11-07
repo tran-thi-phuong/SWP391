@@ -23,9 +23,9 @@ public class myCourse extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Uncomment to enable permission checking
-//        if (!hasPermission(request, response)) {
-//            return;
-//        }
+        if (!hasPermission(request, response)) {
+            return;
+        }
         
         // Get the current session and the logged-in user
         HttpSession session = request.getSession();

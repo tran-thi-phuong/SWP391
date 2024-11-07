@@ -25,11 +25,6 @@ public class Homepage extends HttpServlet {
             throws ServletException, IOException {
         // Create an instance of SliderDAO to interact with the database
         SliderDAO sliderDAO = new SliderDAO();
-        try {
-            sliderDAO.autoCreateSliders();
-        } catch (SQLException ex) {
-            Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
-        }
         // Retrieve all sliders from the database
         List<Slider> sliders = sliderDAO.getAllSliders();
         

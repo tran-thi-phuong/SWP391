@@ -18,9 +18,9 @@
         <title>My Registration</title>
     </head>
     <body>
-        
+
         <%@include file="Header.jsp" %> <!-- Include header JSP -->
-        
+
         <p></p>
         <div style="padding: 0 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
             <h1>My Registration</h1> <!-- Title of the page -->
@@ -91,7 +91,15 @@
                     <div class="registration-card">
                         <div>
                             <p class="registration-card-text"><img class="card-img-top" src="images/${registration.thumbnail}" alt="${registration.subjectName}"></p>
-                            <p class="registration-card-title subjectName"><a href="SubjectView?subjectId=${registration.subjectId}">${registration.subjectName}</a></p>
+                                <c:choose>
+                                    <c:when test="${registration.status == 'Active'}">
+                                    <p class="registration-card-title subjectName"><a href="SubjectView?subjectId=${registration.subjectId}">${registration.subjectName}</a></p>
+                                    </c:when>
+                                    <c:otherwise>
+                                    <p class="registration-card-title subjectName">${registration.subjectName}</a></p>
+                                    </c:otherwise>
+                                </c:choose>
+
                             <p class="registration-card-text package"><strong>Package:</strong> ${registration.packageId}</p>
                             <p class="registration-card-text registrationTime"><strong>Registration Time:</strong> ${registration.registrationTime}</p>
                             <p class="registration-card-text totalCost"><strong>Cost:</strong> ${registration.totalCost}</p>
