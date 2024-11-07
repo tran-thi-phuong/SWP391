@@ -170,7 +170,7 @@ public class LessonDAO extends DBContext {
     }
 
     public boolean updateLessonStatusToCompleted(int lessonID, int userID) {
-        String sql = "UPDATE Lesson_User SET Status = 'Completed' WHERE LessonID = ? AND UserID = ? AND Status = 'Not Started'";
+        String sql = "UPDATE Lesson_User SET Status = 'Completed' WHERE LessonID = ? AND UserID = ? AND Status = 'Not Completed'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, lessonID);
             ps.setInt(2, userID);

@@ -557,7 +557,7 @@ public class SubjectDAO extends DBContext {
     public List<Subject> getSubjectDetailsByUserIdAndSubjectID(int userId, int subjectId) {
         List<Subject> subjects = new ArrayList<>();
         String sql = """
-      SELECT s.SubjectID, staff.username, staff.UserID AS OwnerID, staff.Name AS OwnerName, 
+      SELECT DISTINCT s.SubjectID, staff.username, staff.UserID AS OwnerID, staff.Name AS OwnerName, 
              s.Title AS SubjectTitle, lt.TopicID, lt.Name AS LessonTopicName,
              l.LessonID, l.Title AS LessonTitle, l.[Order] AS LessonOrder, 
              lu.Status AS UserLessonStatus  -- Thêm trạng thái ở đây
