@@ -179,6 +179,9 @@ public class EditQuiz extends HttpServlet {
         current.setSubjectID(subjectId);
         current.setTitle(title);
         current.setType(type);
+        testDAO.updateTest(current); //Update quiz details in the database
+        Test testCurrent = testDAO.getTestById(testId);
+                System.out.println(testCurrent);
         List<String> mediaFilesExist = new ArrayList<>();
         List<String> mediaDescriptionsExist = new ArrayList<>();
         List<Part> mediaFilesParts = request.getParts().stream()
@@ -219,7 +222,9 @@ public class EditQuiz extends HttpServlet {
                     mediaDAO.saveMedia(mediaToAdd);
                 }
         
-        //add current
+        
+            }
+            //add current
         for (int i = 0; i < mediaFilesExist.size(); i++) {
                     mediaLink = mediaFilesExist.get(i);
                     mediaDescription = (i < mediaDescriptionsExist.size()) ? mediaDescriptionsExist.get(i) : ""; // Avoid IndexOutOfBounds
@@ -233,8 +238,7 @@ public class EditQuiz extends HttpServlet {
                     // Save the existing media back to the database
                     mediaDAO.saveMedia(existingMedia);
                 }
-        testDAO.updateTest(current); // Update quiz details in the database
-    }
+            
     }
     //Update Question
     private void handleUpdateQuestions(HttpServletRequest request) throws ServletException, IOException {

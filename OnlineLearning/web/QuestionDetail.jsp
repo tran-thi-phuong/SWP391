@@ -108,8 +108,9 @@
 
                 <p>
                     <strong>Content:</strong>
-                    <input type="text" value="${currentQuestion != null ? currentQuestion.content : ''}" readonly/>
+                    <textarea style="width: 100%; height: 150px;" readonly>${currentQuestion != null ? currentQuestion.content : ''}</textarea>
                 </p>
+
                 <!-- Summarize button -->
                 <button type="buton" name="action" value="summarize">Summarize</button>
 

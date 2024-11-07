@@ -161,7 +161,7 @@
                                         <c:set var="lesson" value="${lessonDAO.getLessonById(question.lessonID)}" />
 
                                         <c:if test="${lesson != null}">
-                                            ${lesson.content}
+                                            ${lesson.title}
                                         </c:if>
 
 
