@@ -39,6 +39,7 @@ public class payment extends HttpServlet {
     //setup for random
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final SecureRandom RANDOM = new SecureRandom();
+
     //generate random string
     public static String generateRandomString(int length) {
         StringBuilder result = new StringBuilder(length);
@@ -114,24 +115,24 @@ public class payment extends HttpServlet {
             int userID;
             if (user == null) {
                 userID = userDAO.addUser(email, phone, gender, phone, generateRandomString(10));
+                session.setAttribute("notification", "Registration successful! You have been registered for the course. We will send you email for verification soon :3"); // You can set different types like 'error' or 'info'
+
             } else {
                 userID = user.getUserID();
+                session.setAttribute("notification", "Registration successful! You have been registered for the course."); // You can set different types like 'error' or 'info'
+
             }
             registrationsDAO.addRegistration(userID, subjectID, packageId, price);
             //sample log
-            out.println("<html><head><title>Submission Details</title></head><body>");
-            out.println("<h1>Form Submission Details</h1>");
-            out.println("<p><strong>Package ID:</strong> " + currentPac.getDurationTime() + "days - " + currentPac.getSalePrice() + "$</p>");
-            out.println("<p><strong>Full Name:</strong> " + fullname + "</p>");
-            out.println("<p><strong>Email:</strong> " + email + "</p>");
-            out.println("<p><strong>Phone:</strong> " + phone + "</p>");
-            out.println("<p><strong>Gender:</strong> " + gender + "</p>");
-            out.println("<p><strong>Status:Submission Successful </strong></p>");
-            out.println("</body></html>");
+            // After the registration is successful
+
+// Redirect to a JSP or forward the request
+            response.sendRedirect("registerCourse?id="+subjectID);  // This redirects to the JSP page where you want to show the notification
+
             //sample log
         } catch (SQLException ex) {
-            System.out.println(ex);
-            out.println("<p><strong>Status:Submission Failed </strong></p>");
+            session.setAttribute("notification", "Registration Failed! :((((");
+            response.sendRedirect("registerCourse?id="+subjectID);
         }
 
         // Get the PrintWriter to write the response

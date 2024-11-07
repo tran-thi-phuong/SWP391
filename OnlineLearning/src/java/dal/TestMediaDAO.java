@@ -80,13 +80,13 @@ public class TestMediaDAO extends DBContext {
 
     // delete media by media ID
     public void deleteMedia(int mediaId) {
-        String sql = "DELETE FROM TestMedia WHERE MediaID = ?";
+        String sql = "DELETE FROM TestMedia WHERE TestID = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, mediaId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Media with ID " + mediaId + " deleted successfully.");
+                System.out.println("Media with Test ID " + mediaId + " deleted successfully.");
             } else {
                 System.out.println("No media found with ID " + mediaId + ".");
             }
