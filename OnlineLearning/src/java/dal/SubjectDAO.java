@@ -76,6 +76,37 @@ public class SubjectDAO extends DBContext {
 
         return subjects;
     }
+    
+    public List<Subject> getAllActiveSubjects(int offset, int limit) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID where s.Status = 'Active' ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // Set the offset and limit parameters
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Subject subject = new Subject();
+                    subject.setSubjectID(rs.getInt("SubjectID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
+                    subject.setTitle(rs.getString("Title"));
+                    subject.setDescription(rs.getString("Description"));
+                    subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
+                    subject.setStatus(rs.getString("Status"));
+                    subject.setThumbnail(rs.getString("Thumbnail"));
+                    subject.setUpdateDate(rs.getDate("Update_Date"));
+                    subject.setUserName(rs.getString("Username"));
+                    subjects.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getAllSubjects: " + e.getMessage());
+        }
+        return subjects;
+        }
+
 
     public List<Subject> getAllSubjects() {
         List<Subject> subjects = new ArrayList<>();
