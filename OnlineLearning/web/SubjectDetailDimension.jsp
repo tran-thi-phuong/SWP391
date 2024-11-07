@@ -82,7 +82,7 @@
             </c:if>
             <div class="tab-buttons">
                 <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailOverview?id=${sessionScope.subjectID}'">Overview</button>
-                <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailDimension?id=${sessionScope.subjectID}'" class="active">Dimension</button>
+                <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailDimension?id=${sessionScope.subjectID}'" class="active">Topic</button>
                 <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailPricePackage?id=${sessionScope.subjectID}'">Price Package</button>
             </div>
 

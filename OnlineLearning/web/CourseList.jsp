@@ -12,7 +12,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">  
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
-        <link rel="stylesheet" href="css/style.css">
+        <link href="css/style.css" rel="stylesheet" >
     </head>
     <body>
         <%@include file="Header.jsp" %>

@@ -74,7 +74,7 @@ public class SubjectList extends HttpServlet {
             String categoryId = request.getParameter("category");
             String status = request.getParameter("status");
             // Fetch subjects based on search criteria and pagination
-            SubjectListResult subjectResult = getSubjects(query, categoryId, page, recordsPerPage);
+            SubjectListResult subjectResult = getSubjects(query, categoryId,status, page, recordsPerPage);
 
             // Get all categories for the filter dropdown
             List<SubjectCategory> categories = categoryDAO.getAllCategories();
@@ -101,29 +101,28 @@ public class SubjectList extends HttpServlet {
         return (pageParam != null) ? Integer.parseInt(pageParam) : 1;
     }
 
-    private SubjectListResult getSubjects(String query, String categoryId, int page, int recordsPerPage) throws SQLException {
+    private SubjectListResult getSubjects(String query, String categoryId, String status, int page, int recordsPerPage) throws SQLException {
         int offset = (page - 1) * recordsPerPage;
 
-        // Handle search query if present
-        if (query != null && !query.trim().isEmpty()) {
-            return new SubjectListResult(
-                    subjectDAO.searchSubjects(query, offset, recordsPerPage),
-                    subjectDAO.getTotalSearchSubjects(query)
-            );
-        } // Handle category filter if present
-        else if (categoryId != null && !categoryId.trim().isEmpty()) {
-            int catId = Integer.parseInt(categoryId);
-            return new SubjectListResult(
-                    subjectDAO.getSubjectsByCategory(catId, offset, recordsPerPage),
-                    subjectDAO.getTotalSubjectsByCategory(catId)
-            );
-        } // Return all subjects if no filters are applied
-        else {
-            return new SubjectListResult(
-                    subjectDAO.getAllSubjects(offset, recordsPerPage),
-                    subjectDAO.getTotalSubjects()
-            );
+        // Chuẩn bị các tiêu chí tìm kiếm
+        List<Subject> subjects;
+        int totalRecords;
+
+        // Xây dựng điều kiện tìm kiếm linh hoạt
+        if ((query != null && !query.trim().isEmpty())
+                || (categoryId != null && !categoryId.trim().isEmpty())
+                || (status != null && !status.trim().isEmpty())) {
+
+            // Lấy kết quả dựa trên các điều kiện
+            subjects = subjectDAO.searchSubjectsWithFilters(query, categoryId, status, offset, recordsPerPage);
+            totalRecords = subjectDAO.getTotalSubjectsWithFilters(query, categoryId, status);
+        } else {
+            // Nếu không có điều kiện nào, trả về tất cả các môn học
+            subjects = subjectDAO.getAllSubjects(offset, recordsPerPage);
+            totalRecords = subjectDAO.getTotalSubjects();
         }
+
+        return new SubjectListResult(subjects, totalRecords);
     }
 
     /**

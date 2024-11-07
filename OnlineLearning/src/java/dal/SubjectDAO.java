@@ -54,7 +54,7 @@ public class SubjectDAO extends DBContext {
 
         return subjects;
     }
-    
+
     public List<Subject> getAllActiveSubjects(int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
         String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID where s.Status = 'Active' ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -181,7 +181,7 @@ public class SubjectDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Subject> getActiveSubjectsByCategory(int categoryId, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE Subject_CategoryID = ? and s.Status = 'Active' "
@@ -226,7 +226,7 @@ public class SubjectDAO extends DBContext {
         }
         return 0;
     }
-    
+
     public int getTotalActiveSubjectsByCategory(int categoryId) {
         String sql = "SELECT COUNT(*) FROM Subjects WHERE Subject_CategoryId = ? and Status = 'Active'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -365,7 +365,7 @@ public class SubjectDAO extends DBContext {
 
         return list;
     }
-    
+
     public List<Subject> searchActiveSubjects(String query, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM Subjects WHERE Title LIKE ? OR Description LIKE ? and Status = 'Active' "
@@ -414,7 +414,7 @@ public class SubjectDAO extends DBContext {
         }
         return 0;
     }
-    
+
     public int getTotalActiveSearchSubjects(String query) {
         String sql = "SELECT COUNT(*) FROM Subjects WHERE Title LIKE ? OR Description LIKE ? and Status = 'Active' ";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -490,6 +490,7 @@ public class SubjectDAO extends DBContext {
         }
         return list;
     }
+
     public boolean updateSubject(String courseName, String category, String status, String description, String subjectID, String thumbnailPath) {
         String query = "UPDATE Subjects SET Title = ?, Description = ?, Subject_CategoryID = ?, Status = ?, Update_Date = GETDATE(), Thumbnail = ? WHERE SubjectID = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -507,6 +508,7 @@ public class SubjectDAO extends DBContext {
         }
         return false;
     }
+
     public boolean addSubject(String courseName, String category, String status, String description, String thumbnailPath, String ownerId) {
         boolean isAdded = false;
         String sql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) VALUES (?, ?, ?, ?, ?, GETDATE(),?)";
@@ -676,5 +678,97 @@ public class SubjectDAO extends DBContext {
 
         return subjects;
     }
-    
+
+    public List<Subject> searchSubjectsWithFilters(String query, String categoryId, String status, int offset, int limit) {
+        List<Subject> subjects = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
+
+        // Xây dựng câu lệnh SQL với các điều kiện lọc
+        if (query != null && !query.trim().isEmpty()) {
+            sql.append(" AND s.Title LIKE ?");
+        }
+        if (categoryId != null && !categoryId.trim().isEmpty()) {
+            sql.append(" AND s.Subject_CategoryID = ?");
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND s.Status = ?");
+        }
+        sql.append(" ORDER BY s.Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (query != null && !query.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + query + "%");
+            }
+            if (categoryId != null && !categoryId.trim().isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(categoryId));
+            }
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex, limit);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Subject subject = new Subject();
+                    subject.setSubjectID(rs.getInt("SubjectID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
+                    subject.setTitle(rs.getString("Title"));
+                    subject.setDescription(rs.getString("Description"));
+                    subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
+                    subject.setStatus(rs.getString("Status"));
+                    subject.setThumbnail(rs.getString("Thumbnail"));
+                    subject.setUpdateDate(rs.getDate("Update_Date"));
+                    subject.setUserName(rs.getString("Username"));
+                    subjects.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in searchSubjectsWithFilters: " + e.getMessage());
+        }
+
+        return subjects;
+    }
+
+    public int getTotalSubjectsWithFilters(String query, String categoryId, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Subjects s WHERE 1=1");
+
+        // Xây dựng câu lệnh SQL với các điều kiện lọc
+        if (query != null && !query.trim().isEmpty()) {
+            sql.append(" AND s.Title LIKE ?");
+        }
+        if (categoryId != null && !categoryId.trim().isEmpty()) {
+            sql.append(" AND s.Subject_CategoryID = ?");
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND s.Status = ?");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (query != null && !query.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + query + "%");
+            }
+            if (categoryId != null && !categoryId.trim().isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(categoryId));
+            }
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(paramIndex, status);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getTotalSubjectsWithFilters: " + e.getMessage());
+        }
+
+        return 0;
+    }
+
 }

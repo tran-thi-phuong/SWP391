@@ -71,7 +71,7 @@
         </style>
     </head>
     <body>
-        <h1>Add New Subject</h1>
+        <h1>Add New Course</h1>
          <c:choose>
             <c:when test="${empty sessionScope.user}">
                 <c:redirect url="login.jsp"/>
