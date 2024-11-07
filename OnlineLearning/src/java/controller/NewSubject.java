@@ -31,7 +31,7 @@ import model.Users;
 public class NewSubject extends HttpServlet {
     private CategoryDAO categoryDAO;
     private UserDAO UserDAO;
-    public static final String UPLOAD_DIR = "images";
+    private static final String UPLOAD_DIR = "images";
     @Override
     public void init() throws ServletException {
         super.init();
@@ -75,8 +75,8 @@ public class NewSubject extends HttpServlet {
         String instructor = request.getParameter("instructor");
         // Process the uploaded file (thumbnail image)
         Part filePart = request.getPart("thumbnail");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
-        String uploadPath = getServletContext().getRealPath("/") + "images" + File.separator;
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
         
         // Create uploads directory if it doesn't exist
         File uploadDir = new File(uploadPath);
@@ -85,8 +85,9 @@ public class NewSubject extends HttpServlet {
         }
 
         // Save the uploaded file
-        filePart.write(uploadPath + fileName);
-        String filePath =fileName;
+        File file = new File(uploadDir, fileName);
+            filePart.write(file.getAbsolutePath());
+        String filePath =UPLOAD_DIR + "/" + fileName;
         // After saving the file, you could save the form data and file path to a database
         SubjectDAO subjectDAO = new SubjectDAO();
         boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath, instructor);

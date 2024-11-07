@@ -35,7 +35,7 @@ import model.Users;
 @WebServlet(urlPatterns = {"/SubjectDetailOverview"})
 public class SubjectOverview extends HttpServlet {
 
-    public static final String UPLOAD_DIR = "images";
+    private static final String UPLOAD_DIR = "images";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -64,7 +64,7 @@ public class SubjectOverview extends HttpServlet {
         String status = request.getParameter("status");
         String description = request.getParameter("description");
         Part filePart = request.getPart("thumbnail");
-        String uploadPath = getServletContext().getRealPath("/") + "images" + File.separator;
+        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
         String filePath = null;
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
@@ -76,8 +76,9 @@ public class SubjectOverview extends HttpServlet {
             }
 
             // Save the uploaded file
-            filePart.write(uploadPath + fileName);
-            filePath = fileName;
+            File file = new File(uploadDir, fileName);
+            filePart.write(file.getAbsolutePath());
+            filePath = UPLOAD_DIR + "/" + fileName;
         }
         try {
             SubjectDAO sDAO = new SubjectDAO();
