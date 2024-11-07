@@ -101,6 +101,9 @@
                                     <c:if test="${registration.status == 'Inactive'}">
                                         <option value="Inactive" selected>Inactive</option>
                                     </c:if>
+                                         <c:if test="${registration.status == 'Cancelled'}">
+                                        <option value="Cancelled" selected>Cancelled</option>
+                                    </c:if>
                                 </select>
                             </div>
                             <div class="mb-3">

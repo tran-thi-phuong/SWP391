@@ -79,7 +79,7 @@ public class CampaignStat extends HttpServlet {
         Date currentDate = new Date();
         
         if(cam.getStatus().equals("Incoming")){
-            request.setAttribute("status", "incoming");
+            request.setAttribute("status", "Incoming");
         }else{
             int registration, newCustomer, newlyBought;
             double revenue;

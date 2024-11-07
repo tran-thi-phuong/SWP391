@@ -10,13 +10,15 @@
             <div class="campaign-info">
                 Campaign: ${requestScope.campaign.campaignName}<br>
                 Period: ${requestScope.campaign.startDate} to ${requestScope.campaign.endDate}<br>
+                Description: ${requestScope.campaign.description}<br>
                 Status: ${requestScope.campaign.status}
+                
 
             </div>
-            <c:if test="${requestScope.campaign.status == 'Not Start'}">
+            <c:if test="${requestScope.status eq 'Incoming'}">
                 <div class="status-message">This campaign has not yet started</div>
             </c:if>
-            <c:if test="${requestScope.campaign.status != 'Not Start'}">
+            <c:if test="${requestScope.campaign.status != 'Incoming'}">
                 <div class="content">
                     <div class="total-course-card">
                         <div class="card-1 registration-section">
