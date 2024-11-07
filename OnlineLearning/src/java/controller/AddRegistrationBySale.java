@@ -151,6 +151,13 @@ public class AddRegistrationBySale extends HttpServlet {
             Users existingUser = userDAO.getUserByEmail(email); // Check if user exists by email
             if (existingUser != null) {
                 userId = existingUser.getUserID(); // Use existing user's ID
+                // Check if there's already a registration for this user, subject, and package with a restricted status
+                if (registrationsDAO.hasExistingRegistration(userId, subjectId, packageId)) {
+                    // Set an error message and forward to the JSP to display the error
+                    request.setAttribute("errorMessage", "A registration already exists with the same user, subject, and package ID with a status of 'Processing', 'Active', or 'Inactive'.You can not add anymore:3");
+                    request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
+                    return; // Exit if a duplicate exists
+                }
             } else {
                 String randomPassword = generateRandomString(10); // Generate a random password
                 userId = userDAO.addUser(email, randomPassword, gender, phone, generateRandomString(10)); // Add new user and get ID
@@ -162,7 +169,7 @@ public class AddRegistrationBySale extends HttpServlet {
             csDAO.addCustomerSubject(subjectId, userId);
             List<Lesson> lessons = lessonDAO.getLessonBySubjectId(subjectId);
             if (lessons == null || lessons.isEmpty()) {
-                request.setAttribute("error", "No lessons found for the subject.");
+                request.setAttribute("errorMessage", "No lessons found for the subject.");
                 request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
                 return;
             }
@@ -172,7 +179,7 @@ public class AddRegistrationBySale extends HttpServlet {
                 boolean lessonAdded = lesson_User.addLesson(lesson.getLessonID(), userId);
                 if (!lessonAdded) {
                     allLessonsAdded = false;
-                    request.setAttribute("error", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userId);
+                    request.setAttribute("errorMessage", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userId);
                     request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
                     return;
                 }
@@ -181,13 +188,13 @@ public class AddRegistrationBySale extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/listRegistration");
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid number format in form data.");
-            request.getRequestDispatcher("error.jsp").forward(request, response); // Forward to error page
+            request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response); // Forward to error page
         } catch (SQLException e) {
             request.setAttribute("errorMessage", "Database error occurred: " + e.getMessage());
-            request.getRequestDispatcher("error.jsp").forward(request, response); // Forward to error page
+            request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response); // Forward to error page
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error processing registration: " + e.getMessage());
-            request.getRequestDispatcher("error.jsp").forward(request, response); // Forward to error page
+            request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response); // Forward to error page
         }
     }
 

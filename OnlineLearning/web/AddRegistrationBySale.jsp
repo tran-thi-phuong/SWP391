@@ -14,94 +14,101 @@
         <title>Create Registration</title>
     </head>
     <%@include file="Header.jsp" %>
- 
-            
-                <div class="container2">
-                    <br>
-                    <h2>Create New Registration</h2>
-                    <form action="addRegistrationBySale" method="post">
-                        <div class="form-group">
-                            <label for="subjectID">Subject:</label>
-                            <select class="col-sm-10" name="subjectID" id="subjectID" required>
-                                <option value="">Select a Subject</option>
-                                <c:forEach items="${subject}" var="sub">
-                                    <option value="${sub.value.subjectID}" ${sub.value.subjectID == selectedSubjectID ? 'selected' : ''}>
-                                        ${sub.value.title}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="packageID">Package: </label>
-                            <select class="col-sm-10" name="packageID" id="packageID" required>
-                                <option value="">Select a package</option>
-                                <c:forEach items="${price}" var="sub">
-                                    <option value="${sub.packageId}" ${sub.packageId == param.packageID ? 'selected' : ''}>
-                                        ${sub.name}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="totalCost">Total Cost:</label>
-                            <input type="number" step="0.01" id="totalCost" name="totalCost" value="${totalCost}" required readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required placeholder="Enter your email" 
-                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
-                                   title="Please enter a valid email address (e.g., example@example.com)">
-                            <small id="emailError" style="color: red; display: none;"></small> <!-- Error message placeholder -->
-                        </div>
-                        <div class="form-group">
-                            <label for="note">Note:</label>
-                            <textarea id="note" name="note" rows="4"></textarea>
-                        </div>
-                        <div class="form-group button-group">
-                            <button type="submit">Save</button>
-                            <button type="button" class="cancel-button" onclick="window.location.href = 'listRegistration';">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            
-        <script>
-            const emailInput = document.getElementById('email');
-            const emailError = document.getElementById('emailError');
 
-            // Function to validate email
-            function validateEmail() {
-                const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
-                if (!emailPattern.test(emailInput.value)) {
-                    emailError.textContent = 'Please enter a valid email address.';
-                    emailError.style.display = 'block';
-                } else {
-                    emailError.textContent = '';
-                    emailError.style.display = 'none';
-                }
+
+    <div class="container2">
+        <br>
+        <h2>Create New Registration</h2>
+        <!-- Error message section -->
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger" role="alert">
+                ${errorMessage}
+            </div>
+        </c:if>
+
+        <form action="addRegistrationBySale" method="post">
+            <div class="form-group">
+                <label for="subjectID">Subject:</label>
+                <select class="col-sm-10" name="subjectID" id="subjectID" required>
+                    <option value="">Select a Subject</option>
+                    <c:forEach items="${subject}" var="sub">
+                        <option value="${sub.value.subjectID}" ${sub.value.subjectID == selectedSubjectID ? 'selected' : ''}>
+                            ${sub.value.title}
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="packageID">Package: </label>
+                <select class="col-sm-10" name="packageID" id="packageID" required>
+                    <option value="">Select a package</option>
+                    <c:forEach items="${price}" var="sub">
+                        <option value="${sub.packageId}" ${sub.packageId == param.packageID ? 'selected' : ''}>
+                            ${sub.name}
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="totalCost">Total Cost:</label>
+                <input type="number" step="0.01" id="totalCost" name="totalCost" value="${totalCost}" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email" 
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                       title="Please enter a valid email address (e.g., example@example.com)">
+                <small id="emailError" style="color: red; display: none;"></small> <!-- Error message placeholder -->
+            </div>
+            <div class="form-group">
+                <label for="note">Note:</label>
+                <textarea id="note" name="note" rows="4"></textarea>
+            </div>
+            <div class="form-group button-group">
+                <button type="submit">Save</button>
+                <button type="button" class="cancel-button" onclick="window.location.href = 'listRegistration';">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('emailError');
+
+        // Function to validate email
+        function validateEmail() {
+            const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+            if (!emailPattern.test(emailInput.value)) {
+                emailError.textContent = 'Please enter a valid email address.';
+                emailError.style.display = 'block';
+            } else {
+                emailError.textContent = '';
+                emailError.style.display = 'none';
             }
+        }
 
-            // Event listener for input change
-            emailInput.addEventListener('input', validateEmail);
+        // Event listener for input change
+        emailInput.addEventListener('input', validateEmail);
 
-            $(document).ready(function () {
+        $(document).ready(function () {
 
-                $('#subjectID').change(function () {
-                    var subjectID = $(this).val();
-                    if (subjectID) {
-                        window.location.href = 'addRegistrationBySale?subjectID=' + subjectID;
-                    }
-                });
-
-                $('#packageID').change(function () {
-                    var subjectID = $('#subjectID').val();
-                    var packageID = $(this).val();
-
-                    if (subjectID && packageID) {
-                        window.location.href = 'addRegistrationBySale?subjectID=' + subjectID + '&packageID=' + packageID;
-                    }
-                });
+            $('#subjectID').change(function () {
+                var subjectID = $(this).val();
+                if (subjectID) {
+                    window.location.href = 'addRegistrationBySale?subjectID=' + subjectID;
+                }
             });
-        </script>
-    </body>
-    <%@include file="Footer.jsp" %>
+
+            $('#packageID').change(function () {
+                var subjectID = $('#subjectID').val();
+                var packageID = $(this).val();
+
+                if (subjectID && packageID) {
+                    window.location.href = 'addRegistrationBySale?subjectID=' + subjectID + '&packageID=' + packageID;
+                }
+            });
+        });
+    </script>
+</body>
+<%@include file="Footer.jsp" %>
 </html>

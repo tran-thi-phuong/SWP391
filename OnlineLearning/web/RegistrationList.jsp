@@ -77,7 +77,7 @@
                                 <select class="form-select" id="statusSearch" name="status">
                                     <option value="">Select Status</option>
                                     <option value="Active" ${param.status == "Active" ? "selected" : ""}>Active</option>
-                                    <option value="Inactive" ${param.status == "Inactive" ? "selected" : ""}>Expired</option>
+                                    <option value="Inactive" ${param.status == "Inactive" ? "selected" : ""}>Inactive</option>
                                     <option value="Processing" ${param.status == "Processing" ? "selected" : ""}>Processing</option>
                                     <option value="Cancelled" ${param.status == "Cancelled" ? "selected" : ""}>Cancelled</option>
                                 </select>

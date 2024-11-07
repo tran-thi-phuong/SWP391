@@ -1080,5 +1080,29 @@ public class RegistrationsDAO extends DBContext {
 
         return validFrom;
     }
+    /**
+     * 
+     * @param userId
+     * @param subjectId
+     * @param packageId
+     * @return
+     * @throws SQLException 
+     */
+    //Method to check exist registration
+public boolean hasExistingRegistration(int userId, int subjectId, int packageId) throws SQLException {
+    String query = "SELECT COUNT(*) FROM Registrations WHERE UserID = ? AND SubjectID = ? AND PackageID = ? AND Status IN ('processing', 'Active', 'Inactive')";
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setInt(1, userId);
+        stmt.setInt(2, subjectId);
+        stmt.setInt(3, packageId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // True if any matching record is found
+            }
+        }
+    }
+    return false;
+}
 
 }
