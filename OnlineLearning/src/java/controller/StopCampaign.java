@@ -33,7 +33,7 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
     }
 
     // Chuyển hướng về trang danh sách campaigns
-    request.getRequestDispatcher("CampaignList.jsp").forward(request, response);
+    request.getRequestDispatcher("campaignList").forward(request, response);
 }
 
     

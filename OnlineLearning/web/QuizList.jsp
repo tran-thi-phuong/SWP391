@@ -130,7 +130,7 @@
                                             <td style="${sessionScope.setting.quantity ? '' : 'display:none;'}">${test.quantity}</td>
                                             <td style="${sessionScope.setting.duration ? '' : 'display:none;'}">${test.duration}</td>
                                             <td style="${sessionScope.setting.passCondition ? '' : 'display:none;'}">${test.passCondition}</td>
-                                            <td style="${sessionScope.setting.passRate ? '' : 'display:none;'}">pass rate</td>
+                                            <td style="${sessionScope.setting.passRate ? '' : 'display:none;'}">${testDAO.calculatePassRate(test.testID)}</td>
                                             <td style="${sessionScope.setting.quizType ? '' : 'display:none;'}">${test.type}</td>
 
 
@@ -175,7 +175,7 @@
                                             <td>${test.quantity}</td>
                                             <td>${test.duration}</td>
                                             <td>${test.passCondition}</td>
-                                            <td>pass rate</td>
+                                            <td>${testDAO.calculatePassRate(test.testID)}</td>
                                             <td>${test.type}</td>
                                         </tr>
                                     </c:forEach>

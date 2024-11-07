@@ -1,0 +1,90 @@
+.user-list-page {
+    font-family: Arial, sans-serif;
+    background-color: #FBCEB1;
+    text-align: center;
+    
+}
+
+.page-title {
+    font-weight: bold;
+    color: #333;
+}
+
+.filter-form {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-row .form-control,
+.filter-row .form-select {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+.pagination-nav .pagination .page-item .page-link {
+    color: #007bff;
+}
+
+.pagination-nav .pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+/* User List Table Styling */
+.user-table {
+    margin-top: 20px;
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: collapse;
+    font-size: 15px; /* Font size for table content */
+}
+
+.table-header {
+    background-color: #7FFF00;
+    color: #ffffff;
+    font-size: 16px; /* Font size for table headers */
+    text-align: center;
+}
+
+.user-row:hover {
+    background-color: #f2f2f2;
+}
+
+.user-id-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 15px; /* Font size for clickable user IDs */
+}
+
+.user-id-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.no-users-text {
+    color: #999;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px; /* Font size for 'No users found' text */
+}
+
+/* Table Borders and Padding */
+.user-table th,
+.user-table td {
+    padding: 10px;
+    border: 1px solid #B0BF1A	; /* Light border for rows and columns */
+}
+
+/* Pagination Styling */
+.pagination-nav .pagination .page-item .page-link {
+    color: #007bff;
+    font-size: 14px; /* Font size for pagination links */
+}
+
+.pagination-nav .pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #ffffff;
+}

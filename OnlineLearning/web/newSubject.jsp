@@ -13,6 +13,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/Header_Footer.css" rel="stylesheet"> 
         <title>Add New Course</title>
         <style>
             body {
@@ -71,18 +72,10 @@
     </head>
     <body>
         <h1>Add New Subject</h1>
-         <c:choose>
-            <c:when test="${empty sessionScope.user}">
-                <c:redirect url="login.jsp"/>
-            </c:when>
-            <c:when test="${sessionScope.user.role != 'Instructor'}">
-                <c:redirect url="/Homepage"/>
-            </c:when>
-            <c:otherwise>
 
 
         <form action="newSubject" method="POST" enctype="multipart/form-data">
-            <a href="SubjectList" class="back-button">Back to subject list</a>
+            <a href="SubjectList" class="back-button">Back to course list</a>
 
                     <%-- Course Name Input --%>
                     <label for="courseName">Course Name:</label>
@@ -106,14 +99,26 @@
                         </c:forEach>
                     </select>
 
+                    <%-- Instructor Dropdown
+                         Populated dynamically from database
+                    --%>
+                    <label for="instructor">Instructor:</label>
+                    <select id="instructor" name="instructor" required>
+                        <c:forEach items="${Instructor}" var="instructors">
+                            <option value="${instructors.userID}">
+                                ${instructors.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                    
                     <%-- Status Selection
                          Controls course visibility and availability
                     --%>
                     <label for="status">Status:</label>
                     <select id="status" name="status" required>
                         <option value="">Select status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
                         <%-- Additional status options can be added here --%>
                     </select>
 
@@ -126,8 +131,7 @@
             <button type="submit">Add Course</button>
             
         </form>
-            </c:otherwise>
-         </c:choose>
 
     </body>
+    
 </html>

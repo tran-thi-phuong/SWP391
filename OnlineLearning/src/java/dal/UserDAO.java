@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -81,6 +83,34 @@ public class UserDAO extends DBContext {
         return user;
     }
 
+    public List<Users> getInstructors() {
+        List<Users> instructors = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE Role = 'Instructor'";
+
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Users user = new Users();
+                user.setUserID(rs.getInt("UserID"));
+                user.setUsername(rs.getString("Username"));
+                user.setPassword(rs.getString("Password"));
+                user.setName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setPhone(rs.getString("Phone"));
+                user.setEmail(rs.getString("Email"));
+                user.setAddress(rs.getString("Address"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+                user.setToken(rs.getString("Token"));
+                instructors.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exceptions appropriately
+        }
+
+        return instructors;
+    }
+
     // Method to update password
     public boolean updateUserPassword(Users user) {
         String sql = "UPDATE Users SET Password = ? WHERE Username = ?";
@@ -109,7 +139,8 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
- // Method to update status of user
+    // Method to update status of user
+
     public boolean updateUserStatus(Users user) {
         String sql = "UPDATE Users SET Status = ? WHERE Username = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -122,6 +153,7 @@ public class UserDAO extends DBContext {
         return false;
     }
 // Method to get user by email
+
     public Users getUserByEmail(String email) {
         Users user = null;
         String sql = "SELECT * FROM Users WHERE Email = ?";
@@ -194,17 +226,17 @@ public class UserDAO extends DBContext {
     // Create Token for an account
 
     public boolean updateResetToken(String email, String token) {
-    String sql = "UPDATE Users SET Token = ? WHERE Email = ?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setString(1, token);
-        ps.setString(2, email);
-        int rowsUpdated = ps.executeUpdate();
-        return rowsUpdated > 0; // Trả về true nếu cập nhật thành công (hơn 0 hàng bị ảnh hưởng)
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false; // Trả về false nếu có lỗi
+        String sql = "UPDATE Users SET Token = ? WHERE Email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ps.setString(2, email);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0; // Trả về true nếu cập nhật thành công (hơn 0 hàng bị ảnh hưởng)
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi
+        }
     }
-}
 
     //Method to get user by token
     public Users getUserByToken(String token) {
@@ -319,6 +351,7 @@ public class UserDAO extends DBContext {
         return user; // Return the user object or null if not found
     }
 // Method to update password by token
+
     public void updatePassword(String token, String newPassword) {
         String sql = "UPDATE Users SET Password = ? WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -330,6 +363,7 @@ public class UserDAO extends DBContext {
         }
     }
 // Method to clear token
+
     public void clearResetToken(String token) {
         String sql = "UPDATE Users SET Token = NULL WHERE Token = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -339,7 +373,7 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
     }
- //Method to update profile
+    //Method to update profile
 
     public void updateProfile(String name, String username, String phone, String address, String gender, int userID, String avatar) {
         try {
@@ -376,30 +410,29 @@ public class UserDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
-    
+
     //Method complete profile
+    public boolean completeProfile(String fullname, String username, String password, String phone, String address, String gender, String token) {
+        String sql = "UPDATE Users SET Name = ?, Username = ?, Password = ?, Phone = ?, Address = ?, Gender = ?, Status = 'Active' WHERE Token = ?";
 
-public boolean completeProfile(String fullname, String username, String password, String phone, String address, String gender, String token) {
-    String sql = "UPDATE Users SET Name = ?, Username = ?, Password = ?, Phone = ?, Address = ?, Gender = ?, Status = 'Active' WHERE Token = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            // Set parameters
+            stmt.setString(1, fullname); // Set fullname
+            stmt.setString(2, username); // Set username
+            stmt.setString(3, password); // Set password (Consider hashing it before storing)
+            stmt.setString(4, phone); // Set phone
+            stmt.setString(5, address); // Set address
+            stmt.setString(6, gender); // Set gender
+            stmt.setString(7, token); // Set token as the 7th parameter
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        // Set parameters
-        stmt.setString(1, fullname); // Set fullname
-        stmt.setString(2, username); // Set username
-        stmt.setString(3, password); // Set password (Consider hashing it before storing)
-        stmt.setString(4, phone); // Set phone
-        stmt.setString(5, address); // Set address
-        stmt.setString(6, gender); // Set gender
-        stmt.setString(7, token); // Set token as the 7th parameter
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0; // Return true if update was successful
 
-        int rowsAffected = stmt.executeUpdate();
-        return rowsAffected > 0; // Return true if update was successful
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Return false if update failed
     }
-    return false; // Return false if update failed
-}
 
 // Method to get user by email
     public Integer getUserIdByEmail(String email) throws SQLException {
@@ -413,7 +446,7 @@ public boolean completeProfile(String fullname, String username, String password
         }
         return null; // Return null if email not found
     }
-   // Method to add an rondom account by email
+    // Method to add an rondom account by email
 
     public int addUser(String email, String password, String gender, String phone, String username) throws SQLException {
         String sql = "INSERT INTO Users (Email, Password, Gender, Phone, Status, Role, Username) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -445,7 +478,8 @@ public boolean completeProfile(String fullname, String username, String password
 
         return generatedUserId;
     }
-    public int getTotalCustomer(){
+
+    public int getTotalCustomer() {
         String sql = "SELECT COUNT(*) FROM Users where Role = 'Customer' and Status = 'Active'";
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
@@ -456,7 +490,8 @@ public boolean completeProfile(String fullname, String username, String password
         }
         return 0;
     }
-    public int getNewCustomer(Date startDate, Date endDate){
+
+    public int getNewCustomer(Date startDate, Date endDate) {
         String sql = "SELECT COUNT(*) FROM Users WHERE Create_At BETWEEN ? AND ? and Status = 'Active' and Role = 'Customer'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(startDate.getTime()));
@@ -471,7 +506,8 @@ public boolean completeProfile(String fullname, String username, String password
         }
         return 0;
     }
-    public int getNewlyBoughtCustomer(Date startDate, Date endDate){
+
+    public int getNewlyBoughtCustomer(Date startDate, Date endDate) {
         String sql = "SELECT COUNT(*) FROM (SELECT UserID FROM Payment where PaymentDate between ? and ? GROUP BY UserID HAVING COUNT(UserID) = 1) AS NewlyBought";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(startDate.getTime()));
@@ -486,7 +522,8 @@ public boolean completeProfile(String fullname, String username, String password
         }
         return 0;
     }
-    public int getTotalBoughtCustomer(){
+
+    public int getTotalBoughtCustomer() {
         String sql = "SELECT COUNT(DISTINCT UserID) FROM Payment;";
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
@@ -497,5 +534,145 @@ public boolean completeProfile(String fullname, String username, String password
         }
         return 0;
     }
-    
+
+    public Users getUserById(int userId) {
+        Users user = null;
+        String sql = "SELECT * FROM Users WHERE UserID = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new Users();
+                user.setUserID(rs.getInt("UserID"));
+                user.setUsername(rs.getString("Username"));
+                user.setName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setPhone(rs.getString("Phone"));
+                user.setEmail(rs.getString("Email"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    //Methousers to paging filter, sort user
+    public List<Users> getUsersByPage(int currentPage, int pageSize, String gender, String role, String status, String name, String email, String phone, String sortColumn, String sortOrder) {
+        List<Users> users = new ArrayList<>();
+        int offset = (currentPage - 1) * pageSize;
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM Users WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Build the query with parameters
+        if (role != null && !role.isEmpty()) {
+            sql.append(" AND Role LIKE ?");
+            params.add("%" + role + "%");
+        }
+        if (gender != null && !gender.isEmpty()) {
+            sql.append(" AND Gender LIKE ?");
+            params.add("%" + gender + "%");
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND Status = ?");
+            params.add(status);
+        }
+        if (name != null && !name.isEmpty()) {
+            sql.append(" AND Name LIKE ?");
+            params.add("%" + name + "%");
+        }
+        if (email != null && !email.isEmpty()) {
+            sql.append(" AND Email LIKE ?");
+            params.add("%" + email + "%");
+        }
+        if (phone != null && !phone.isEmpty()) {
+            sql.append(" AND Phone LIKE ?");
+            params.add("%" + phone + "%");
+        }
+
+        sql.append(" ORDER BY ").append(sortColumn).append(" ").append(sortOrder)
+                .append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            for (Object param : params) {
+                stmt.setObject(paramIndex++, param);
+            }
+            stmt.setInt(paramIndex++, offset);
+            stmt.setInt(paramIndex, pageSize);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Users user = new Users();
+                    user.setUserID(rs.getInt("UserID"));
+                    user.setUsername(rs.getString("Username"));
+                    user.setPassword(rs.getString("Password"));
+                    user.setName(rs.getString("Name"));
+                    user.setGender(rs.getString("Gender"));
+                    user.setPhone(rs.getString("Phone"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setAddress(rs.getString("Address"));
+                    user.setAvatar(rs.getString("Avatar"));
+                    user.setRole(rs.getString("Role"));
+                    user.setStatus(rs.getString("Status"));
+                    user.setToken(rs.getString("Token"));
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+
+        }
+        return users; // Return the list, even if it's empty
+    }
+
+    public int getTotalUser(String gender, String role, String status, String name, String email, String phone) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Users WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Build the query with parameters
+        if (role != null && !role.isEmpty()) {
+            sql.append(" AND Role LIKE ?");
+            params.add("%" + role + "%");
+        }
+        if (gender != null && !gender.isEmpty()) { // Ensure this is consistent
+            sql.append(" AND Gender LIKE ?");
+            params.add("%" + gender + "%");
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND Status = ?");
+            params.add(status);
+        }
+        if (name != null && !name.isEmpty()) {
+            sql.append(" AND Name LIKE ?");
+            params.add("%" + name + "%");
+        }
+        if (email != null && !email.isEmpty()) {
+            sql.append(" AND Email LIKE ?");
+            params.add("%" + email + "%");
+        }
+        if (phone != null && !phone.isEmpty()) {
+            sql.append(" AND Phone LIKE ?");
+            params.add("%" + phone + "%");
+        }
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            for (Object param : params) {
+                stmt.setObject(paramIndex++, param);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+
+        }
+        return 0; // Return 0 if an error occurs
+    }
+
 }

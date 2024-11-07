@@ -65,14 +65,6 @@
                         <input type="date" class="form-control" id="campaignEndDate" name="endDate" value="${fn:substring(campaign.endDate, 0, 10)}" required readonly>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="campaignStatus" class="form-label">Status</label>
-                        <select class="form-control" id="campaignStatus" name="status" required disabled>
-                            <option value="Not Start" ${campaign.status == 'Not Start' ? 'selected' : ''}>Not Start</option>
-                            <option value="Processing" ${campaign.status == 'Processing' ? 'selected' : ''}>Processing</option>
-                            <option value="End" ${campaign.status == 'End' ? 'selected' : ''}>End</option>
-                        </select>
-                    </div>
 
                     <!-- Media files section -->
                     <div id="mediaContainer">
@@ -113,8 +105,9 @@
                     </div>
 
                     <button type="button" class="btn btn-secondary mt-3" onclick="addMedia()" style="display:none;" id="addMediaButton">Add More Media</button>
-                    <button type="button" class="btn btn-primary mt-3" onclick="enableEditing()">Edit</button>
-                    <button type="submit" class="btn btn-primary mt-3" style="display:none;">Save changes</button>
+                    <button type="button" class="btn btn-primary mt-3" onclick="enableEditing()" id="editButton">Edit</button>
+                    <button type="submit" class="btn btn-primary mt-3" style="display:none;" id="saveButton">Save changes</button>
+
                     <button type="button" class="btn btn-secondary mt-3" onclick="window.location.href = 'campaignList';">Cancel</button>
                 </form>
             </div>
@@ -122,20 +115,20 @@
 
         <script>
             function enableEditing() {
-                // Enable input fields
                 document.getElementById('campaignName').removeAttribute('readonly');
                 document.getElementById('campaignDescription').removeAttribute('readonly');
                 document.getElementById('campaignStartDate').removeAttribute('readonly');
                 document.getElementById('campaignEndDate').removeAttribute('readonly');
 
-                // Enable status field
-                document.getElementById('campaignStatus').removeAttribute('disabled');
-
-                // Show the save button and "Add More Media" button, and hide the edit button
-                document.querySelector('button[type="submit"]').style.display = 'inline-block';
+                // Show Save and Add Media buttons, hide Edit button
+                document.getElementById('saveButton').style.display = 'inline-block';
                 document.getElementById('addMediaButton').style.display = 'inline-block';
-                document.querySelector('.btn.btn-primary.mt-3').style.display = 'none';
+                document.getElementById('editButton').style.display = 'none';
             }
+
+
+
+
 
             // Function to add more media input fields dynamically
             function addMedia() {

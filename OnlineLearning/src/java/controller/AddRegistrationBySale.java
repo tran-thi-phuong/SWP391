@@ -34,6 +34,9 @@ public class AddRegistrationBySale extends HttpServlet {
     private final UserDAO userDAO = new UserDAO();
     private final SubjectDAO subjectDAO = new SubjectDAO();
     private final PackagePriceDAO packageDAO = new PackagePriceDAO();
+    private final Customer_SubjectDAO csDAO = new Customer_SubjectDAO();
+    private final LessonDAO lessonDAO = new LessonDAO();
+    private final Lesson_UserDAO lesson_User = new Lesson_UserDAO();
 
     // Generates a random string of specified length
     public static String generateRandomString(int length) {
@@ -156,7 +159,24 @@ public class AddRegistrationBySale extends HttpServlet {
 
             // Add the registration to the database
             addRegistration(userId, subjectId, packageId, totalCost, staffId, note);
+            csDAO.addCustomerSubject(subjectId, userId);
+            List<Lesson> lessons = lessonDAO.getLessonBySubjectId(subjectId);
+            if (lessons == null || lessons.isEmpty()) {
+                request.setAttribute("error", "No lessons found for the subject.");
+                request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
+                return;
+            }
 
+            boolean allLessonsAdded = true;
+            for (Lesson lesson : lessons) {
+                boolean lessonAdded = lesson_User.addLesson(lesson.getLessonID(), userId);
+                if (!lessonAdded) {
+                    allLessonsAdded = false;
+                    request.setAttribute("error", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userId);
+                    request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
+                    return;
+                }
+            }
             // Redirect to the registration list page after successful processing
             response.sendRedirect(request.getContextPath() + "/listRegistration");
         } catch (NumberFormatException e) {
@@ -259,7 +279,7 @@ public class AddRegistrationBySale extends HttpServlet {
 
         // Nếu người dùng đã đăng nhập nhưng không có quyền, chuyển hướng về /homePage
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-           response.sendRedirect(request.getContextPath() + "/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
 
             return false;
         } else if (pageID == null) {

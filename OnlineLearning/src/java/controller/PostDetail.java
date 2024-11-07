@@ -29,7 +29,9 @@ public class PostDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//         if (!hasPermission(request, response)) return;
+        if (!hasPermission(request, response)) {
+            return;
+        }
         List<Blog> blogs = blogDAO.getAllBlogs();
         request.setAttribute("blogs", blogs);
 
@@ -39,6 +41,9 @@ public class PostDetail extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!hasPermission(request, response)) {
+            return;
+        }
         String blogId = request.getParameter("blogId");
         String currentStatus = request.getParameter("currentStatus");
 
@@ -49,9 +54,10 @@ public class PostDetail extends HttpServlet {
         blogDAO.updateStatus(blogId, newStatus);
 
         // Send the new status as a response
-        response.getWriter().write(newStatus); 
+        response.getWriter().write(newStatus);
     }
-private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
         if (currentUser == null) {
@@ -64,7 +70,7 @@ private boolean hasPermission(HttpServletRequest request, HttpServletResponse re
         String userRole = currentUser.getRole();
 
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-           response.sendRedirect(request.getContextPath() + "/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
 
             return false;
         } else if (pageID == null) {
@@ -75,4 +81,3 @@ private boolean hasPermission(HttpServletRequest request, HttpServletResponse re
         return true;
     }
 }
-

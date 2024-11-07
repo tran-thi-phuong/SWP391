@@ -42,7 +42,7 @@ public class StartCampaign extends HttpServlet {
     }
 
     // Chuyển hướng về trang danh sách campaigns
-    request.getRequestDispatcher("CampaignList.jsp").forward(request, response);
+    request.getRequestDispatcher("campaignList").forward(request, response);
 }
 
     

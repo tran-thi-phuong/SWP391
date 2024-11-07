@@ -7,6 +7,7 @@ import dal.CategoryDAO;
 import dal.PagesDAO;
 import dal.RolePermissionDAO;
 import dal.SubjectDAO;
+import dal.UserDAO;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,11 +31,13 @@ import model.Users;
 @MultipartConfig
 public class NewSubject extends HttpServlet {
     private CategoryDAO categoryDAO;
+    private UserDAO UserDAO;
     public static final String UPLOAD_DIR = "images";
     @Override
     public void init() throws ServletException {
         super.init();
         categoryDAO = new CategoryDAO();
+        UserDAO = new UserDAO();
     }
     /**
      * Handles GET requests
@@ -48,11 +51,13 @@ public class NewSubject extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!hasPermission(request, response)) {
-            return;
-        }
+//        if (!hasPermission(request, response)) {
+//            return;
+//        }
         try {
             List<SubjectCategory> categories = categoryDAO.getAllCategories();
+            List<Users> instructor = UserDAO.getInstructors();
+            request.setAttribute("Instructor", instructor);
             request.setAttribute("categories", categories);
             request.getRequestDispatcher("newSubject.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
@@ -68,12 +73,12 @@ public class NewSubject extends HttpServlet {
         String category = request.getParameter("category");
         String status = request.getParameter("status");
         String description = request.getParameter("description");
-
+        String instructor = request.getParameter("instructor");
         // Process the uploaded file (thumbnail image)
         Part filePart = request.getPart("thumbnail");
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
         String uploadPath = getServletContext().getRealPath("/") + "images" + File.separator;
-
+        
         // Create uploads directory if it doesn't exist
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -85,10 +90,10 @@ public class NewSubject extends HttpServlet {
         String filePath =fileName;
         // After saving the file, you could save the form data and file path to a database
         SubjectDAO subjectDAO = new SubjectDAO();
-        boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath);
+        boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath, instructor);
         if (isAdded) {
             // Redirect to success page or list of courses if add is successful
-            response.sendRedirect("SubjectList.jsp");
+            response.sendRedirect("SubjectList");
         } else {
             // Handle failure to add course
             request.setAttribute("errorMessage", "Failed to add the course.");

@@ -191,12 +191,12 @@
 
                 <div class="form-group">
                     <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" value="${currentTest.title}" required/>
+                    <input type="text" id="title" name="title" value="${currentTest.title}" required pattern="\S.*"/>
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <input type="text" id="description" name="description" value="${currentTest.description}" required/>
+                    <input type="text" id="description" name="description" value="${currentTest.description}" pattern="\S.*"/>
                 </div>
                  <h2>Current Media Files</h2>
                 <c:forEach var="media" items="${mediaList}">
@@ -217,7 +217,7 @@
                             </c:otherwise>
                         </c:choose>
                         <p><em>${media.description}</em></p>
-                        <input type="text" value="${media.mediaId}" name="current-media"hidden/>
+                        <input type="text" value="${media.mediaId}" name="current-media" hidden/>
                         <button type="button" onclick="removeMedia(this)">Remove</button>
                     </div>
                     <hr>

@@ -1,0 +1,146 @@
+/* General Body Styling */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f7fa;
+    padding: 0;
+    margin: 0;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* User Detail Card */
+.user-detail-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+}
+
+/* Avatar Styling */
+img.img-fluid.rounded-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 2px solid #ADFF2F;
+
+}
+
+/* Form Styling */
+.user-detail-form .form-control {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    background-color: #F0F8FF;
+    border: 2px solid #ADFF2F;
+}
+
+/* Form Select Styling */
+.user-detail-form .form-select.custom-select {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    background-color: #F0F8FF;
+    border: 2px solid #ADFF2F;
+}
+
+/* Row for Each Section */
+.row {
+    margin-bottom: 20px;
+}
+
+/* Columns within Row */
+.col-md-4 {
+    margin-bottom: 20px;
+}
+
+/* Button Styling */
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+#editButton {
+    background-color: #f39c12;
+    color: #ffffff;
+}
+
+#saveButton {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+/* Button alignment */
+.mb-3.text-center {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Card Body */
+.card-body {
+    padding: 0;
+}
+
+/* Labels Styling */
+.form-label {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Alert Box Styling for User Not Found */
+.alert {
+    font-size: 1rem;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Custom Class for Optional Fields */
+.custom-class {
+    padding: 5px 0;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 767px) {
+    .user-detail-form .form-control,
+    .user-detail-form .form-select.custom-select {
+        width: 100%;
+    }
+
+    .user-detail-form .col-md-4 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .user-detail-form .row {
+        flex-direction: column;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
