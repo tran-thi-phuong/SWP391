@@ -10,21 +10,38 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-         <link rel="stylesheet" href="css/userlist.css">
+        <link rel="stylesheet" href="css/userlist.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <link rel="stylesheet" href="css/userlist.css">
+        
     </head>
     <%@include file="Header.jsp" %>
     <body class="user-list-page">
         <div class="container mt-5">
             <h1 class="text-center page-title">Manage Users</h1>
             <br>
+            <c:if test="${not empty successMessage}">
+                <div class="alert alert-success" role="alert">
+                    ${successMessage}
+                </div>
+            </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger" role="alert">
+                    ${errorMessage}
+                </div>
+            </c:if>
 
+            <!-- Add Staff Button -->
+            <div class="d-flex justify-content-between mb-4">
+                
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                    Add Staff
+                </button>
+            </div>
             <!-- Filter and Search Form -->
             <form action="UserList" method="get" class="mb-4 filter-form">
                 <div class="row mb-3 filter-row">
@@ -138,6 +155,37 @@
                     </c:if>
                 </ul>
             </nav>
+            <!-- Add Staff Modal -->
+            <div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="AddStaff" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addStaffModalLabel">Add New Staff</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label"><strong>Email</strong></label>
+                                    <input type="email" name="email" id="email" class="form-control" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="role" class="form-label"><strong>Role</strong></label>
+                                    <select name="role" id="role" class="form-select" required>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Instructor">Instructor</option>
+                                        <option value="Marketing">Marketing</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add Staff</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <%@include file="Footer.jsp" %>
     </body>

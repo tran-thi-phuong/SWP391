@@ -88,3 +88,93 @@
     border-color: #007bff;
     color: #ffffff;
 }
+/* Style for the Add Staff Modal */
+#addStaffModal .modal-content {
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+#addStaffModal .modal-header {
+    background-color: #FFC0CB;
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    padding: 15px;
+}
+
+#addStaffModal .modal-footer {
+    border-top: 2px solid #ddd;
+    background-color: #f1f1f1;
+}
+
+#addStaffModalLabel {
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+#addStaffModal .form-label {
+    font-weight: bold;
+    color: #333;
+}
+
+#addStaffModal .form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+#addStaffModal .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#addStaffModal .form-select {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+#addStaffModal .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#addStaffModal button[type="submit"] {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+#addStaffModal button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+#addStaffModal button[type="button"] {
+    background-color: #6c757d;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+#addStaffModal button[type="button"]:hover {
+    background-color: #5a6268;
+}
+
+/* Style for the modal backdrop */
+.modal-backdrop {
+    opacity: 0.8 !important;
+}
