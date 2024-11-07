@@ -105,7 +105,7 @@ public class RegistrationStat extends HttpServlet {
         RegistrationsDAO r = new RegistrationsDAO();
         int successRegistration = r.getTotalRegistrationByStatus("Active", startDate, endDate); //get registration by status and time range
         int submittedRegistration = r.getTotalRegistrationByStatus("Processing", startDate, endDate); //get registration by status and time range
-        int cancelledRegistration = r.getTotalRegistrationByStatus("Inactive", startDate, endDate); //get registration by status and time range
+        int cancelledRegistration = r.getTotalRegistrationByStatus("Cancelled", startDate, endDate); //get registration by status and time range
         int newRegistration = r.getNewRegistrationByTime(startDate, endDate); 
         int totalRegistration = r.getTotalRegistrations(); // get total registration
         List<SubjectCategoryCount> registrationAllocation = r.getRegistrationAllocation();
@@ -150,7 +150,7 @@ public class RegistrationStat extends HttpServlet {
             Date startDate = Date.valueOf(startDateLocal);
             successRegistration = r.getTotalRegistrationByStatus("Active", startDate, endDate);
             submittedRegistration = r.getTotalRegistrationByStatus("Processing", startDate, endDate);
-            cancelledRegistration = r.getTotalRegistrationByStatus("Inactive", startDate, endDate);
+            cancelledRegistration = r.getTotalRegistrationByStatus("Cancelled", startDate, endDate);
             newRegistration = r.getNewRegistrationByTime(startDate, endDate);
         } else if (select.equals("30days")) {
             LocalDate endDateLocal = LocalDate.now();
@@ -159,7 +159,7 @@ public class RegistrationStat extends HttpServlet {
             Date startDate = Date.valueOf(startDateLocal);
             successRegistration = r.getTotalRegistrationByStatus("Active", startDate, endDate);
             submittedRegistration = r.getTotalRegistrationByStatus("Processing", startDate, endDate);
-            cancelledRegistration = r.getTotalRegistrationByStatus("Inactive", startDate, endDate);
+            cancelledRegistration = r.getTotalRegistrationByStatus("Cancelled", startDate, endDate);
             newRegistration = r.getNewRegistrationByTime(startDate, endDate);
         } else if (select.equals("custom")) {
             if (timeRange == null || timeRange.trim().isEmpty()) {
