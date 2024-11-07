@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Blog;
 import model.Slider;
 import model.Subject;
@@ -23,7 +25,11 @@ public class Homepage extends HttpServlet {
             throws ServletException, IOException {
         // Create an instance of SliderDAO to interact with the database
         SliderDAO sliderDAO = new SliderDAO();
-        
+        try {
+            sliderDAO.autoCreateSliders();
+        } catch (SQLException ex) {
+            Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // Retrieve all sliders from the database
         List<Slider> sliders = sliderDAO.getAllSliders();
         

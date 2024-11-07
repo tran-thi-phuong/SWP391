@@ -47,7 +47,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 
     // Determine the status based on the start date relative to the current date
     Date currentDate = new Date(System.currentTimeMillis());
-    String status = (startDate.after(currentDate)) ? "Not Started" : "Active";
+    String status = (startDate.after(currentDate)) ? "Incoming" : "Running";
 
     // Create a new Campaign object with the updated status
     Campaigns campaign = new Campaigns();

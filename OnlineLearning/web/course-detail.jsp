@@ -19,10 +19,19 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
         <link href="css/Header_Footer.css" rel="stylesheet"> 
         <link rel="stylesheet" href="css/course-style.css">
-        
+
     </head>
 
     <body>
+        <c:if test="${not empty sessionScope.notification}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Notification:</strong> ${sessionScope.notification}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <%-- Remove notification from session to prevent it from showing again --%>
+            <c:remove var="notification" scope="session"/>
+        </c:if>
         <%@include file="Header.jsp" %>
         <c:set var="categories" value="${requestScope.categories}" />
         <c:set var="currentSub" value="${requestScope.currentSub}" />
@@ -31,28 +40,28 @@
         <c:set var="currentPackage" value="${requestScope.currentPackage}" />
         <div class="container2">
             <aside class="sidebar">
-                    <section class="search">
-                        <h2>Search course</h2>
-                        <form action="CourseList" method="get">  
-                            <input type="text" name="query" placeholder="Search course...">
-                            <button type="submit">Search</button>
-                        </form>
-                    </section>
+                <section class="search">
+                    <h2>Search course</h2>
+                    <form action="CourseList" method="get">  
+                        <input type="text" name="query" placeholder="Search course...">
+                        <button type="submit">Search</button>
+                    </form>
+                </section>
 
-                    <section class="categories">
-                        <h2>Course Category</h2>
-                        <ul>
+                <section class="categories">
+                    <h2>Course Category</h2>
+                    <ul>
+                        <li>
+                            <a href="CourseList?category=${category.subjectCategoryId}">All</a>
+                        </li>
+                        <c:forEach items="${categories}" var="category">
                             <li>
-                                <a href="CourseList?category=${category.subjectCategoryId}">All</a>
+                                <a href="CourseList?category=${category.subjectCategoryId}">${category.title}</a>
                             </li>
-                            <c:forEach items="${categories}" var="category">
-                                <li>
-                                    <a href="CourseList?category=${category.subjectCategoryId}">${category.title}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </section>
-                </aside>
+                        </c:forEach>
+                    </ul>
+                </section>
+            </aside>
             <!-- Left Content -->
             <div class="left-content">
                 <div class="title">
@@ -89,67 +98,67 @@
                 </div>
                 <div class="page-same">
                     <c:set var="subjectPriceMap" value="${requestScope.subjectPriceMap}" />
-                <ul>
-                    <c:if test="${not empty subjectPriceMap}">
-                        <c:forEach var="entry" items="${subjectPriceMap}">
-                            <li>
-                                <div class="img-same">
-                                    <a href="registerCourse?id=${entry.key.subjectID}">
-                                        <div style="background: url('${entry.key.thumbnail}'); background-size: cover; height: 100px; width: 75px;"></div>
-                                    </a>
-                                </div>
-                                <div class="des-same">
-                                    <a href="registerCourse?id=${entry.key.subjectID}">
-                                        <b>${entry.key.title}</b>
-                                    </a>
-                                </div>
-                                <b>
-                                    <p class="price">$${entry.value}</p>
-                                </b>
-                            </li>
-                        </c:forEach>
-                    </c:if>
-                    <c:if test="${empty subjectPriceMap}">
-                        <li>No subjects available.</li>
+                    <ul>
+                        <c:if test="${not empty subjectPriceMap}">
+                            <c:forEach var="entry" items="${subjectPriceMap}">
+                                <li>
+                                    <div class="img-same">
+                                        <a href="registerCourse?id=${entry.key.subjectID}">
+                                            <div style="background: url('${entry.key.thumbnail}'); background-size: cover; height: 100px; width: 75px;"></div>
+                                        </a>
+                                    </div>
+                                    <div class="des-same">
+                                        <a href="registerCourse?id=${entry.key.subjectID}">
+                                            <b>${entry.key.title}</b>
+                                        </a>
+                                    </div>
+                                    <b>
+                                        <p class="price">$${entry.value}</p>
+                                    </b>
+                                </li>
+                            </c:forEach>
                         </c:if>
-                </ul>
-            </div>
+                        <c:if test="${empty subjectPriceMap}">
+                            <li>No subjects available.</li>
+                            </c:if>
+                    </ul>
+                </div>
 
-        </div>
+            </div>
         </div>
         <div id="register-popup" class="popup-container">
             <div class="popup-content">
-                
+
                 <span class="close-btn">&times;</span>
                 <h2>Register for Subject Access</h2>
                 <form id="registration-form" action="payment" method="post">
-                <!-- Pricing Packages -->
-                <input type="text" name="subjectID" value="${currentSub.subjectID}" hidden="true">
-                <section id="pricing-packages">
-                    <h3>Choose Your Package</h3>
-                    <c:forEach items="${currentPackage}" var="pkg">
-                        <div class="package-option">
-                            <label>
-                                <input type="radio" name="package" value="${pkg.packageId}" required>
-                                ${pkg.name} - ${pkg.durationTime} day -
-                                <c:choose>
-                                    <c:when test="${pkg.salePrice < pkg.price}">
-                                        <span class="original-price">${pkg.price}$</span>
-                                        <span class="price">${pkg.salePrice}$</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="price">${pkg.price}$</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </label>
-                        </div>
-                    </c:forEach>
-                </section>
+                    <!-- Pricing Packages -->
+                    <input type="text" name="subjectID" value="${currentSub.subjectID}" hidden="true">
+                    <section id="pricing-packages">
+                        <h3>Choose Your Package</h3>
+                        <c:forEach items="${currentPackage}" var="pkg">
+                            <div class="package-option">
+                                <label>
+                                    <input type="radio" name="package" value="${pkg.packageId}" required>
+                                    ${pkg.name} - ${pkg.durationTime} day -
+                                    <c:choose>
+                                        <c:when test="${pkg.salePrice < pkg.price}">
+                                            <span class="original-price">${pkg.price}$</span>
+                                            <span class="price">${pkg.salePrice}$</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="price">${pkg.price}$</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </label>
+                            </div>
+                        </c:forEach>
+                    </section>
 
-                <!-- User Information -->
-                <section id="user-info">
-                    <h3>Enter Your Information</h3>
-                    
+                    <!-- User Information -->
+                    <section id="user-info">
+                        <h3>Enter Your Information</h3>
+
                         <c:choose>
                             <c:when test="${sessionScope.user != null}">
                                 <!-- User is logged in, make form fields read-only -->
@@ -168,29 +177,29 @@
                                 <div class="form-field">
                                     <label>Gender:</label>
                                     <label>
-                                        <input type="radio" name="gender" value="male" ${sessionScope.user.gender == 'male' ? 'checked' : ''} disabled>
+                                        <input type="radio" name="gender" value="Male" ${sessionScope.user.gender == 'Male' ? 'checked' : ''} disabled>
                                         Male
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="female" ${sessionScope.user.gender == 'female' ? 'checked' : ''} disabled>
+                                        <input type="radio" name="gender" value="Female" ${sessionScope.user.gender == 'Female' ? 'checked' : ''} disabled>
                                         Female
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="other" ${sessionScope.user.gender == 'other' ? 'checked' : ''} disabled>
+                                        <input type="radio" name="gender" value="Other" ${sessionScope.user.gender == 'Other' ? 'checked' : ''} disabled>
                                         Other
                                     </label>
                                 </div>
-                                <button type="button" disabled>Register</button>
+                                <button type="submit">Register</button>
                             </c:when>
                             <c:otherwise>
                                 <!-- User is not logged in, form is editable -->
                                 <div class="form-field">
                                     <label for="full-name">Full Name:</label>
-                                    <input type="text" id="full-name" name="full-name" required>
+                                    <input type="text" id="full-name" name="full-name" required pattern="\S.*">
                                 </div>
                                 <div class="form-field">
                                     <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" required>
+                                    <input type="email" id="email" name="email" required pattern="\S.*">
                                 </div>
                                 <div class="form-field">
                                     <label for="mobile">Mobile:</label>
@@ -199,22 +208,22 @@
                                 <div class="form-field">
                                     <label>Gender:</label>
                                     <label>
-                                        <input type="radio" name="gender" value="male" required>
+                                        <input type="radio" name="gender" value="Male" required>
                                         Male
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="female" required>
+                                        <input type="radio" name="gender" value="Female" required>
                                         Female
                                     </label>
                                     <label>
-                                        <input type="radio" name="gender" value="other" required>
+                                        <input type="radio" name="gender" value="Other" required>
                                         Other
                                     </label>
                                 </div>
                                 <button type="submit">Register</button>
                             </c:otherwise>
                         </c:choose>
-                    </form>
+                </form>
                 </section>
 
                 <!-- Additional Information -->
@@ -225,7 +234,7 @@
         </div>
         <%@include file="Footer.jsp" %>
     </body>
-    
+
     <script src="js/pop-up-script.js"></script>
 
 </html>

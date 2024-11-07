@@ -61,9 +61,9 @@ public class SubjectLesson extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-         if (!hasPermission(request, response)) {
-            return;
-        }
+//         if (!hasPermission(request, response)) {
+//            return;
+//        }
      
         String courseId = request.getParameter("courseId");
         String courseName = request.getParameter("courseName");

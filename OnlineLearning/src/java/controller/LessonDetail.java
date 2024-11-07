@@ -64,7 +64,7 @@ public class LessonDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         if (!hasPermission(request, response)) return;
+//         if (!hasPermission(request, response)) return;
         LessonDAO l = new LessonDAO();
         SubjectDAO s = new SubjectDAO();
         String action = request.getParameter("action");

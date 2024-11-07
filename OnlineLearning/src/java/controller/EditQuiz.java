@@ -179,10 +179,13 @@ public class EditQuiz extends HttpServlet {
         current.setSubjectID(subjectId);
         current.setTitle(title);
         current.setType(type);
+        testDAO.updateTest(current); //Update quiz details in the database
+        Test testCurrent = testDAO.getTestById(testId);
+                System.out.println(testCurrent);
         List<String> mediaFilesExist = new ArrayList<>();
         List<String> mediaDescriptionsExist = new ArrayList<>();
         List<Part> mediaFilesParts = request.getParts().stream()
-                .filter(part -> "mediaFiles".equals(part.getName()))
+                .filter(part -> "mediaFiles".equals(part.getName()) && part.getSize() > 0)
                 .collect(Collectors.toList());
         List<String> mediaDescriptions = new ArrayList<>();
         
@@ -198,27 +201,30 @@ public class EditQuiz extends HttpServlet {
                     }
                 }
         //delete all
+        String mediaLink;
+        String uploadDir = "TestMedia/";
+        String mediaDescription = request.getParameter("mediaDescription");
         mediaDAO.deleteMedia(testId);
-        for (Part mediaFilePart : mediaFilesParts) {
-            String mediaDescription = request.getParameter("mediaDescription");
-            mediaDescriptions.add(mediaDescription);
+            for (Part mediaFilePart : mediaFilesParts) {
+                mediaDescriptions.add(mediaDescription);
 
-            String uploadDir = "TestMedia/"; // Directory to save media
+                // Save the file and get the saved file URL
+                mediaLink = saveMediaFile(mediaFilePart, uploadDir);
 
-            // Save the file and get the saved file URL
-            String mediaLink = saveMediaFile(mediaFilePart, uploadDir);
+                if (mediaLink != null) {
+                    // Create a new QuestionMedia object
+                    TestMedia mediaToAdd = new TestMedia();
+                    mediaToAdd.setMediaLink(mediaLink);
+                    mediaToAdd.setDescription(mediaDescription);
+                    mediaToAdd.setTestId(testId); // Set this to the appropriate Question ID
 
-            if (mediaLink != null) {
-                // Create a new QuestionMedia object
-                TestMedia mediaToAdd = new TestMedia();
-                mediaToAdd.setMediaLink(mediaLink);
-                mediaToAdd.setDescription(mediaDescription);
-                mediaToAdd.setTestId(testId); // Set this to the appropriate Question ID
-
-                // Save the media to the database
-                mediaDAO.saveMedia(mediaToAdd);
+                    // Save the media to the database
+                    mediaDAO.saveMedia(mediaToAdd);
+                }
+        
+        
             }
-        //add current
+            //add current
         for (int i = 0; i < mediaFilesExist.size(); i++) {
                     mediaLink = mediaFilesExist.get(i);
                     mediaDescription = (i < mediaDescriptionsExist.size()) ? mediaDescriptionsExist.get(i) : ""; // Avoid IndexOutOfBounds
@@ -232,8 +238,7 @@ public class EditQuiz extends HttpServlet {
                     // Save the existing media back to the database
                     mediaDAO.saveMedia(existingMedia);
                 }
-        testDAO.updateTest(current); // Update quiz details in the database
-    }
+            
     }
     //Update Question
     private void handleUpdateQuestions(HttpServletRequest request) throws ServletException, IOException {

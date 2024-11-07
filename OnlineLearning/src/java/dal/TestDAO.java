@@ -282,7 +282,7 @@ public class TestDAO extends DBContext {
 
     public double calculatePassRate(int testID) {
         double passRate = 0.0;
-        String passConditionSql = "SELECT PassCondition FROM Tests WHERE TestID = ?";
+        String passConditionSql = "SELECT Pass_Condition FROM Tests WHERE TestID = ?";
         String totalAttemptsSql = "SELECT COUNT(*) FROM User_Attempt WHERE TestID = ?";
         String passedAttemptsSql = "SELECT COUNT(*) FROM User_Attempt WHERE TestID = ? AND Mark > ?";
 
@@ -293,7 +293,7 @@ public class TestDAO extends DBContext {
                 pstmt.setInt(1, testID);
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
-                    passCondition = rs.getDouble("PassCondition");
+                    passCondition = rs.getDouble("Pass_Condition");
                 }
             }
 
@@ -370,11 +370,5 @@ public class TestDAO extends DBContext {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }
-    public static void main(String[] args) {
-        TestDAO d = new TestDAO();
-        Test test = new Test(0, 1, "a", "a", "A", "a", 1, 0, 0);
-        int a = d.addTest(test);
-        System.out.println(a);
     }
 }

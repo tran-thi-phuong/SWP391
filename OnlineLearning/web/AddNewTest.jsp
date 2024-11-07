@@ -78,11 +78,11 @@
                     <form action="AddQuiz" method="post" enctype="multipart/form-data">
                         <p>
                             <strong>Title:</strong>
-                            <input type="text" name="title" required/>
+                            <input type="text" name="title"  required pattern="\S.*"/>
                         </p>
                         <p>
                             <strong>Description:</strong>
-                            <input type="text" name="description" required/>
+                            <input type="text" name="description"  required pattern="\S.*"/>
                         </p>
                         <h2>Media Files</h2>
                         <div id="mediaList"></div>
@@ -101,18 +101,18 @@
 
                         <p>
                             <strong>Duration:</strong>
-                            <input type="number" name="duration" required/> minutes
+                            <input type="text" pattern="^[0-9]*\.?[0-9]+$" name="duration" required/> minutes
                         </p>
                         <p>
                             <strong>Pass Condition:</strong>
-                            <input type="number" name="passCondition" required/> %
+                            <input type="number" name="passCondition"  required min="0" max="100" step="0.01"/> %
                         </p>
                         <strong for="level">Level:</strong>
                         <select id="level" name="level" required>
                             <option value="">Select Level</option>
                             <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Advanced">Advanced</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Expert">Expert</option>
                         </select>
 
                         <p>

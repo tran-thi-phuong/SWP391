@@ -72,7 +72,7 @@
         <%@include file="Header.jsp" %>
 
         <div class="container mt-4">
-            <h2 class="mb-4">Subject Details</h2>
+            <h2 class="mb-4">Course Details</h2>
 
             <c:if test="${not empty errorMessage}">
                 <div class="alert alert-danger">${errorMessage}</div>
@@ -83,7 +83,7 @@
 
             <div class="tab-buttons">
                 <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailOverview?id=${sessionScope.subjectID}'" class="active">Overview</button>
-                <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailDimension?id=${sessionScope.subjectID}'">Dimension</button>
+                <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailDimension?id=${sessionScope.subjectID}'">Topic</button>
                 <button onclick="location.href = '${pageContext.request.contextPath}/SubjectDetailPricePackage?id=${sessionScope.subjectID}'">Price Package</button>
             </div>
 
@@ -95,7 +95,7 @@
                     <input type="hidden" name="subjectId" value="${subject.subjectID}">
 
                     <div class="form-group">
-                        <label class="form-label">Subject Thumbnail:</label>
+                        <label class="form-label">Course Thumbnail:</label>
                         <div>
                             <img src="images/${subject.thumbnail}" alt="Subject Thumbnail" 
                                  class="img-thumbnail" style="width: 150px; height: auto;">
@@ -103,7 +103,7 @@
                         <input type="file" name="thumbnail">
                     </div>
                     <div class="form-group">
-                        <label for="subjectName" class="form-label">Subject Name:</label>
+                        <label for="subjectName" class="form-label">Course Name:</label>
                         <input type="text" class="form-control" id="subjectName" name="subjectName" 
                                value="${subject.title}" required>
                     </div>

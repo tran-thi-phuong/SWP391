@@ -20,7 +20,8 @@
         <c:if test="${not empty email}">
             <h1>Your Account</h1><br>
             <div class="account-info">
-                <img src="${avatarUrl}" alt="Avatar" class="avatar">
+                <img src="${empty user.avatar ? 'images/default_avatar.jpg' : user.avatar}" alt="Avatar" class="avatar">
+
                 <p>Username: ${username}</p>
                 <p>Email: ${email}</p>       
             </div>

@@ -381,6 +381,7 @@ public class RegistrationsDAO extends DBContext {
                          u.UserID, 
                          s.SubjectID, 
                         s.Title AS SubjectName, 
+                        s.Thumbnail
                          pp.PackageID, "
                          pp.Name AS PackageName, 
                          r.Registration_Time, 
@@ -405,6 +406,7 @@ public class RegistrationsDAO extends DBContext {
                     + "       u.UserID, "
                     + "       s.SubjectID, "
                     + "       s.Title AS SubjectName, "
+                    + "       s.Thumbnail,"
                     + "       pp.PackageID, "
                     + "       pp.Name AS PackageName, "
                     + "       r.Registration_Time, "
@@ -447,6 +449,7 @@ public class RegistrationsDAO extends DBContext {
                 reg.setValidTo(rs.getDate("Valid_To"));
                 reg.setNote(rs.getString("Note"));
                 reg.setSubjectName(rs.getString("SubjectName"));
+                reg.setThumbnail(rs.getString("Thumbnail"));
                 reg.setStaffName(rs.getString("StaffName"));
                 list.add(reg);
             }
@@ -493,6 +496,7 @@ public class RegistrationsDAO extends DBContext {
                 + "       u.UserID, "
                 + "       s.SubjectID, "
                 + "       s.Title AS SubjectName, "
+                + "       s.Thumbnail,"
                 + "       pp.PackageID, "
                 + "       pp.Name AS PackageName, "
                 + "       r.Registration_Time, "
@@ -530,6 +534,7 @@ public class RegistrationsDAO extends DBContext {
                 reg.setValidTo(rs.getDate("Valid_To"));
                 reg.setNote(rs.getString("Note"));
                 reg.setSubjectName(rs.getString("SubjectName"));
+                reg.setThumbnail(rs.getString("Thumbnail"));
                 reg.setStaffName(rs.getString("StaffName"));
                 list.add(reg);
             }
@@ -561,29 +566,33 @@ public class RegistrationsDAO extends DBContext {
     public List<Registrations> getRegistrationsByUserId(int userId, int page, int pageSize) {
         List<Registrations> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT r.RegistrationID, "
-                + "       u.UserID, "
-                + "       s.SubjectID, "
-                + "       s.Title AS SubjectName, "
-                + "       pp.PackageID, "
-                + "       pp.Name AS PackageName, "
-                + "       r.Registration_Time, "
-                + "       r.Total_Cost, "
-                + "       r.Status, "
-                + "       r.Valid_From, "
-                + "       r.Valid_To, "
-                + "       staff.UserID AS StaffID, "
-                + "       staff.Name AS StaffName, "
-                + "       r.Note "
-                + "FROM Registrations r "
-                + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
-                + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
-                + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "WHERE r.UserID = ? AND  r.Status != 'Cancelled' "
-                + "ORDER BY r.Registration_Time DESC "
-                + "OFFSET ? ROWS "
-                + "FETCH NEXT ? ROWS ONLY";
+        String sql = """
+                     SELECT r.RegistrationID, 
+                            u.UserID, 
+                            s.SubjectID, 
+                            s.Title AS SubjectName, 
+                            s.Thumbnail,  
+                            pp.PackageID, 
+                            pp.Name AS PackageName, 
+                            r.Registration_Time, 
+                            r.Total_Cost, 
+                            r.Status, 
+                            r.Valid_From, 
+                            r.Valid_To, 
+                            staff.UserID AS StaffID, 
+                            staff.Name AS StaffName, 
+                            r.Note 
+                     FROM Registrations r 
+                     JOIN Users u ON r.UserID = u.UserID 
+                     JOIN Subjects s ON r.SubjectID = s.SubjectID 
+                     JOIN Package_Price pp ON r.PackageID = pp.PackageID 
+                     LEFT JOIN Users staff ON r.StaffID = staff.UserID 
+                     WHERE r.UserID = ? 
+                     AND r.Status != 'Cancelled' 
+                     ORDER BY r.Registration_Time DESC 
+                     OFFSET ? ROWS 
+                     FETCH NEXT ? ROWS ONLY;
+                     """;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, offset);
@@ -601,6 +610,7 @@ public class RegistrationsDAO extends DBContext {
                 reg.setValidTo(rs.getDate("Valid_To"));
                 reg.setNote(rs.getString("Note"));
                 reg.setSubjectName(rs.getString("SubjectName"));
+                reg.setThumbnail(rs.getString("Thumbnail"));
                 reg.setStaffName(rs.getString("StaffName"));
                 list.add(reg);
             }
@@ -647,6 +657,7 @@ public class RegistrationsDAO extends DBContext {
                 + "       u.UserID, "
                 + "       s.SubjectID, "
                 + "       s.Title AS SubjectName, "
+                + "       s.Thumbnail, "
                 + "       pp.PackageID, "
                 + "       pp.Name AS PackageName, "
                 + "       r.Registration_Time, "
@@ -683,6 +694,7 @@ public class RegistrationsDAO extends DBContext {
                 reg.setValidTo(rs.getDate("Valid_To"));
                 reg.setNote(rs.getString("Note"));
                 reg.setSubjectName(rs.getString("SubjectName"));
+                reg.setThumbnail(rs.getString("Thumbnail"));
                 reg.setStaffName(rs.getString("StaffName"));
                 list.add(reg);
             }
@@ -706,6 +718,7 @@ public class RegistrationsDAO extends DBContext {
                 + "       u.UserID, "
                 + "       s.SubjectID, "
                 + "       s.Title AS SubjectName, "
+                + "       s.Thumbnail, "
                 + "       pp.PackageID, "
                 + "       pp.Name AS PackageName, "
                 + "       r.Registration_Time, "
@@ -721,7 +734,7 @@ public class RegistrationsDAO extends DBContext {
                 + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID  "
-                + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)AND r.Status = 'In-progress' "
+                + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)AND r.Status = 'Active' "
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
 
@@ -743,6 +756,7 @@ public class RegistrationsDAO extends DBContext {
                 reg.setValidTo(rs.getDate("Valid_To"));
                 reg.setNote(rs.getString("Note"));
                 reg.setSubjectName(rs.getString("SubjectName"));
+                reg.setThumbnail(rs.getString("Thumbnail"));
                 reg.setStaffName(rs.getString("StaffName"));
                 list.add(reg);
             }

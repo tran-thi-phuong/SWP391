@@ -58,7 +58,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 
         // Lock the account if maximum attempts are exceeded
         if (attempts >= MAX_ATTEMPTS) {
-            user.setStatus("deactive");
+            user.setStatus("Inactive");
             dao.updateUserStatus(user);
             session.invalidate(); // Invalidate the session
             response.sendRedirect("login.jsp");

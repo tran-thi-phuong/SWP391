@@ -2,19 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controller;
 
-import dal.BlogDAO; // Importing the BlogDAO class to access blog data
-import java.io.IOException; // Importing IOException for handling input/output errors
-import java.util.List; // Importing List to use for collections of blog objects
-import jakarta.servlet.ServletException; // Importing ServletException for servlet-related exceptions
-import jakarta.servlet.http.HttpServlet; // Importing HttpServlet for creating HTTP servlets
-import jakarta.servlet.http.HttpServletRequest; // Importing HttpServletRequest to handle request data
-import jakarta.servlet.http.HttpServletResponse; // Importing HttpServletResponse to handle response data
-import model.Blog; // Importing the Blog model class
-import model.BlogCategory; // Importing the BlogCategory model class
+import dal.BlogDAO;
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Blog;
+import model.BlogCategory;
 
-public class blogList extends HttpServlet {
+/**
+ *
+ * @author sonna
+ */
+@WebServlet(name = "BlogList", urlPatterns = {"/BlogList"})
+public class BlogList extends HttpServlet {
 
     private static final int PAGE_SIZE = 8; // Defining the number of blogs to display per page
 
@@ -41,7 +48,7 @@ public class blogList extends HttpServlet {
         // Parse the categoryID if present
         if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
             try {
-                categoryID = Integer.parseInt(categoryIdStr); // Convert categoryID to Integer
+                categoryID = Integer.valueOf(categoryIdStr); // Convert categoryID to Integer
             } catch (NumberFormatException e) {
                 categoryID = null; // If parsing fails, set categoryID to null
             }

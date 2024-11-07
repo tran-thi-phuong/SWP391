@@ -77,7 +77,7 @@
 
                 <p>
                     <strong>Content:</strong>
-                    <input type="text" name="content" id="contentInput" value="${currentQuestion.content}" required/>
+                    <textarea name="content" style="width: 100%; height: 150px;" required pattern="\S.*">${currentQuestion != null ? currentQuestion.content : ''}</textarea>
                 </p>
 
                 <p>

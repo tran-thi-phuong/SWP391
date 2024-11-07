@@ -38,7 +38,7 @@
                 <!-- Search bar -->
                 <div class="search-bar">
                     <h4>Search </h4>
-                    <form action="blogList" method="get"> <!-- Form to submit search queries -->
+                    <form action="BlogList" method="get"> <!-- Form to submit search queries -->
                         <input type="text" name="title" class="form-control" placeholder="Enter word to search" value="${param.title}">
                         <button type="submit" class="btn btn-primary mt-2">Search</button>
                     </form>
@@ -49,7 +49,7 @@
                     <ul class="list-group">
                         <c:forEach var="category" items="${categories}"> <!-- Loop through categories -->
                             <li class="list-group-item ${param.categoryID == category.blogCategoryId ? 'active' : ''}">
-                                <a href="blogList?categoryID=${category.blogCategoryId}&title=${param.title}">
+                                <a href="BlogList?categoryID=${category.blogCategoryId}&title=${param.title}">
                                     ${category.title} <!-- Display category title -->
                                 </a>
                             </li>
@@ -74,19 +74,19 @@
                     <ul class="pagination">
                         <c:if test="${currentPage > 1}"> <!-- If not on the first page, show previous link -->
                             <li class="page-item">
-                                <a class="page-link" href="blogList?page=${currentPage - 1}&title=${param.title}&categoryID=${param.categoryID}" aria-label="Previous">
+                                <a class="page-link" href="BlogList?page=${currentPage - 1}&title=${param.title}&categoryID=${param.categoryID}" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                         </c:if>
                         <c:forEach var="i" begin="1" end="${totalPages}"> <!-- Loop through total pages -->
                             <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                <a class="page-link" href="blogList?page=${i}&title=${param.title}&categoryID=${param.categoryID}">${i}</a>
+                                <a class="page-link" href="BlogList?page=${i}&title=${param.title}&categoryID=${param.categoryID}">${i}</a>
                             </li>
                         </c:forEach>
                         <c:if test="${currentPage < totalPages}"> <!-- If not on the last page, show next link -->
                             <li class="page-item">
-                                <a class="page-link" href="blogList?page=${currentPage + 1}&title=${param.title}&categoryID=${param.categoryID}" aria-label="Next">
+                                <a class="page-link" href="BlogList?page=${currentPage + 1}&title=${param.title}&categoryID=${param.categoryID}" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>

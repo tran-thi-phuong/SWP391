@@ -14,11 +14,13 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import model.CampaignMedia;
 import model.Campaigns;
 import model.Users;
+
 @MultipartConfig
 public class UpdateCampaign extends HttpServlet {
 
@@ -97,6 +99,7 @@ public class UpdateCampaign extends HttpServlet {
                 request.getRequestDispatcher("UpdateCampaign.jsp").forward(request, response);
                 return;
             }
+
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", "Invalid date format: " + e.getMessage());
             request.getRequestDispatcher("UpdateCampaign.jsp").forward(request, response);
@@ -104,8 +107,8 @@ public class UpdateCampaign extends HttpServlet {
         }
 
         // Determine campaign status
-        String status = request.getParameter("status");
-
+        Date currentDate = new Date(System.currentTimeMillis());
+        String status = (startDate.after(currentDate)) ? "Incomming" : "Running";
         Campaigns campaign = new Campaigns(campaignId, campaignName, description, startDate, endDate, status);
         boolean isUpdated = campaignDAO.updateCampaign(campaign);
 
@@ -156,7 +159,6 @@ public class UpdateCampaign extends HttpServlet {
         }
         return null;
     }
-    
 
     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
