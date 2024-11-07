@@ -58,7 +58,7 @@
                                             <span class="order-section">Order: ${lesson.order}</span>
                                         </span>
                                     <c:if test="${lesson.status eq 'Active'}">
-                                        <button class="btn btn-danger btn-status" onclick="window.location.href = 'updateLessonStatus?action=deactive&lessonId=${lesson.lessonID}&courseId=${requestScope.courseId}&courseName=${course.title}'">Deactive</button>
+                                        <button class="btn btn-danger btn-status" onclick="window.location.href = 'updateLessonStatus?action=deactive&lessonId=${lesson.lessonID}&courseId=${requestScope.courseId}&courseName=${requestScope.courseName}'">Deactive</button>
                                     </c:if>
                                     <c:if test="${lesson.status eq 'Inactive'}">
                                         <button class="btn btn-success btn-status" onclick="window.location.href = 'updateLessonStatus?action=active&lessonId=${lesson.lessonID}&courseId=${requestScope.courseId}&courseName=${requestScope.courseName}'">Active</button>

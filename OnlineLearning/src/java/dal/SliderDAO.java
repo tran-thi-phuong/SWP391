@@ -63,39 +63,6 @@ public class SliderDAO extends DBContext {
         return subjects;
     }
 
-    public void autoCreateSliders() throws SQLException {
-        List<Subject> topSubjects = getTopSubjects(5);
-        List<Blog> latestBlogs = getLatestBlogs(3);
-        String sql = "INSERT INTO Sliders (BlogID, SubjectID, Title, Image, Content) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            // Tạo slider từ khóa học bán chạy nhất
-            for (Subject subject : topSubjects) {
-                if (!isSliderExists(null, subject.getSubjectID())) {
-                    st.setNull(1, java.sql.Types.INTEGER);
-                    st.setInt(2, subject.getSubjectID());
-                    st.setString(3, "Slider for " + subject.getTitle());
-                    st.setString(4, subject.getThumbnail());
-                    st.setString(5, subject.getDescription());
-                    st.executeUpdate();
-                }
-            }
-
-            // Tạo slider từ bài viết mới nhất
-            for (Blog blog : latestBlogs) {
-                if (!isSliderExists(blog.getBlogId(), null)) {
-                    st.setInt(1, blog.getBlogId());
-                    st.setNull(2, java.sql.Types.INTEGER);
-                    st.setString(3, "Slider for " + blog.getTitle());
-                    st.setString(4, "default_image.jpg");
-                    st.setString(5, blog.getContent().substring(0, 100));
-                    st.executeUpdate();
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while creating sliders: " + e.getMessage());
-        }
-    }
-
     public boolean isSliderExists(Integer blogId, Integer subjectId) {
         String sql = "SELECT COUNT(*) FROM Sliders WHERE BlogID = ? OR SubjectID = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
@@ -122,6 +89,7 @@ public class SliderDAO extends DBContext {
                 slider.setTitle(rs.getString("Title"));
                 slider.setImage(rs.getString("Image"));
                 slider.setContent(rs.getString("Content"));
+                slider.setBacklink(rs.getString("Backlink"));
                 slider.setStatus(rs.getString("Status"));
                 sliders.add(slider);
             }
@@ -129,6 +97,21 @@ public class SliderDAO extends DBContext {
             System.out.println("Error while fetching sliders: " + e.getMessage());
         }
         return sliders;
+    }
+
+    public boolean addSlider(Slider slider) {
+        String sql = "INSERT INTO Sliders (title, image, backlink, status) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, slider.getTitle());
+            ps.setString(2, slider.getImage());
+            ps.setString(3, slider.getBacklink());
+            ps.setString(4, slider.getStatus());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public void updateSliderStatus(int sliderID, String status) {
@@ -187,5 +170,7 @@ public class SliderDAO extends DBContext {
     }
 
     public static void main(String[] args) {
+        SliderDAO slide = new SliderDAO();
+        System.out.println(slide.getAllSliders());
     }
 }

@@ -37,7 +37,7 @@
             <div class="form-group row-1">
                 <div class="">
                     <label for="desciption">Desciption</label>
-                    <textarea class="form-control"  id="description" name="description">${lesson.description}</textarea>
+                    <textarea class="form-control"  id="description" name="description" required>${lesson.description}</textarea>
                 </div>
                 <div class="topic-div">
                     <label for="topic">Topic</label>
@@ -52,11 +52,11 @@
             <div class="form-group row-2">
                 <div class="">
                     <label for="lesson-name" >Name</label>
-                    <input class="form-control" type="text" id="lesson-name" name="lesson-name" value="${lesson.title}">
+                    <input class="form-control" type="text" id="lesson-name" name="lesson-name" value="${lesson.title}" required>
                 </div>
                 <div class="order">
                     <label for="order">Order</label>
-                    <input class="form-control" type="number" min="1" name="order" id="order" value="${lesson.order}">
+                    <input class="form-control" type="number" min="1" name="order" id="order" value="${lesson.order}" required>
                 </div>
                 <div class="status-div">
                     <label for="status">Status</label>
@@ -79,7 +79,7 @@
             <div class="btn-save">
                 <button type="button" class="btn btn-dark" onclick="submitContent()">Submit</button>
                 <c:if test="${requestScope.action eq 'update'}">
-                    <a href="deleteLesson?lessonID=${lesson.lessonID}&courseID=${requestScope.courseID}&courseName=${requestScope.courseName}" class="btn btn-danger">Delete</a>
+                    <button type="button" onclick="doDelete()" class="btn btn-danger">Delete</button>
                 </c:if>
                 <a class="btn btn-dark" href="subjectLesson?courseId=${requestScope.courseID}&courseName=${requestScope.courseName}">Back</a>
             </div>
@@ -217,6 +217,14 @@
                 document.getElementById('content').value = content;
                 document.forms[0].submit();
             }
+            function doDelete() {
+    // Confirm the deletion action
+    if (confirm("Are you sure you want to delete this lesson?")) {
+        // Redirect to the delete URL if confirmed
+        window.location.href = `deleteLesson?lessonID=${lesson.lessonID}&courseID=${courseID}&courseName=${requestScope.courseName}`;
+    }
+}
+
         </script>
     </body>
 </html>
