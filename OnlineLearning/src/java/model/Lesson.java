@@ -10,7 +10,7 @@ package model;
  */
 public class Lesson {
     private int lessonID, subjectID, topicID, order;
-    private String title, content, description, status,mediaLink;
+    private String title, content, description, status;
 
     public Lesson() {
     }
@@ -24,7 +24,6 @@ public class Lesson {
         this.content = content;
         this.description = description;
         this.status = status;
-        this.mediaLink=mediaLink;
     }
 
     public int getLessonID() {
@@ -90,17 +89,7 @@ public class Lesson {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public String getMediaLink() {
-        return mediaLink;
-    }
-
-    public void setMediaLink(String mediaLink) {
-        this.mediaLink = mediaLink;
-    }
-    
-    
-
+   
     @Override
     public String toString() {
         return "Lesson{" + "lessonID=" + lessonID + ", subjectID=" + subjectID + ", topicID=" + topicID + ", order=" + order + ", title=" + title + ", content=" + content + ", description=" + description + ", status=" + status + '}';
