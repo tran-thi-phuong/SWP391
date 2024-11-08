@@ -50,7 +50,7 @@
                     <button type="submit">Filter</button> <!-- Button to submit the filter form -->
                 </form>
             </div>
-
+<a href="AddSlider" class="btn btn-primary mb-3">Add Slider</a>
             <div>
                 <!-- Checkboxes to toggle the visibility of different columns in the table -->
                 <input type="checkbox" onclick="toggleColumn('col-id')" checked> ID

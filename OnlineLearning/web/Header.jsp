@@ -41,15 +41,6 @@
                     </c:if>
                 </li>
 
-                    <li class="nav-item">
-                        <c:if test="${sessionScope.user.role=='Customer' || empty sessionScope.user}">
-                             <a class="nav-link" href="BlogList">News</a>
-                        </c:if>
-                        <c:if test="${sessionScope.user.role=='Admin' || sessionScope.user.role=='Marketing' || sessionScope.user.role=='Instructor'}">
-                             <a class="nav-link" href="PostDetail">News</a>
-                        </c:if>
-                    </li>
-
                 <li class="nav-item">
                     <c:if test="${sessionScope.user.role == 'Instructor'}">
                         <a class="nav-link active" href="QuestionList">Question List</a>
@@ -76,12 +67,22 @@
                     </c:if>
                 </li>
 
+                <li class="nav-item">
+                    <c:if test="${sessionScope.user.role == 'Customer' || empty sessionScope.user}">
+                        <a class="nav-link" href="BlogList">News</a>
+                    </c:if>
+                    <c:if test="${sessionScope.user.role == 'Marketing'}">
+                        <a class="nav-link" href="PostDetail">News</a>
+                    </c:if>
+                </li>
+
 
                 <li class="nav-item">
                     <c:if test="${sessionScope.user.role == 'Marketing'}">
                         <a class="nav-link active" href="sliderList">Slider</a>
                     </c:if>
                 </li>
+
             </ul>
         </div>
 
@@ -106,7 +107,7 @@
                     <c:if test="${sessionScope.user.role == 'Customer'}">
                         <li><a class="dropdown-item" href="myRegistration">My Registration</a></li>
                         <li><a class="dropdown-item" href="myCourse">My Courses</a></li>
-                    </c:if>
+                        </c:if>
 
                     <li><a class="dropdown-item" href="profile.jsp">Profile</a></li>
                     <li><a class="dropdown-item" href="Logout">Logout</a></li>

@@ -30,6 +30,13 @@ public class Slider {
         this.image = image;
         this.content = content;
     }
+    
+    public Slider(String title, String image, String backlink, String status) {
+        this.title = title;
+        this.image = image;
+        this.backlink = backlink;
+        this.status = status;
+    }
 
     // Getter và Setter cho tất cả các thuộc tính
     public int getSliderID() {

@@ -97,7 +97,7 @@
                     <div class="form-group">
                         <label class="form-label">Course Thumbnail:</label>
                         <div>
-                            <img src="images/${subject.thumbnail}" alt="Subject Thumbnail" 
+                            <img src="${subject.thumbnail}" alt="Subject Thumbnail" 
                                  class="img-thumbnail" style="width: 150px; height: auto;">
                         </div>
                         <input type="file" name="thumbnail">
