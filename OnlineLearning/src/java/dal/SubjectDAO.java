@@ -690,11 +690,18 @@ public class SubjectDAO extends DBContext {
         return subjects;
     }
 
-    public List<Subject> searchSubjectsWithFilters(String query, String categoryId, String status, int offset, int limit) {
+    public List<Subject> searchSubjectsWithFilters(String query, String categoryId, String status,
+            int offset, int limit, Integer ownerID) {
         List<Subject> subjects = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
+        StringBuilder sql = new StringBuilder(
+                "SELECT s.*, u.Username FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
 
-        // Xây dựng câu lệnh SQL với các điều kiện lọc
+        // Add owner filter for instructors
+        if (ownerID != null) {
+            sql.append(" AND s.OwnerID = ?");
+        }
+
+        // Add search filters
         if (query != null && !query.trim().isEmpty()) {
             sql.append(" AND s.Title LIKE ?");
         }
@@ -704,11 +711,18 @@ public class SubjectDAO extends DBContext {
         if (status != null && !status.trim().isEmpty()) {
             sql.append(" AND s.Status = ?");
         }
+
         sql.append(" ORDER BY s.Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             int paramIndex = 1;
 
+            // Set owner parameter first if it exists
+            if (ownerID != null) {
+                ps.setInt(paramIndex++, ownerID);
+            }
+
+            // Set other filter parameters
             if (query != null && !query.trim().isEmpty()) {
                 ps.setString(paramIndex++, "%" + query + "%");
             }
@@ -718,6 +732,8 @@ public class SubjectDAO extends DBContext {
             if (status != null && !status.trim().isEmpty()) {
                 ps.setString(paramIndex++, status);
             }
+
+            // Set pagination parameters
             ps.setInt(paramIndex++, offset);
             ps.setInt(paramIndex, limit);
 
@@ -739,14 +755,19 @@ public class SubjectDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("Error in searchSubjectsWithFilters: " + e.getMessage());
         }
-
         return subjects;
     }
 
-    public int getTotalSubjectsWithFilters(String query, String categoryId, String status) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Subjects s WHERE 1=1");
+    public int getTotalSubjectsWithFilters(String query, String categoryId, String status, Integer ownerID) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) FROM Subjects s WHERE 1=1");
 
-        // Xây dựng câu lệnh SQL với các điều kiện lọc
+        // Add owner filter for instructors
+        if (ownerID != null) {
+            sql.append(" AND s.OwnerID = ?");
+        }
+
+        // Add search filters
         if (query != null && !query.trim().isEmpty()) {
             sql.append(" AND s.Title LIKE ?");
         }
@@ -760,6 +781,12 @@ public class SubjectDAO extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             int paramIndex = 1;
 
+            // Set owner parameter first if it exists
+            if (ownerID != null) {
+                ps.setInt(paramIndex++, ownerID);
+            }
+
+            // Set other filter parameters
             if (query != null && !query.trim().isEmpty()) {
                 ps.setString(paramIndex++, "%" + query + "%");
             }
@@ -767,7 +794,7 @@ public class SubjectDAO extends DBContext {
                 ps.setInt(paramIndex++, Integer.parseInt(categoryId));
             }
             if (status != null && !status.trim().isEmpty()) {
-                ps.setString(paramIndex, status);
+                ps.setString(paramIndex++, status);
             }
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -778,7 +805,77 @@ public class SubjectDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("Error in getTotalSubjectsWithFilters: " + e.getMessage());
         }
-
         return 0;
     }
+
+    public int getTotalSubjects(Integer ownerId) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Subjects WHERE 1=1");
+
+        // Add filter for owner if present
+        if (ownerId != null) {
+            sql.append(" AND OwnerID = ?");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            if (ownerId != null) {
+                ps.setInt(1, ownerId);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getTotalSubjects: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public List<Subject> getAllSubjects(int offset, int recordsPerPage, Integer ownerId) {
+        List<Subject> subjects = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT s.*, u.Username FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
+
+        // Thêm điều kiện lọc theo owner nếu có
+        if (ownerId != null) {
+            sql.append(" AND s.OwnerID = ?");
+        }
+
+        // Thêm điều kiện phân trang
+        sql.append(" ORDER BY s.SubjectID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            // Thiết lập tham số ownerId nếu có
+            if (ownerId != null) {
+                ps.setInt(paramIndex++, ownerId);
+            }
+
+            // Thiết lập tham số phân trang
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex, recordsPerPage);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Subject subject = new Subject();
+                    subject.setSubjectID(rs.getInt("SubjectID"));
+                    subject.setUserID(rs.getInt("OwnerID"));
+                    subject.setTitle(rs.getString("Title"));
+                    subject.setDescription(rs.getString("Description"));
+                    subject.setSubjectCategoryId(rs.getInt("Subject_CategoryID"));
+                    subject.setStatus(rs.getString("Status"));
+                    subject.setThumbnail(rs.getString("Thumbnail"));
+                    subject.setUpdateDate(rs.getDate("Update_Date"));
+                    subject.setUserName(rs.getString("Username"));
+                    subjects.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getAllSubjects: " + e.getMessage());
+        }
+        return subjects;
+    }
+
 }
