@@ -26,6 +26,7 @@ public class updateRegistration extends HttpServlet { // Class names should star
     private static final long serialVersionUID = 1L;
     private final RegistrationsDAO registrationsDAO = new RegistrationsDAO();
     private final PackagePriceDAO packageDAO = new PackagePriceDAO();
+    private final PaymentDAO paymentDAO = new PaymentDAO();
     private final Customer_SubjectDAO csDAO = new Customer_SubjectDAO();
     private final LessonDAO lessonDAO = new LessonDAO();
     private final Lesson_UserDAO lesson_User = new Lesson_UserDAO();
@@ -112,6 +113,7 @@ public class updateRegistration extends HttpServlet { // Class names should star
         Date validFrom = (Date) currentRegistration.getValidFrom();
         Date validTo = (Date) currentRegistration.getValidTo();
         String customerEmail = request.getParameter("customerEmail");
+        double amount = currentRegistration.getTotalCost();
 
         if (customerEmail == null || customerEmail.isEmpty()) {
             request.setAttribute("error", "Customer email is missing.");
@@ -145,8 +147,16 @@ public class updateRegistration extends HttpServlet { // Class names should star
                     return;
                 }
             }
-            // Check if all lessons were added successfully
+
+            // Add payment after successful registration update and lesson addition
+            boolean paymentAdded = paymentDAO.addPayment(userID, subjectID, amount);
+            if (!paymentAdded) {
+                request.setAttribute("error", "Failed to add payment record.");
+                request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
+                return;
+            }
             if (allLessonsAdded) {
+
                 sendEmail(customerEmail, request); // Notify customer on status update
             } else {
                 request.setAttribute("error", "Failed to add all lessons for the customer.");

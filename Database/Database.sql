@@ -162,6 +162,7 @@ CREATE TABLE Sliders (
     Image NVARCHAR(255),
 	Status NVARCHAR(10) NOT NULL DEFAULT 'Show',
     Content NVARCHAR(MAX),
+Backlink NVARCHAR(MAX),
     FOREIGN KEY (BlogID) REFERENCES Blogs(BlogID),
     FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
 );

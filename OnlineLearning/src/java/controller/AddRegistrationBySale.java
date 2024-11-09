@@ -37,6 +37,7 @@ public class AddRegistrationBySale extends HttpServlet {
     private final Customer_SubjectDAO csDAO = new Customer_SubjectDAO();
     private final LessonDAO lessonDAO = new LessonDAO();
     private final Lesson_UserDAO lesson_User = new Lesson_UserDAO();
+    private final PaymentDAO paymentDAO = new PaymentDAO();
 
     // Generates a random string of specified length
     public static String generateRandomString(int length) {
@@ -154,7 +155,7 @@ public class AddRegistrationBySale extends HttpServlet {
                 // Check if there's already a registration for this user, subject, and package with a restricted status
                 if (registrationsDAO.hasExistingRegistration(userId, subjectId, packageId)) {
                     // Set an error message and forward to the JSP to display the error
-                    request.setAttribute("errorMessage", "A registration already exists with the same user, subject, and package ID with a status of 'Processing', 'Active', or 'Inactive'.You can not add anymore:3");
+                    request.setAttribute("errorMessage", "A registration already exists with the same user, subject, and package ID with a status of 'Processing', 'Active', or 'Inactive'. You cannot add any more.");
                     request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
                     return; // Exit if a duplicate exists
                 }
@@ -167,6 +168,8 @@ public class AddRegistrationBySale extends HttpServlet {
             // Add the registration to the database
             addRegistration(userId, subjectId, packageId, totalCost, staffId, note);
             csDAO.addCustomerSubject(subjectId, userId);
+
+            // Add lessons to the user
             List<Lesson> lessons = lessonDAO.getLessonBySubjectId(subjectId);
             if (lessons == null || lessons.isEmpty()) {
                 request.setAttribute("errorMessage", "No lessons found for the subject.");
@@ -184,8 +187,18 @@ public class AddRegistrationBySale extends HttpServlet {
                     return;
                 }
             }
-            // Redirect to the registration list page after successful processing
-            response.sendRedirect(request.getContextPath() + "/listRegistration");
+
+            // Process payment after successful registration and lesson addition
+            boolean paymentSuccess = paymentDAO.addPayment(userId, subjectId, totalCost);
+
+            if (paymentSuccess) {
+                // Redirect to the registration list page or display success message
+                response.sendRedirect(request.getContextPath() + "/listRegistration?message=Registration and payment successful.");
+            } else {
+                // Set an error message if payment insertion failed
+                request.setAttribute("errorMessage", "Registration was successful, but payment processing failed.");
+                request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
+            }
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid number format in form data.");
             request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response); // Forward to error page
