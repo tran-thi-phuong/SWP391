@@ -4,28 +4,17 @@
  */
 package controller;
 
-import dal.CategoryDAO;
 import dal.LessonDAO;
-import dal.PackagePriceDAO;
 import dal.PagesDAO;
 import dal.RolePermissionDAO;
-import dal.SubjectDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.Date;
 import java.util.List;
-import model.PackagePrice;
-import model.Subject;
-import model.SubjectCategory;
 import model.SubjectTopic;
 import model.Users;
 
@@ -36,76 +25,93 @@ import model.Users;
 @WebServlet(urlPatterns = {"/SubjectDetailDimension"})
 public class SubjectDimension extends HttpServlet {
 
+    // Handles GET request to display the subject details
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//           if (!hasPermission(request, response)) return;
-        String subjectId = request.getParameter("id");
-        request.getSession().setAttribute("subjectID", subjectId);
-        LessonDAO lDAO = new LessonDAO();
-        List<SubjectTopic> l = lDAO.getAllLessonTopicBySubjectId(Integer.parseInt(subjectId));
-        request.setAttribute("dimensions", l);
+        // Check if the user has permission to access this page
+        if (!hasPermission(request, response)) {
+            return;
+        }
 
-        // Chuyển tiếp đến JSP
+        String subjectId = request.getParameter("id"); // Get subject ID from request parameters
+        request.getSession().setAttribute("subjectID", subjectId); // Store subject ID in session
+
+        // Get the list of lessons/topics related to the subject from the database
+        LessonDAO lDAO = new LessonDAO();
+        List<SubjectTopic> topics = lDAO.getAllLessonTopicBySubjectId(Integer.parseInt(subjectId));
+        request.setAttribute("dimensions", topics); // Set the topics in request attribute
+
+        // Forward the request to the JSP page for rendering
         request.getRequestDispatcher("/SubjectDetailDimension.jsp").forward(request, response);
     }
 
+    // Handles POST request for actions like add, update, or delete topic
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy dữ liệu từ request
+        // Get the action parameter from the request (add, update, delete)
         String action = request.getParameter("action");
-        String subjectId = request.getParameter("subjectId");
+        String subjectId = request.getParameter("subjectId"); // Get subject ID from request parameters
 
         try {
             LessonDAO lessonDAO = new LessonDAO();
 
+            // Perform actions based on the specified action parameter
             if ("add".equals(action)) {
-                addTopic(request, lessonDAO, subjectId);
+                addTopic(request, lessonDAO, subjectId); // Add a new topic
             } else if ("update".equals(action)) {
-                updateTopic(request, lessonDAO, subjectId);
+                updateTopic(request, lessonDAO, subjectId); // Update an existing topic
             } else if ("delete".equals(action)) {
-                deleteTopic(request, lessonDAO, subjectId); // Thêm subjectId vào delete
+                deleteTopic(request, lessonDAO, subjectId); // Delete a topic
             }
+
+            // Check if there are any error messages
             String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null) {
-                // Nếu có lỗi, chuyển tiếp đến trang JSP để hiển thị thông báo
+                // If there is an error, forward the request to the JSP page to show the message
                 request.getRequestDispatcher("/SubjectDetailDimension.jsp").forward(request, response);
                 return;
             }
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Error processing request: " + e.getMessage());
+            // Forward the request to the JSP page to show the error message
             request.getRequestDispatcher("/SubjectDetailDimension.jsp").forward(request, response);
-            return; // Thêm return để tránh gọi response.sendRedirect
+            return; // Return to prevent the redirect from being called
         }
 
+        // Redirect to the SubjectDetailDimension.jsp page after successfully processing the request
         response.sendRedirect("SubjectDetailDimension.jsp");
     }
 
+    // Adds a new topic for the subject
     private void addTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
-        int subjectID = Integer.parseInt(subjectId);
-        String topicName = request.getParameter("dimensionName");
-        int order = Integer.parseInt(request.getParameter("order"));
+        int subjectID = Integer.parseInt(subjectId); // Parse subject ID from request
+        String topicName = request.getParameter("dimensionName"); // Get the topic name
+        int order = Integer.parseInt(request.getParameter("order")); // Get the order for the topic
 
+        // Check if the order is unique for the subject
         if (lessonDAO.isOrderUnique(subjectID, order)) {
             SubjectTopic topic = new SubjectTopic();
             topic.setSubjectID(subjectID);
             topic.setTopicName(topicName);
             topic.setOrder(order);
 
+            // Add the new topic to the database
             lessonDAO.addLessonTopic(topic);
         } else {
+            // Set an error message if the order is not unique
             request.setAttribute("errorMessage", "The order must be unique for each subject.");
-
         }
     }
 
+    // Updates an existing topic for the subject
     private void updateTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
         // Retrieve information from the request
-        int topicID = Integer.parseInt(request.getParameter("id"));
-        int subjectID = Integer.parseInt(subjectId);
-        String newTopicName = request.getParameter("dimensionName");
-        int newOrder = Integer.parseInt(request.getParameter("order"));
+        int topicID = Integer.parseInt(request.getParameter("id")); // Get topic ID
+        int subjectID = Integer.parseInt(subjectId); // Get subject ID
+        String newTopicName = request.getParameter("dimensionName"); // Get the new topic name
+        int newOrder = Integer.parseInt(request.getParameter("order")); // Get the new order
 
         // Fetch the old topic from the database for comparison
         SubjectTopic oldTopic = lessonDAO.getLessonTopicById(topicID);
@@ -129,32 +135,36 @@ public class SubjectDimension extends HttpServlet {
         }
     }
 
+    // Deletes a topic from the subject
     private void deleteTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
-        int topicId = Integer.parseInt(request.getParameter("id"));
-        lessonDAO.deleteLessonTopic(topicId, Integer.parseInt(subjectId)); // Gọi delete với cả topicId và subjectId
+        int topicId = Integer.parseInt(request.getParameter("id")); // Get topic ID from request
+        lessonDAO.deleteLessonTopic(topicId, Integer.parseInt(subjectId)); // Delete the topic from the database
     }
 
+    // Checks if the user has permission to access this page
     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
-        Users currentUser = (Users) session.getAttribute("user");
+        Users currentUser = (Users) session.getAttribute("user"); // Get the current user from the session
+
+        // If the user is not logged in, redirect to the login page
         if (currentUser == null) {
             response.sendRedirect("login.jsp");
             return false;
         }
 
         RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
-        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
-        String userRole = currentUser.getRole();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString()); // Get the page ID from the URL
+        String userRole = currentUser.getRole(); // Get the user's role
 
+        // Check if the user has permission to access this page
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-            response.sendRedirect(request.getContextPath() + "/Homepage");
-
+            response.sendRedirect(request.getContextPath() + "/Homepage"); // Redirect to homepage if no permission
             return false;
         } else if (pageID == null) {
-            response.sendRedirect("error.jsp");
+            response.sendRedirect("error.jsp"); // Redirect to error page if no page ID
             return false;
         }
 
-        return true;
+        return true; // User has permission to access the page
     }
 }
