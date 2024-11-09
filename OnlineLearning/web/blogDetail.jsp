@@ -79,7 +79,7 @@
                     <h4>Latest news</h4>
                     <c:forEach var="latestBlog" items="${latestBlogs}">
                         <div class="latest-blog-item mb-3">
-                            <a href="blogDetail?blogId=${latestBlog.blogId}">
+                            <a class="text-primary" href="blogDetail?blogId=${latestBlog.blogId}">
                                 <strong>${latestBlog.title}</strong>
                             </a>
                             <p>Created at: ${latestBlog.createAt}</p>

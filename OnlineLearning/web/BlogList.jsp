@@ -49,7 +49,7 @@
                     <ul class="list-group">
                         <c:forEach var="category" items="${categories}"> <!-- Loop through categories -->
                             <li class="list-group-item ${param.categoryID == category.blogCategoryId ? 'active' : ''}">
-                                <a href="BlogList?categoryID=${category.blogCategoryId}&title=${param.title}">
+                                <a class="text-primary" href="BlogList?categoryID=${category.blogCategoryId}&title=${param.title}">
                                     ${category.title} <!-- Display category title -->
                                 </a>
                             </li>
@@ -61,7 +61,7 @@
             <div class="col-md-9"> <!-- Main content area for blog posts -->
                 <c:forEach var="blog" items="${blogs}"> <!-- Loop through blog posts -->
                     <div class="blog-post">
-                        <h2><a href="blogDetail?blogId=${blog.blogId}">${blog.title}</a></h2> <!-- Blog title with link to detail page -->
+                        <h2><a class="text-primary" href="blogDetail?blogId=${blog.blogId}">${blog.title}</a></h2> <!-- Blog title with link to detail page -->
 
                         <div class="blog-info">
                             Post by ${blog.userId.name} at ${blog.createAt} <!-- Blog post author and creation date -->

@@ -164,13 +164,14 @@ public class SliderDAO extends DBContext {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }   
 
         return sliders;
     }
 
     public static void main(String[] args) {
         SliderDAO slide = new SliderDAO();
-        System.out.println(slide.getAllSliders());
+        Slider c = new Slider("a","images/thumbnail_chinese.jpg","https://www.msn.com/vi-vn/money/news/musk-c%C3%B3-th%C3%AAm-g%E1%BA%A7n-27-t%E1%BB%B7-usd-khi-%C3%B4ng-trump-%C4%91%E1%BA%AFc-c%E1%BB%AD/ar-AA1tEGQu?ocid=msedgntp&pc=DCTS&cvid=bd18f0b0b293475baeb0d455e0699bf6&ei=20","Show");
+        System.out.println(slide.addSlider(c));
     }
 }

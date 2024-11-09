@@ -3,17 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/model/Lesson.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/ListSubject.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/myRegistration.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/RegistrationsDAO.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/SubjectDAO.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/Header.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/Customer_SubjectDAO.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/Homepage.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/LessonView.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/LessonView.java</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/SubjectView.jsp</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/SliderDAO.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/AddSlider.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/web/Homepage.jsp</file>
-            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/LessonDAO.java</file>
+            <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/sliderList.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/controller/SubjectView.java</file>
             <file>file:/D:/SWP391%20project/SWP391/OnlineLearning/src/java/dal/DBContext.java</file>
         </group>

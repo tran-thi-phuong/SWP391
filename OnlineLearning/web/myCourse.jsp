@@ -53,23 +53,6 @@
             </form>
         </div>
 
-        <!-- JavaScript to handle page size selection and store it in local storage -->
-        <script>
-            function updatePageSize(select) {
-                const selectedValue = select.value;
-                localStorage.setItem('pageSize', selectedValue);
-                select.form.submit(); // Submit the form after selection
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                const savedPageSize = localStorage.getItem('pageSize');
-                if (savedPageSize) {
-                    const pageSizeSelect = document.getElementById('pageSize');
-                    pageSizeSelect.value = savedPageSize; // Set the selected value based on local storage
-                }
-            });
-        </script>
-
         <!-- Display the list of courses if not empty -->
         <c:if test="${not empty courseList}">
             <div id="registrations">
@@ -124,5 +107,20 @@
 
         <!-- Include the footer from another JSP file -->
         <%@include file="Footer.jsp" %>
+          <script>
+            function updatePageSize(select) {
+                const selectedValue = select.value;
+                localStorage.setItem('pageSize', selectedValue);
+                select.form.submit(); // Submit the form after selection
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const savedPageSize = localStorage.getItem('pageSize');
+                if (savedPageSize) {
+                    const pageSizeSelect = document.getElementById('pageSize');
+                    pageSizeSelect.value = savedPageSize; // Set the selected value based on local storage
+                }
+            });
+        </script>
     </body>
 </html>
