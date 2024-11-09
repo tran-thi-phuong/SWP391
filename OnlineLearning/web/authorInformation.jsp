@@ -31,13 +31,13 @@
             if (author != null) {
         %>
         <div class="container">
-            <h1>Thông tin tác giả</h1>
-            <p><strong>Tên:</strong> <%= author.getName() %></p>
+            <h1>Author Information</h1>
+            <p><strong>Fullname:</strong> <%= author.getName() %></p>
             <p><strong>Email:</strong> <%= author.getEmail() %></p>
-            <p><strong>Số điện thoại:</strong> <%= author.getPhone() %></p>
+            <p><strong>Phone:</strong> <%= author.getPhone() %></p>
         </div>
         <% } else { %>
-        <p>Tác giả không tồn tại!</p>
+        <p>Author is not existed!</p>
         <% } %>
         <%@include file="Footer.jsp"%>
           

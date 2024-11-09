@@ -140,7 +140,7 @@ header h1 {
   padding: 1rem;
   box-shadow: var(--shadow);
   transition: transform var(--transition), box-shadow var(--transition);
-  height: 280px;
+  height: 400px;
   display: flex;
   flex-direction: column;
 }

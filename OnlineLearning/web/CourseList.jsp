@@ -58,7 +58,7 @@
                         <c:when test="${not empty subjects}">
                             <c:forEach items="${subjects}" var="subject">
                                 <article class="subject-item">
-                                    <div class="center-itself" style="background: url('${subject.thumbnail}'); background-size: cover; height: 100px"></div>
+                                    <div class="center-itself" style="background: url('${subject.thumbnail}'); background-size: cover; height: 220px"></div>
                                     <h2>
                                         <a href="registerCourse?id=${subject.subjectID}" style="text-decoration: none; color: black">${subject.title}</a>
                                     </h2>
@@ -68,7 +68,7 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <p>No subjects found.</p>
+                            <p>No course found.</p>
                         </c:otherwise>
                     </c:choose>
                 </main>

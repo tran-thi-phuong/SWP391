@@ -67,7 +67,7 @@
                 <div class="title">
                     <div class="title-info">Course Detail</div>
                 </div>
-                <div class="center-itself", style="background: url('${currentSub.thumbnail}'); background-size: cover; height: 100px"></div>
+                <div class="center-itself", style="background: url('${currentSub.thumbnail}'); background-size: cover; height: 350px"></div>
                 <div class="course-details">
                     <a href="#">
                         <h1>${currentSub.title}</h1>

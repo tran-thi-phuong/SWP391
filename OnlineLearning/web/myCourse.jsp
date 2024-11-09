@@ -68,7 +68,7 @@
                             </p>
                             <p class="registration-card-text validFrom"><strong>Valid From:</strong> ${course.validFrom}</p>
                             <p class="registration-card-text validTo"><strong>Valid To:</strong> ${course.validTo}</p>
-                            <p class="registration-card-text staffName"><strong>Teacher:</strong> ${course.staffName}</p>
+                            
                             <p class="registration-card-text"><strong>Completion:</strong> ${course.progress}%</p>
                         </div>
                     </div>

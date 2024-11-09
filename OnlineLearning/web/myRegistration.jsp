@@ -106,7 +106,7 @@
                             <p class="registration-card-text validFrom"><strong>Valid From:</strong> ${registration.validFrom}</p>
                             <p class="registration-card-text validTo"><strong>Valid To:</strong> ${registration.validTo}</p>
                             <p class="registration-card-text status"><strong>Status:</strong> ${registration.status}</p>
-                            <p class="registration-card-text staffName"><strong>Teacher:</strong> ${registration.staffName}</p>
+                            
                         </div>
                         <div class="registration-card-footer">
                             <c:if test="${registration.status == 'Processing'}"> <!-- Show cancel button only for submitted registrations -->

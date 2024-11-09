@@ -44,7 +44,7 @@
                         <c:when test="${not empty lesson}">
                             <h3>${lesson.title}</h3>
                             <p><strong>Description:</strong> ${lesson.description}</p>
-                            <p><strong>Content:</strong> ${lesson.content}</p>
+                            <p>${lesson.content}</p>
 
                             <%-- Check lesson status to determine if "Mark as Completed" button should be shown --%>
                             <c:choose>

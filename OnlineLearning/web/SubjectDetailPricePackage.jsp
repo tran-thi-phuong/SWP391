@@ -131,9 +131,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addPackageModalLabel">Add New Package</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                
                             </div>
                             <div class="modal-body">
                                 <form id="addPackageForm">
@@ -152,7 +150,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              
                                 <button type="button" class="btn btn-primary" onclick="addPackage()">Add Package</button>
                             </div>
                         </div>
@@ -166,9 +164,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editPackageModalLabel">Edit Package</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                
                             </div>
                             <div class="modal-body">
                                 <form id="editPackageForm">
@@ -188,7 +184,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                
                                 <button type="button" class="btn btn-primary" onclick="updatePackage()">Update Package</button>
                             </div>
                         </div>

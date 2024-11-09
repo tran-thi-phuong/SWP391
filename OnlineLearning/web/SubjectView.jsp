@@ -19,7 +19,7 @@
             // Function to toggle the visibility of lessons based on the lesson topic ID
             function toggleLessons(lessonTopicId) {
                 const lessonsContainer = document.getElementById('lessons-' + lessonTopicId);
-                lessonsContainer.style.display = (lessonsContainer.style.display === 'none' || lessonsContainer.style.display === '') ? 'block' : 'none';
+                lessonsContainer.style.display = (lessonsContainer.style.display === 'block' || lessonsContainer.style.display === '') ? 'none' : 'block';
             }
 
             // Function to hide or show the lesson topic and its lessons when checkbox is clicked
@@ -29,12 +29,12 @@
 
                 if (checkbox.checked) {
                     // Hide topic and lessons if checkbox is checked
-                    topicElement.style.display = 'none';
-                    lessonsContainer.style.display = 'none';
-                } else {
-                    // Show topic and lessons if checkbox is unchecked
                     topicElement.style.display = 'block';
                     lessonsContainer.style.display = 'block';
+                } else {
+                    // Show topic and lessons if checkbox is unchecked
+                    topicElement.style.display = 'none';
+                    lessonsContainer.style.display = 'none';
                 }
             }
         </script>
@@ -52,7 +52,7 @@
                         <c:forEach var="lessonTopic" items="${subject.lessonTopics}">
                             <label>
                                 <input type="checkbox" name="lessonTopic" value="${lessonTopic.topicID}" 
-                                       onchange="toggleLessonTopicVisibility(this, '${lessonTopic.topicID}')">
+                                       onchange="toggleLessonTopicVisibility(this, '${lessonTopic.topicID}')" checked>
                                 ${lessonTopic.name}
                             </label>
                         </c:forEach>

@@ -127,9 +127,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addDimensionModalLabel">Add New Topic</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                               
                             </div>
                             <div class="modal-body">
                                 <form id="addDimensionForm">
@@ -144,7 +142,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                             
                                 <button type="button" class="btn btn-primary" onclick="addDimension()">Add Topic</button>
                             </div>
                         </div>
@@ -157,9 +155,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editDimensionModalLabel">Edit Topic</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                               
                             </div>
                             <div class="modal-body">
                                 <form id="editDimensionForm">
@@ -168,14 +164,11 @@
                                         <label for="editDimensionName">Topic Name</label>
                                         <input type="text" class="form-control" id="editDimensionName" required>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="editDimensionOrder">Order</label>
-                                        <input type="number" class="form-control" id="editDimensionOrder" required>
-                                    </div>
+                                    
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                
                                 <button type="button" class="btn btn-primary" onclick="updateDimension()">Update Topic</button>
                             </div>
                         </div>
@@ -213,11 +206,11 @@
                                     function editDimension(dimensionId) {
                                         const row = $('#dimension-' + dimensionId);
                                         const topicName = row.find('td:nth-child(2)').text();
-                                        const order = row.find('td:nth-child(3)').text();
+                                       
 
                                         $('#editDimensionId').val(dimensionId);
                                         $('#editDimensionName').val(topicName);
-                                        $('#editDimensionOrder').val(order);
+                                      
                                         $('#editDimensionModal').modal('show');
                                     }
 

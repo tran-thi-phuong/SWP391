@@ -96,6 +96,7 @@ public class SubjectDimension extends HttpServlet {
             lessonDAO.addLessonTopic(topic);
         } else {
             request.setAttribute("errorMessage", "The order must be unique for each subject.");
+            
         }
     }
 
@@ -105,14 +106,11 @@ public class SubjectDimension extends HttpServlet {
         topic.setSubjectID(Integer.parseInt(subjectId));
         topic.setTopicName(request.getParameter("dimensionName"));
         topic.setOrder(Integer.parseInt(request.getParameter("order")));
-        int subjectID = Integer.parseInt(subjectId);
-        int order = Integer.parseInt(request.getParameter("order"));
+        
 
-        if (lessonDAO.isOrderUnique(subjectID, order)) {
+       
             lessonDAO.updateLessonTopic(topic);
-        } else {
-            request.setAttribute("errorMessage", "The order must be unique for each subject.");
-        }
+        
     }
 
     private void deleteTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
