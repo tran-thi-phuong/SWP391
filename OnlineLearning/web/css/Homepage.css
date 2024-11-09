@@ -12,7 +12,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #FAEBD7;
 }
 
 /*---------------------------------------
@@ -149,12 +149,12 @@ input[type="radio"] {
 #subjects .card-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--secondary-color);
+    color: red;
     margin-bottom: 0.75rem;
 }
 
 #subjects .card-text {
-    color: var(--p-color);
+    color: red;
     font-size: 0.875rem;
     margin-bottom: 0.5rem;
 }
@@ -175,8 +175,8 @@ input[type="radio"] {
 }
 
 /* Border chung cho toàn bộ khu vực chứa Blog */
-.col-md-3 .container {
-    border: 3px solid #333; /* Đặt border dày hơn (3px) */
+.col-md-3 .container2 {
+    border: 3px solid black; /* Đặt border dày hơn (3px) */
     border-radius: 12px; /* Góc tròn cho border */
     padding: 15px; /* Khoảng cách giữa border và nội dung */
 }
@@ -263,4 +263,9 @@ ul.list-unstyled li a:hover {
 #latest-blogs a:hover {
     color: var(--primary-color);
 }
+
+.blog-color{
+    background-color: white;
+}
+
 

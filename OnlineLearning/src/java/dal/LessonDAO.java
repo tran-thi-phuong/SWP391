@@ -66,7 +66,8 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
-     public List<Lesson> getLessonBySubjectId(int subjectID) {
+
+    public List<Lesson> getLessonBySubjectId(int subjectID) {
         List<Lesson> list = new ArrayList<>();
         String sql = "select * from Lessons where SubjectID = ? ";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -90,6 +91,7 @@ public class LessonDAO extends DBContext {
         }
         return list;
     }
+
     // func for searching lesson by name
     public List<Lesson> searchLesson(int subjectID, String searchValue) {
         List<Lesson> list = new ArrayList<>();
@@ -412,4 +414,18 @@ public class LessonDAO extends DBContext {
         return count;
     }
 
+    public boolean isOrderUnique(int subjectID, int order) {
+        String query = "select Count(*) from [Subject_LessonTopic] where SubjectID=? and [Order]=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, subjectID);
+            ps.setInt(2, order);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) == 0; // Trả về true nếu không có bản ghi nào
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in isOrderUnique: " + e.getMessage());
+        }
+        return false;
+    }
 }

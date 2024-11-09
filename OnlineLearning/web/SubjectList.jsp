@@ -71,6 +71,30 @@
                 background-color: #0d6efd;
                 color: white;
             }
+            .modal {
+                display: none; /* Ẩn modal mặc định */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+            }
+            .modal-content {
+                background-color: white;
+                padding: 20px;
+                border-radius: 5px;
+                width: 400px;
+                max-width: 90%;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+            .close-button {
+                float: right;
+                font-size: 20px;
+                cursor: pointer;
+            }
         </style>
 
         <script>
@@ -88,105 +112,129 @@
     </head>
     <body>
 
-                <%@include file="Header.jsp" %>
-                <h1>Course List</h1>
+        <%@include file="Header.jsp" %>
+        <h1>Course List</h1>
 
-                <%-- Search and Filter Form --%>
-                <form action="SubjectList" method="GET">
-                    <%-- Search input with value persistence --%>
-                    <input type="text" name="search" placeholder="search by name" value="${param.search}">
+        <%-- Search and Filter Form --%>
+        <form action="SubjectList" method="GET">
+            <%-- Search input with value persistence --%>
+            <input type="text" name="search" placeholder="search by name" value="${param.search}">
 
-                    <%-- Category dropdown with dynamic options --%>
-                    <select name="category">
-                        <option value="">All</option>
-                        <c:forEach items="${categories}" var="category">
-                            <%-- Maintain selected category after form submission --%>
-                            <option value="${category.subjectCategoryId}" 
-                                    ${param.category == category.subjectCategoryId ? 'selected' : ''}>
-                                ${category.title}
-                            </option>
-                        </c:forEach>
-                    </select>
+            <%-- Category dropdown with dynamic options --%>
+            <select name="category">
+                <option value="">All</option>
+                <c:forEach items="${categories}" var="category">
+                    <%-- Maintain selected category after form submission --%>
+                    <option value="${category.subjectCategoryId}" 
+                            ${param.category == category.subjectCategoryId ? 'selected' : ''}>
+                        ${category.title}
+                    </option>
+                </c:forEach>
+            </select>
 
-                    <%-- Status filter dropdown --%>
-                    <select name="status">
-                        <option value="">All Status</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
+            <%-- Status filter dropdown --%>
+            <select name="status">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
 
-                    <input type="submit" value="Search">
+            <input type="submit" value="Search">
+        </form>
+
+        <%-- Column Visibility Controls 
+             JavaScript functionality to toggle table columns
+        --%>
+        <div>
+            <%-- Commented out controls
+            <input type="checkbox" onclick="toggleColumn('col-id')" checked> ID
+            <input type="checkbox" onclick="toggleColumn('col-name')" checked> Name
+            <input type="checkbox" onclick="toggleColumn('col-category')" checked> Category
+            --%>
+            <input type="checkbox" onclick="toggleColumn('col-lessons')" checked> Number of lesson
+            <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
+            <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
+        </div>
+        <c:if test="${sessionScope.user.role == 'Admin'}">
+            <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
+        </c:if>
+        <c:if test="${sessionScope.user.role == 'Admin'}">
+            <button onclick="openModal()">Add New Category</button>
+        </c:if>
+        <%-- Subject List Table --%>
+        <table>
+            <tr>
+                <%-- Table headers with corresponding CSS classes for toggle functionality --%>
+                <th class="col-id">ID</th>
+                <th class="col-name">Name</th>
+                <th class="col-category">Category</th>
+                <th class="col-lessons">Number of lesson</th>
+                <th class="col-owner">Owner</th>
+                <th class="col-status">Status</th>
+                <th>Action</th>
+            </tr>
+            <%-- Iterate through subjects and display data --%>
+            <c:forEach items="${subjects}" var="course">
+                <tr>
+                    <td class="col-id">${course.subjectID}</td>
+                    <td class="col-name">
+                        <a href="subjectLesson?courseId=${course.subjectID}&courseName=${course.title}">
+                            ${course.title}
+                        </a>
+                    </td>
+                    <td class="col-category">${course.subjectCategoryId}</td>
+                    <td class="col-lessons">${lessonCounts[course.subjectID]}</td>
+                    <td class="col-owner">${course.userName}</td>
+                    <td class="col-status">${course.status}</td>
+                    <td>
+                        <a href="SubjectDetailOverview?id=${course.subjectID}">Edit</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+
+        <%-- Pagination Controls --%>
+        <c:if test="${totalPages > 1}">
+            <div class="pagination">
+                <c:forEach begin="1" end="${totalPages}" var="i">
+                    <c:choose>
+                        <%-- Highlight current page --%>
+                        <c:when test="${currentPage eq i}">
+                            <span>${i}</span>
+                        </c:when>
+                        <%-- Links to other pages with search parameters preserved --%>
+                        <c:otherwise>
+                            <a href="?page=${i}&search=${param.search}&category=${param.category}&status=${param.status}">
+                                ${i}
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
+        </c:if>
+        <div class="modal" id="categoryModal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h2>Add New Category</h2>
+                <form action="newCategory" method="POST">
+                    <label for="categoryTitle">Category Title:</label>
+                    <input type="text" id="categoryTitle" name="categoryTitle" required>
+                    <button type="submit">Add Category</button>
                 </form>
+            </div>
+        </div>
 
-                <%-- Column Visibility Controls 
-                     JavaScript functionality to toggle table columns
-                --%>
-                <div>
-                    <%-- Commented out controls
-                    <input type="checkbox" onclick="toggleColumn('col-id')" checked> ID
-                    <input type="checkbox" onclick="toggleColumn('col-name')" checked> Name
-                    <input type="checkbox" onclick="toggleColumn('col-category')" checked> Category
-                    --%>
-                    <input type="checkbox" onclick="toggleColumn('col-lessons')" checked> Number of lesson
-                    <input type="checkbox" onclick="toggleColumn('col-owner')" checked> Owner
-                    <input type="checkbox" onclick="toggleColumn('col-status')" checked> Status
-                </div>
-                     <c:if test="${sessionScope.user.role == 'Admin'}">
-                <a href="newSubject"  class="btn btn-success"><span>Add New Course</span></a>
-                     </c:if>
+        <script>
+            // JavaScript để mở modal
+            function openModal() {
+                document.getElementById("categoryModal").style.display = "flex";
+            }
 
-                <%-- Subject List Table --%>
-                <table>
-                    <tr>
-                        <%-- Table headers with corresponding CSS classes for toggle functionality --%>
-                        <th class="col-id">ID</th>
-                        <th class="col-name">Name</th>
-                        <th class="col-category">Category</th>
-                        <th class="col-lessons">Number of lesson</th>
-                        <th class="col-owner">Owner</th>
-                        <th class="col-status">Status</th>
-                        <th>Action</th>
-                    </tr>
-                    <%-- Iterate through subjects and display data --%>
-                    <c:forEach items="${subjects}" var="course">
-                        <tr>
-                            <td class="col-id">${course.subjectID}</td>
-                            <td class="col-name">
-                                <a href="subjectLesson?courseId=${course.subjectID}&courseName=${course.title}">
-                                    ${course.title}
-                                </a>
-                            </td>
-                            <td class="col-category">${course.subjectCategoryId}</td>
-                            <td class="col-lessons">${lessonCounts[course.subjectID]}</td>
-                            <td class="col-owner">${course.userName}</td>
-                            <td class="col-status">${course.status}</td>
-                            <td>
-                                <a href="SubjectDetailOverview?id=${course.subjectID}">Edit</a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
-
-                <%-- Pagination Controls --%>
-                <c:if test="${totalPages > 1}">
-                    <div class="pagination">
-                        <c:forEach begin="1" end="${totalPages}" var="i">
-                            <c:choose>
-                                <%-- Highlight current page --%>
-                                <c:when test="${currentPage eq i}">
-                                    <span>${i}</span>
-                                </c:when>
-                                <%-- Links to other pages with search parameters preserved --%>
-                                <c:otherwise>
-                                    <a href="?page=${i}&search=${param.search}&category=${param.category}&status=${param.status}">
-                                        ${i}
-                                    </a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </div>
-                </c:if>
-            
+            // JavaScript để đóng modal
+            function closeModal() {
+                document.getElementById("categoryModal").style.display = "none";
+            }
+        </script>
 
     </body>
     <%@include file="Footer.jsp" %>

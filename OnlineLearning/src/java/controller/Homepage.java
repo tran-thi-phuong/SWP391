@@ -37,7 +37,7 @@ public class Homepage extends HttpServlet {
         
         try {
             // Retrieve the top 5 subjects from the database
-            List<Subject> topSubjects = sliderDAO.getTopSubjects(5);
+            List<Subject> topSubjects = sliderDAO.getTopSubjects(6);
             // Set the list of top subjects as a request attribute
             request.setAttribute("topSubjects", topSubjects);
         } catch (SQLException e) {

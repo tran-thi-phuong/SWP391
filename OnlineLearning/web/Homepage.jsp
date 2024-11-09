@@ -25,7 +25,7 @@
     </head>
     <body>
         <%@include file="Header.jsp" %> <!-- Include the header of the page -->
-        <<p></p>
+        <p></p>
         <div class="slider-container"> <!-- Slider section for displaying images -->
             <div class="slider">
                 <!-- Radio buttons for navigation -->
@@ -72,7 +72,7 @@
                                     <img class="card-img-top" src="${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
                                     <div class="card-body">
                                         <h5 class="card-title">
-                                            <a href="SubjectView?subjectId=${subject.subjectID}">
+                                            <a class="text-primary" href="SubjectView?subjectId=${subject.subjectID}">
                                                 ${subject.title}
                                             </a>
                                         </h5>
@@ -88,12 +88,12 @@
 
                 <!-- Latest Blogs Section: Right side (1/4 width) -->
                 <div class="col-md-3">
-                    <h2 class="text-center mb-4">Latest Blogs</h2>
-                    <div class="container border p-3"> <!-- Thêm border cho toàn bộ khu vực chứa Blogs -->
+                    <div class="container2 border p-3 blog-color""> <!-- Thêm border cho toàn bộ khu vực chứa Blogs -->
+                        <h2 class="text-center mb-4">Latest Blogs</h2>
                         <ul class="list-unstyled">
                             <c:forEach var="blog" items="${latestBlogs}">
                                 <li class="mb-3">
-                                    <a href="blogDetail?blogId=${blog.blogId}" class="ms-2" style="color: orange;">
+                                    <a class="text-primary" href="blogDetail?blogId=${blog.blogId}" class="ms-2">
                                         ${blog.title}
                                     </a>
                                 </li>
