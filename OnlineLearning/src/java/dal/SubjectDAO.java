@@ -77,7 +77,7 @@ public class SubjectDAO extends DBContext {
 
         return subjects;
     }
-    
+
     public List<Subject> getAllActiveSubjects(int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
         String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID where s.Status = 'Active' ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -532,32 +532,44 @@ public class SubjectDAO extends DBContext {
         return false;
     }
 
-    public boolean addSubject(String courseName, String category, String status, String description, String thumbnailPath, String ownerId) {
-        boolean isAdded = false;
-        String sql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) VALUES (?, ?, ?, ?, ?, GETDATE(),?)";
+    public int addSubject(String courseName, String category, String status, String description, String thumbnailPath, String ownerId) {
+        int newSubjectId = 0;
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, courseName);
-            ps.setString(2, description);
-            ps.setInt(3, Integer.parseInt(category));
-            ps.setString(4, status);
-            ps.setString(5, thumbnailPath);
-            ps.setInt(6, Integer.parseInt(ownerId));
+        // Câu lệnh SQL để thêm Subject
+        String insertSql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) "
+                + "VALUES (?, ?, ?, ?, ?, GETDATE(), ?)";
 
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0) {
-                isAdded = true;
+        // Câu lệnh SQL để lấy SubjectID mới nhất
+        String selectSql = "SELECT TOP 1 SubjectID FROM Subjects ORDER BY SubjectID DESC";
+
+        try {
+            // Thực hiện câu lệnh INSERT
+            PreparedStatement psInsert = connection.prepareStatement(insertSql);
+            psInsert.setString(1, courseName);
+            psInsert.setString(2, description);
+            psInsert.setInt(3, Integer.parseInt(category));
+            psInsert.setString(4, status);
+            psInsert.setString(5, thumbnailPath);
+            psInsert.setInt(6, Integer.parseInt(ownerId));
+            psInsert.executeUpdate();
+
+            // Thực hiện câu lệnh SELECT để lấy SubjectID mới nhất
+            PreparedStatement psSelect = connection.prepareStatement(selectSql);
+            ResultSet rs = psSelect.executeQuery();
+            if (rs.next()) {
+                newSubjectId = rs.getInt(1);
             }
+
         } catch (SQLException e) {
             System.out.println("Error in addSubject: " + e.getMessage());
         }
 
-        return isAdded;
+        return newSubjectId;
     }
 
     public List<Subject> getSubjectDetailsByUserIdAndSubjectID(int userId, int subjectId) {
-    List<Subject> subjects = new ArrayList<>();
-    String sql = """
+        List<Subject> subjects = new ArrayList<>();
+        String sql = """
         SELECT s.SubjectID, s.Title AS SubjectTitle, 
                l.LessonID, l.Title AS LessonTitle, l.[Order] AS LessonOrder,
                lt.TopicID, lt.Name AS TopicName,
@@ -571,55 +583,52 @@ public class SubjectDAO extends DBContext {
         ORDER BY lt.TopicID, l.[Order]
         """;
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        // Set parameters dynamically instead of hardcoding them
-        ps.setInt(1, subjectId);
-        ps.setInt(2, userId);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // Set parameters dynamically instead of hardcoding them
+            ps.setInt(1, subjectId);
+            ps.setInt(2, userId);
 
-        try (ResultSet rs = ps.executeQuery()) {
-            Subject currentSubject = null;
-            LessonTopic currentTopic = null;
+            try (ResultSet rs = ps.executeQuery()) {
+                Subject currentSubject = null;
+                LessonTopic currentTopic = null;
 
-            while (rs.next()) {
-                int subjectID = rs.getInt("SubjectID");
-                if (currentSubject == null || currentSubject.getSubjectID() != subjectID) {
-                    currentSubject = new Subject();
-                    currentSubject.setSubjectID(subjectID);
-                    currentSubject.setTitle(rs.getString("SubjectTitle"));
-                    currentSubject.setLessonTopics(new ArrayList<>());
-                    subjects.add(currentSubject);
+                while (rs.next()) {
+                    int subjectID = rs.getInt("SubjectID");
+                    if (currentSubject == null || currentSubject.getSubjectID() != subjectID) {
+                        currentSubject = new Subject();
+                        currentSubject.setSubjectID(subjectID);
+                        currentSubject.setTitle(rs.getString("SubjectTitle"));
+                        currentSubject.setLessonTopics(new ArrayList<>());
+                        subjects.add(currentSubject);
+                    }
+
+                    int topicID = rs.getInt("TopicID");
+                    if (currentTopic == null || currentTopic.getTopicID() != topicID) {
+                        currentTopic = new LessonTopic();
+                        currentTopic.setTopicID(topicID);
+                        currentTopic.setName(rs.getString("TopicName"));
+                        currentTopic.setLessons(new ArrayList<>());
+                        currentSubject.getLessonTopics().add(currentTopic);
+                    }
+
+                    // Create lesson and add it to the topic
+                    Lesson lesson = new Lesson();
+                    lesson.setLessonID(rs.getInt("LessonID"));
+                    lesson.setTitle(rs.getString("LessonTitle"));
+                    lesson.setOrder(rs.getInt("LessonOrder"));
+                    lesson.setStatus(rs.getString("LessonStatus"));
+                    currentTopic.getLessons().add(lesson);
                 }
-
-                int topicID = rs.getInt("TopicID");
-                if (currentTopic == null || currentTopic.getTopicID() != topicID) {
-                    currentTopic = new LessonTopic();
-                    currentTopic.setTopicID(topicID);
-                    currentTopic.setName(rs.getString("TopicName"));
-                    currentTopic.setLessons(new ArrayList<>());
-                    currentSubject.getLessonTopics().add(currentTopic);
-                }
-
-                // Create lesson and add it to the topic
-                Lesson lesson = new Lesson();
-                lesson.setLessonID(rs.getInt("LessonID"));
-                lesson.setTitle(rs.getString("LessonTitle"));
-                lesson.setOrder(rs.getInt("LessonOrder"));
-                lesson.setStatus(rs.getString("LessonStatus"));
-                currentTopic.getLessons().add(lesson);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return subjects;
     }
-    return subjects;
-}
 
-
-
-
-   public List<Subject> getSubjectDetailsBySubjectID(int subjectID) {
-    List<Subject> subjects = new ArrayList<>();
-    String sql = """
+    public List<Subject> getSubjectDetailsBySubjectID(int subjectID) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = """
         SELECT s.SubjectID, staff.username, staff.UserID AS OwnerID, staff.Name AS OwnerName, s.Title AS SubjectTitle, 
                lt.TopicID, lt.Name AS LessonTopicName, 
                l.LessonID, l.Title AS LessonTitle
@@ -631,56 +640,55 @@ public class SubjectDAO extends DBContext {
         ORDER BY lt.TopicID, l.LessonID
         """;
 
-    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-        pstmt.setInt(1, subjectID);
-        ResultSet rs = pstmt.executeQuery();
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, subjectID);
+            ResultSet rs = pstmt.executeQuery();
 
-        Subject subject = null;
-        while (rs.next()) {
-            if (subject == null) {
-                // Initialize the subject object only once
-                subject = new Subject();
-                subject.setSubjectID(rs.getInt("SubjectID"));
-                subject.setTitle(rs.getString("SubjectTitle"));
-                subject.setOwnerName(rs.getString("OwnerName"));
-                subject.setLessonTopics(new ArrayList<>()); // Initialize lesson topics list
-                subjects.add(subject);
-            }
-
-            // Get LessonTopic information
-            int topicID = rs.getInt("TopicID");
-            LessonTopic lessonTopic = null;
-
-            // Check if the LessonTopic already exists in the subject's list
-            for (LessonTopic existingTopic : subject.getLessonTopics()) {
-                if (existingTopic.getTopicID() == topicID) {
-                    lessonTopic = existingTopic;
-                    break;
+            Subject subject = null;
+            while (rs.next()) {
+                if (subject == null) {
+                    // Initialize the subject object only once
+                    subject = new Subject();
+                    subject.setSubjectID(rs.getInt("SubjectID"));
+                    subject.setTitle(rs.getString("SubjectTitle"));
+                    subject.setOwnerName(rs.getString("OwnerName"));
+                    subject.setLessonTopics(new ArrayList<>()); // Initialize lesson topics list
+                    subjects.add(subject);
                 }
-            }
 
-            // If the LessonTopic doesn't exist, create a new one
-            if (lessonTopic == null) {
-                lessonTopic = new LessonTopic();
-                lessonTopic.setTopicID(topicID);
-                lessonTopic.setName(rs.getString("LessonTopicName"));
-                lessonTopic.setLessons(new ArrayList<>()); // Initialize lessons list
-                subject.getLessonTopics().add(lessonTopic);
-            }
+                // Get LessonTopic information
+                int topicID = rs.getInt("TopicID");
+                LessonTopic lessonTopic = null;
 
-            // Create and add Lesson to the LessonTopic
-            Lesson lesson = new Lesson();
-            lesson.setLessonID(rs.getInt("LessonID"));
-            lesson.setTitle(rs.getString("LessonTitle"));
-            lessonTopic.getLessons().add(lesson);
+                // Check if the LessonTopic already exists in the subject's list
+                for (LessonTopic existingTopic : subject.getLessonTopics()) {
+                    if (existingTopic.getTopicID() == topicID) {
+                        lessonTopic = existingTopic;
+                        break;
+                    }
+                }
+
+                // If the LessonTopic doesn't exist, create a new one
+                if (lessonTopic == null) {
+                    lessonTopic = new LessonTopic();
+                    lessonTopic.setTopicID(topicID);
+                    lessonTopic.setName(rs.getString("LessonTopicName"));
+                    lessonTopic.setLessons(new ArrayList<>()); // Initialize lessons list
+                    subject.getLessonTopics().add(lessonTopic);
+                }
+
+                // Create and add Lesson to the LessonTopic
+                Lesson lesson = new Lesson();
+                lesson.setLessonID(rs.getInt("LessonID"));
+                lesson.setTitle(rs.getString("LessonTitle"));
+                lessonTopic.getLessons().add(lesson);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately
         }
-    } catch (SQLException e) {
-        e.printStackTrace(); // Handle the exception appropriately
+
+        return subjects;
     }
-
-    return subjects;
-}
-
 
     public List<Subject> searchSubjectsWithFilters(String query, String categoryId, String status, int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
@@ -773,32 +781,4 @@ public class SubjectDAO extends DBContext {
 
         return 0;
     }
-    
-    public static void main(String[] args) {
-   
-            int userId = 1;    // Example userId
-            int subjectId = 1; // Example subjectId
-            
-            // Create an instance of the class containing the method (e.g., SubjectDAO)
-            SubjectDAO subjectDAO = new SubjectDAO();
-            
-            // Call the method to get subject details
-            List<Subject> subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
-            
-            // Print out the subjects to check if data is retrieved
-            for (Subject subject : subjects) {
-                System.out.println("Subject ID: " + subject.getSubjectID());
-                System.out.println("Subject Title: " + subject.getTitle());
-                for (LessonTopic topic : subject.getLessonTopics()) {
-                    System.out.println("  Topic ID: " + topic.getTopicID());
-                    System.out.println("  Topic Name: " + topic.getName());
-                    for (Lesson lesson : topic.getLessons()) {
-                        System.out.println("    Lesson ID: " + lesson.getLessonID());
-                        System.out.println("    Lesson Title: " + lesson.getTitle());
-                        System.out.println("    Lesson Order: " + lesson.getOrder());
-                    }
-                }
-            }
-    }
-
 }

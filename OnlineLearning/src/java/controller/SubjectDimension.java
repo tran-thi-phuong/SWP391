@@ -66,6 +66,12 @@ public class SubjectDimension extends HttpServlet {
             } else if ("delete".equals(action)) {
                 deleteTopic(request, lessonDAO, subjectId); // Thêm subjectId vào delete
             }
+            String errorMessage = (String) request.getAttribute("errorMessage");
+            if (errorMessage != null) {
+                // Nếu có lỗi, chuyển tiếp đến trang JSP để hiển thị thông báo
+                request.getRequestDispatcher("/SubjectDetailDimension.jsp").forward(request, response);
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Error processing request: " + e.getMessage());
@@ -77,12 +83,20 @@ public class SubjectDimension extends HttpServlet {
     }
 
     private void addTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
-        SubjectTopic topic = new SubjectTopic();
-        topic.setSubjectID(Integer.parseInt(subjectId));
-        topic.setTopicName(request.getParameter("dimensionName"));
-        topic.setOrder(Integer.parseInt(request.getParameter("order")));
+        int subjectID = Integer.parseInt(subjectId);
+        String topicName = request.getParameter("dimensionName");
+        int order = Integer.parseInt(request.getParameter("order"));
 
-        lessonDAO.addLessonTopic(topic);
+        if (lessonDAO.isOrderUnique(subjectID, order)) {
+            SubjectTopic topic = new SubjectTopic();
+            topic.setSubjectID(subjectID);
+            topic.setTopicName(topicName);
+            topic.setOrder(order);
+
+            lessonDAO.addLessonTopic(topic);
+        } else {
+            request.setAttribute("errorMessage", "The order must be unique for each subject.");
+        }
     }
 
     private void updateTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
@@ -91,15 +105,22 @@ public class SubjectDimension extends HttpServlet {
         topic.setSubjectID(Integer.parseInt(subjectId));
         topic.setTopicName(request.getParameter("dimensionName"));
         topic.setOrder(Integer.parseInt(request.getParameter("order")));
+        int subjectID = Integer.parseInt(subjectId);
+        int order = Integer.parseInt(request.getParameter("order"));
 
-        lessonDAO.updateLessonTopic(topic);
+        if (lessonDAO.isOrderUnique(subjectID, order)) {
+            lessonDAO.updateLessonTopic(topic);
+        } else {
+            request.setAttribute("errorMessage", "The order must be unique for each subject.");
+        }
     }
 
     private void deleteTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
         int topicId = Integer.parseInt(request.getParameter("id"));
         lessonDAO.deleteLessonTopic(topicId, Integer.parseInt(subjectId)); // Gọi delete với cả topicId và subjectId
     }
-     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
         if (currentUser == null) {

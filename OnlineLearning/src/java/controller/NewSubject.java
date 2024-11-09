@@ -90,10 +90,10 @@ public class NewSubject extends HttpServlet {
         String filePath =UPLOAD_DIR + "/" + fileName;
         // After saving the file, you could save the form data and file path to a database
         SubjectDAO subjectDAO = new SubjectDAO();
-        boolean isAdded = subjectDAO.addSubject(courseName, category, status, description, filePath, instructor);
-        if (isAdded) {
+        int newSubjectId = subjectDAO.addSubject(courseName, category, status, description, filePath, instructor);
+        if (newSubjectId > 0) {
             // Redirect to success page or list of courses if add is successful
-            response.sendRedirect("SubjectList");
+            response.sendRedirect("SubjectDetailOverview?id=" + newSubjectId);
         } else {
             // Handle failure to add course
             request.setAttribute("errorMessage", "Failed to add the course.");
