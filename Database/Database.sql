@@ -1,5 +1,6 @@
-drop database OnlineLearning
+--drop database OnlineLearning
 -- Tạo cơ sở dữ liệu OnlineLearning
+use master
 CREATE DATABASE OnlineLearning;
 GO
 -- Sử dụng cơ sở dữ liệu OnlineLearning
@@ -158,7 +159,6 @@ CREATE TABLE Sliders (
     BlogID INT,
     SubjectID INT,
     Title NVARCHAR(255) NOT NULL,
-	Backlink NVARCHAR(255) NOT NULL,
     Image NVARCHAR(255),
 	Status NVARCHAR(10) NOT NULL DEFAULT 'Show',
     Content NVARCHAR(MAX),
