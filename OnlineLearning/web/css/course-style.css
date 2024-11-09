@@ -305,17 +305,22 @@ border: 1px solid #666;
 }
 
 .img-same {
-    width: 75px;
-    float: left;
-    margin-right: 7px;
-    border: 1px solid #d6d6d6;
+    width: 177px; /* Đảm bảo chiều rộng cố định */
+    height: 100px; /* Đảm bảo chiều cao cố định */
+    margin: 0 auto; /* Căn giữa phần tử hình ảnh */
     padding: 2px;
+    background-size: cover; /* Đảm bảo ảnh bao phủ toàn bộ vùng chứa */
+    background-position: center; /* Căn giữa ảnh bên trong vùng chứa */
+    overflow: hidden; /* Ẩn phần ảnh vượt ra ngoài */
+    display: block;
 }
 
 .des-same {
-    display: block;
     font-size: 14px;
+    text-align: center;
+    margin-top: 5px;
 }
+
 
 .des-same,
 .left-info,

@@ -377,20 +377,21 @@ public class LessonDAO extends DBContext {
     }
 
     public boolean updateLessonTopic(SubjectTopic topic) {
-        String updateLessonTopicSQL = "UPDATE LessonTopic SET Name = ? WHERE TopicID = ?";
-        String updateSubjectLessonTopicSQL = "UPDATE Subject_LessonTopic SET [Order] = ? WHERE TopicID = ? AND SubjectID = ?";
+        String updateTopicNameSQL = "UPDATE LessonTopic SET Name = ? WHERE TopicID = ?";
+        String updateOrderSQL = "UPDATE Subject_LessonTopic SET [Order] = ? WHERE TopicID = ? AND SubjectID = ?";
 
-        try (PreparedStatement ps1 = connection.prepareStatement(updateLessonTopicSQL)) {
+        try (
+                PreparedStatement ps1 = connection.prepareStatement(updateTopicNameSQL); PreparedStatement ps2 = connection.prepareStatement(updateOrderSQL)) {
+
             ps1.setString(1, topic.getTopicName());
             ps1.setInt(2, topic.getTopicID());
             ps1.executeUpdate();
 
-            try (PreparedStatement ps2 = connection.prepareStatement(updateSubjectLessonTopicSQL)) {
-                ps2.setInt(1, topic.getOrder());
-                ps2.setInt(2, topic.getTopicID());
-                ps2.setInt(3, topic.getSubjectID());
-                ps2.executeUpdate();
-            }
+            ps2.setInt(1, topic.getOrder());
+            ps2.setInt(2, topic.getTopicID());
+            ps2.setInt(3, topic.getSubjectID());
+            ps2.executeUpdate();
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -428,4 +429,29 @@ public class LessonDAO extends DBContext {
         }
         return false;
     }
+
+    public SubjectTopic getLessonTopicById(int topicID) {
+        // Truy vấn để lấy dữ liệu từ cả hai bảng
+        String query = "SELECT lt.TopicID, slt.SubjectID, lt.Name, slt.[Order] "
+                + "FROM LessonTopic lt "
+                + "JOIN Subject_LessonTopic slt ON lt.TopicID = slt.TopicID "
+                + "WHERE lt.TopicID = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, topicID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new SubjectTopic(
+                        rs.getString("Name"), // Lấy tên chủ đề từ bảng LessonTopic
+                        rs.getInt("TopicID"), // Lấy TopicID từ bảng LessonTopic
+                        rs.getInt("SubjectID"), // Lấy SubjectID từ bảng Subject_LessonTopic
+                        rs.getInt("Order") // Lấy thứ tự từ bảng Subject_LessonTopic
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
