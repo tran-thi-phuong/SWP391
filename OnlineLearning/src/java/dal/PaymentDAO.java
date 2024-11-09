@@ -32,6 +32,7 @@ public class PaymentDAO extends DBContext {
         }
         return 0;
     }
+
     public List<Revenue> getRevenueAllocation() {
         List<Revenue> list = new ArrayList<>();
         try {
@@ -56,9 +57,10 @@ public class PaymentDAO extends DBContext {
         }
         return list;
     }
+
     public List<Revenue> getRevenueAllocationByTime(Date startDate, Date endDate) {
-    List<Revenue> list = new ArrayList<>();
-    String sql = """
+        List<Revenue> list = new ArrayList<>();
+        String sql = """
         SELECT sc.Title AS Title, SUM(p.Amount) AS Revenue
         FROM Payment p
         JOIN Subjects s ON p.SubjectID = s.SubjectID
@@ -66,25 +68,26 @@ public class PaymentDAO extends DBContext {
         WHERE p.PaymentDate BETWEEN ? AND ?
         GROUP BY sc.Title
     """;
-    
-    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-        pstmt.setDate(1, new java.sql.Date(startDate.getTime()));
-        pstmt.setDate(2, new java.sql.Date(endDate.getTime()));
-        
-        try (ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                Revenue revenue = new Revenue();
-                revenue.setCategory(rs.getString("Title"));
-                revenue.setRevenue(rs.getDouble("Revenue"));
-                list.add(revenue);
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setDate(1, new java.sql.Date(startDate.getTime()));
+            pstmt.setDate(2, new java.sql.Date(endDate.getTime()));
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Revenue revenue = new Revenue();
+                    revenue.setCategory(rs.getString("Title"));
+                    revenue.setRevenue(rs.getDouble("Revenue"));
+                    list.add(revenue);
+                }
             }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        System.out.println("Error: " + e.getMessage());
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
+
     public double getRevenueByTime(java.util.Date startDate, java.util.Date endDate) {
         String sql = "  select sum(Amount) from Payment where PaymentDate between ? and ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -101,4 +104,25 @@ public class PaymentDAO extends DBContext {
         return 0;
     }
 
+    public boolean addPayment(int userId, int subjectId, double amount) {
+        String sql = "INSERT INTO Payment (UserID, SubjectID, PaymentDate, Amount, PaymentMethod) VALUES (?, ?,GETDATE(),?, 'QR Pay')";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, subjectId);
+            stmt.setDouble(3, amount);
+
+            int rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+
+                return true;
+            } else {
+
+                return false;
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
