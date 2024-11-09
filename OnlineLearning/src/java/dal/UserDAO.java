@@ -550,6 +550,7 @@ public class UserDAO extends DBContext {
                 user.setGender(rs.getString("Gender"));
                 user.setPhone(rs.getString("Phone"));
                 user.setEmail(rs.getString("Email"));
+                user.setAvatar(rs.getString("Avatar"));
                 user.setRole(rs.getString("Role"));
                 user.setStatus(rs.getString("Status"));
             }
@@ -674,5 +675,72 @@ public class UserDAO extends DBContext {
         }
         return 0; // Return 0 if an error occurs
     }
+// Method to update user role and status
+
+    public boolean updateUser(String userId, String role, String status) {
+        String sql = "UPDATE Users SET Role = ?, Status = ? WHERE UserID = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            // Set parameters for the update query
+            ps.setString(1, role);
+            ps.setString(2, status);
+            ps.setString(3, userId);
+
+            // Execute update and check if any row was updated
+            int updatedRows = ps.executeUpdate();
+            return updatedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean addStaff(String email,String username, String role) {
+        String sql = "INSERT INTO Users (Email, Role, Username, Password, Status) VALUES (?, ?,?,?, 'Inactive')";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, role);
+            ps.setString(3, username);
+            ps.setString(4, "12345678");
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean isEmailExists(String email) {
+    String query = "SELECT COUNT(*) FROM Users WHERE Email = ?";
+    try (
+         PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, email);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // If count > 0, email exists
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+ public boolean deleteUser(String userId) {
+    String sql = "DELETE FROM Users WHERE UserID = ?"; // Adjust table name if necessary
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        // Set the userId parameter
+        statement.setString(1, userId);
+
+        // Execute the delete query
+        int rowsAffected = statement.executeUpdate();
+
+        // If one or more rows are affected, return true
+        return rowsAffected > 0;
+    } catch (SQLException e) {
+        // Log the error with details
+        System.err.println("Error deleting user with ID: " + userId);
+        // Print stack trace for debugging
+        return false;
+    }
+}
 
 }

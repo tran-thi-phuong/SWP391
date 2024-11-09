@@ -13,20 +13,35 @@
         <link href="css/Header_Footer.css" rel="stylesheet">
         <link rel="stylesheet" href="css/userdetail.css">
     </head>
-    <%@include file="Header.jsp" %>
+    <%@ include file="Header.jsp" %>
     <body class="user-detail-page">
         <div class="container mt-5">
             <h1 class="text-center page-title">User Details</h1>
             <br>
+            <!-- Display messages -->
+            <c:if test="${not empty sessionScope.successMessage}">
+                <div class="alert alert-success" role="alert">
+                    ${sessionScope.successMessage}
+                </div>
+                <c:remove var="successMessage"/>
+            </c:if>
+
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <div class="alert alert-danger" role="alert">
+                    ${sessionScope.errorMessage}
+                </div>
+                <c:remove var="errorMessage"/>
+            </c:if>
 
             <c:if test="${not empty user}">
                 <div class="user-detail-card card shadow-sm">
                     <div class="card-body">
                         <form method="POST" action="UpdateUser" class="user-detail-form">
+                            <input type="hidden" name="userId" value="${user.userID}" />
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <!-- Avatar -->
-                                    <img src="${empty user.avatar ? 'images/default_avatar.jpg' : user.avatar}" alt="Avatar" class="img-fluid rounded-circle" style="width: 150px;">
+                                    <img src="${empty user.avatar ? 'images/default-avatar.jpg' : user.avatar}" alt="Avatar" class="img-fluid rounded-circle" style="width: 150px;">
                                 </div>
                                 <div class="col-md-9">
                                     <!-- Full Name, Gender, Email, Phone, Address, Role, Status in the same row -->
@@ -59,13 +74,11 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-
                                             <div class="mb-3 custom-class">
                                                 <label for="address" class="form-label"><strong>Address</strong></label>
                                                 <input type="text" id="address" class="form-control" value="${user.address}" readonly />
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <div class="row">
@@ -94,10 +107,13 @@
                                     <div class="mb-3 text-center">
                                         <button type="button" class="btn btn-warning" id="editButton" onclick="enableEditing()">Edit</button>
                                         <button type="submit" class="btn btn-success" id="saveButton" style="display:none;">Save</button>
+                                       <button type="button" class="btn btn-danger" id="deleteButton" onclick="doDelete(${user.userID})">Delete</button>
+
                                     </div>
                                 </div>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </c:if>
@@ -121,6 +137,16 @@
                 document.getElementById("editButton").style.display = "none";
                 document.getElementById("saveButton").style.display = "inline-block";
             }
+
+            // Confirm delete action
+            function doDelete(userId) {
+    // Confirm the deletion action
+    if (confirm("Are you sure you want to delete this user?")) {
+        // Redirect to the delete URL with the userId if confirmed
+        window.location.href = `DeleteUser?userId=${user.userID}`;
+    }
+}
+
         </script>
     </body>
 </html>
