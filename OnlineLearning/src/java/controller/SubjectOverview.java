@@ -79,11 +79,12 @@ public class SubjectOverview extends HttpServlet {
             File file = new File(uploadDir, fileName);
             filePart.write(file.getAbsolutePath());
             filePath = UPLOAD_DIR + "/" + fileName;
-        }
+        }else
+            filePath = request.getParameter("oldThumbnail");
         try {
             SubjectDAO sDAO = new SubjectDAO();
             sDAO.updateSubject(subjectName, category, status, description, subjectId, filePath);
-            response.sendRedirect("SubjectList");
+            response.sendRedirect("SubjectDetailOverview?id=" + subjectId);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error saving subject: " + e.getMessage());
             request.getRequestDispatcher("/SubjectDetailOverview.jsp").forward(request, response);

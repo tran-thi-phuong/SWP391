@@ -98,9 +98,10 @@
                         <label class="form-label">Course Thumbnail:</label>
                         <div>
                             <img src="${subject.thumbnail}" alt="Subject Thumbnail" 
-                                 class="img-thumbnail" style="width: 150px; height: auto;">
+                                 class="img-thumbnail" style="width: 600px; height: auto;">
                         </div>
                         <input type="file" name="thumbnail">
+                        <input type="hidden" name="oldThumbnail" value="${subject.thumbnail}">
                     </div>
                     <div class="form-group">
                         <label for="subjectName" class="form-label">Course Name:</label>

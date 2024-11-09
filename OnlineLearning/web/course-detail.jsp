@@ -67,7 +67,7 @@
                 <div class="title">
                     <div class="title-info">Course Detail</div>
                 </div>
-                <div class="center-itself", style="background: url('${currentSub.thumbnail}'); background-size: cover; height: 350px"></div>
+                <div class="center-itself", style="background: url('${currentSub.thumbnail}'); background-size: cover; height: 291px"></div>
                 <div class="course-details">
                     <a href="#">
                         <h1>${currentSub.title}</h1>
@@ -104,7 +104,7 @@
                                 <li>
                                     <div class="img-same">
                                         <a href="registerCourse?id=${entry.key.subjectID}">
-                                            <div style="background: url('${entry.key.thumbnail}'); background-size: cover; height: 100px; width: 75px;"></div>
+                                            <div style="background: url('${entry.key.thumbnail}'); background-size: cover; height: 100px; "></div>
                                         </a>
                                     </div>
                                     <div class="des-same">

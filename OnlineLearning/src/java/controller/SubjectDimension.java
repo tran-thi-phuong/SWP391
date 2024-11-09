@@ -96,21 +96,37 @@ public class SubjectDimension extends HttpServlet {
             lessonDAO.addLessonTopic(topic);
         } else {
             request.setAttribute("errorMessage", "The order must be unique for each subject.");
-            
+
         }
     }
 
     private void updateTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
-        SubjectTopic topic = new SubjectTopic();
-        topic.setTopicID(Integer.parseInt(request.getParameter("id")));
-        topic.setSubjectID(Integer.parseInt(subjectId));
-        topic.setTopicName(request.getParameter("dimensionName"));
-        topic.setOrder(Integer.parseInt(request.getParameter("order")));
-        
+        // Retrieve information from the request
+        int topicID = Integer.parseInt(request.getParameter("id"));
+        int subjectID = Integer.parseInt(subjectId);
+        String newTopicName = request.getParameter("dimensionName");
+        int newOrder = Integer.parseInt(request.getParameter("order"));
 
-       
-            lessonDAO.updateLessonTopic(topic);
-        
+        // Fetch the old topic from the database for comparison
+        SubjectTopic oldTopic = lessonDAO.getLessonTopicById(topicID);
+
+        // Check if the order has changed
+        if (oldTopic.getOrder() != newOrder) {
+            // If the order has changed, verify if the new order is unique
+            if (lessonDAO.isOrderUnique(subjectID, newOrder)) {
+                // If the new order is unique, update both the topic name and the order
+                oldTopic.setTopicName(newTopicName);
+                oldTopic.setOrder(newOrder);
+                lessonDAO.updateLessonTopic(oldTopic);
+            } else {
+                // Handle the case when the new order is not unique (e.g., show an error message)
+                request.setAttribute("error", "The order already exists. Please choose a different order.");
+            }
+        } else {
+            // If the order has not changed, only update the topic name
+            oldTopic.setTopicName(newTopicName);
+            lessonDAO.updateLessonTopic(oldTopic);
+        }
     }
 
     private void deleteTopic(HttpServletRequest request, LessonDAO lessonDAO, String subjectId) {
