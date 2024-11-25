@@ -11,6 +11,7 @@ import model.*;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +121,7 @@ public class AddRegistrationBySale extends HttpServlet {
                 // Set an error message for empty input
                 request.setAttribute("errorMessage", "Email field cannot be empty.");
                 // Forward the request to findAccount.jsp
-                request.getRequestDispatcher("/findAccount.jsp").forward(request, response);
+                request.getRequestDispatcher("/AddRegistrationBySale.jsp").forward(request, response);
                 return;
             }
 
@@ -178,15 +179,21 @@ public class AddRegistrationBySale extends HttpServlet {
             }
 
             boolean allLessonsAdded = true;
-            for (Lesson lesson : lessons) {
-                boolean lessonAdded = lesson_User.addLesson(lesson.getLessonID(), userId);
-                if (!lessonAdded) {
-                    allLessonsAdded = false;
-                    request.setAttribute("errorMessage", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userId);
-                    request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
-                    return;
-                }
+             for (Lesson lesson : lessons) {
+            // Calculate the deadline
+            int durationDays = lesson.getDuration(); // Assuming duration is in days
+            LocalDate currentDate = LocalDate.now(); // Current date
+           java.sql.Date deadlineDate = java.sql.Date.valueOf(currentDate.plusDays(durationDays)); 
+
+            // Add the lesson with the deadline
+            boolean lessonAdded = lesson_User.addLesson(lesson.getLessonID(), userId, deadlineDate);
+            if (!lessonAdded) {
+                allLessonsAdded = false;
+                request.setAttribute("errorMessage", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userId);
+                request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
+                return;
             }
+             }
 
             // Process payment after successful registration and lesson addition
             boolean paymentSuccess = paymentDAO.addPayment(userId, subjectId, totalCost);

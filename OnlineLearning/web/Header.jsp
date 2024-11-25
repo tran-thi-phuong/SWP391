@@ -40,6 +40,11 @@
                         <a class="nav-link active" href="RolePermission">Manage System</a>
                     </c:if>
                 </li>
+                <li class="nav-item">
+                    <c:if test="${sessionScope.user.role == 'Instructor'}">
+                        <a class="nav-link active" href="QuizList">Quiz List</a>
+                    </c:if>
+                </li>
 
                 <li class="nav-item">
                     <c:if test="${sessionScope.user.role == 'Instructor'}">
@@ -52,11 +57,11 @@
                         <a class="nav-link active" href="listRegistration">Manage Registration</a>
                     </c:if>
                 </li>
-                <li class="nav-item">
+<!--                <li class="nav-item">
                     <c:if test="${sessionScope.user.role == 'Marketing'}">
                         <a class="nav-link active" href="campaignList">Manage Campaign</a>
                     </c:if>
-                </li>
+                </li>-->
 
                 <li class="nav-item">
                     <c:if test="${sessionScope.user.role == 'Customer' || empty sessionScope.user}">

@@ -24,7 +24,7 @@ public class Campaign_SubjectDAO extends DBContext {
  * @return 
  */
   public boolean addCampaignSubject(String campaignId, String subjectId, int discount) {
-        String sql = "INSERT INTO Campaign_Subject (CampaignID, SubjectID, Discount) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Campaign_Course (CampaignID, SubjectID, Discount) VALUES (?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, Integer.parseInt(campaignId)); // Campaign ID
@@ -40,7 +40,7 @@ public class Campaign_SubjectDAO extends DBContext {
     }
     public Map<String, Double> getCurrentDiscounts() {
     Map<String, Double> discounts = new HashMap<>();
-    String sql = "SELECT CampaignID, SubjectID, Discount FROM Campaign_Subject";
+    String sql = "SELECT CampaignID, SubjectID, Discount FROM Campaign_Course";
     
     try (
          PreparedStatement ps = connection.prepareStatement(sql);
@@ -55,12 +55,43 @@ public class Campaign_SubjectDAO extends DBContext {
     }
     return discounts;
 }
+    public boolean deleteCampaignSubject() {
+    String sql = "DELETE FROM Campaign_Course ";
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        // Execute the delete query
+        int rowsAffected = ps.executeUpdate();
+
+        // Return true if a record was deleted (rowsAffected > 0)
+        return rowsAffected > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();  // Print any SQL exception to help with debugging
+        return false;  // Return false if an error occurs
+    }
+}
+
+
+
     public static void main(String[] args) {
-       Campaign_SubjectDAO d = new Campaign_SubjectDAO();
-       Map<String, Double> c = d.getCurrentDiscounts();
-        for (String key : c.keySet()) {
-            System.out.println(key);
+        // Create an instance of the DAO class that contains the addCampaignSubject method
+        Campaign_SubjectDAO csDao = new Campaign_SubjectDAO();
+
+        // Test data: Provide values for campaignId, subjectId, and discount
+        String campaignId = "1";  // Example campaign ID
+        String subjectId = "2";   // Example subject ID
+        int discount = 15;          // Example discount value (15%)
+
+        // Call the addCampaignSubject method and print the result
+        boolean result = csDao.addCampaignSubject(campaignId, subjectId, discount);
+
+        if (result) {
+            System.out.println("Campaign subject added successfully.");
+        } else {
+            System.out.println("Failed to add campaign subject.");
         }
-       
     }
-    }
+}
+
+
+    

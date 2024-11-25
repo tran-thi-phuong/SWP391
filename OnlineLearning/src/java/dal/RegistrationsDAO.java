@@ -38,10 +38,10 @@ public class RegistrationsDAO extends DBContext {
                 + "r.Note, r.UserID, r.SubjectID, r.PackageID, r.StaffID, c.CampaignName "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Course s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price p ON r.PackageID = p.PackageID "
                 + "JOIN Users us ON r.StaffID = us.UserID "
-                + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
+                + "LEFT JOIN Campaign_Course cs ON r.SubjectID = cs.SubjectID "
                 + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID";
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -81,8 +81,8 @@ public class RegistrationsDAO extends DBContext {
     public int getTotalRegistrationsCount(String email, String title, String campaignId, Date registrationTimeFrom, Date validTo, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
-                + "JOIN Subjects s ON cs.SubjectID = s.SubjectID "
+                + "JOIN Campaign_Course cs ON r.SubjectID = cs.SubjectID "
+                + "JOIN Course s ON cs.SubjectID = s.SubjectID "
                 + "JOIN Campaigns c ON cs.CampaignID = c.CampaignID WHERE 1=1");
 
         // Build query conditions based on provided parameters
@@ -103,7 +103,7 @@ public class RegistrationsDAO extends DBContext {
             sql.append(" OR r.Valid_To <= ?");
         }
         if (status != null && !status.isEmpty()) {
-            sql.append(" AND r.Status LIKE ?");
+            sql.append(" AND r.Status = ?");
         }
 
         try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
@@ -157,10 +157,10 @@ public class RegistrationsDAO extends DBContext {
                 + "(CASE WHEN cs.discount != 0 AND r.Registration_Time <= c.EndDate AND r.Registration_Time >= c.StartDate THEN c.CampaignName ELSE NULL END) AS CampaignName "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Course s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price p ON r.PackageID = p.PackageID "
                 + "JOIN Users us ON r.StaffID = us.UserID "
-                + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
+                + "LEFT JOIN Campaign_Course cs ON r.SubjectID = cs.SubjectID "
                 + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID "
                 + "WHERE 1=1 "
                 + "ORDER BY r.Registration_Time DESC, "
@@ -221,10 +221,10 @@ public class RegistrationsDAO extends DBContext {
                 + "(CASE WHEN cs.discount != 0 AND r.Registration_Time <= c.EndDate AND r.Registration_Time >= c.StartDate THEN c.CampaignName ELSE NULL END) AS CampaignName "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Course s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price p ON r.PackageID = p.PackageID "
                 + "LEFT JOIN Users us ON r.StaffID = us.UserID "
-                + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
+                + "LEFT JOIN Campaign_Course cs ON r.SubjectID = cs.SubjectID "
                 + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID "
                 + "WHERE 1=1");
 
@@ -252,8 +252,8 @@ public class RegistrationsDAO extends DBContext {
             params.add(new Timestamp(validTo.getTime()));
         }
         if (status != null && !status.isEmpty()) {
-            sql.append(" AND r.Status LIKE ?");
-            params.add("%" + status + "%");
+            sql.append(" AND r.Status = ?");
+            params.add(status);
         }
 
         sql.append(" ORDER BY r.Registration_Time DESC, "
@@ -302,7 +302,7 @@ public class RegistrationsDAO extends DBContext {
         Registrations registration = null;
         String sql = "SELECT r.*, c.CampaignName "
                 + "FROM Registrations r "
-                + "LEFT JOIN Campaign_Subject cs ON r.SubjectID = cs.SubjectID "
+                + "LEFT JOIN Campaign_Course cs ON r.SubjectID = cs.SubjectID "
                 + "LEFT JOIN Campaigns c ON cs.CampaignID = c.CampaignID "
                 + "WHERE r.RegistrationID = ?";
 
@@ -394,7 +394,7 @@ public class RegistrationsDAO extends DBContext {
                           r.Note 
                     FROM Registrations r 
                     JOIN Users u ON r.UserID = u.UserID 
-                    JOIN Subjects s ON r.SubjectID = s.SubjectID 
+                    JOIN Course s ON r.SubjectID = s.SubjectID 
                     JOIN Package_Price pp ON r.PackageID = pp.PackageID 
                     LEFT JOIN Users staff ON r.StaffID = staff.UserID 
                     WHERE r.UserID = ? AND r.Status != 'Cancelled' 
@@ -419,7 +419,7 @@ public class RegistrationsDAO extends DBContext {
                     + "       r.Note "
                     + "FROM Registrations r "
                     + "JOIN Users u ON r.UserID = u.UserID "
-                    + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                    + "JOIN Course s ON r.SubjectID = s.SubjectID "
                     + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                     + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
                     + "WHERE r.UserID = ? AND r.Status = ? "
@@ -509,7 +509,7 @@ public class RegistrationsDAO extends DBContext {
                 + "       r.Note "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Course s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID  "
                 + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)AND r.Status != 'Cancelled' "
@@ -546,7 +546,7 @@ public class RegistrationsDAO extends DBContext {
 
     public int getTotalSearchResultsByUserId(int userId, String searchQuery) {
         String sql = "SELECT COUNT(*) FROM Registrations r "
-                + "JOIN Subjects s ON r.subjectId = s.subjectId "
+                + "JOIN Course s ON r.subjectId = s.subjectId "
                 + "WHERE r.userId = ? AND (s.subjectName LIKE ? OR r.status LIKE ?) AND r.Status != 'Cancelled'";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -584,7 +584,7 @@ public class RegistrationsDAO extends DBContext {
                             r.Note 
                      FROM Registrations r 
                      JOIN Users u ON r.UserID = u.UserID 
-                     JOIN Subjects s ON r.SubjectID = s.SubjectID 
+                     JOIN Course s ON r.SubjectID = s.SubjectID 
                      JOIN Package_Price pp ON r.PackageID = pp.PackageID 
                      LEFT JOIN Users staff ON r.StaffID = staff.UserID 
                      WHERE r.UserID = ? 
@@ -671,10 +671,10 @@ public class RegistrationsDAO extends DBContext {
                 + "       COALESCE(cs.Progress, 0) AS Progress "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Course s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID "
-                + "LEFT JOIN Customer_Subject cs ON r.SubjectID = cs.SubjectID AND r.UserID = cs.UserID " 
+                + "LEFT JOIN Customer_Course cs ON r.SubjectID = cs.SubjectID AND r.UserID = cs.UserID " 
                 + "WHERE r.UserID = ? AND r.Status = 'Active'"
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS "
@@ -735,10 +735,10 @@ public class RegistrationsDAO extends DBContext {
                 + "       COALESCE(cs.Progress, 0) AS Progress "
                 + "FROM Registrations r "
                 + "JOIN Users u ON r.UserID = u.UserID "
-                + "JOIN Subjects s ON r.SubjectID = s.SubjectID "
+                + "JOIN Course s ON r.SubjectID = s.SubjectID "
                 + "JOIN Package_Price pp ON r.PackageID = pp.PackageID "
                 + "LEFT JOIN Users staff ON r.StaffID = staff.UserID  "
-                + "LEFT JOIN Customer_Subject cs ON r.SubjectID = cs.SubjectID AND r.UserID = cs.UserID " 
+                + "LEFT JOIN Customer_Course cs ON r.SubjectID = cs.SubjectID AND r.UserID = cs.UserID " 
                 + "WHERE r.UserID = ? AND (s.Title LIKE ? OR pp.Name LIKE ?)AND r.Status = 'Active' "
                 + "ORDER BY r.Registration_Time DESC "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Thêm phân trang
@@ -780,7 +780,7 @@ public class RegistrationsDAO extends DBContext {
      */
     public int getTotalSearchResultsCourseByUserId(int userId, String searchQuery) {
         String sql = "SELECT COUNT(*) FROM Registrations r "
-                + "JOIN Subjects s ON r.subjectId = s.subjectId "
+                + "JOIN Course s ON r.subjectId = s.subjectId "
                 + "WHERE r.userId = ? AND (s.subjectName LIKE ? OR r.status LIKE ?) AND r.Status = 'Active'";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -827,7 +827,7 @@ public class RegistrationsDAO extends DBContext {
         try {
             String sql = "SELECT sc.Title AS CategoryName, COUNT(r.RegistrationID) AS RegistrationCount "
                     + "FROM Subject_Category sc "
-                    + "JOIN Subjects s ON sc.Subject_CategoryID = s.Subject_CategoryID "
+                    + "JOIN Course s ON sc.Subject_CategoryID = s.Subject_CategoryID "
                     + "JOIN Registrations r ON s.SubjectID = r.SubjectID "
                     + "GROUP BY sc.Subject_CategoryID, sc.Title "
                     + "HAVING COUNT(r.RegistrationID) > 0 "
@@ -873,7 +873,7 @@ public class RegistrationsDAO extends DBContext {
  */
     public List<SubjectCategoryCount> getBestSeller(int n) {
         List<SubjectCategoryCount> list = new ArrayList<>();
-        String sql = "SELECT top " + n + "count(r.SubjectID) as Amount, s.Title FROM Registrations r join Subjects s on r.SubjectID = s.SubjectID group by s.Title order by Amount desc";
+        String sql = "SELECT top " + n + "count(r.SubjectID) as Amount, s.Title FROM Registrations r join Course s on r.SubjectID = s.SubjectID group by s.Title order by Amount desc";
         try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
             while (rs.next()) {
                 SubjectCategoryCount subCount = new SubjectCategoryCount();
@@ -909,28 +909,34 @@ public class RegistrationsDAO extends DBContext {
  * @param registration
  * @return 
  */
-    // Method to update a opject registration
-    public boolean updateRegistration(Registrations registration) {
-
-        if (registration.getValidFrom().after(registration.getValidTo())) {
-            return false; // Invalid date range
-        }
-        String sql = "UPDATE Registrations SET Valid_From = ?, Valid_To = ?, Status = ? WHERE RegistrationID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setDate(1, new java.sql.Date(registration.getValidFrom().getTime()));
-            ps.setDate(2, new java.sql.Date(registration.getValidTo().getTime()));
-            ps.setString(3, registration.getStatus());
-            ps.setInt(4, registration.getRegistrationId());
-
-            int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+public boolean updateRegistration(Registrations registration) {
+    // Validate date range
+    if (registration.getValidFrom().after(registration.getValidTo())) {
+        return false; // Invalid date range
     }
+
+    // SQL update statement
+    String sql = "UPDATE Registrations SET Valid_From = ?, Valid_To = ?, Status = ?, StaffID = ? WHERE RegistrationID = ?";
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        // Set parameters in the PreparedStatement
+        ps.setDate(1, new java.sql.Date(registration.getValidFrom().getTime()));
+        ps.setDate(2, new java.sql.Date(registration.getValidTo().getTime()));
+        ps.setString(3, registration.getStatus());
+        ps.setInt(4, registration.getStaffId()); // Staff ID should be set here
+        ps.setInt(5, registration.getRegistrationId()); // Registration ID should be set here
+
+        // Execute the update and return the result
+        int rowsUpdated = ps.executeUpdate();
+        return rowsUpdated > 0; // Return true if at least one row was updated
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return false; // Return false if update fails or exception occurs
+}
+
 
     /**
      * 

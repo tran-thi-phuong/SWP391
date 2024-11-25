@@ -39,12 +39,12 @@
                     <c:forEach var="slider" items="${sliders}" varStatus="status">
                         <c:if test="${slider.status == 'Show'}">
                             <div class="slide">
-                                    <c:if test="${not empty slider.backlink}">
-                                        <!-- If backlink is not empty, wrap the image with the <a> tag -->
-                                        <a href="${slider.backlink}" target="_blank">
-                                            <img src="${slider.image}" alt="${slider.title}"> <!-- Display slider images -->
-                                        </a>
-                                    </c:if>
+                                <c:if test="${not empty slider.backlink}">
+                                    <!-- If backlink is not empty, wrap the image with the <a> tag -->
+                                    <a href="${slider.backlink}" target="_blank">
+                                        <img src="${slider.image}" alt="${slider.title}"> <!-- Display slider images -->
+                                    </a>
+                                </c:if>
                             </div>
                         </c:if>
                     </c:forEach>
@@ -70,6 +70,7 @@
                             <div class="col-md-4 mb-4">
                                 <div class="card">
                                     <img class="card-img-top" src="${subject.thumbnail}" alt="${subject.title}"> <!-- Display subject thumbnail -->
+
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <a class="text-primary" href="SubjectView?subjectId=${subject.subjectID}">
@@ -79,10 +80,12 @@
                                         <p class="card-text">
                                             ${subject.ownerName}
                                         </p>
+                                        <button class="btn btn-primary" onclick="location.href = 'TryCourse?subjectId=${subject.subjectID}'">Try Now</button> <!-- Try Now button -->
                                     </div>
                                 </div>
                             </div>
                         </c:forEach>
+
                     </div>
                 </div>
 

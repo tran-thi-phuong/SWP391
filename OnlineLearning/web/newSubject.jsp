@@ -71,7 +71,7 @@
         </style>
     </head>
     <body>
-        <h1>Add New Subject</h1>
+        <h1>Add New Course</h1>
 
 
         <form action="newSubject" method="POST" enctype="multipart/form-data">

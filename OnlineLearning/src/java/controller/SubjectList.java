@@ -26,6 +26,7 @@ import model.Lesson;
 import dal.LessonDAO;
 import java.util.HashMap;
 import java.util.Map;
+import dal.Customer_SubjectDAO;
 
 /**
  *
@@ -38,6 +39,7 @@ public class SubjectList extends HttpServlet {
     private CategoryDAO categoryDAO;
     private UserDAO userDAO;
     private LessonDAO lessonDAO;
+    private Customer_SubjectDAO csubjectDAO;
 
     @Override
     public void init() throws ServletException {
@@ -45,11 +47,15 @@ public class SubjectList extends HttpServlet {
         subjectDAO = new SubjectDAO();
         categoryDAO = new CategoryDAO();
         lessonDAO = new LessonDAO();
+        csubjectDAO = new Customer_SubjectDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!hasPermission(request, response)) {
+            return;
+        }
         try {
             HttpSession session = request.getSession();
             Users currentUser = (Users) session.getAttribute("user");
@@ -69,6 +75,13 @@ public class SubjectList extends HttpServlet {
             SubjectListResult subjectResult = getSubjects(query, categoryId, status, page, recordsPerPage, currentUser);
 
             List<SubjectCategory> categories = categoryDAO.getAllCategories();
+            // Calculate average progress for each subject
+            Map<Integer, Double> averageProgressMap = new HashMap<>();
+            for (Subject subject : subjectResult.subjects) {
+                double avgProgress = csubjectDAO.calculateAverageProgress(subject.getSubjectID());
+                averageProgressMap.put(subject.getSubjectID(), avgProgress);
+            }
+            request.setAttribute("averageProgressMap", averageProgressMap);
 
             Map<Integer, Integer> lessonCounts = new HashMap<>();
             for (Subject subject : subjectResult.subjects) {
@@ -137,5 +150,29 @@ public class SubjectList extends HttpServlet {
             this.subjects = subjects;
             this.totalRecords = totalRecords;
         }
+    }
+     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Users currentUser = (Users) session.getAttribute("user");
+
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return false;
+        }
+
+        String userRole = currentUser.getRole();
+        RolePermissionDAO rolePermissionDAO = new RolePermissionDAO();
+        Integer pageID = new PagesDAO().getPageIDFromUrl(request.getRequestURL().toString());
+
+        if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
+            response.sendRedirect(request.getContextPath() + "/Homepage");
+
+            return false;
+        } else if (pageID == null) {
+            response.sendRedirect("error.jsp");
+            return false;
+        }
+
+        return true;
     }
 }

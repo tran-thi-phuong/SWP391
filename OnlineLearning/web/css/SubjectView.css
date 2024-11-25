@@ -146,3 +146,13 @@ iframe {
     aspect-ratio: 16 / 9;
     height: auto; /* Ensures the height adjusts automatically based on the width */
 }
+.deadline-notice {
+    color: red;
+    font-size: 30px;
+    background-color: #f8d7da; /* Light red background */
+    border: 1px solid #f5c2c7; /* Red border */
+    padding: 15px;
+    border-radius: 5px; /* Rounded corners */
+    margin: 20px 0; /* Space above and below */
+    text-align: center; /* Center align text */
+}

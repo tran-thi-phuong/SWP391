@@ -31,12 +31,12 @@
                             </form>
                         </div>
                     </c:if>
-                    <form action="campaignList" method="get">
+<!--                    <form action="campaignList" method="get">
                         <button type="submit" id="add" style="background-color: #FF0000; color: white;
                                 border: 1px solid #FF6347 ; padding: 10px 20px; cursor: pointer; border-radius: 5px;">
                             Campaign List
                         </button>
-                    </form>
+                    </form>-->
                     <br>
                     <form id="searchForm" action="listRegistration" method="get">
                         <div class="row mb-3">

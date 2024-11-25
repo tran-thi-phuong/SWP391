@@ -67,6 +67,9 @@
                 </div>
             </div>
             <div class="form-group row-3">
+                <div>
+                    <label for="lesson-duration" >Duration:  </label>
+                <input class="form-control" type="text" id="lesson-durtion" name="lesson-duration" value="${lesson.duration}" required></div>
                 <div class="html-content">
                     <label for="content" >HTML content</label>
                     <div id="editor-container">${lesson.content}</div>
@@ -218,12 +221,12 @@
                 document.forms[0].submit();
             }
             function doDelete() {
-    // Confirm the deletion action
-    if (confirm("Are you sure you want to delete this lesson?")) {
-        // Redirect to the delete URL if confirmed
-        window.location.href = `deleteLesson?lessonID=${lesson.lessonID}&courseID=${courseID}&courseName=${requestScope.courseName}`;
-    }
-}
+                // Confirm the deletion action
+                if (confirm("Are you sure you want to delete this lesson?")) {
+                    // Redirect to the delete URL if confirmed
+                    window.location.href = `deleteLesson?lessonID=${lesson.lessonID}&courseID=${courseID}&courseName=${requestScope.courseName}`;
+                }
+            }
 
         </script>
     </body>

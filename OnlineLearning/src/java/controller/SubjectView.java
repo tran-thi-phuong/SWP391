@@ -47,7 +47,7 @@ public class SubjectView extends HttpServlet {
             subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId);
         } else {
             // If the user is logged in, retrieve the subject list based on userId and subjectId
-            subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
+            subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId);
         }
 
         // Set the subjects attribute for use in the JSP

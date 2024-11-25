@@ -35,14 +35,78 @@
                     <a href="SubjectView?subjectId=${subjectId}" class="btn btn-secondary">Back to Subjects</a>
                 </div>
             </div>
-            
+
             <%-- Main content row with lesson details and subject list sidebar --%>
             <div class="row">
                 <div class="col-md-8">
                     <%-- Check if lesson data is available and display its details --%>
                     <c:choose>
                         <c:when test="${not empty lesson}">
+                            <c:if test="${not empty deadlineNotice}">
+                                <script>
+                                    // Pass the deadline notice from the server
+                                    const deadlineNotice = "${deadlineNotice}";
+
+                                    // Function to display a custom alert with close functionality
+                                    function showAlert(message) {
+                                        // Create the alert container
+                                        const alertDiv = document.createElement('div');
+                                        alertDiv.style.position = 'fixed';
+                                        alertDiv.style.top = '20px';
+                                        alertDiv.style.right = '20px';
+                                        alertDiv.style.backgroundColor = '#f8d7da';
+                                        alertDiv.style.color = '#721c24';
+                                        alertDiv.style.padding = '15px 20px';
+                                        alertDiv.style.border = '1px solid #f5c6cb';
+                                        alertDiv.style.borderRadius = '5px';
+                                        alertDiv.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.2)';
+                                        alertDiv.style.zIndex = '9999';
+                                        alertDiv.style.width = '300px';
+                                        alertDiv.style.display = 'flex';
+                                        alertDiv.style.justifyContent = 'space-between';
+                                        alertDiv.style.alignItems = 'center';
+
+                                        // Add the alert message
+                                        const messageSpan = document.createElement('span');
+                                        messageSpan.innerText = message;
+                                        alertDiv.appendChild(messageSpan);
+
+                                        // Add the close button
+                                        const closeButton = document.createElement('button');
+                                        closeButton.innerText = '×';
+                                        closeButton.style.backgroundColor = 'transparent';
+                                        closeButton.style.border = 'none';
+                                        closeButton.style.color = '#721c24';
+                                        closeButton.style.fontSize = '16px';
+                                        closeButton.style.cursor = 'pointer';
+                                        closeButton.style.marginLeft = '10px';
+
+                                        // Close button click handler
+                                        closeButton.onclick = function () {
+                                            alertDiv.remove();
+                                        };
+
+                                        alertDiv.appendChild(closeButton);
+
+                                        // Append the alert to the document body
+                                        document.body.appendChild(alertDiv);
+
+                                        // Automatically hide the alert after 3 minutes (180,000 ms)
+                                        setTimeout(() => {
+                                            alertDiv.remove();
+                                        }, 180000); // 3 minutes in milliseconds
+                                    }
+
+                                    // Display the alert
+                                    showAlert(deadlineNotice);
+                                </script>
+                            </c:if>
+
+
+
                             <h3>${lesson.title}</h3>
+
+
                             <p><strong>Description:</strong> ${lesson.description}</p>
                             <p>${lesson.content}</p>
 
@@ -52,6 +116,7 @@
                                     <%-- No action needed if lesson is already marked as completed --%>
                                 </c:when>
                                 <c:otherwise>
+
                                     <%-- Display a form to submit "Mark as Completed" action for the lesson --%>
                                     <form action="LessonView" method="post">
                                         <input type="hidden" name="lessonID" value="${lesson.lessonID}" />
@@ -82,10 +147,10 @@
                                     <div class="lesson-item">
                                         <%-- Link to lesson view page for each lesson title --%>
                                         <p><a href="LessonView?lessonId=${lesson.lessonID}&subjectId=${subject.subjectID}">${lesson.title}</a></p>
-                                        <%-- Show completed icon if user is logged in and lesson is completed --%>
-                                        <c:if test="${not empty sessionScope.user}">
-                                            <c:choose>
-                                                <c:when test="${lesson.status == 'Completed'}">
+                                            <%-- Show completed icon if user is logged in and lesson is completed --%>
+                                            <c:if test="${not empty sessionScope.user}">
+                                                <c:choose>
+                                                    <c:when test="${lesson.status == 'Completed'}">
                                                     <span class="status-icon">
                                                         <i class="bi bi-check-circle-fill text-success"></i> Completed
                                                     </span>

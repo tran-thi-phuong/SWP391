@@ -149,7 +149,7 @@ public class QuestionDetail extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     //setup URL for call API
-    String API_KEY = "AIzaSyCvgaTStpraY_PXbu4Fu-LDlfDv9hUyj_U"; //Replace with your API key
+    String API_KEY = "AIzaSyDYjULffQIiLVTTSSSMa73IryeF_PriRW8"; //Replace with your API key
     private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
 
     @Override
@@ -192,6 +192,7 @@ public class QuestionDetail extends HttpServlet {
                 //summarize question
                 Question q = questionDAO.getQuestionById(questionId);
                 String userInput = q.getContent();
+                userInput = userInput.replace("\"","");
                 userInput += "Summarize it with simple words, keep the meaning, if it is question, don't answer";
                 String jsonResponse = callGenerativeAPI(userInput);
                 String extractedText = extractTextFromJson(jsonResponse);

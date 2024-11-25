@@ -60,7 +60,7 @@
                     <div class="registration-card">
                         <div>
                             <!-- Display course details -->
-                            <p class="registration-card-text"><img class="card-img-top" src="images/${course.thumbnail}" alt="${course.subjectName}"></p>
+                            <p class="registration-card-text"><img class="card-img-top" src="${course.thumbnail}" alt="${course.subjectName}"></p>
                             <p class="registration-card-title subjectName">
                             <a href="SubjectView?subjectId=${course.subjectId}">
                                 ${course.subjectName}

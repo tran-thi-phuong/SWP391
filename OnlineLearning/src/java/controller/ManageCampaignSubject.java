@@ -89,37 +89,41 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                     request.getRequestDispatcher("CampaignSubject.jsp").forward(request, response);
                     return;
                 }
+                boolean delete = csDao.deleteCampaignSubject();
 
                 // Call the DAO method to add the campaign-subject discount
                 boolean success = csDao.addCampaignSubject(campaignId, subjectId, discount);
 
                 if (!success) {
                     // If insertion failed, return error message
-                    request.setAttribute("errorMessage", "Failed to save campaign-subject discount for subject " + subjectId);
+                    request.setAttribute("errorMessage", "Failed to save campaign discount for course " + subjectId);
                     request.getRequestDispatcher("CampaignSubject.jsp").forward(request, response);
                     return;
                 }
 
-                // Get the original price for the subject
-                Double price = pDao.getPriceBySubjectID(Integer.parseInt(subjectId));
+                // Get the list of prices for the given subjectId
+                List<Double> prices = pDao.getPricesBySubjectID(Integer.parseInt(subjectId));
 
-                if (price == null || price <= 0) {
-                    // Check if the price is null or less than or equal to 0
-                    request.setAttribute("errorMessage", "Invalid or missing price for subject: " + subjectId);
+                // Check if the list is not empty and process the first price
+                if (prices != null && !prices.isEmpty()) {
+                    // Calculate the sale price based on the discount using the first price
+                    double originalPrice = prices.get(0);
+                    double salePrice = originalPrice - (originalPrice * discount / 100.0);
+
+                    // Update the sale price in the database using the PackagePriceDAO
+                    boolean priceUpdateSuccess = pDao.updateSalePriceBySubjectID(Integer.parseInt(subjectId), salePrice);
+                    if (!priceUpdateSuccess) {
+                        request.setAttribute("errorMessage", "Failed to update sale price for subject " + subjectId);
+                        request.getRequestDispatcher("CampaignSubject.jsp").forward(request, response);
+                        return;
+                    }
+                } else {
+                    // If no prices are found for the given subjectId
+                    request.setAttribute("errorMessage", "No prices found for the given subjectId.");
                     request.getRequestDispatcher("CampaignSubject.jsp").forward(request, response);
                     return;
                 }
 
-                // Calculate the sale price based on the discount
-                double salePrice = price - (price * discount / 100.0);
-
-                // Update the sale price in the database using the PackagePriceDAO
-                boolean priceUpdateSuccess = pDao.updateSalePriceBySubjectID(Integer.parseInt(subjectId), salePrice);
-                if (!priceUpdateSuccess) {
-                    request.setAttribute("errorMessage", "Failed to update sale price for subject " + subjectId);
-                    request.getRequestDispatcher("CampaignSubject.jsp").forward(request, response);
-                    return;
-                }
             } catch (NumberFormatException e) {
                 // Handle invalid discount format
                 request.setAttribute("errorMessage", "Invalid discount value. Please enter a valid number between 0 and 100.");
@@ -133,7 +137,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     request.setAttribute("successMessage", "Discounts updated successfully.");
     response.sendRedirect("ManageCampaignSubject");  // Redirecting to the same page or a success page
 }
-
 
     /**
      * Returns a short description of the servlet.

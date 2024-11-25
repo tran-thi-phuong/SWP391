@@ -64,7 +64,9 @@ public class LessonDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//         if (!hasPermission(request, response)) return;
+        if (!hasPermission(request, response)) {
+            return;
+        }
         LessonDAO l = new LessonDAO();
         SubjectDAO s = new SubjectDAO();
         String action = request.getParameter("action");
@@ -105,12 +107,13 @@ public class LessonDetail extends HttpServlet {
         String order = request.getParameter("order");
         String content = request.getParameter("content");
         String courseID = request.getParameter("courseID");
-        
+        String duration = request.getParameter("lesson-duration");
+
         if (action.equals("update")) {
             String lessonID = request.getParameter("lessonID");
             Lesson lesson = l.getLessonByLessonID(Integer.parseInt(lessonID));
             if (l.validLessonOrder(Integer.parseInt(courseID), Integer.parseInt(topic), Integer.parseInt(order)) || Integer.parseInt(order) == lesson.getOrder()) {
-                l.updateLesson(Integer.parseInt(lessonID), lessonName, Integer.parseInt(topic), content, Integer.parseInt(order), description, status);
+                l.updateLesson(Integer.parseInt(lessonID), lessonName, Integer.parseInt(topic), content, Integer.parseInt(order), description, status, Integer.parseInt(duration));
                 session.setAttribute("success", true);
                 response.sendRedirect("lessonDetail?lessonID=" + lessonID + "&courseID=" + courseID + "&action=" + action);
             } else {
@@ -120,7 +123,7 @@ public class LessonDetail extends HttpServlet {
 
         } else if (action.equals("add")) {
             if (l.validLessonOrder(Integer.parseInt(courseID), Integer.parseInt(topic), Integer.parseInt(order))) {
-                l.addLesson(Integer.parseInt(courseID), lessonName, Integer.parseInt(topic), content, Integer.parseInt(order), description, status);
+                l.addLesson(Integer.parseInt(courseID), lessonName, Integer.parseInt(topic), content, Integer.parseInt(order), description, status, Integer.parseInt(duration));
                 session.setAttribute("success", true);
                 response.sendRedirect("lessonDetail?courseID=" + courseID + "&action=" + action);
             } else {
@@ -140,6 +143,7 @@ public class LessonDetail extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
     private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
@@ -153,7 +157,7 @@ public class LessonDetail extends HttpServlet {
         String userRole = currentUser.getRole();
 
         if (pageID != null && !rolePermissionDAO.hasPermission(userRole, pageID)) {
-           response.sendRedirect(request.getContextPath() + "/Homepage");
+            response.sendRedirect(request.getContextPath() + "/Homepage");
 
             return false;
         } else if (pageID == null) {

@@ -21,7 +21,7 @@ public class LessonDAO extends DBContext {
     // get all topic of the subject by id
     public List<SubjectTopic> getAllLessonTopicBySubjectId(int subjectID) {
         List<SubjectTopic> list = new ArrayList<>();
-        String sql = "select lt.Name, ls.TopicID, ls.SubjectID, ls.[Order] from Subject_LessonTopic ls join LessonTopic lt "
+        String sql = "select lt.Name, ls.TopicID, ls.SubjectID, ls.[Order] from Course_LessonTopic ls join LessonTopic lt "
                 + "on ls.TopicID = lt.TopicID where SubjectID = ? order by [Order]";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, subjectID);
@@ -58,6 +58,7 @@ public class LessonDAO extends DBContext {
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
                     lesson.setStatus(rs.getString("Status"));
+                    lesson.setDuration(rs.getInt("Duration"));
                     list.add(lesson);
                 }
             }
@@ -83,6 +84,7 @@ public class LessonDAO extends DBContext {
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
                     lesson.setStatus(rs.getString("Status"));
+                    lesson.setDuration(rs.getInt("Duration"));
                     list.add(lesson);
                 }
             }
@@ -110,6 +112,7 @@ public class LessonDAO extends DBContext {
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
                     lesson.setStatus(rs.getString("Status"));
+                    lesson.setDuration(rs.getInt("Duration"));
                     list.add(lesson);
                 }
             }
@@ -160,6 +163,7 @@ public class LessonDAO extends DBContext {
                 lesson.setLessonID(rs.getInt("LessonID"));
                 lesson.setDescription(rs.getString("Description"));
                 lesson.setStatus(rs.getString("Status"));
+                
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -195,6 +199,7 @@ public class LessonDAO extends DBContext {
                 lesson.setOrder(rs.getInt("Order"));
                 lesson.setDescription(rs.getString("Description"));
                 lesson.setStatus(rs.getString("Status"));
+                lesson.setDuration(rs.getInt("Duration"));
                 list.add(lesson);
             }
         } catch (SQLException e) {
@@ -221,6 +226,7 @@ public class LessonDAO extends DBContext {
                     lesson.setOrder(rs.getInt("Order"));
                     lesson.setDescription(rs.getString("Description"));
                     lesson.setStatus(rs.getString("Status"));
+                    lesson.setDuration(rs.getInt("Duration"));
                 }
             }
         } catch (SQLException e) {
@@ -250,6 +256,8 @@ public class LessonDAO extends DBContext {
                 lesson.setOrder(rs.getInt("Order"));
                 lesson.setSubjectID(rs.getInt("SubjectID"));
                 lesson.setTopicID(rs.getInt("TopicID"));
+                lesson.setDuration(rs.getInt("Duration"));
+                lesson.setDuration(rs.getInt("Duration"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -258,9 +266,9 @@ public class LessonDAO extends DBContext {
     }
 
     // func for adding a new lesson
-    public void addLesson(int subjectID, String title, int topicID, String content, int order, String description, String status) {
-        String sql = "INSERT INTO Lessons (SubjectID, Title, TopicID, Content, [Order], Description, Status) "
-                + "VALUES (?,?,?,?,?,?,?)";
+    public void addLesson(int subjectID, String title, int topicID, String content, int order, String description, String status, int duration) {
+        String sql = "INSERT INTO Lessons (SubjectID, Title, TopicID, Content, [Order], Description, Status, Duration) "
+                + "VALUES (?,?,?,?,?,?,?,?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, subjectID);
@@ -270,6 +278,7 @@ public class LessonDAO extends DBContext {
             pstmt.setInt(5, order);
             pstmt.setString(6, description);
             pstmt.setString(7, status);
+            pstmt.setInt(8, duration);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -277,8 +286,8 @@ public class LessonDAO extends DBContext {
     }
 
     // func for updating lesson by id
-    public void updateLesson(int lessonID, String title, int topicID, String content, int order, String description, String status) {
-        String sql = "update Lessons set Title = ?, TopicID = ?, Content = ?, [Order] = ?, Description = ?, Status = ? where LessonID = ?";
+    public void updateLesson(int lessonID, String title, int topicID, String content, int order, String description, String status, int duration) {
+        String sql = "update Lessons set Title = ?, TopicID = ?, Content = ?, [Order] = ?, Description = ?, Status = ?, Duration = ? where LessonID = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, title);
@@ -287,7 +296,8 @@ public class LessonDAO extends DBContext {
             pstmt.setInt(4, order);
             pstmt.setString(5, description);
             pstmt.setString(6, status);
-            pstmt.setInt(7, lessonID);
+            pstmt.setInt(7, duration);
+            pstmt.setInt(8, lessonID);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -326,7 +336,7 @@ public class LessonDAO extends DBContext {
     public boolean addLessonTopic(SubjectTopic topic) {
         String insertLessonTopicSQL = "INSERT INTO LessonTopic (Name) VALUES (?)";
         String selectLastInsertedTopicIDSQL = "SELECT MAX(TopicID) AS TopicID FROM LessonTopic";
-        String insertSubjectLessonTopicSQL = "INSERT INTO Subject_LessonTopic (TopicID, SubjectID, [Order]) VALUES (?, ?, ?)";
+        String insertSubjectLessonTopicSQL = "INSERT INTO Course_LessonTopic (TopicID, SubjectID, [Order]) VALUES (?, ?, ?)";
 
         try (PreparedStatement ps1 = connection.prepareStatement(insertLessonTopicSQL)) {
             // Thêm vào bảng LessonTopic
@@ -356,8 +366,8 @@ public class LessonDAO extends DBContext {
     }
 
     public boolean deleteLessonTopic(int topicID, int subjectID) {
-        String deleteSubjectLessonTopicSQL = "DELETE FROM Subject_LessonTopic WHERE TopicID = ? AND SubjectID = ?";
-        String deleteLessonTopicSQL = "DELETE FROM LessonTopic WHERE TopicID = ? AND NOT EXISTS (SELECT 1 FROM Subject_LessonTopic WHERE TopicID = ?)";
+        String deleteSubjectLessonTopicSQL = "DELETE FROM Course_LessonTopic WHERE TopicID = ? AND SubjectID = ?";
+        String deleteLessonTopicSQL = "DELETE FROM LessonTopic WHERE TopicID = ? AND NOT EXISTS (SELECT 1 FROM Course_LessonTopic WHERE TopicID = ?)";
 
         try (PreparedStatement ps1 = connection.prepareStatement(deleteSubjectLessonTopicSQL)) {
             ps1.setInt(1, topicID);
@@ -378,7 +388,7 @@ public class LessonDAO extends DBContext {
 
     public boolean updateLessonTopic(SubjectTopic topic) {
         String updateTopicNameSQL = "UPDATE LessonTopic SET Name = ? WHERE TopicID = ?";
-        String updateOrderSQL = "UPDATE Subject_LessonTopic SET [Order] = ? WHERE TopicID = ? AND SubjectID = ?";
+        String updateOrderSQL = "UPDATE Course_LessonTopic SET [Order] = ? WHERE TopicID = ? AND SubjectID = ?";
 
         try (
                 PreparedStatement ps1 = connection.prepareStatement(updateTopicNameSQL); PreparedStatement ps2 = connection.prepareStatement(updateOrderSQL)) {
@@ -416,7 +426,7 @@ public class LessonDAO extends DBContext {
     }
 
     public boolean isOrderUnique(int subjectID, int order) {
-        String query = "select Count(*) from [Subject_LessonTopic] where SubjectID=? and [Order]=?";
+        String query = "select Count(*) from [Course_LessonTopic] where SubjectID=? and [Order]=?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, subjectID);
             ps.setInt(2, order);
@@ -434,7 +444,7 @@ public class LessonDAO extends DBContext {
         // Truy vấn để lấy dữ liệu từ cả hai bảng
         String query = "SELECT lt.TopicID, slt.SubjectID, lt.Name, slt.[Order] "
                 + "FROM LessonTopic lt "
-                + "JOIN Subject_LessonTopic slt ON lt.TopicID = slt.TopicID "
+                + "JOIN Course_LessonTopic slt ON lt.TopicID = slt.TopicID "
                 + "WHERE lt.TopicID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -453,5 +463,41 @@ public class LessonDAO extends DBContext {
         }
         return null;
     }
+
+    // Assuming you have a method to get the first lesson for a subject
+    public Lesson getFirstLessonBySubjectId(int subjectId) {
+        Lesson firstLesson = null;
+        String sql = "SELECT TOP 1* FROM Lessons WHERE subjectId = ? ORDER BY LessonID ASC "; // Or based on created_at
+
+        try (
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                firstLesson = new Lesson();
+                firstLesson.setLessonID(rs.getInt("LessonID"));
+                firstLesson.setTitle(rs.getString("Title"));
+                firstLesson.setContent(rs.getString("Content"));
+                firstLesson.setDescription(rs.getString("Description"));
+                // Any other lesson details you want to map here
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return firstLesson;
+    }
+
+
+    public static void main(String[] args) {
+   
+      
+
+            // Test the updateLesson method
+          LessonDAO test = new LessonDAO();
+            test.addLesson(1, "title", 1, "content", 2, "description", "Active", 50);
+
+          
+    }
+
 
 }

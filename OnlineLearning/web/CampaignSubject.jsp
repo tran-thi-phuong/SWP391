@@ -14,7 +14,7 @@
     <%@ include file="Header.jsp" %>
     <body class="campaign-subject-body">
 
-        <h2 class="campaign-subject-title">Assign Campaigns to Subjects</h2>
+        <h2 class="campaign-subject-title">Assign Campaigns to Courses</h2>
         <!-- Display error or success messages -->
         <c:if test="${not empty errorMessage}">
             <div class="alert alert-danger">
@@ -37,7 +37,7 @@
                 <thead>
                     <tr>
                         <th class="campaign-name-column">Campaign Name</th>  
-                        <th class="select-subject-column">Select Subject</th>
+                        <th class="select-subject-column">Select Course</th>
                         <th class="discount-column">Discount (%)</th>
                     </tr>
                 </thead>

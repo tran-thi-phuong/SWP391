@@ -9,21 +9,33 @@ package model;
  * @author tuant
  */
 public class Lesson {
-    private int lessonID, subjectID, topicID, order;
+    private int lessonID, subjectID, topicID, order, duration;
     private String title, content, description, status;
 
     public Lesson() {
     }
 
-    public Lesson(int lessonID, int subjectID, int topicID, int order, String title, String content, String description, String status, String mediaLink) {
+    public Lesson(int lessonID, int subjectID, int topicID, int order, int duration, String title, String content, String description, String status) {
         this.lessonID = lessonID;
         this.subjectID = subjectID;
         this.topicID = topicID;
         this.order = order;
+        this.duration = duration;
         this.title = title;
         this.content = content;
         this.description = description;
         this.status = status;
+    }
+
+  
+    
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public int getLessonID() {

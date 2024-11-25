@@ -20,6 +20,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     padding-left: 90px;
     padding-top: 20px;
 }
+
 #description{
     width: 770px;
 }
@@ -135,4 +136,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     font-size: 16px;
     margin-bottom: 0px;
     margin-top: 20px;
+}
+/* Styling for duration input box */
+#lesson-durtion {
+    width: 150px; /* Set an appropriate width */
+    height: 40px; /* Match the height of other input fields */
+    border: 1px solid #ccc; /* Add a subtle border */
+    border-radius: 5px; /* Rounded corners for better aesthetics */
+    padding: 5px 10px; /* Add some padding inside the box */
+    font-size: 16px; /* Match the font size with other fields */
+    color: #333; /* Text color */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight inner shadow */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+}
+
+#lesson-durtion:focus {
+    border-color: #007bff; /* Highlight border when focused */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add glowing effect on focus */
+    outline: none; /* Remove default outline */
 }

@@ -139,14 +139,19 @@ public class updateRegistration extends HttpServlet { // Class names should star
 
             boolean allLessonsAdded = true;
             for (Lesson lesson : lessons) {
-                boolean lessonAdded = lesson_User.addLesson(lesson.getLessonID(), userID);
-                if (!lessonAdded) {
-                    allLessonsAdded = false;
-                    request.setAttribute("error", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userID);
-                    request.getRequestDispatcher("RegistrationDetail.jsp").forward(request, response);
-                    return;
-                }
+            // Calculate the deadline
+            int dealine = lesson.getDuration(); 
+            Date deadlineDate = Date.valueOf(currentDate.plusDays(durationDays)); 
+
+            // Add the lesson with the deadline
+            boolean lessonAdded = lesson_User.addLesson(lesson.getLessonID(), userID, deadlineDate);
+            if (!lessonAdded) {
+                allLessonsAdded = false;
+                request.setAttribute("errorMessage", "Failed to add lessonID = " + lesson.getLessonID() + " for userID = " + userID);
+                request.getRequestDispatcher("AddRegistrationBySale.jsp").forward(request, response);
+                return;
             }
+        }
 
             // Add payment after successful registration update and lesson addition
             boolean paymentAdded = paymentDAO.addPayment(userID, subjectID, amount);

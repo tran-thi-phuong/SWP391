@@ -27,7 +27,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllSubjects(int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM Course s JOIN Users u ON s.OwnerID = u.UserID ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             // Set the offset and limit parameters
@@ -59,7 +59,7 @@ public class SubjectDAO extends DBContext {
     // Method to get subjects with status "Active"
     public List<Subject> getActiveSubjects() {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT SubjectID, Title, Status FROM Subjects WHERE Status = 'Active'"; // Include Status in SELECT statement
+        String sql = "SELECT SubjectID, Title, Status FROM Course WHERE Status = 'Active'"; // Include Status in SELECT statement
 
         try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
@@ -80,7 +80,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllActiveSubjects(int offset, int limit) {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID where s.Status = 'Active' ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM Course s JOIN Users u ON s.OwnerID = u.UserID where s.Status = 'Active' ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             // Set the offset and limit parameters
@@ -111,7 +111,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getAllSubjects() {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID"; // Select all subjects
+        String sql = "SELECT * FROM Course s JOIN Users u ON s.OwnerID = u.UserID"; // Select all subjects
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -136,7 +136,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getTotalSubjects() {
-        String sql = "SELECT COUNT(*) FROM Subjects";
+        String sql = "SELECT COUNT(*) FROM Course";
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
@@ -148,7 +148,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getTotalActiveSubjects() {
-        String sql = "SELECT COUNT(*) FROM Subjects where Status = 'Active'";
+        String sql = "SELECT COUNT(*) FROM Course where Status = 'Active'";
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
@@ -160,7 +160,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getNewSubjectByTime(Date startDate, Date endDate) {
-        String sql = "SELECT COUNT(*) FROM Subjects WHERE Update_Date BETWEEN ? AND ?";
+        String sql = "SELECT COUNT(*) FROM Course WHERE Update_Date BETWEEN ? AND ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(startDate.getTime()));
             ps.setDate(2, new java.sql.Date(endDate.getTime()));
@@ -177,7 +177,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getSubjectsByCategory(int categoryId, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE Subject_CategoryID = ? "
+        String sql = "SELECT * FROM Course s JOIN Users u ON s.OwnerID = u.UserID WHERE Subject_CategoryID = ? "
                 + "ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -207,7 +207,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getActiveSubjectsByCategory(int categoryId, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE Subject_CategoryID = ? and s.Status = 'Active' "
+        String sql = "SELECT * FROM Course s JOIN Users u ON s.OwnerID = u.UserID WHERE Subject_CategoryID = ? and s.Status = 'Active' "
                 + "ORDER BY Update_Date OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -236,7 +236,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getTotalSubjectsByCategory(int categoryId) {
-        String sql = "SELECT COUNT(*) FROM Subjects WHERE Subject_CategoryId = ?";
+        String sql = "SELECT COUNT(*) FROM Course WHERE Subject_CategoryId = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, categoryId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -251,7 +251,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getTotalActiveSubjectsByCategory(int categoryId) {
-        String sql = "SELECT COUNT(*) FROM Subjects WHERE Subject_CategoryId = ? and Status = 'Active'";
+        String sql = "SELECT COUNT(*) FROM Course WHERE Subject_CategoryId = ? and Status = 'Active'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, categoryId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -266,7 +266,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public boolean insertSubject(Subject subject) {
-        String query = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Dtatus, Update_Date, Thumbnail) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Course (Title, Description, Subject_CategoryID, Dtatus, Update_Date, Thumbnail) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, subject.getTitle());
             ps.setString(2, subject.getDescription());
@@ -283,7 +283,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public boolean deleteSubject(int subjectId) {
-        String query = "DELETE FROM Subjects WHERE SubjectID = ?";
+        String query = "DELETE FROM Course WHERE SubjectID = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, subjectId);
             int rowsDeleted = ps.executeUpdate();
@@ -295,7 +295,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public boolean updateSubject(Subject subject) {
-        String query = "UPDATE Subjects SET Title = ?, Description = ?, Subject_CategoryID = ?, Status = ?, Update_Date = ?, Thumbnail = ? WHERE SubjectID = ?";
+        String query = "UPDATE Course SET Title = ?, Description = ?, Subject_CategoryID = ?, Status = ?, Update_Date = ?, Thumbnail = ? WHERE SubjectID = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, subject.getTitle());
             ps.setString(2, subject.getDescription());
@@ -315,7 +315,7 @@ public class SubjectDAO extends DBContext {
 
     public Subject getSubjectById(int subjectId) {
         Subject subject = null;
-        String query = "SELECT * FROM Subjects WHERE SubjectID = ?";
+        String query = "SELECT * FROM Course WHERE SubjectID = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, subjectId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -341,7 +341,7 @@ public class SubjectDAO extends DBContext {
         String title = "";
 
         try {
-            String query = "SELECT Title FROM Subjects WHERE SubjectID = ?";
+            String query = "SELECT Title FROM Course WHERE SubjectID = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, subjectId);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -358,7 +358,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> searchSubjects(String query, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects WHERE Title LIKE ? OR Description LIKE ? "
+        String sql = "SELECT * FROM Course WHERE Title LIKE ? OR Description LIKE ? "
                 + "ORDER BY Update_Date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -391,7 +391,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> searchActiveSubjects(String query, int offset, int limit) {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subjects WHERE Title LIKE ? OR Description LIKE ? and Status = 'Active' "
+        String sql = "SELECT * FROM Course WHERE Title LIKE ? OR Description LIKE ? and Status = 'Active' "
                 + "ORDER BY Update_Date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -423,7 +423,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getTotalSearchSubjects(String query) {
-        String sql = "SELECT COUNT(*) FROM Subjects WHERE Title LIKE ? OR Description LIKE ?";
+        String sql = "SELECT COUNT(*) FROM Course WHERE Title LIKE ? OR Description LIKE ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, "%" + query + "%");
             ps.setString(2, "%" + query + "%");
@@ -439,7 +439,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getTotalActiveSearchSubjects(String query) {
-        String sql = "SELECT COUNT(*) FROM Subjects WHERE Title LIKE ? OR Description LIKE ? and Status = 'Active' ";
+        String sql = "SELECT COUNT(*) FROM Course WHERE Title LIKE ? OR Description LIKE ? and Status = 'Active' ";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, "%" + query + "%");
             ps.setString(2, "%" + query + "%");
@@ -456,7 +456,7 @@ public class SubjectDAO extends DBContext {
 
     public List<Subject> getFeaturedSubjects() {
         List<Subject> featuredSubjects = new ArrayList<>();
-        String sql = "SELECT TOP 5 * FROM Subjects ORDER BY Update_Date DESC";
+        String sql = "SELECT TOP 5 * FROM Course ORDER BY Update_Date DESC";
         try (
                 PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
             while (rs.next()) {
@@ -473,7 +473,7 @@ public class SubjectDAO extends DBContext {
     public Map<Integer, Subject> getAllSubject() {
         Map<Integer, Subject> list = new HashMap<>();
         try {
-            String sql = "SELECT * FROM Subjects";
+            String sql = "SELECT * FROM Course";
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -497,8 +497,8 @@ public class SubjectDAO extends DBContext {
         List<SubjectCategoryCount> list = new ArrayList<>();
         try {
             String sql = "SELECT sc.Title, COUNT(s.SubjectID) as SubjectCount "
-                    + "FROM Subject_Category sc "
-                    + "LEFT JOIN Subjects s ON sc.Subject_CategoryID = s.Subject_CategoryID "
+                    + "FROM Course_Category sc "
+                    + "LEFT JOIN Course s ON sc.Subject_CategoryID = s.Subject_CategoryID "
                     + "GROUP BY sc.Title HAVING COUNT(s.SubjectID) > 0";
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sql);
@@ -515,7 +515,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public boolean updateSubject(String courseName, String category, String status, String description, String subjectID, String thumbnailPath) {
-        String query = "UPDATE Subjects SET Title = ?, Description = ?, Subject_CategoryID = ?, Status = ?, Update_Date = GETDATE(), Thumbnail = ? WHERE SubjectID = ?";
+        String query = "UPDATE Course SET Title = ?, Description = ?, Subject_CategoryID = ?, Status = ?, Update_Date = GETDATE(), Thumbnail = ? WHERE SubjectID = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, courseName);
             ps.setString(2, description);
@@ -536,7 +536,7 @@ public class SubjectDAO extends DBContext {
         int newSubjectId = 0;
 
         // Câu lệnh SQL để thêm Subject
-        String insertSql = "INSERT INTO Subjects (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) "
+        String insertSql = "INSERT INTO Course (Title, Description, Subject_CategoryID, Status, Thumbnail, Update_Date, OwnerID) "
                 + "VALUES (?, ?, ?, ?, ?, GETDATE(), ?)";
 
         // Câu lệnh SQL để lấy SubjectID mới nhất
@@ -576,7 +576,7 @@ public class SubjectDAO extends DBContext {
                lu.Status AS LessonStatus 
         FROM Lessons l
         JOIN Lesson_User lu ON l.LessonID = lu.LessonID
-        JOIN Subjects s ON l.SubjectID = s.SubjectID
+        JOIN Course s ON l.SubjectID = s.SubjectID
         JOIN LessonTopic lt ON l.TopicID = lt.TopicID
         WHERE l.SubjectID = ? AND lu.UserID = ? 
                  AND l.Status != 'Inactive'
@@ -632,7 +632,7 @@ public class SubjectDAO extends DBContext {
         SELECT s.SubjectID, staff.username, staff.UserID AS OwnerID, staff.Name AS OwnerName, s.Title AS SubjectTitle, 
                lt.TopicID, lt.Name AS LessonTopicName, 
                l.LessonID, l.Title AS LessonTitle
-        FROM Subjects s 
+        FROM Course s 
         JOIN Lessons l ON l.SubjectID = s.SubjectID 
         JOIN LessonTopic lt ON lt.TopicID = l.TopicID
         JOIN Users staff ON s.OwnerID = staff.UserID
@@ -694,7 +694,7 @@ public class SubjectDAO extends DBContext {
             int offset, int limit, Integer ownerID) {
         List<Subject> subjects = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-                "SELECT s.*, u.Username FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
+                "SELECT s.*, u.Username FROM Course s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
 
         // Add owner filter for instructors
         if (ownerID != null) {
@@ -760,7 +760,7 @@ public class SubjectDAO extends DBContext {
 
     public int getTotalSubjectsWithFilters(String query, String categoryId, String status, Integer ownerID) {
         StringBuilder sql = new StringBuilder(
-                "SELECT COUNT(*) FROM Subjects s WHERE 1=1");
+                "SELECT COUNT(*) FROM Course s WHERE 1=1");
 
         // Add owner filter for instructors
         if (ownerID != null) {
@@ -809,7 +809,7 @@ public class SubjectDAO extends DBContext {
     }
 
     public int getTotalSubjects(Integer ownerId) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Subjects WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Course WHERE 1=1");
 
         // Add filter for owner if present
         if (ownerId != null) {
@@ -835,7 +835,7 @@ public class SubjectDAO extends DBContext {
     public List<Subject> getAllSubjects(int offset, int recordsPerPage, Integer ownerId) {
         List<Subject> subjects = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-                "SELECT s.*, u.Username FROM Subjects s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
+                "SELECT s.*, u.Username FROM Course s JOIN Users u ON s.OwnerID = u.UserID WHERE 1=1");
 
         // Thêm điều kiện lọc theo owner nếu có
         if (ownerId != null) {
@@ -877,5 +877,18 @@ public class SubjectDAO extends DBContext {
         }
         return subjects;
     }
-
+    public String getSubjectTitleByID(int subjectID) throws SQLException {
+        String sql = "SELECT Title FROM Course WHERE SubjectID = ?";
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, subjectID);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("Title");
+                } else {
+                    return null; // Return null if no subject is found
+                }
+            }
+        }
+    }
+    
 }

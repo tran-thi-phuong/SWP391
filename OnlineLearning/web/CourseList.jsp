@@ -63,7 +63,9 @@
                                         <a href="registerCourse?id=${subject.subjectID}" style="text-decoration: none; color: black">${subject.title}</a>
                                     </h2>
                                     <p>${subject.description}</p>
-                                    <a href="registerCourse?id=${subject.subjectID}" class="btn-register">Register</a>
+                                   <h6 style="color: #FF8C00;">${userCounts[subject.subjectID]} student are studying this course.</h6>
+                                   
+                                    <a href="registerCourse?id=${subject.subjectID}" class="btn-register">Register Now</a>
                                 </article>
                             </c:forEach>
                         </c:when>

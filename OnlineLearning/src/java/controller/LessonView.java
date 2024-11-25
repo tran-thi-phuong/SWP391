@@ -6,6 +6,7 @@ package controller;
 
 import model.Lesson;
 import dal.LessonDAO;
+import dal.Lesson_UserDAO;
 import dal.PagesDAO;
 import dal.RolePermissionDAO;
 import dal.SubjectDAO;
@@ -15,22 +16,30 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Subject;
 import model.Users;
 
 public class LessonView extends HttpServlet {
 
     private LessonDAO lessonDAO = new LessonDAO(); // Initialize DAO
+    private Lesson_UserDAO luserDAO = new Lesson_UserDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         if (!hasPermission(request, response)) return;
+        if (!hasPermission(request, response)) {
+            return;
+        }
+
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         String lessonIdParam = request.getParameter("lessonId");
         String subjectIdParam = request.getParameter("subjectId");
-        
+
         int userId = (user != null) ? user.getUserID() : -1;
         int lessonId = (lessonIdParam != null && !lessonIdParam.isEmpty()) ? Integer.parseInt(lessonIdParam) : -1;
         int subjectId = (subjectIdParam != null && !subjectIdParam.isEmpty()) ? Integer.parseInt(subjectIdParam) : -1;
@@ -40,15 +49,44 @@ public class LessonView extends HttpServlet {
         request.setAttribute("lesson", lesson);
         request.setAttribute("subjectId", subjectId);
 
+        Date deadline = null;
+        String deadlineNotice = null;
+
+        try {
+            // Retrieve the deadline
+            deadline = luserDAO.getDeadline(lessonId, userId);
+
+            // Check and compare the deadline
+            if (deadline != null) {
+                Date currentDate = new Date(); // Get the current date
+
+                if (deadline.after(currentDate)) {
+                    deadlineNotice = "You still have time. The deadline is on " + deadline;
+                } else if (deadline.equals(currentDate)) {
+                    deadlineNotice = "The deadline is today: " + deadline;
+                } else {
+                    deadlineNotice = "The deadline was on " + deadline + ". It is overdue!";
+                }
+            } else {
+                deadlineNotice = "No deadline found for this lesson.";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LessonView.class.getName()).log(Level.SEVERE, null, ex);
+            deadlineNotice = "An error occurred while retrieving the deadline.";
+        }
+
+        // Set attributes for the notice and deadline
+        request.setAttribute("deadline", deadline);
+        request.setAttribute("deadlineNotice", deadlineNotice);
+
+        // Retrieve subjects
         SubjectDAO subjectDAO = new SubjectDAO();
         List<Subject> subjects;
 
-        // If the user is not logged in, retrieve subjects based only on subjectId
         if (user == null) {
-            subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId);
+            subjects = subjectDAO.getSubjectDetailsBySubjectID(subjectId); // For guests
         } else {
-            // If the user is logged in, retrieve subjects based on userId and subjectId
-            subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId);
+            subjects = subjectDAO.getSubjectDetailsByUserIdAndSubjectID(userId, subjectId); // For logged-in users
         }
 
         request.setAttribute("subjects", subjects);
@@ -59,7 +97,9 @@ public class LessonView extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!hasPermission(request, response)) return;
+        if (!hasPermission(request, response)) {
+            return;
+        }
         HttpSession session = request.getSession();
         String subjectId = request.getParameter("subjectId");
 
@@ -93,7 +133,8 @@ public class LessonView extends HttpServlet {
             response.sendRedirect("error.jsp"); // Redirect to error page
         }
     }
-private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    private boolean hasPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Users currentUser = (Users) session.getAttribute("user");
         if (currentUser == null) {

@@ -178,26 +178,28 @@ public class PackagePriceDAO extends DBContext {
         }
     }
 
-    // Method to get Price by SubjectID
-    public Double getPriceBySubjectID(int subjectId) {
+// Method to get Prices by SubjectID
+public List<Double> getPricesBySubjectID(int subjectId) {
     String sql = "SELECT Price FROM Package_Price WHERE SubjectID = ?";
+    List<Double> prices = new ArrayList<>();
     
     try (
-         PreparedStatement pst = connection.prepareStatement(sql)) {
+        PreparedStatement pst = connection.prepareStatement(sql)) {
         
         pst.setInt(1, subjectId);
         
         ResultSet rs = pst.executeQuery();
-        if (rs.next()) {
-            return rs.getDouble("Price");  // Returns the price if found
+        while (rs.next()) {
+            prices.add(rs.getDouble("Price"));  // Add each price to the list
         }
     } catch (SQLException ex) {
         ex.printStackTrace();
     }
     
-    // Return null if no price is found
-    return null;
+    // Return the list (empty if no prices are found)
+    return prices;
 }
+
  public boolean updateSalePriceBySubjectID(int subjectID, double newSalePrice) {
         String sql = "UPDATE Package_Price SET Sale_Price = ? WHERE SubjectID = ?";
         try (

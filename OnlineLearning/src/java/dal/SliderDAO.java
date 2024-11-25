@@ -38,30 +38,32 @@ public class SliderDAO extends DBContext {
         return list;
     }
 
-    public List<Subject> getTopSubjects(int n) throws SQLException {
-        List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT TOP " + n + " s.*,u.userName AS ownerName "
-                + "FROM Subjects s "
-                + "JOIN (SELECT SubjectID, COUNT(*) as RegistrationCount "
-                + "      FROM Registrations "
-                + "      GROUP BY SubjectID) r ON s.SubjectID = r.SubjectID "
-                + "JOIN Users u ON s.ownerID = u.userID "
-                + "ORDER BY r.RegistrationCount DESC";
+public List<Subject> getTopSubjects(int n) throws SQLException {
+    List<Subject> subjects = new ArrayList<>();
+    String sql = "SELECT TOP " + n + " s.*, u.userName AS ownerName "
+               + "FROM Course s " // Added alias for Course here
+               + "JOIN (SELECT SubjectID, COUNT(*) as RegistrationCount "
+               + "      FROM Registrations "
+               + "      GROUP BY SubjectID) r ON s.SubjectID = r.SubjectID "
+               + "JOIN Users u ON s.ownerID = u.userID "
+               + "ORDER BY r.RegistrationCount DESC";
 
-        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
-            while (rs.next()) {
-                Subject subject = new Subject();
-                subject.setSubjectID(rs.getInt("SubjectID"));
-                subject.setTitle(rs.getString("Title"));
-                subject.setOwnerName(rs.getString("ownerName"));
-                subject.setDescription(rs.getString("Description"));
-                subject.setThumbnail(rs.getString("Thumbnail"));
-                subject.setUpdateDate(rs.getTimestamp("Update_Date"));
-                subjects.add(subject);
-            }
+    try (PreparedStatement st = connection.prepareStatement(sql);
+         ResultSet rs = st.executeQuery()) {
+        while (rs.next()) {
+            Subject subject = new Subject();
+            subject.setSubjectID(rs.getInt("SubjectID"));
+            subject.setTitle(rs.getString("Title"));
+            subject.setOwnerName(rs.getString("ownerName"));
+            subject.setDescription(rs.getString("Description"));
+            subject.setThumbnail(rs.getString("Thumbnail"));
+            subject.setUpdateDate(rs.getTimestamp("Update_Date"));
+            subjects.add(subject);
         }
-        return subjects;
     }
+    return subjects;
+}
+
 
     public boolean isSliderExists(Integer blogId, Integer subjectId) {
         String sql = "SELECT COUNT(*) FROM Sliders WHERE BlogID = ? OR SubjectID = ?";
@@ -169,9 +171,29 @@ public class SliderDAO extends DBContext {
         return sliders;
     }
 
-    public static void main(String[] args) {
-        SliderDAO slide = new SliderDAO();
-        Slider c = new Slider("a","images/thumbnail_chinese.jpg","https://www.msn.com/vi-vn/money/news/musk-c%C3%B3-th%C3%AAm-g%E1%BA%A7n-27-t%E1%BB%B7-usd-khi-%C3%B4ng-trump-%C4%91%E1%BA%AFc-c%E1%BB%AD/ar-AA1tEGQu?ocid=msedgntp&pc=DCTS&cvid=bd18f0b0b293475baeb0d455e0699bf6&ei=20","Show");
-        System.out.println(slide.addSlider(c));
+
+    public static void main(String[] args) throws SQLException {
+        
+
+        
+            // Assuming your DAO class is called SubjectDAO
+            SliderDAO subjectDAO = new SliderDAO();
+
+            // Test the getTopSubjects method with a specific value for 'n'
+            int n = 5; // Number of top subjects to retrieve
+            List<Subject> topSubjects = subjectDAO.getTopSubjects(6);
+
+            // Print the retrieved subjects
+            System.out.println("Top " + n + " Subjects:");
+            for (Subject subject : topSubjects) {
+                System.out.println("Subject ID: " + subject.getSubjectID());
+                System.out.println("Title: " + subject.getTitle());
+                System.out.println("Owner Name: " + subject.getOwnerName());
+                System.out.println("Description: " + subject.getDescription());
+                System.out.println("Thumbnail: " + subject.getThumbnail());
+                System.out.println("Update Date: " + subject.getUpdateDate());
+                System.out.println("-------------------------------------------------");
+            }
     }
+
 }

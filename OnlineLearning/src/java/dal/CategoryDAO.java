@@ -17,7 +17,7 @@ public class CategoryDAO extends DBContext {
     public List<SubjectCategory> getAllCategories() {
         List<SubjectCategory> list = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM Subject_Category";
+            String sql = "SELECT * FROM Course_Category";
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -33,7 +33,7 @@ public class CategoryDAO extends DBContext {
     }
 
     public boolean insertCategory(SubjectCategory category) {
-        String query = "INSERT INTO Subject_Category (title) VALUES (?)";
+        String query = "INSERT INTO Course_Category (title) VALUES (?)";
         try (PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, category.getTitle());
             int affectedRows = ps.executeUpdate();
@@ -52,7 +52,7 @@ public class CategoryDAO extends DBContext {
     }
 
     public boolean deleteCategory(int categoryId) {
-        String query = "DELETE FROM Subject_Category WHERE Subject_CategoryId = ?";
+        String query = "DELETE FROM Course_Category WHERE Subject_CategoryId = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, categoryId);
             int rowsDeleted = ps.executeUpdate();
@@ -64,7 +64,7 @@ public class CategoryDAO extends DBContext {
     }
 
     public boolean updateCategory(SubjectCategory category) {
-        String query = "UPDATE Subject_Category SET title = ? WHERE Subject_CategoryId = ?";
+        String query = "UPDATE Course_Category SET title = ? WHERE Subject_CategoryId = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, category.getTitle());
             ps.setInt(2, category.getSubjectCategoryId());
@@ -78,7 +78,7 @@ public class CategoryDAO extends DBContext {
 
     public SubjectCategory getCategoryById(int categoryId) {
         SubjectCategory category = null;
-        String query = "SELECT * FROM Subject_Category WHERE Subject_CategoryId = ?";
+        String query = "SELECT * FROM Course_Category WHERE Subject_CategoryId = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, categoryId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -96,7 +96,7 @@ public class CategoryDAO extends DBContext {
 
     public List<SubjectCategory> searchCategories(String query) {
         List<SubjectCategory> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subject_Category WHERE title LIKE ?";
+        String sql = "SELECT * FROM Course_Category WHERE title LIKE ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, "%" + query + "%");
             ResultSet rs = ps.executeQuery();
@@ -112,11 +112,4 @@ public class CategoryDAO extends DBContext {
         return list;
     }
 
-    public static void main(String[] args) {
-        CategoryDAO cDAO = new CategoryDAO();
-        List<SubjectCategory> list = cDAO.getAllCategories();
-        System.out.println(list);
-        
-        // Test other methods here
-    }
 }

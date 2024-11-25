@@ -181,6 +181,7 @@
                     <th class="col-lessons">Number of lesson</th>
                     <th class="col-owner">Owner</th>
                     <th class="col-status">Status</th>
+                    <th class="col-percentage"> Customer studying progress </th>
                     <th>Action</th>
                 </tr>
                 <%-- Iterate through subjects and display data --%>
@@ -196,6 +197,12 @@
                         <td class="col-lessons">${lessonCounts[course.subjectID]}</td>
                         <td class="col-owner">${course.userName}</td>
                         <td class="col-status">${course.status}</td>
+                        <td>
+                            <a href="ViewCustomerProgress?subjectID=${course.subjectID}" 
+                               onclick="document.getElementById('subjectForm${course.subjectID}').submit();">
+                                <c:out value="${averageProgressMap[course.subjectID]}" />%
+                            </a>
+                        </td>
                         <td>
                             <a href="SubjectDetailOverview?id=${course.subjectID}">Edit</a>
                         </td>
