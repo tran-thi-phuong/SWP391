@@ -75,7 +75,7 @@ public class forgotPassword extends HttpServlet {
     private void sendEmail(String to, String subject, String body) {
         // Email account credentials
         final String username = "phuongtthe186681@fpt.edu.vn";
-        final String password = "mslazpojvjimeuzt";
+        final String password = "";
 
         // Configure email session properties
         Properties props = new Properties();
