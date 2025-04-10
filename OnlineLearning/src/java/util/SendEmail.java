@@ -25,7 +25,7 @@ public class SendEmail {
     // email: tuando1007@gmail.com
     // pass: aixt uews lypz qwnx
     static final String FROM = "tuando1007@gmail.com";
-    static final String PASSWORD = "aixtuewslypzqwnx";
+    static final String PASSWORD = "";
 
     public static void sendCode(String toEmail, String verificationCode) {
         Properties pros = new Properties();
