@@ -228,7 +228,7 @@ public class updateRegistration extends HttpServlet { // Class names should star
 
         // SMTP email setup
         final String username = "phuongtthe186681@fpt.edu.vn"; // Email sender
-        final String password = "mslazpojvjimeuzt"; // Email password
+        final String password = ""; // Email password
         Properties props = new Properties(); // Email properties
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
