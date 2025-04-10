@@ -86,7 +86,7 @@ public class AddStaff extends HttpServlet {
 
         // SMTP email setup
         final String username = "phuongtthe186681@fpt.edu.vn"; // Sender's email
-        final String password = "mslazpojvjimeuzt"; // Email password
+        final String password = ""; // Email password
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
